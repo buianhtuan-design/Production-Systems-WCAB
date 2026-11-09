@@ -2,23 +2,23 @@
   "A": {
     "shift": "A",
     "name": "Shift A",
-    "assyDirect": 41.0,
-    "assyTotal": 56.0,
+    "assyDirect": 42.0,
+    "assyTotal": 57.0,
     "assyLinesDirect": {
-      "1A": 13.0,
+      "1A": 14.0,
       "2A": 14.0,
       "3A": 14.0
     },
     "assyLinesTotal": {
-      "1A": 18.0,
+      "1A": 19.0,
       "2A": 19.0,
       "3A": 19.0
     },
-    "htDirect": 24.0,
-    "htTotal": 26.0,
+    "htDirect": 25.0,
+    "htTotal": 27.0,
     "htBreakdown": {
       "cleanroom": 3.0,
-      "operator": 21.0,
+      "operator": 22.0,
       "feeder": 1.0,
       "leader": 1.0
     }
@@ -48,23 +48,23 @@
   "C": {
     "shift": "C",
     "name": "Shift C",
-    "assyDirect": 43.0,
-    "assyTotal": 58.0,
+    "assyDirect": 46.0,
+    "assyTotal": 61.0,
     "assyLinesDirect": {
-      "1C": 15.0,
-      "2C": 13.0,
+      "1C": 16.0,
+      "2C": 15.0,
       "3C": 15.0
     },
     "assyLinesTotal": {
-      "1C": 20.0,
-      "2C": 18.0,
+      "1C": 21.0,
+      "2C": 20.0,
       "3C": 20.0
     },
-    "htDirect": 23.0,
-    "htTotal": 25.0,
+    "htDirect": 25.0,
+    "htTotal": 27.0,
     "htBreakdown": {
       "cleanroom": 2.0,
-      "operator": 21.0,
+      "operator": 23.0,
       "feeder": 1.0,
       "leader": 1.0
     }
@@ -82,11 +82,11 @@
       "1D": 19.0,
       "2D": 19.0
     },
-    "htDirect": 22.0,
-    "htTotal": 24.0,
+    "htDirect": 24.0,
+    "htTotal": 26.0,
     "htBreakdown": {
       "cleanroom": 4.0,
-      "operator": 18.0,
+      "operator": 20.0,
       "feeder": 1.0,
       "leader": 1.0
     }
@@ -97,13 +97,13 @@
     "lines": [
       "3D"
     ],
-    "assyDirect": 11.0,
-    "assyTotal": 16.0,
+    "assyDirect": 13.0,
+    "assyTotal": 18.0,
     "assyLinesDirect": {
-      "3D": 11.0
+      "3D": 13.0
     },
     "assyLinesTotal": {
-      "3D": 16.0
+      "3D": 18.0
     },
     "htDirect": 0.0,
     "htTotal": 0.0,

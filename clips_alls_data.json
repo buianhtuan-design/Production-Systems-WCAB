@@ -1516,7 +1516,7 @@
       "agg": "DualCurtain Outdoor",
       "device": "Ajax DualCurtain Outdoor (8EU) ASP white датчик руху",
       "plan": 7156.0,
-      "sheetFact": 38.0,
+      "sheetFact": 103.0,
       "done": 0,
       "isDone": false
     },
@@ -1546,7 +1546,7 @@
       "agg": "",
       "device": "Ajax DualCurtain Outdoor (9NA) UPC white датчик руху",
       "plan": 0.0,
-      "sheetFact": 3.0,
+      "sheetFact": 5.0,
       "done": 1,
       "isDone": true
     },
@@ -1906,7 +1906,7 @@
       "agg": "",
       "device": "Ajax MotionProtect Plus (9AU) white датчик руху",
       "plan": 1192.0,
-      "sheetFact": 33.0,
+      "sheetFact": 36.0,
       "done": 0,
       "isDone": false
     },
@@ -4118,7 +4118,7 @@
       "agg": "DualCurtain Outdoor",
       "device": "Ajax DualCurtain Outdoor (8EU) ASP white датчик руху",
       "plan": 7156.0,
-      "sheetFact": 38.0,
+      "sheetFact": 103.0,
       "done": 0,
       "isDone": false
     },
@@ -4148,7 +4148,7 @@
       "agg": "",
       "device": "Ajax DualCurtain Outdoor (9NA) UPC white датчик руху",
       "plan": 0.0,
-      "sheetFact": 3.0,
+      "sheetFact": 5.0,
       "done": 1,
       "isDone": true
     },
@@ -4508,7 +4508,7 @@
       "agg": "",
       "device": "Ajax MotionProtect Plus (9AU) white датчик руху",
       "plan": 1192.0,
-      "sheetFact": 33.0,
+      "sheetFact": 36.0,
       "done": 0,
       "isDone": false
     },
@@ -5210,7 +5210,7 @@
   "clipAllPlant": "36.2%",
   "clipAllPlantPct": 36.2,
   "totalPlan": 485822.0,
-  "totalSheetFact": 118363.0,
+  "totalSheetFact": 118433.0,
   "hasPlanCount": 219,
   "gt90Count": 94,
   "lt90Count": 166,
@@ -9507,10 +9507,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-09 17:59:26",
+        "archivedAt": "2026-11-09 20:04:28",
         "totalItems": 260,
         "totalPlan": 485822.0,
-        "totalSheetFact": 118363.0,
+        "totalSheetFact": 118433.0,
         "qtyAllDevice": 260,
         "qtyDoneDevice": 94,
         "qtyNotDoneDevice": 166,
@@ -11032,7 +11032,7 @@
             "agg": "DualCurtain Outdoor",
             "device": "Ajax DualCurtain Outdoor (8EU) ASP white датчик руху",
             "plan": 7156.0,
-            "sheetFact": 38.0,
+            "sheetFact": 103.0,
             "done": 0,
             "isDone": false
           },
@@ -11062,7 +11062,7 @@
             "agg": "",
             "device": "Ajax DualCurtain Outdoor (9NA) UPC white датчик руху",
             "plan": 0.0,
-            "sheetFact": 3.0,
+            "sheetFact": 5.0,
             "done": 1,
             "isDone": true
           },
@@ -11422,7 +11422,7 @@
             "agg": "",
             "device": "Ajax MotionProtect Plus (9AU) white датчик руху",
             "plan": 1192.0,
-            "sheetFact": 33.0,
+            "sheetFact": 36.0,
             "done": 0,
             "isDone": false
           },
@@ -13634,7 +13634,7 @@
             "agg": "DualCurtain Outdoor",
             "device": "Ajax DualCurtain Outdoor (8EU) ASP white датчик руху",
             "plan": 7156.0,
-            "sheetFact": 38.0,
+            "sheetFact": 103.0,
             "done": 0,
             "isDone": false
           },
@@ -13664,7 +13664,7 @@
             "agg": "",
             "device": "Ajax DualCurtain Outdoor (9NA) UPC white датчик руху",
             "plan": 0.0,
-            "sheetFact": 3.0,
+            "sheetFact": 5.0,
             "done": 1,
             "isDone": true
           },
@@ -14024,7 +14024,7 @@
             "agg": "",
             "device": "Ajax MotionProtect Plus (9AU) white датчик руху",
             "plan": 1192.0,
-            "sheetFact": 33.0,
+            "sheetFact": 36.0,
             "done": 0,
             "isDone": false
           },
