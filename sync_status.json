@@ -1,9 +1,9 @@
 {
   "success": true,
-  "timestamp": "2026-11-09 15:31:24",
-  "version": 202611091531,
-  "download_seconds": 22.82,
-  "total_seconds": 23.75,
+  "timestamp": "2026-11-09 15:32:55",
+  "version": 202611091532,
+  "download_seconds": 16.67,
+  "total_seconds": 17.6,
   "items_count": 2148,
   "dates_count": 439,
   "weeks_count": 62,
@@ -12,7 +12,8 @@
   "mass_history_count": 3782,
   "hardtest_items_count": 89,
   "github_sync": {
-    "pushed": false,
-    "error": "fatal: unable to access 'https://github.com/buianhtuan-design/Production-Systems-WCAB.git/': Could not resolve host: github.com"
+    "pushed": true,
+    "timestamp": "2026-11-09 15:32:55",
+    "files_updated": 6
   }
 }
