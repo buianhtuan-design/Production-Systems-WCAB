@@ -4291,14 +4291,14 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-09 15:44:49",
-      "totalItems": 259,
+      "archivedAt": "2026-11-09 15:46:50",
+      "totalItems": 260,
       "totalPlan": 485822.0,
-      "totalSheetFact": 108321.0,
-      "qtyAllDevice": 259,
-      "qtyDoneDevice": 89,
-      "qtyNotDoneDevice": 170,
-      "clipAllPlant": "34.4%",
+      "totalSheetFact": 117637.0,
+      "qtyAllDevice": 260,
+      "qtyDoneDevice": 94,
+      "qtyNotDoneDevice": 166,
+      "clipAllPlant": "36.2%",
       "items": [
         {
           "category": "Comfort and productivity",
@@ -4386,7 +4386,7 @@
           "agg": "",
           "device": "Ajax WaterStop [1/2] (8MA) black розумний кран",
           "plan": 0.0,
-          "sheetFact": 34.0,
+          "sheetFact": 35.0,
           "done": 1,
           "isDone": true
         },
@@ -4456,9 +4456,9 @@
           "agg": "FireProtect 2",
           "device": "Ajax FireProtect 2 RB (CO) (8EU) ASP white датчик чадного газу",
           "plan": 210.0,
-          "sheetFact": 187.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 192.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -4536,7 +4536,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/CO) (8EU) ASP white датчик температури та чадного газу",
           "plan": 690.0,
-          "sheetFact": 0.0,
+          "sheetFact": 469.0,
           "done": 0,
           "isDone": false
         },
@@ -4566,7 +4566,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) WL Standard ASP white датчик диму та температури",
           "plan": 7237.0,
-          "sheetFact": 4826.0,
+          "sheetFact": 4880.0,
           "done": 0,
           "isDone": false
         },
@@ -4586,7 +4586,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8MA) black датчик диму та температури",
           "plan": 362.0,
-          "sheetFact": 0.0,
+          "sheetFact": 3.0,
           "done": 0,
           "isDone": false
         },
@@ -4596,7 +4596,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8MA) white датчик диму та температури",
           "plan": 1127.0,
-          "sheetFact": 477.0,
+          "sheetFact": 899.0,
           "done": 0,
           "isDone": false
         },
@@ -4766,7 +4766,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) ASP white сповіщувач пожежний тепловий зі звуковим оповіщувачем",
           "plan": 1752.0,
-          "sheetFact": 1663.0,
+          "sheetFact": 1699.0,
           "done": 1,
           "isDone": true
         },
@@ -4976,7 +4976,7 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Red) (8EU) ASP ручний пожежний сповіщувач",
           "plan": 11170.0,
-          "sheetFact": 3890.0,
+          "sheetFact": 4721.0,
           "done": 0,
           "isDone": false
         },
@@ -5126,7 +5126,7 @@
           "agg": "",
           "device": "Ajax SpaceControl (8EU) ASP white брелок",
           "plan": 20100.0,
-          "sheetFact": 7292.0,
+          "sheetFact": 7648.0,
           "done": 0,
           "isDone": false
         },
@@ -5156,9 +5156,9 @@
           "agg": "",
           "device": "Ajax SpaceControl (9AU) AR WL Prosegur white брелок",
           "plan": 2025.0,
-          "sheetFact": 453.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 2021.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -5216,7 +5216,7 @@
           "agg": "",
           "device": "Ajax Hub 2 (8MA) white охоронна централь",
           "plan": 442.0,
-          "sheetFact": 174.0,
+          "sheetFact": 266.0,
           "done": 0,
           "isDone": false
         },
@@ -5316,7 +5316,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (9AU/AUX) black охоронна централь",
           "plan": 74.0,
-          "sheetFact": 30.0,
+          "sheetFact": 62.0,
           "done": 0,
           "isDone": false
         },
@@ -5466,7 +5466,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (9NA/AFA) UPC with SIM white охоронна централь",
           "plan": 1149.0,
-          "sheetFact": 670.0,
+          "sheetFact": 720.0,
           "done": 0,
           "isDone": false
         },
@@ -5584,6 +5584,16 @@
           "category": "",
           "group": "",
           "agg": "",
+          "device": "Ajax CombiProtect (8MA) white датчик руху та розбиття",
+          "plan": 0.0,
+          "sheetFact": 1.0,
+          "done": 1,
+          "isDone": true
+        },
+        {
+          "category": "",
+          "group": "",
+          "agg": "",
           "device": "Ajax CombiProtect (9AU) white датчик руху та розбиття",
           "plan": 201.0,
           "sheetFact": 1.0,
@@ -5606,7 +5616,7 @@
           "agg": "",
           "device": "Ajax CombiProtect (9NA) UPC white датчик руху та розбиття",
           "plan": 107.0,
-          "sheetFact": 104.0,
+          "sheetFact": 106.0,
           "done": 1,
           "isDone": true
         },
@@ -5616,7 +5626,7 @@
           "agg": "",
           "device": "Ajax CombiProtect (9NA) white датчик руху та розбиття",
           "plan": 100.0,
-          "sheetFact": 0.0,
+          "sheetFact": 1.0,
           "done": 0,
           "isDone": false
         },
@@ -5716,9 +5726,9 @@
           "agg": "",
           "device": "Ajax Keypad (8EU) ASP white клавіатура",
           "plan": 6936.0,
-          "sheetFact": 5993.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 6843.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -5736,7 +5746,7 @@
           "agg": "KeyPad TouchScreen",
           "device": "Ajax KeyPad TouchScreen (8EU) ASP black клавіатура",
           "plan": 1623.0,
-          "sheetFact": 3.0,
+          "sheetFact": 6.0,
           "done": 0,
           "isDone": false
         },
@@ -5866,7 +5876,7 @@
           "agg": "",
           "device": "Ajax MotionCam HDR (8EU) ASP white датчик руху з камерою",
           "plan": 15498.0,
-          "sheetFact": 7024.0,
+          "sheetFact": 8478.0,
           "done": 0,
           "isDone": false
         },
@@ -6056,7 +6066,7 @@
           "agg": "",
           "device": "Ajax MotionProtect (8MA) white датчик руху",
           "plan": 211.0,
-          "sheetFact": 215.0,
+          "sheetFact": 217.0,
           "done": 1,
           "isDone": true
         },
@@ -6086,7 +6096,7 @@
           "agg": "",
           "device": "Ajax MotionProtect (9NA) black датчик руху",
           "plan": 0.0,
-          "sheetFact": 3.0,
+          "sheetFact": 4.0,
           "done": 1,
           "isDone": true
         },
@@ -6096,7 +6106,7 @@
           "agg": "",
           "device": "Ajax MotionProtect (9NA) white датчик руху",
           "plan": 360.0,
-          "sheetFact": 365.0,
+          "sheetFact": 366.0,
           "done": 1,
           "isDone": true
         },
@@ -6116,7 +6126,7 @@
           "agg": "MotionProtect Outdoor",
           "device": "Ajax MotionProtect Outdoor (8EU) ASP white датчик руху",
           "plan": 3079.0,
-          "sheetFact": 1697.0,
+          "sheetFact": 1738.0,
           "done": 0,
           "isDone": false
         },
@@ -6136,7 +6146,7 @@
           "agg": "",
           "device": "Ajax MotionProtect Outdoor (8MA) white датчик руху",
           "plan": 14.0,
-          "sheetFact": 0.0,
+          "sheetFact": 1.0,
           "done": 0,
           "isDone": false
         },
@@ -6146,7 +6156,7 @@
           "agg": "",
           "device": "Ajax MotionProtect Outdoor (9AU) white датчик руху",
           "plan": 10.0,
-          "sheetFact": 7.0,
+          "sheetFact": 9.0,
           "done": 0,
           "isDone": false
         },
@@ -6156,7 +6166,7 @@
           "agg": "",
           "device": "Ajax MotionProtect Outdoor (9NA) UPC white датчик руху",
           "plan": 92.0,
-          "sheetFact": 80.0,
+          "sheetFact": 81.0,
           "done": 0,
           "isDone": false
         },
@@ -6166,9 +6176,9 @@
           "agg": "",
           "device": "Ajax MotionProtect Outdoor (9NA) white датчик руху",
           "plan": 79.0,
-          "sheetFact": 66.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 73.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -6426,7 +6436,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (9AU) black датчик відкриття",
           "plan": 1170.0,
-          "sheetFact": 0.0,
+          "sheetFact": 618.0,
           "done": 0,
           "isDone": false
         },
@@ -6436,7 +6446,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (9AU) white датчик відкриття",
           "plan": 4581.0,
-          "sheetFact": 1.0,
+          "sheetFact": 1880.0,
           "done": 0,
           "isDone": false
         },
@@ -6456,7 +6466,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (9NA) white датчик відкриття",
           "plan": 630.0,
-          "sheetFact": 0.0,
+          "sheetFact": 533.0,
           "done": 0,
           "isDone": false
         },
@@ -6978,7 +6988,7 @@
           "agg": "",
           "device": "Ajax WaterStop [1/2] (8MA) black розумний кран",
           "plan": 0.0,
-          "sheetFact": 34.0,
+          "sheetFact": 35.0,
           "done": 1,
           "isDone": true
         },
@@ -7048,9 +7058,9 @@
           "agg": "FireProtect 2",
           "device": "Ajax FireProtect 2 RB (CO) (8EU) ASP white датчик чадного газу",
           "plan": 210.0,
-          "sheetFact": 187.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 192.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax FireProtect 2 RB (CO) UL (9NA) black датчик чадного газу": {
           "category": "",
@@ -7128,7 +7138,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/CO) (8EU) ASP white датчик температури та чадного газу",
           "plan": 690.0,
-          "sheetFact": 0.0,
+          "sheetFact": 469.0,
           "done": 0,
           "isDone": false
         },
@@ -7158,7 +7168,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) WL Standard ASP white датчик диму та температури",
           "plan": 7237.0,
-          "sheetFact": 4826.0,
+          "sheetFact": 4880.0,
           "done": 0,
           "isDone": false
         },
@@ -7178,7 +7188,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8MA) black датчик диму та температури",
           "plan": 362.0,
-          "sheetFact": 0.0,
+          "sheetFact": 3.0,
           "done": 0,
           "isDone": false
         },
@@ -7188,7 +7198,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8MA) white датчик диму та температури",
           "plan": 1127.0,
-          "sheetFact": 477.0,
+          "sheetFact": 899.0,
           "done": 0,
           "isDone": false
         },
@@ -7358,7 +7368,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) ASP white сповіщувач пожежний тепловий зі звуковим оповіщувачем",
           "plan": 1752.0,
-          "sheetFact": 1663.0,
+          "sheetFact": 1699.0,
           "done": 1,
           "isDone": true
         },
@@ -7568,7 +7578,7 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Red) (8EU) ASP ручний пожежний сповіщувач",
           "plan": 11170.0,
-          "sheetFact": 3890.0,
+          "sheetFact": 4721.0,
           "done": 0,
           "isDone": false
         },
@@ -7718,7 +7728,7 @@
           "agg": "",
           "device": "Ajax SpaceControl (8EU) ASP white брелок",
           "plan": 20100.0,
-          "sheetFact": 7292.0,
+          "sheetFact": 7648.0,
           "done": 0,
           "isDone": false
         },
@@ -7748,9 +7758,9 @@
           "agg": "",
           "device": "Ajax SpaceControl (9AU) AR WL Prosegur white брелок",
           "plan": 2025.0,
-          "sheetFact": 453.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 2021.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax SpaceControl (9AU) black брелок": {
           "category": "",
@@ -7808,7 +7818,7 @@
           "agg": "",
           "device": "Ajax Hub 2 (8MA) white охоронна централь",
           "plan": 442.0,
-          "sheetFact": 174.0,
+          "sheetFact": 266.0,
           "done": 0,
           "isDone": false
         },
@@ -7908,7 +7918,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (9AU/AUX) black охоронна централь",
           "plan": 74.0,
-          "sheetFact": 30.0,
+          "sheetFact": 62.0,
           "done": 0,
           "isDone": false
         },
@@ -8058,7 +8068,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (9NA/AFA) UPC with SIM white охоронна централь",
           "plan": 1149.0,
-          "sheetFact": 670.0,
+          "sheetFact": 720.0,
           "done": 0,
           "isDone": false
         },
@@ -8172,6 +8182,16 @@
           "done": 1,
           "isDone": true
         },
+        "Ajax CombiProtect (8MA) white датчик руху та розбиття": {
+          "category": "",
+          "group": "",
+          "agg": "",
+          "device": "Ajax CombiProtect (8MA) white датчик руху та розбиття",
+          "plan": 0.0,
+          "sheetFact": 1.0,
+          "done": 1,
+          "isDone": true
+        },
         "Ajax CombiProtect (9AU) white датчик руху та розбиття": {
           "category": "",
           "group": "",
@@ -8198,7 +8218,7 @@
           "agg": "",
           "device": "Ajax CombiProtect (9NA) UPC white датчик руху та розбиття",
           "plan": 107.0,
-          "sheetFact": 104.0,
+          "sheetFact": 106.0,
           "done": 1,
           "isDone": true
         },
@@ -8208,7 +8228,7 @@
           "agg": "",
           "device": "Ajax CombiProtect (9NA) white датчик руху та розбиття",
           "plan": 100.0,
-          "sheetFact": 0.0,
+          "sheetFact": 1.0,
           "done": 0,
           "isDone": false
         },
@@ -8308,9 +8328,9 @@
           "agg": "",
           "device": "Ajax Keypad (8EU) ASP white клавіатура",
           "plan": 6936.0,
-          "sheetFact": 5993.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 6843.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax Keypad (9NA) white клавіатура": {
           "category": "",
@@ -8328,7 +8348,7 @@
           "agg": "KeyPad TouchScreen",
           "device": "Ajax KeyPad TouchScreen (8EU) ASP black клавіатура",
           "plan": 1623.0,
-          "sheetFact": 3.0,
+          "sheetFact": 6.0,
           "done": 0,
           "isDone": false
         },
@@ -8458,7 +8478,7 @@
           "agg": "",
           "device": "Ajax MotionCam HDR (8EU) ASP white датчик руху з камерою",
           "plan": 15498.0,
-          "sheetFact": 7024.0,
+          "sheetFact": 8478.0,
           "done": 0,
           "isDone": false
         },
@@ -8648,7 +8668,7 @@
           "agg": "",
           "device": "Ajax MotionProtect (8MA) white датчик руху",
           "plan": 211.0,
-          "sheetFact": 215.0,
+          "sheetFact": 217.0,
           "done": 1,
           "isDone": true
         },
@@ -8678,7 +8698,7 @@
           "agg": "",
           "device": "Ajax MotionProtect (9NA) black датчик руху",
           "plan": 0.0,
-          "sheetFact": 3.0,
+          "sheetFact": 4.0,
           "done": 1,
           "isDone": true
         },
@@ -8688,7 +8708,7 @@
           "agg": "",
           "device": "Ajax MotionProtect (9NA) white датчик руху",
           "plan": 360.0,
-          "sheetFact": 365.0,
+          "sheetFact": 366.0,
           "done": 1,
           "isDone": true
         },
@@ -8708,7 +8728,7 @@
           "agg": "MotionProtect Outdoor",
           "device": "Ajax MotionProtect Outdoor (8EU) ASP white датчик руху",
           "plan": 3079.0,
-          "sheetFact": 1697.0,
+          "sheetFact": 1738.0,
           "done": 0,
           "isDone": false
         },
@@ -8728,7 +8748,7 @@
           "agg": "",
           "device": "Ajax MotionProtect Outdoor (8MA) white датчик руху",
           "plan": 14.0,
-          "sheetFact": 0.0,
+          "sheetFact": 1.0,
           "done": 0,
           "isDone": false
         },
@@ -8738,7 +8758,7 @@
           "agg": "",
           "device": "Ajax MotionProtect Outdoor (9AU) white датчик руху",
           "plan": 10.0,
-          "sheetFact": 7.0,
+          "sheetFact": 9.0,
           "done": 0,
           "isDone": false
         },
@@ -8748,7 +8768,7 @@
           "agg": "",
           "device": "Ajax MotionProtect Outdoor (9NA) UPC white датчик руху",
           "plan": 92.0,
-          "sheetFact": 80.0,
+          "sheetFact": 81.0,
           "done": 0,
           "isDone": false
         },
@@ -8758,9 +8778,9 @@
           "agg": "",
           "device": "Ajax MotionProtect Outdoor (9NA) white датчик руху",
           "plan": 79.0,
-          "sheetFact": 66.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 73.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax MotionProtect Plus (8EU) ASP black датчик руху": {
           "category": "",
@@ -9018,7 +9038,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (9AU) black датчик відкриття",
           "plan": 1170.0,
-          "sheetFact": 0.0,
+          "sheetFact": 618.0,
           "done": 0,
           "isDone": false
         },
@@ -9028,7 +9048,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (9AU) white датчик відкриття",
           "plan": 4581.0,
-          "sheetFact": 1.0,
+          "sheetFact": 1880.0,
           "done": 0,
           "isDone": false
         },
@@ -9048,7 +9068,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (9NA) white датчик відкриття",
           "plan": 630.0,
-          "sheetFact": 0.0,
+          "sheetFact": 533.0,
           "done": 0,
           "isDone": false
         },
