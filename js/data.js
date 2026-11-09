@@ -1994,7 +1994,7 @@ class Store {
     }
   }
 
-  // Chuẩn công thức Tổng Hard Test: SUM HARDTEST + OPTICS ASM + A IMP ASM + FOCUS
+  // Chuẩn công thức Tổng Hard Test: SUM HARDTEST + OPTICS ASM + A IMP ASM (Đã bỏ FOCUS theo yêu cầu)
   getHardtestTotalPlanForDate(dateStr, shift = 'ALL') {
     const rawManpower = (this.dataMass && this.dataMass.manpower) ? this.dataMass.manpower : [];
     const getVal = (st, s) => {
@@ -2014,11 +2014,9 @@ class Store {
     const optNight = getVal('OPTICS ASM', 'Night');
     const aimDay = getVal('A IMP ASM', 'Day');
     const aimNight = getVal('A IMP ASM', 'Night');
-    const focDay = getVal('FOCUS', 'Day');
-    const focNight = getVal('FOCUS', 'Night');
 
-    const totDay = Math.round((sumHtDay + optDay + aimDay + focDay) * 10) / 10;
-    const totNight = Math.round((sumHtNight + optNight + aimNight + focNight) * 10) / 10;
+    const totDay = Math.round((sumHtDay + optDay + aimDay) * 10) / 10;
+    const totNight = Math.round((sumHtNight + optNight + aimNight) * 10) / 10;
     const totAll = Math.round((totDay + totNight) * 10) / 10;
 
     const sNorm = String(shift || 'ALL').toUpperCase();
@@ -2440,9 +2438,9 @@ class Store {
       const focDay = getMpVal('FOCUS', d, 'Day');
       const focNight = getMpVal('FOCUS', d, 'Night');
 
-      // Row 16: Plan HT Total = SUM HARDTEST + OPTICS ASM + A IMP ASM + FOCUS
-      const planHtDay = Math.round((sumHtDay + optDay + aimDay + focDay) * 10) / 10;
-      const planHtNight = Math.round((sumHtNight + optNight + aimNight + focNight) * 10) / 10;
+      // Row 16: Plan HT Total = SUM HARDTEST + OPTICS ASM + A IMP ASM (Đã bỏ FOCUS theo yêu cầu)
+      const planHtDay = Math.round((sumHtDay + optDay + aimDay) * 10) / 10;
+      const planHtNight = Math.round((sumHtNight + optNight + aimNight) * 10) / 10;
 
       // Row 21: Actual Total Hard Test
       const actHtDay = this.getActualAttendance(d, 'Day', 'HARDTEST');
@@ -2919,7 +2917,7 @@ class Store {
           }
         });
 
-        // Định mức nhân lực cần (Plan People) Cụm Hardtest trong Tổng Hợp 2 Cụm: SUM HARDTEST + OPTICS ASM + A IMP ASM + FOCUS
+        // Định mức nhân lực cần (Plan People) Cụm Hardtest trong Tổng Hợp 2 Cụm: SUM HARDTEST + OPTICS ASM + A IMP ASM (Đã bỏ FOCUS)
         const groupHtPeopleDay = this.getHardtestTotalPlanForDate(d, 'Day');
         const groupHtPeopleNight = this.getHardtestTotalPlanForDate(d, 'Night');
 
@@ -3019,7 +3017,7 @@ class Store {
           }
         });
 
-        // Định mức nhân lực cần (Plan People) Tổng Hard Test: SUM HARDTEST + OPTICS ASM + A IMP ASM + FOCUS
+        // Định mức nhân lực cần (Plan People) Tổng Hard Test: SUM HARDTEST + OPTICS ASM + A IMP ASM (Đã bỏ FOCUS)
         const groupPeopleDay = this.getHardtestTotalPlanForDate(d, 'Day');
         const groupPeopleNight = this.getHardtestTotalPlanForDate(d, 'Night');
         const totalPeople = (shiftFilter === 'DAY') ? groupPeopleDay : (shiftFilter === 'NIGHT' ? groupPeopleNight : Math.round((groupPeopleDay + groupPeopleNight) * 10) / 10);
@@ -3102,7 +3100,7 @@ class Store {
           }
         });
 
-        // Định mức nhân lực cần (Plan People) Tổng Hard Test: SUM HARDTEST + OPTICS ASM + A IMP ASM + FOCUS
+        // Định mức nhân lực cần (Plan People) Tổng Hard Test: SUM HARDTEST + OPTICS ASM + A IMP ASM (Đã bỏ FOCUS)
         const groupPeopleDay = this.getHardtestTotalPlanForDate(d, 'Day');
         const groupPeopleNight = this.getHardtestTotalPlanForDate(d, 'Night');
         const totalPeople = (shiftFilter === 'DAY') ? groupPeopleDay : (shiftFilter === 'NIGHT' ? groupPeopleNight : Math.round((groupPeopleDay + groupPeopleNight) * 10) / 10);
@@ -3295,7 +3293,7 @@ class Store {
           }
         });
 
-        // Định mức nhân lực cần (Plan People) Tổng Hard Test: SUM HARDTEST + OPTICS ASM + A IMP ASM + FOCUS
+        // Định mức nhân lực cần (Plan People) Tổng Hard Test: SUM HARDTEST + OPTICS ASM + A IMP ASM (Đã bỏ FOCUS)
         const groupPeopleDay = this.getHardtestTotalPlanForDate(d, 'Day');
         const groupPeopleNight = this.getHardtestTotalPlanForDate(d, 'Night');
         const totalPeople = (shiftFilter === 'DAY') ? groupPeopleDay : (shiftFilter === 'NIGHT' ? groupPeopleNight : Math.round((groupPeopleDay + groupPeopleNight) * 10) / 10);

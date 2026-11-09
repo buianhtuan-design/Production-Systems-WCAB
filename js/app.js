@@ -6962,26 +6962,26 @@ function renderSfpdReportView() {
               }).join('')}
             </tr>
 
-            <!-- Row 15: FOCUS -->
-            <tr>
+            <!-- Row 15: FOCUS (Tách riêng, không tính vào HT Total) -->
+            <tr style="opacity: 0.65;">
               <td class="sfpd-code-col">15</td>
               <td style="text-align: center; color: var(--text-muted);">--</td>
-              <td style="font-weight: 700; color: #f8fafc;">FOCUS</td>
+              <td style="font-weight: 600; color: #cbd5e1;">FOCUS <span style="font-size: 0.72rem; color: #f59e0b; font-weight: normal;">(Tách riêng, không tính vào Total)</span></td>
               <td style="text-align: center; color: #94a3b8;">People</td>
               ${sfpdDates.map(d => {
                 const mp = sfpd.manpowerDaily[d];
                 return `
-                  <td class="font-mono" style="text-align: right; font-weight: 700; color: #60a5fa;">${mp.focus.day > 0 ? mp.focus.day.toFixed(1) : '0.0'}</td>
-                  <td class="font-mono" style="text-align: right; font-weight: 700; color: #93c5fd;">${mp.focus.night > 0 ? mp.focus.night.toFixed(1) : '0.0'}</td>
+                  <td class="font-mono" style="text-align: right; font-weight: 600; color: #94a3b8;">${mp.focus.day > 0 ? mp.focus.day.toFixed(1) : '0.0'}</td>
+                  <td class="font-mono" style="text-align: right; font-weight: 600; color: #94a3b8;">${mp.focus.night > 0 ? mp.focus.night.toFixed(1) : '0.0'}</td>
                 `;
               }).join('')}
             </tr>
 
-            <!-- Row 16: Plan HT Total (HÀNG VÀNG RỰC RỠ) -->
+            <!-- Row 16: Plan HT Total (HÀNG VÀNG RỰC RỠ: SUM HT + OPTICS + A IMP) -->
             <tr class="sfpd-row-yellow">
               <td class="sfpd-code-col" style="color: #0f172a; font-weight: 800;">16</td>
               <td style="text-align: center; font-weight: 900; color: #0f172a;">Plan</td>
-              <td style="font-weight: 900; color: #0f172a;">HT Total</td>
+              <td style="font-weight: 900; color: #0f172a;">HT Total (SUM HT + OPTICS + A IMP)</td>
               <td style="text-align: center; color: #0f172a; font-weight: 700;">--</td>
               ${sfpdDates.map(d => {
                 const mp = sfpd.manpowerDaily[d];
