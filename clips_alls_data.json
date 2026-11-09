@@ -1156,7 +1156,7 @@
       "agg": "",
       "device": "Ajax Hub 2 Plus (9NA/AFA) UPC with SIM black охоронна централь",
       "plan": 827.0,
-      "sheetFact": 192.0,
+      "sheetFact": 252.0,
       "done": 0,
       "isDone": false
     },
@@ -1166,7 +1166,7 @@
       "agg": "",
       "device": "Ajax Hub 2 Plus (9NA/AFA) UPC with SIM white охоронна централь",
       "plan": 1149.0,
-      "sheetFact": 720.0,
+      "sheetFact": 762.0,
       "done": 0,
       "isDone": false
     },
@@ -2136,7 +2136,7 @@
       "agg": "",
       "device": "Ajax DoorProtect Plus (9AU) black датчик відкриття",
       "plan": 1170.0,
-      "sheetFact": 618.0,
+      "sheetFact": 1022.0,
       "done": 0,
       "isDone": false
     },
@@ -2146,7 +2146,7 @@
       "agg": "",
       "device": "Ajax DoorProtect Plus (9AU) white датчик відкриття",
       "plan": 4581.0,
-      "sheetFact": 1880.0,
+      "sheetFact": 2100.0,
       "done": 0,
       "isDone": false
     },
@@ -3758,7 +3758,7 @@
       "agg": "",
       "device": "Ajax Hub 2 Plus (9NA/AFA) UPC with SIM black охоронна централь",
       "plan": 827.0,
-      "sheetFact": 192.0,
+      "sheetFact": 252.0,
       "done": 0,
       "isDone": false
     },
@@ -3768,7 +3768,7 @@
       "agg": "",
       "device": "Ajax Hub 2 Plus (9NA/AFA) UPC with SIM white охоронна централь",
       "plan": 1149.0,
-      "sheetFact": 720.0,
+      "sheetFact": 762.0,
       "done": 0,
       "isDone": false
     },
@@ -4738,7 +4738,7 @@
       "agg": "",
       "device": "Ajax DoorProtect Plus (9AU) black датчик відкриття",
       "plan": 1170.0,
-      "sheetFact": 618.0,
+      "sheetFact": 1022.0,
       "done": 0,
       "isDone": false
     },
@@ -4748,7 +4748,7 @@
       "agg": "",
       "device": "Ajax DoorProtect Plus (9AU) white датчик відкриття",
       "plan": 4581.0,
-      "sheetFact": 1880.0,
+      "sheetFact": 2100.0,
       "done": 0,
       "isDone": false
     },
@@ -5210,7 +5210,7 @@
   "clipAllPlant": "36.2%",
   "clipAllPlantPct": 36.2,
   "totalPlan": 485822.0,
-  "totalSheetFact": 117637.0,
+  "totalSheetFact": 118363.0,
   "hasPlanCount": 219,
   "gt90Count": 94,
   "lt90Count": 166,
@@ -9507,10 +9507,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-09 17:43:00",
+        "archivedAt": "2026-11-09 17:48:27",
         "totalItems": 260,
         "totalPlan": 485822.0,
-        "totalSheetFact": 117637.0,
+        "totalSheetFact": 118363.0,
         "qtyAllDevice": 260,
         "qtyDoneDevice": 94,
         "qtyNotDoneDevice": 166,
@@ -10672,7 +10672,7 @@
             "agg": "",
             "device": "Ajax Hub 2 Plus (9NA/AFA) UPC with SIM black охоронна централь",
             "plan": 827.0,
-            "sheetFact": 192.0,
+            "sheetFact": 252.0,
             "done": 0,
             "isDone": false
           },
@@ -10682,7 +10682,7 @@
             "agg": "",
             "device": "Ajax Hub 2 Plus (9NA/AFA) UPC with SIM white охоронна централь",
             "plan": 1149.0,
-            "sheetFact": 720.0,
+            "sheetFact": 762.0,
             "done": 0,
             "isDone": false
           },
@@ -11652,7 +11652,7 @@
             "agg": "",
             "device": "Ajax DoorProtect Plus (9AU) black датчик відкриття",
             "plan": 1170.0,
-            "sheetFact": 618.0,
+            "sheetFact": 1022.0,
             "done": 0,
             "isDone": false
           },
@@ -11662,7 +11662,7 @@
             "agg": "",
             "device": "Ajax DoorProtect Plus (9AU) white датчик відкриття",
             "plan": 4581.0,
-            "sheetFact": 1880.0,
+            "sheetFact": 2100.0,
             "done": 0,
             "isDone": false
           },
@@ -13274,7 +13274,7 @@
             "agg": "",
             "device": "Ajax Hub 2 Plus (9NA/AFA) UPC with SIM black охоронна централь",
             "plan": 827.0,
-            "sheetFact": 192.0,
+            "sheetFact": 252.0,
             "done": 0,
             "isDone": false
           },
@@ -13284,7 +13284,7 @@
             "agg": "",
             "device": "Ajax Hub 2 Plus (9NA/AFA) UPC with SIM white охоронна централь",
             "plan": 1149.0,
-            "sheetFact": 720.0,
+            "sheetFact": 762.0,
             "done": 0,
             "isDone": false
           },
@@ -14254,7 +14254,7 @@
             "agg": "",
             "device": "Ajax DoorProtect Plus (9AU) black датчик відкриття",
             "plan": 1170.0,
-            "sheetFact": 618.0,
+            "sheetFact": 1022.0,
             "done": 0,
             "isDone": false
           },
@@ -14264,7 +14264,7 @@
             "agg": "",
             "device": "Ajax DoorProtect Plus (9AU) white датчик відкриття",
             "plan": 4581.0,
-            "sheetFact": 1880.0,
+            "sheetFact": 2100.0,
             "done": 0,
             "isDone": false
           },
