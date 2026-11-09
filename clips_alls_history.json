@@ -4291,14 +4291,14 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-09 21:45:37",
+      "archivedAt": "2026-11-09 21:51:06",
       "totalItems": 260,
       "totalPlan": 485822.0,
-      "totalSheetFact": 118433.0,
+      "totalSheetFact": 118829.0,
       "qtyAllDevice": 260,
-      "qtyDoneDevice": 94,
-      "qtyNotDoneDevice": 166,
-      "clipAllPlant": "36.2%",
+      "qtyDoneDevice": 96,
+      "qtyNotDoneDevice": 164,
+      "clipAllPlant": "36.9%",
       "items": [
         {
           "category": "Comfort and productivity",
@@ -4566,7 +4566,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) WL Standard ASP white датчик диму та температури",
           "plan": 7237.0,
-          "sheetFact": 4880.0,
+          "sheetFact": 4897.0,
           "done": 0,
           "isDone": false
         },
@@ -4576,9 +4576,9 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8IN) white датчик диму та температури",
           "plan": 50.0,
-          "sheetFact": 6.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 58.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -4586,9 +4586,9 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8MA) black датчик диму та температури",
           "plan": 362.0,
-          "sheetFact": 3.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 330.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -7168,7 +7168,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) WL Standard ASP white датчик диму та температури",
           "plan": 7237.0,
-          "sheetFact": 4880.0,
+          "sheetFact": 4897.0,
           "done": 0,
           "isDone": false
         },
@@ -7178,9 +7178,9 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8IN) white датчик диму та температури",
           "plan": 50.0,
-          "sheetFact": 6.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 58.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax FireProtect 2 RB (Heat/Smoke) (8MA) black датчик диму та температури": {
           "category": "",
@@ -7188,9 +7188,9 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8MA) black датчик диму та температури",
           "plan": 362.0,
-          "sheetFact": 3.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 330.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax FireProtect 2 RB (Heat/Smoke) (8MA) white датчик диму та температури": {
           "category": "",
