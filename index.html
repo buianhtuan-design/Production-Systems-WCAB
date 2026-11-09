@@ -1,0 +1,1944 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>Ajax ProPlan MES - Kế Hoạch Sản Xuất & Điều Độ Chuyền</title>
+  <meta name="description" content="Hệ thống điều độ sản xuất, tính toán năng suất chuyền, tối ưu hóa phân bổ lắp ráp và đồng bộ dữ liệu thời gian thực từ Google Sheets.">
+
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="css/app.css?v=20261104_arial_dark_v2">
+</head>
+<body>
+
+  <!-- ========================================== -->
+  <!-- AUTHENTICATION & ROLE-BASED ACCESS CONTROL -->
+  <!-- ========================================== -->
+  <div id="authLockOverlay" class="auth-lock-overlay" style="display: none;">
+    <div class="auth-lock-card" id="authLockCard">
+      <div class="auth-shield-icon">
+        <div class="shield-glow"></div>
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <rect x="9" y="11" width="6" height="5" rx="1"/>
+          <path d="M10 11V9a2 2 0 1 1 4 0v2"/>
+        </svg>
+      </div>
+
+      <div class="auth-header">
+        <h2>Phân Quyền & Xác Thực</h2>
+        <span class="auth-subtitle">Ajax ProPlan MES — Chọn vai trò đăng nhập của bạn</span>
+        <div class="auth-tag">🔒 Nội Bộ Ajax Systems</div>
+      </div>
+
+      <!-- Selectable Role Tabs -->
+      <div class="auth-role-tabs" id="authRoleTabs">
+        <div class="auth-role-tab active" data-role="admin" onclick="selectAuthRole('admin')" title="Toàn quyền quản trị, đồng bộ và khôi phục dữ liệu">
+          <span class="auth-tab-icon">👑</span>
+          <span class="auth-tab-title">Admin</span>
+          <span class="auth-tab-sub">Toàn quyền</span>
+        </div>
+        <div class="auth-role-tab" data-role="editor" onclick="selectAuthRole('editor')" title="Được nhập dữ liệu, điều chỉnh chuyền, chọn Line Support và chạy Simulator">
+          <span class="auth-tab-icon">✍️</span>
+          <span class="auth-tab-title">Chỉnh Sửa</span>
+          <span class="auth-tab-sub">Nhập data</span>
+        </div>
+        <div class="auth-role-tab" data-role="viewer" onclick="selectAuthRole('viewer')" title="Chỉ xem báo cáo, tra cứu kế hoạch, khóa sửa đổi dữ liệu">
+          <span class="auth-tab-icon">👁️</span>
+          <span class="auth-tab-title">Chỉ Xem</span>
+          <span class="auth-tab-sub">Viewer</span>
+        </div>
+      </div>
+
+      <!-- Dynamic Role Description Box -->
+      <div id="authRoleDescBox" class="auth-role-desc-box">
+        <strong>👑 Quyền Admin:</strong> Toàn quyền quản trị hệ thống, đồng bộ Google Sheets, khôi phục dữ liệu gốc, phân bổ và điều chỉnh mọi kế hoạch.
+      </div>
+
+      <form id="authLockForm" onsubmit="handleAuthSubmit(event)">
+        <div class="auth-field-group" id="authPasswordGroup">
+          <label for="authPasswordInput" id="authPasswordLabel">Mật khẩu truy cập Admin:</label>
+          <div class="auth-input-wrapper">
+            <span class="auth-input-icon">🔑</span>
+            <input type="password" id="authPasswordInput" class="auth-password-input" 
+                   placeholder="Nhập mật khẩu để mở khóa..." autocomplete="current-password" autofocus />
+            <button type="button" class="btn-toggle-pwd" onclick="toggleAuthPasswordVisibility()" title="Ẩn/Hiện mật khẩu">
+              👁️
+            </button>
+          </div>
+        </div>
+
+        <div id="authErrorMessage" class="auth-error-msg" style="display: none;">
+          ⚠️ Mật khẩu không chính xác cho vai trò này. Vui lòng thử lại!
+        </div>
+
+        <div class="auth-options-row">
+          <label class="auth-remember-label">
+            <input type="checkbox" id="authRememberDevice" checked>
+            <span>Ghi nhớ phiên trên thiết bị này</span>
+          </label>
+        </div>
+
+        <button type="submit" id="btnAuthSubmit" class="btn-auth-unlock">
+          <span>🔓 Đăng Nhập Hệ Thống</span>
+        </button>
+
+        <!-- Quick Viewer Login Button (Always accessible) -->
+        <button type="button" class="btn-quick-viewer" onclick="handleQuickViewerLogin()" title="Vào xem báo cáo ngay không cần mật khẩu">
+          <span>👁️ Vào Xem Nhanh (Quyền Viewer)</span>
+        </button>
+      </form>
+
+      <div class="auth-footer-note">
+        🛡️ Phân quyền 3 cấp độ: <strong>Admin</strong> (Toàn quyền) • <strong>Chỉnh sửa</strong> (Nhập data) • <strong>Viewer</strong> (Chỉ xem).
+      </div>
+    </div>
+  </div>
+
+
+  <div class="app-layout">
+    <!-- ========================================== -->
+    <!-- SIDEBAR NAVIGATION                         -->
+    <!-- ========================================== -->
+    <aside class="sidebar" id="appSidebar">
+      <div class="brand-header">
+        <div class="brand-logo">AP</div>
+        <div class="brand-text">
+          <h1>Ajax ProPlan</h1>
+          <span>MES IE Planner</span>
+        </div>
+      </div>
+
+      <nav class="nav-list">
+        <!-- GROUP 1: PHÂN HỆ HOẠT ĐỘNG CHÍNH THỨC -->
+        <div class="nav-group-section">
+          <div class="nav-section-title">
+            <span>PHÂN HỆ CHÍNH</span>
+            <span class="badge-status-dot active" title="Đang sử dụng"></span>
+          </div>
+          <a href="#datamass" class="nav-link active nav-link-primary" data-tab="datamass" data-title="Kế Hoạch Tổng Thể (Data_Mass)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/></svg>
+            <div class="nav-label-wrap">
+              <span class="nav-label-main">Kế Hoạch Tổng Thể</span>
+              <span class="nav-label-sub">Data_Mass</span>
+            </div>
+            <span class="nav-badge-pill in-use">Đang dùng</span>
+          </a>
+          <a href="#capacity" class="nav-link nav-link-primary" data-tab="capacity" data-title="Năng Lực Sản Xuất (Capacity Planning)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <div class="nav-label-wrap">
+              <span class="nav-label-main">Năng Lực &amp; Định Mức</span>
+              <span class="nav-label-sub">Capacity (Assembly)</span>
+            </div>
+            <span class="nav-badge-pill" style="background: rgba(139, 92, 246, 0.2); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.4);">Mới</span>
+          </a>
+          <a href="#wip" class="nav-link nav-link-primary" data-tab="wip" data-title="Kiểm Soát Tồn Chuyền (WIP Control)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            <div class="nav-label-wrap">
+              <span class="nav-label-main">Kiểm Soát Tồn Chuyền</span>
+              <span class="nav-label-sub">WIP Control</span>
+            </div>
+            <span class="nav-badge-pill" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);">Mới</span>
+          </a>
+          <a href="#clips-all-plan" class="nav-link nav-link-primary" data-tab="clips-all-plan" data-title="Tra Cứu Clips All Plan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+            <div class="nav-label-wrap">
+              <span class="nav-label-main">Tra Cứu Clips All Plan</span>
+              <span class="nav-label-sub">Chuỗi SMD ➔ MB</span>
+            </div>
+            <span class="nav-badge-pill" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4);">Mới</span>
+          </a>
+          <a href="#kpi-result" class="nav-link nav-link-primary" data-tab="kpi-result" data-title="Báo Cáo KPI Kết QuẢ (KPI Result)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            <div class="nav-label-wrap">
+              <span class="nav-label-main">KPI Result</span>
+              <span class="nav-label-sub">Chỉ Số Vận Hành &amp; Kết Quả</span>
+            </div>
+            <span class="nav-badge-pill" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4);">Mới</span>
+          </a>
+          <a href="#prod-history" class="nav-link nav-link-primary" data-tab="prod-history" data-title="Tra Cứu Lịch Sử Sản Xuất">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <div class="nav-label-wrap">
+              <span class="nav-label-main">Lịch Sử Sản Xuất</span>
+              <span class="nav-label-sub">So Sánh Công Đoạn</span>
+            </div>
+            <span class="nav-badge-pill" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);">Mới</span>
+          </a>
+        </div>
+
+        <!-- GROUP 2: CÁC PHÂN HỆ ĐANG PHÁT TRIỂN (COLLAPSIBLE / FILTERED) -->
+        <div class="nav-group-section nav-dev-section">
+          <div class="nav-dev-toggle-bar" id="devNavToggle" onclick="toggleDevModules()" title="Bấm để ẩn / hiện danh sách phân hệ đang phát triển">
+            <div class="nav-dev-toggle-left">
+              <span class="nav-dev-icon">🚧</span>
+              <span class="nav-dev-title">Đang phát triển</span>
+              <span class="nav-dev-count">7</span>
+            </div>
+            <span class="nav-dev-arrow" id="devNavArrow">▼</span>
+          </div>
+
+          <div class="nav-dev-sublist" id="devNavSublist" style="display: none;">
+            <a href="#dashboard" class="nav-link nav-link-dev" data-tab="dashboard" data-title="Tổng Quan (Dashboard)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+              <span>Tổng Quan (Dashboard)</span>
+              <span class="nav-badge-dev-mini">Dev</span>
+            </a>
+            <a href="#as" class="nav-link nav-link-dev" data-tab="as" data-title="Kế Hoạch Lắp Ráp (As)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              <span>Kế Hoạch Lắp Ráp (As)</span>
+              <span class="nav-badge-dev-mini">Dev</span>
+            </a>
+            <a href="#ht" class="nav-link nav-link-dev" data-tab="ht" data-title="Hoàn Thiện / Đóng Gói (HT)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              <span>Hoàn Thiện / Đóng Gói (HT)</span>
+              <span class="nav-badge-dev-mini">Dev</span>
+            </a>
+            <a href="#matrix" class="nav-link nav-link-dev" data-tab="matrix" data-title="Ma Trận Năng Suất (Matrix)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+              <span>Ma Trận Năng Suất (Matrix)</span>
+              <span class="nav-badge-dev-mini">Dev</span>
+            </a>
+            <a href="#scheduler" class="nav-link nav-link-dev" data-tab="scheduler" data-title="Điều Độ & Tải Chuyền">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>Điều Độ & Tải Chuyền</span>
+              <span class="nav-badge-dev-mini">Dev</span>
+            </a>
+            <a href="#ftt" class="nav-link nav-link-dev" data-tab="ftt" data-title="Chất Lượng & FTT">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span>Chất Lượng & FTT</span>
+              <span class="nav-badge-dev-mini">Dev</span>
+            </a>
+            <a href="#settings" class="nav-link nav-link-dev" data-tab="settings" data-title="Kết Nối Google Sheets">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              <span>Kết Nối Google Sheets</span>
+              <span class="nav-badge-dev-mini">Dev</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="cloud-status-box">
+          <div class="cloud-status-indicator">
+            <span id="cloudStatusDot" class="status-dot"></span>
+            <span style="color: var(--text-primary); font-size: 0.8rem;">Google Sheets</span>
+          </div>
+          <div id="cloudStatusText" style="color: var(--text-muted); font-size: 0.7rem;">Sẵn sàng</div>
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="handleAppLock()" 
+                style="width: 100%; margin-top: 0.65rem; font-size: 0.75rem; padding: 0.4rem; justify-content: center; gap: 0.4rem; background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: #f87171;" 
+                title="Khóa màn hình truy cập">
+          <span>🔒 Khóa Màn Hình</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ========================================== -->
+    <!-- MAIN CONTENT WRAPPER                       -->
+    <!-- ========================================== -->
+    <div class="content-wrapper" id="mainContentWrapper">
+      <!-- TOP NAVIGATION BAR -->
+      <header class="top-nav">
+        <div class="top-nav-left">
+          <button type="button" class="btn-sidebar-toggle" id="sidebarCollapseBtn" onclick="toggleSidebarCollapse()" title="Thu gọn / Mở rộng Sidebar để mở rộng bảng">
+            <span id="sidebarToggleIcon">◀</span>
+          </button>
+          <h2 id="viewTitle" class="current-view-title">Kế Hoạch Tổng Thể (Data_Mass)</h2>
+          <span id="headerSyncBadge" class="live-sync-badge">
+            <span class="status-dot"></span> Sẵn sàng
+          </span>
+        </div>
+
+        <div class="top-nav-actions">
+          <!-- User Role Status Badge (Click to Switch Role) -->
+          <div id="topNavRoleBadge" class="top-nav-role-badge role-admin" onclick="openRoleSwitchModal()" title="Bấm để xem quyền hạn hoặc đổi vai trò (Admin / Chỉnh sửa / Chỉ xem)">
+            <span class="role-icon">👑</span>
+            <div class="role-text-wrap">
+              <span class="role-name">Admin</span>
+              <span class="role-tag">Toàn quyền</span>
+            </div>
+            <span class="role-arrow">▾</span>
+          </div>
+
+          <!-- Scale Switcher (Auto Fit for MacBook M5) -->
+          <div class="scale-switcher" id="scaleSwitcherGroup" title="Điều chỉnh tỉ lệ hiển thị giao diện">
+            <span class="scale-switcher-label">🖥️ Tỉ lệ:</span>
+            <button type="button" class="btn-scale-opt active" data-scale="auto" onclick="setAppScale('auto')" title="Tự động co giãn tối ưu theo màn hình">Auto</button>
+            <button type="button" class="btn-scale-opt" data-scale="0.85" onclick="setAppScale(0.85)">85%</button>
+            <button type="button" class="btn-scale-opt" data-scale="1.0" onclick="setAppScale(1.0)">100%</button>
+          </div>
+
+          <!-- Font Size Switcher (Auto / Standard / Large / XLarge) -->
+          <div class="scale-switcher" id="fontScaleSwitcherGroup" title="Điều chỉnh kích cỡ chữ cho dễ đọc và theo dõi">
+            <span class="scale-switcher-label">🔤 Chữ:</span>
+            <button type="button" class="btn-font-opt active" data-font="auto" onclick="setFontScale('auto')" title="Tự động tối ưu cỡ chữ theo màn hình">Auto</button>
+            <button type="button" class="btn-font-opt" data-font="standard" onclick="setFontScale('standard')" title="Cỡ chữ Vừa chuẩn (14.5px)">Vừa</button>
+            <button type="button" class="btn-font-opt" data-font="large" onclick="setFontScale('large')" title="Cỡ chữ Lớn (+15%) dễ nhìn">Lớn</button>
+            <button type="button" class="btn-font-opt" data-font="xlarge" onclick="setFontScale('xlarge')" title="Cỡ chữ Rất Lớn (+30%) cho màn hình xa">Rất Lớn</button>
+          </div>
+
+          <button id="btnResetDefaultData" class="btn btn-secondary role-admin-only" onclick="handleResetDefaultData()" title="Khôi phục lại toàn bộ dữ liệu gốc chuẩn từ 15/10 đến 28/10 (Chỉ Admin)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <span>Dữ Liệu Gốc</span>
+          </button>
+
+          <button id="btnCloudSync" class="btn btn-secondary" onclick="window.SyncService.fetchLiveData()" title="Đồng bộ ngay với Google Sheets">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            <span>Đồng Bộ Cloud</span>
+          </button>
+
+          <button id="btnAutoAssignAll" class="btn btn-primary" onclick="handleAutoAssignAll()" title="Tự động phân bổ chuyền năng suất cao nhất">
+            <span>⚡ Tự Động Gán Line</span>
+          </button>
+
+          <button id="btnExportCSV" class="btn btn-secondary" onclick="handleExportCSV()" title="Xuất file CSV kế hoạch">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Xuất CSV</span>
+          </button>
+
+          <button id="btnAppLock" class="btn btn-secondary" onclick="handleAppLock()" title="Khóa màn hình bảo mật" style="background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.35); color: #f87171;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>Khóa</span>
+          </button>
+
+          <button id="themeToggleBtn" class="btn btn-secondary theme-toggle-btn" title="Đổi giữa Nền Tối Tương Phản Cao và Nền Sáng Dễ Nhìn" style="display: inline-flex; align-items: center; gap: 0.4rem; font-weight: 700;">
+            <span id="themeIcon">☀️</span>
+            <span id="themeText">Nền Sáng</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- PAGE MAIN VIEWS -->
+      <main class="page-view">
+        <!-- ========================================== -->
+        <!-- VIEW 1: DASHBOARD                          -->
+        <!-- ========================================== -->
+        <section id="tab-dashboard" class="tab-content">
+          <div class="dev-notice-banner">
+            <div class="dev-notice-left">
+              <span class="dev-notice-icon">🚧</span>
+              <div class="dev-notice-text">
+                <strong>Phân hệ Tổng Quan (Dashboard) đang trong quá trình phát triển</strong>
+                <span>Hệ thống đang tập trung hoàn thiện tab <strong>[Kế Hoạch Tổng Thể (Data_Mass)]</strong> trước theo tiến độ ưu tiên.</span>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary dev-notice-action" onclick="switchToTab('datamass')">
+              <span>⬅️ Về Kế Hoạch Tổng Thể (Đang dùng)</span>
+            </button>
+          </div>
+
+          <!-- KPI Cards -->
+          <div class="kpi-row">
+            <div class="card">
+              <div class="kpi-title-row">
+                <span class="kpi-title">Kế Hoạch (Plan Qty)</span>
+                <div class="kpi-icon-wrap" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">📋</div>
+              </div>
+              <div id="kpiPlanQty" class="kpi-number font-mono">0</div>
+              <div class="kpi-subtext">Tổng sản lượng yêu cầu As</div>
+            </div>
+
+            <div class="card">
+              <div class="kpi-title-row">
+                <span class="kpi-title">Thực Tế (Fact Qty)</span>
+                <div class="kpi-icon-wrap" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">🏭</div>
+              </div>
+              <div id="kpiFactQty" class="kpi-number font-mono">0</div>
+              <div class="kpi-subtext">Đã sản xuất lũy kế</div>
+            </div>
+
+            <div class="card">
+              <div class="kpi-title-row">
+                <span class="kpi-title">Chênh Lệch (Gap Qty)</span>
+                <div class="kpi-icon-wrap" style="background: rgba(239, 68, 68, 0.15); color: #f87171;">📉</div>
+              </div>
+              <div id="kpiGapQty" class="kpi-number font-mono">0</div>
+              <div class="kpi-subtext">Số lượng cần bù tiếp</div>
+            </div>
+
+            <div class="card">
+              <div class="kpi-title-row">
+                <span class="kpi-title">Tỷ Lệ Hoàn Thành</span>
+                <div class="kpi-icon-wrap" style="background: rgba(139, 92, 246, 0.15); color: #c084fc;">🎯</div>
+              </div>
+              <div id="kpiRate" class="kpi-number font-mono">0%</div>
+              <div class="kpi-subtext">Fact / Plan</div>
+            </div>
+
+            <div class="card">
+              <div class="kpi-title-row">
+                <span class="kpi-title">Tổng Giờ Cần (Actual)</span>
+                <div class="kpi-icon-wrap" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">⏱️</div>
+              </div>
+              <div id="kpiHoursActual" class="kpi-number font-mono">0 h</div>
+              <div class="kpi-subtext">Theo Productivity từng Line</div>
+            </div>
+
+            <div class="card">
+              <div class="kpi-title-row">
+                <span class="kpi-title">FTT Trung Bình</span>
+                <div class="kpi-icon-wrap" style="background: rgba(6, 182, 212, 0.15); color: #22d3ee;">🛡️</div>
+              </div>
+              <div id="kpiAvgFtt" class="kpi-number font-mono">0%</div>
+              <div class="kpi-subtext">Tỷ lệ First Time Through</div>
+            </div>
+          </div>
+
+          <!-- Capacity & Top Gap Grid -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+            <!-- Line Load Progress -->
+            <div class="card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                <h3 style="font-size: 1rem; font-weight: 700;">📊 Phân Bổ Tải Theo Chuyền (2 Shifts = 21.66h)</h3>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">10 Chuyền Lắp Ráp</span>
+              </div>
+              <div id="dashboardLineList">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Quick Info & Instructions -->
+            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem;">⚡ Tính Năng Điều Độ Thông Minh</h3>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1rem;">
+                  Hệ thống tự động tra cứu <strong>Ma Trận Năng Suất (Productivity Matrix)</strong> của 10 Line (1A, 2A, 1B, 2B, 1C, 2C, 1D, 2D, 3A, 3B) để tính chính xác số giờ cần sản xuất thực tế:
+                </p>
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1rem;">
+                  <div style="font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem; color: #60a5fa;">Công thức chuẩn IE:</div>
+                  <code class="font-mono" style="font-size: 0.8rem; color: var(--text-primary); display: block; line-height: 1.6;">
+                    • Số Giờ Plan = (|Gap Qty| × CT NORM) / 3600<br>
+                    • Số Giờ Actual = Số Giờ Plan / (Productivity% / 100)
+                  </code>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
+                  Nhấn nút <strong>"⚡ Tự Động Gán Line"</strong> ở góc trên để hệ thống tự quét và phân bổ toàn bộ model vào chuyền có năng suất cao nhất (100% hoặc 85%).
+                </div>
+              </div>
+
+              <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border-glass); display: flex; gap: 0.75rem;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="document.querySelector('[data-tab=as]').click()">
+                  Xem Kế Hoạch Lắp Ráp &rarr;
+                </button>
+                <button class="btn btn-secondary" style="flex: 1;" onclick="document.querySelector('[data-tab=matrix]').click()">
+                  Xem Ma Trận Năng Suất &rarr;
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- ========================================== -->
+        <!-- VIEW: MASTER SCHEDULE (Data_Mass)          -->
+        <!-- ========================================== -->
+        <section id="tab-datamass" class="tab-content active">
+
+          <!-- ======================================================== -->
+          <!-- 1. TOP CONTROL BAR: CHỌN NGÀY / KHOẢNG NGÀY -> CÔNG ĐOẠN -->
+          <!-- ======================================================== -->
+          <div class="card filter-card" id="datamassFilterCard" style="margin-bottom: 0.85rem; padding: 0; background: var(--bg-card); border: 1px solid var(--border-glass); overflow: visible; position: relative; z-index: 100;">
+            <div class="filter-card-header" style="justify-content: flex-start; gap: 1.25rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 0.8rem; font-weight: 800; color: #60a5fa;">⚡ BỘ LỌC KẾ HOẠCH &amp; CÔNG ĐOẠN</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <button type="button" id="btnMacBookCompactToggle" class="btn-filter-toggle" onclick="toggleMacBookCompactMode()" title="Chuyển đổi giao diện thu gọn cho màn hình MacBook">
+                  📐 Gọn (MacBook)
+                </button>
+                <button type="button" id="btnFilterToggle" class="btn-filter-toggle" onclick="toggleFilterCollapse()" title="Thu gọn bộ lọc để xem trọn vẹn bảng số liệu">
+                  🔼 Thu gọn bộ lọc
+                </button>
+              </div>
+            </div>
+
+            <!-- Compact Summary Strip when collapsed -->
+            <div class="filter-compact-summary" id="datamassFilterCompactSummary"></div>
+
+            <div class="filter-body" id="datamassFilterBody" style="padding: 0.85rem 1.15rem;">
+              <!-- Row 1: Khoảng Ngày & Lọc Ca & Bảng Tổng Hợp Nhanh Chỉ Số (Gọn gàng trên cùng 1 hàng) -->
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.85rem; margin-bottom: 0.65rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border-glass);">
+                
+                <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.85rem;">
+                  <!-- Khoảng ngày Từ -> Đến -->
+                  <div style="display: flex; align-items: center; gap: 0.35rem;">
+                    <span style="font-size: 0.8rem; font-weight: 800; color: #60a5fa; display: flex; align-items: center; gap: 0.25rem;">
+                      📅 Ngày:
+                    </span>
+                    <span style="font-size: 0.725rem; color: var(--text-muted);">Từ</span>
+                    <input type="date" id="datamassFromDate" class="select-filter font-mono" value="" onchange="handleDateRangeInputsChange()" oninput="handleDateRangeInputsChange()" style="padding: 0.25rem 0.5rem; font-size: 0.775rem;">
+                    <span style="font-size: 0.725rem; color: var(--text-muted);">Đến</span>
+                    <input type="date" id="datamassToDate" class="select-filter font-mono" value="" onchange="handleDateRangeInputsChange()" oninput="handleDateRangeInputsChange()" style="padding: 0.25rem 0.5rem; font-size: 0.775rem;">
+                    <span id="datamassWeekdayTag"></span>
+                  </div>
+
+                  <!-- Shift Filter (Day / Night) -->
+                  <div style="display: flex; align-items: center; gap: 0.4rem;">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-secondary);">
+                      ☀️/🌙 Ca:
+                    </span>
+                    <div class="btn-group" id="shiftFilterGroup">
+                      <button class="btn-mode active" data-shift="ALL" onclick="handleShiftFilterChange('ALL')" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;">
+                        🌟 Cả 2 Ca
+                      </button>
+                      <button class="btn-mode" data-shift="DAY" onclick="handleShiftFilterChange('DAY')" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;">
+                        ☀️ Ca Ngày
+                      </button>
+                      <button class="btn-mode" data-shift="NIGHT" onclick="handleShiftFilterChange('NIGHT')" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;">
+                        🌙 Ca Đêm
+                      </button>
+                      <button class="btn-mode" data-shift="SPLIT" onclick="handleShiftFilterChange('SPLIT')" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;">
+                        🔄 Phân Tách 2 Ca
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bảng Tổng Hợp Nhanh Chỉ Số (Đặt gọn cạnh phải Phân Tách 2 Ca theo ảnh số 1) -->
+                <div id="datamassInlineKpiSummary" style="display: flex; align-items: center; background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; padding: 0.25rem 0.65rem; box-shadow: 0 2px 6px rgba(0,0,0,0.25);">
+                  <table style="border-collapse: collapse; font-size: 0.75rem; line-height: 1.25; text-align: right;">
+                    <thead>
+                      <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); color: #94a3b8; font-size: 0.675rem; text-transform: uppercase;">
+                        <th style="text-align: left; padding: 0.15rem 0.65rem 0.2rem 0.2rem; font-weight: 700; color: #cbd5e1;">Hạng Mục</th>
+                        <th style="padding: 0.15rem 0.65rem 0.2rem 0.35rem; font-weight: 700; color: #60a5fa;">Plan Cần</th>
+                        <th style="padding: 0.15rem 0.65rem 0.2rem 0.35rem; font-weight: 700; color: #34d399;">Thực Tế Có</th>
+                        <th style="padding: 0.15rem 0.2rem 0.2rem 0.35rem; font-weight: 700; color: #fbbf24;">Chênh Lệch</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Hàng 1: Nhân Lực -->
+                      <tr style="border-bottom: 1px dashed rgba(255, 255, 255, 0.08);">
+                        <td style="text-align: left; padding: 0.2rem 0.65rem 0.15rem 0.2rem; font-weight: 700; color: #fbbf24; white-space: nowrap;">
+                          <span style="margin-right: 0.25rem;">👥</span>Nhân Lực
+                        </td>
+                        <td style="padding: 0.2rem 0.65rem 0.15rem 0.35rem; white-space: nowrap;">
+                          <div id="dmMpKpiPlan" class="font-mono" style="font-weight: 800; color: #fbbf24; font-size: 0.85rem;">0 lượt ng</div>
+                        </td>
+                        <td style="padding: 0.2rem 0.65rem 0.15rem 0.35rem; white-space: nowrap;">
+                          <div id="dmMpKpiActual" class="font-mono" style="font-weight: 800; color: #34d399; font-size: 0.85rem;">0 lượt ng</div>
+                        </td>
+                        <td style="padding: 0.2rem 0.2rem 0.15rem 0.35rem; white-space: nowrap;">
+                          <div id="dmMpKpiBalance" class="font-mono" style="font-weight: 800; font-size: 0.85rem;">0 lượt ng</div>
+                        </td>
+                      </tr>
+                      <!-- Hàng 2: Output Plan -->
+                      <tr>
+                        <td style="text-align: left; padding: 0.15rem 0.65rem 0.2rem 0.2rem; font-weight: 700; color: #60a5fa; white-space: nowrap;">
+                          <span style="margin-right: 0.25rem;">📦</span>Output Plan
+                        </td>
+                        <td style="padding: 0.15rem 0.65rem 0.2rem 0.35rem; white-space: nowrap;">
+                          <div id="dmKpiWeekPlan" class="font-mono" style="font-weight: 800; color: #60a5fa; font-size: 0.85rem;">0</div>
+                        </td>
+                        <td style="padding: 0.15rem 0.65rem 0.2rem 0.35rem; white-space: nowrap;">
+                          <div id="dmKpiWeekFact" class="font-mono" style="font-weight: 800; color: #34d399; font-size: 0.85rem;">0</div>
+                        </td>
+                        <td style="padding: 0.15rem 0.2rem 0.2rem 0.35rem; white-space: nowrap;">
+                          <div id="dmKpiWeekGap" class="font-mono" style="font-weight: 800; font-size: 0.85rem;">0</div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Row 2: Công Đoạn (Stage) Selection (Sát bên trái) -->
+              <div style="display: flex; align-items: center; justify-content: flex-start; flex-wrap: wrap; gap: 1.25rem;">
+                <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
+                  <span style="font-size: 0.8rem; font-weight: 800; color: #a78bfa; display: flex; align-items: center; gap: 0.35rem;">
+                    🏭 2. CÔNG ĐOẠN:
+                  </span>
+                  <!-- Custom Multi-Select Dropdown Component -->
+                  <div class="stage-multiselect-container" id="stageMultiSelectContainer" style="position: relative; display: inline-block;">
+                    <button type="button" id="stageMultiSelectTrigger" class="stage-multiselect-trigger" onclick="toggleStageMultiSelectDropdown(event)" title="Nhấn để chọn 1 hoặc nhiều công đoạn">
+                      <span id="stageMultiSelectLabel" style="display: flex; align-items: center; gap: 0.4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px;">
+                        <span>⭐ Total Hard Test</span>
+                      </span>
+                      <span class="stage-dropdown-arrow" style="font-size: 0.65rem; color: #a78bfa; margin-left: 0.35rem;">▼</span>
+                    </button>
+
+                    <!-- Popover Menu -->
+                    <div id="stageMultiSelectMenu" class="stage-multiselect-menu" style="display: none;">
+                      <div class="stage-menu-header">
+                        <span style="font-size: 0.775rem; font-weight: 800; color: #c4b5fd; display: flex; align-items: center; gap: 0.35rem;">
+                          🏭 BỘ LỌC CÔNG ĐOẠN (CHỌN 1 HOẶC NHIỀU)
+                        </span>
+                        <div style="display: flex; gap: 0.35rem; align-items: center;">
+                          <button type="button" class="btn-xs btn-outline" onclick="handleStageSelectAll(event)" title="Chọn tất cả công đoạn">✓ Chọn Hết</button>
+                          <button type="button" class="btn-xs btn-outline" onclick="handleStageClearAll(event)" title="Bỏ chọn tất cả">✗ Bỏ Chọn</button>
+                          <button type="button" class="btn-xs btn-outline stage-mobile-close-btn" onclick="closeStageMultiSelectDropdown(event)" title="Đóng bảng chọn" style="background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); color: #fca5a5; font-weight: 700; padding: 2px 8px;">✕ Đóng</button>
+                        </div>
+                      </div>
+
+                      <!-- Nhóm Cụm Tổng Hợp -->
+                      <div class="stage-group-section">
+                        <div class="stage-group-title">── CÁC CỤM TỔNG HỢP CHÍNH (CLICK ĐỂ CHỌN NHANH) ──</div>
+                        <div class="stage-quick-bundles">
+                          <div class="bundle-item" data-bundle="HARDTEST_TOTAL" onclick="handleStageGroupSelect('HARDTEST_TOTAL', event)">
+                            <div class="bundle-name">⭐ Total Hard Test</div>
+                            <div class="bundle-sub">4 c/đ: HT, Optics, A Imp, Focus</div>
+                          </div>
+                          <div class="bundle-item" data-bundle="ASSEMBLY" onclick="handleStageGroupSelect('ASSEMBLY', event)">
+                            <div class="bundle-name">🔧 ASSEMBLY</div>
+                            <div class="bundle-sub">Lắp ráp cụm chi tiết</div>
+                          </div>
+                          <div class="bundle-item" data-bundle="HARDTEST_AND_ASSEMBLY" onclick="handleStageGroupSelect('HARDTEST_AND_ASSEMBLY', event)">
+                            <div class="bundle-name">🚀 Tổng SFPD</div>
+                            <div class="bundle-sub">Assembly + Total Hard Test</div>
+                          </div>
+                          <div class="bundle-item" data-bundle="FPD_TOTAL" onclick="handleStageGroupSelect('FPD_TOTAL', event)">
+                            <div class="bundle-name">📦 Tổng FPD</div>
+                            <div class="bundle-sub">Long Test, Test Room, QC, PKG</div>
+                          </div>
+                          <div class="bundle-item" data-bundle="MASTERBOX_TOTAL" onclick="handleStageGroupSelect('MASTERBOX_TOTAL', event)">
+                            <div class="bundle-name">💻 Tổng MasterBox</div>
+                            <div class="bundle-sub">COM PKG, COM PKG AUTO, MB</div>
+                          </div>
+                          <div class="bundle-item" data-bundle="ALL" onclick="handleStageGroupSelect('ALL', event)">
+                            <div class="bundle-name">🏭 Toàn Bộ Nhà Máy (ALL)</div>
+                            <div class="bundle-sub">Tất cả các công đoạn</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Checklist Các Công Đoạn Đơn Lẻ -->
+                      <div class="stage-group-section" style="margin-top: 0.5rem;">
+                        <div class="stage-group-title">── TỪNG CÔNG ĐOẠN ĐƠN LẺ (CHỌN 1 HOẶC NHIỀU) ──</div>
+                        <div class="stage-checkbox-list" id="stageCheckboxList">
+                          <!-- Sẽ được đồng bộ động qua js/app.js -->
+                        </div>
+                      </div>
+
+                      <div class="stage-menu-footer">
+                        <span id="stageSelectedCountText" style="font-size: 0.725rem; color: #94a3b8; font-weight: 600;">
+                          Đang chọn: ⭐ Total Hard Test
+                        </span>
+                        <button type="button" class="btn-xs btn-primary" onclick="closeStageMultiSelectDropdown(event)" style="padding: 0.25rem 0.65rem; font-weight: 700;">
+                          ✓ Xong
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Ẩn Select tiêu chuẩn để giữ 100% tương thích ngược các script cũ -->
+                  <select id="datamassStageSelect" class="select-filter" style="display: none;" onchange="handleDataMassStageChange(this.value)">
+                    <optgroup label="── CÁC CỤM TỔNG HỢP ──">
+                      <option value="HARDTEST_TOTAL" selected>⭐ Total Hard Test</option>
+                      <option value="ASSEMBLY">🔧 ASSEMBLY</option>
+                      <option value="HARDTEST_AND_ASSEMBLY">🚀 Tổng SFPD</option>
+                      <option value="FPD_TOTAL">📦 Tổng FPD (4 Công Đoạn)</option>
+                      <option value="MASTERBOX_TOTAL">💻 Tổng MasterBox (3 Công Đoạn)</option>
+                      <option value="ALL">🏭 Tất cả công đoạn (Toàn Nhà Máy - ALL)</option>
+                    </optgroup>
+                    <optgroup label="── CÁC CÔNG ĐOẠN SẢN XUẤT ──">
+                      <option value="ASSEMBLY">🔧 ASSEMBLY</option>
+                      <option value="HARD TEST">🔬 HARD TEST</option>
+                      <option value="OPTICS ASM">🔭 OPTICS ASM</option>
+                      <option value="A IMP ASM">⚙️ A IMP ASM</option>
+                      <option value="FOCUS">🎯 FOCUS</option>
+                      <option value="LONG TEST">⏱️ LONG TEST</option>
+                      <option value="TEST ROOM">🌡️ TEST ROOM</option>
+                      <option value="QC">🔍 QC</option>
+                      <option value="PKG">📦 PKG</option>
+                      <option value="COM PKG">📦 COM PKG</option>
+                      <option value="COM PKG AUTO">🤖 COM PKG AUTO</option>
+                      <option value="MB">💻 MB</option>
+                    </optgroup>
+                  </select>
+                  <span id="datamassSelectedStageBadge" style="display: none !important;"></span>
+
+                  <!-- Quick Stage Pill Buttons (Chỉ giữ các cụm tổng hợp và Toàn Bộ) -->
+                  <div class="stage-quick-pills" id="stageQuickPillsGroup">
+                    <button type="button" class="btn-quick-stage active" data-stage="HARDTEST_TOTAL" onclick="handleDataMassStageChange('HARDTEST_TOTAL')">
+                      ⭐ Total Hard Test
+                    </button>
+                    <button type="button" class="btn-quick-stage" data-stage="ASSEMBLY" onclick="handleDataMassStageChange('ASSEMBLY')">
+                      🔧 ASSEMBLY
+                    </button>
+                    <button type="button" class="btn-quick-stage" data-stage="HARDTEST_AND_ASSEMBLY" onclick="handleDataMassStageChange('HARDTEST_AND_ASSEMBLY')">
+                      🚀 Tổng SFPD
+                    </button>
+                    <button type="button" class="btn-quick-stage" data-stage="FPD_TOTAL" onclick="handleDataMassStageChange('FPD_TOTAL')">
+                      📦 Tổng FPD
+                    </button>
+                    <button type="button" class="btn-quick-stage" data-stage="MASTERBOX_TOTAL" onclick="handleDataMassStageChange('MASTERBOX_TOTAL')">
+                      💻 Tổng MasterBox
+                    </button>
+                    <button type="button" class="btn-quick-stage" data-stage="ALL" onclick="handleDataMassStageChange('ALL')">
+                      🏭 Toàn Bộ
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Action: View Mode Switcher -->
+                <div class="btn-group">
+                  <button class="btn-mode active" data-mode="PLAN_FACT" onclick="handleDataMassViewMode('PLAN_FACT')">
+                    📊 Kế Hoạch &amp; Model
+                  </button>
+                  <button class="btn-mode" data-mode="SFPD" onclick="handleDataMassViewMode('SFPD')" title="Xem Báo Cáo Cân Đối Ca SFPD chuẩn theo mẫu ảnh">
+                    📑 Báo Cáo Ca SFPD
+                  </button>
+                  <button class="btn-mode" data-mode="CAPACITY" onclick="handleDataMassViewMode('CAPACITY')" title="Xem Bảng Định Mức Cycle Time & Năng Lực Sản Xuất Từng Line">
+                    ⚡ Năng Lực &amp; Capacity
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ======================================================== -->
+          <!-- DEDICATED SFPD REPORT VIEW CONTAINER (CHUẨN THEO ẢNH MẪU) -->
+          <!-- ======================================================== -->
+          <div id="datamassSfpdContainer" style="display: none; margin-bottom: 2rem;"></div>
+
+          <!-- Section Card 1: Manpower Status Table -->
+          <div class="section-card" id="datamassManpowerSectionCard" style="margin-bottom: 2rem;">
+            <div class="section-header-row" style="flex-wrap: wrap; gap: 0.75rem; justify-content: space-between;">
+              <div class="section-title-wrap">
+                <div class="section-icon-badge" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.35); color: #fbbf24;">👥</div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 0.65rem;">
+                    <h2>1. TÌNH TRẠNG NHÂN LỰC &amp; CÂN ĐỐI CA</h2>
+                    <button type="button" id="btnToggleManpowerSection" class="btn-filter-toggle" onclick="toggleManpowerSectionCollapse()" style="font-size: 0.75rem; padding: 0.25rem 0.65rem;" title="Thu gọn / Mở rộng bảng nhân lực">
+                      🔼 Thu gọn
+                    </button>
+                  </div>
+                  <span id="datamassManpowerSubtitle" class="section-subtitle" style="display: none;"></span>
+                </div>
+              </div>
+
+              <!-- Quick Action & History Toolbar -->
+              <div id="datamassManpowerHeaderToolbar" style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                <button type="button" class="btn btn-secondary" onclick="openAttendanceHistoryModal()" 
+                        style="font-size: 0.8rem; padding: 0.45rem 0.85rem; display: inline-flex; align-items: center; gap: 0.45rem; background: rgba(147, 51, 234, 0.12); border-color: rgba(147, 51, 234, 0.35); color: #c084fc;"
+                        title="Xem lịch sử chi tiết mọi lần cập nhật số người thực tế">
+                  <span>📜 Tra Cứu Lịch Sử</span>
+                  <span id="historyCountBadge" style="background: #9333ea; color: #fff; font-size: 0.7rem; font-weight: 800; padding: 0.1rem 0.45rem; border-radius: 9999px;">0</span>
+                </button>
+                <button type="button" class="btn btn-primary" onclick="handleSaveAllManpower()" 
+                        style="font-size: 0.8rem; padding: 0.45rem 0.85rem; display: inline-flex; align-items: center; gap: 0.35rem; background: linear-gradient(135deg, #059669, #10b981); border: none;"
+                        title="Lưu toàn bộ số liệu nhân lực vào bộ nhớ hệ thống">
+                  <span>💾 Lưu Tất Cả</span>
+                </button>
+                <button type="button" class="btn btn-sheet-copy" onclick="window.handleCopyManpowerTable()" 
+                        title="Sao chép toàn bộ bảng Tình trạng nhân lực để dán trực tiếp (Ctrl+V) vào Google Sheets">
+                  <span>📋 Copy Cho Sheet</span>
+                </button>
+                <button type="button" class="btn btn-sheet-export" onclick="window.handleExportManpowerTable()" 
+                        title="Tải file CSV Tình trạng nhân lực chuẩn UTF-8 để mở trên Google Sheets hoặc Excel">
+                  <span>📥 Xuất File Sheet</span>
+                </button>
+
+                <!-- Filter Mở Rộng / Thu Gọn Bảng Nhân Lực -->
+                <div class="filter-mp-mode-toggle" id="filterMpModeToggle" title="Filter hiển thị: Mở rộng xem đủ 8 chỉ tiêu (gồm Số Line, Bổ sung, OT) / Thu gọn xem trọng tâm Kế hoạch & Thực tế">
+                  <span style="font-size: 0.72rem; color: var(--text-muted); padding: 0 0.35rem; font-weight: 700;">Filter:</span>
+                  <button type="button" id="btnMpModeExpanded" class="day-pill-btn active" onclick="window.setManpowerCompactMode(false)" title="Chế độ Mở rộng: Xem đầy đủ mọi chỉ tiêu (gồm Số Line, Bổ sung & Giờ OT)">
+                    🔽 Mở rộng
+                  </button>
+                  <button type="button" id="btnMpModeCompact" class="day-pill-btn" onclick="window.setManpowerCompactMode(true)" title="Chế độ Thu gọn: Tinh gọn bảng, chỉ xem Kế hoạch, Số Line, Thực tế & Chênh lệch">
+                    🔼 Thu gọn
+                  </button>
+                </div>
+
+                <!-- Quick Day Selection Toolbar (Ẩn theo yêu cầu ảnh 3) -->
+                <div id="datamassDaySelectorToolbar" class="day-selector-toolbar" style="display: none;"></div>
+              </div>
+            </div>
+
+            <!-- Manpower Section Body Wrap -->
+            <div id="datamassManpowerBodyWrap">
+              <div id="datamassManpowerBanners"></div>
+              <!-- Manpower Table Container -->
+              <div id="datamassManpowerTableContainer" class="table-container">
+                <!-- Dynamically rendered -->
+              </div>
+
+              <!-- Biểu Đồ Tỉ Lệ Loading Plan Nhân Lực (Kế Hoạch Cần / Thực Tế Có) -->
+              <div id="datamassManpowerChartContainer" class="manpower-chart-section">
+                <!-- Dynamically rendered -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Section Card 2: Production Summary Table -->
+          <div class="section-card" id="datamassProductionSummaryCard">
+            <div class="section-header-row" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+              <div class="section-title-wrap">
+                <div class="section-icon-badge" style="background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.35); color: #60a5fa;">📊</div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 0.65rem;">
+                    <h2>2. KẾ HOẠCH SẢN XUẤT TỔNG THEO CÔNG ĐOẠN</h2>
+                    <button type="button" id="btnToggleStageSummarySection" class="btn-filter-toggle" onclick="toggleStageSummarySectionCollapse()" style="font-size: 0.75rem; padding: 0.25rem 0.65rem;" title="Thu gọn / Mở rộng bảng sản xuất tổng">
+                      🔼 Thu gọn
+                    </button>
+                  </div>
+                  <span id="datamassStageSummarySubtitle" class="section-subtitle">
+                    Tổng hợp kế hoạch sản xuất cần (Plan pcs), thực tế đạt (Fact pcs), chênh lệch sản lượng và giờ chuẩn theo từng ngày
+                  </span>
+                </div>
+              </div>
+
+              <!-- Action Toolbar for Production Summary -->
+              <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                <button type="button" class="btn btn-sheet-copy" onclick="window.handleCopyProductionSummaryTable()" 
+                        title="Sao chép toàn bộ bảng Kế hoạch sản xuất tổng theo công đoạn để dán trực tiếp (Ctrl+V) vào Google Sheets">
+                  <span>📋 Copy Cho Sheet</span>
+                </button>
+                <button type="button" class="btn btn-sheet-export" onclick="window.handleExportProductionSummaryTable()" 
+                        title="Tải file CSV Kế hoạch sản xuất tổng chuẩn UTF-8 để mở trên Google Sheets hoặc Excel">
+                  <span>📥 Xuất File Sheet</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Stage Daily Summary Table Container -->
+            <div id="datamassStageSummaryContainer" class="table-container">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- ======================================================== -->
+          <!-- 4. PHẦN 2: CHI TIẾT CÁC MODEL THEO TỪNG CÔNG ĐOẠN        -->
+          <!-- ======================================================== -->
+          <div class="section-card" id="datamassTable2SectionCard">
+            <div class="section-header-row" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+              <div class="section-title-wrap">
+                <div class="section-icon-badge" style="background: rgba(139, 92, 246, 0.12); border-color: rgba(139, 92, 246, 0.25); color: #c084fc;">📋</div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                    <h2>BẢNG 2: TIẾN ĐỘ SẢN LƯỢNG THEO MODEL &amp; CÔNG ĐOẠN</h2>
+                    <button type="button" id="btnToggleTable2Filter" class="btn-filter-toggle" onclick="toggleTable2FilterCollapse()" style="font-size: 0.75rem; padding: 0.25rem 0.65rem;" title="Thu gọn / Mở rộng thanh bộ lọc &amp; chế độ xem Bảng 2">
+                      🔼 Thu gọn bộ lọc
+                    </button>
+                    <button type="button" id="btnToggleTable2Section" class="btn-filter-toggle" onclick="toggleTable2SectionCollapse()" style="font-size: 0.75rem; padding: 0.25rem 0.65rem; background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.12); color: var(--text-muted);" title="Thu gọn / Mở rộng toàn bộ Bảng 2">
+                      🔼 Thu gọn bảng
+                    </button>
+                  </div>
+                  <span id="datamassTable2Subtitle" class="section-subtitle">
+                    Theo dõi số lượng Kế hoạch (Plan), Thực tế (Fact), Chênh lệch (Gap) cùng <strong style="color: #fca5a5;">Nguyên Nhân Âm (Sheet Mass-History)</strong> và <strong style="color: #7dd3fc;">Đánh Giá Tiến Độ</strong>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Action Toolbar for Table 2 -->
+              <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                <button type="button" class="btn btn-sheet-copy" onclick="window.handleCopyTable2Detailed()" 
+                        title="Sao chép toàn bộ dữ liệu Bảng 2 (Model & Công đoạn) để dán trực tiếp (Ctrl+V) vào Google Sheets">
+                  <span>📋 Copy Cho Sheet</span>
+                </button>
+                <button type="button" class="btn btn-sheet-export" onclick="window.handleExportTable2Detailed()" 
+                        title="Tải file CSV Bảng 2 chuẩn UTF-8 để mở trên Google Sheets hoặc Excel">
+                  <span>📥 Xuất File Sheet</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Body Wrap for Table 2 (Filter bar + Table container) -->
+            <div id="datamassTable2BodyWrap">
+
+            <!-- Compact Summary Strip for Table 2 Filter Bar when collapsed -->
+            <div id="datamassTable2FilterCompactSummary" class="filter-compact-summary" style="display: none; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; padding: 0.45rem 0.85rem; background: rgba(30, 41, 59, 0.4); border: 1px dashed rgba(255, 255, 255, 0.12); border-radius: var(--radius-md); margin-bottom: 0.75rem;">
+              <div id="datamassTable2CompactBadges" style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; font-size: 0.75rem;">
+                <!-- Populated by updateTable2CompactSummary -->
+              </div>
+              <button type="button" class="btn-filter-toggle" onclick="toggleTable2FilterCollapse()" style="background: rgba(139, 92, 246, 0.2); border-color: rgba(139, 92, 246, 0.4); color: #c084fc; font-size: 0.75rem; padding: 0.25rem 0.65rem;">
+                🔽 Mở rộng bộ lọc
+              </button>
+            </div>
+
+            <!-- Filter Toolbar for Table 2 (Chế độ xem, Công Đoạn, Group Model, Model 1C, Kế Hoạch, Tìm Kiếm) -->
+            <div id="datamassTable2FilterBar" class="filter-card-bar" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; padding: 0.75rem 1rem; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); border-radius: var(--radius-md); margin-bottom: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap; flex: 1;">
+                <!-- 0. Chế độ xem: Chi tiết theo ngày vs Chỉ xem tổng lũy kế -->
+                <div style="display: flex; align-items: center; gap: 0.35rem; margin-right: 0.35rem;">
+                  <span style="font-size: 0.775rem; font-weight: 700; color: #a855f7; display: flex; align-items: center; gap: 0.25rem;">
+                    👁️ Chế độ xem:
+                  </span>
+                  <div class="btn-group" id="table2ViewModeGroup">
+                    <button type="button" class="btn-mode" id="btnTable2Daily" onclick="handleTable2ViewMode('DAILY')" title="Xem chi tiết số lượng theo từng ngày (28 cột ngày/ca + Cột Nguyên Nhân Âm)">
+                      📊 Chi tiết theo ngày
+                    </button>
+                    <button type="button" class="btn-mode active" id="btnTable2Cumulative" onclick="handleTable2ViewMode('CUMULATIVE')" title="Chỉ xem tổng lũy kế (Hiển thị ngay Cột Nguyên Nhân Âm & Đánh Giá)">
+                      📈 Chỉ xem tổng lũy kế
+                    </button>
+                  </div>
+                  <button type="button" class="btn btn-secondary" onclick="window.scrollToTable2Reasons()" 
+                          style="padding: 0.3rem 0.6rem; font-size: 0.725rem; display: inline-flex; align-items: center; gap: 0.3rem; background: rgba(147, 51, 234, 0.15); border-color: rgba(147, 51, 234, 0.4); color: #c084fc; font-weight: 700;"
+                          title="Bấm để cuộn nhanh bảng sang 2 cột: Nguyên Nhân Âm & Đánh Giá">
+                    <span>👉 Xem 2 Cột Mới ⏭️</span>
+                  </button>
+                </div>
+
+                <!-- 1. Filter by Công Đoạn (Stage) -->
+                <div style="display: flex; align-items: center; gap: 0.35rem;">
+                  <span style="font-size: 0.775rem; font-weight: 700; color: #c084fc; display: flex; align-items: center; gap: 0.25rem;">
+                    🏭 Công Đoạn:
+                  </span>
+                  <select id="datamassTableStageSelect" class="select-filter font-mono" style="min-width: 155px; font-weight: 600; font-size: 0.775rem;" onchange="handleDataMassTableStageChange(this.value)">
+                    <option value="ALL">Tất cả Công Đoạn</option>
+                  </select>
+                </div>
+
+                <!-- 2. Filter by Group Model -->
+                <div style="display: flex; align-items: center; gap: 0.35rem;">
+                  <span style="font-size: 0.775rem; font-weight: 700; color: #60a5fa; display: flex; align-items: center; gap: 0.25rem;">
+                    🏷️ Group Model:
+                  </span>
+                  <select id="datamassModelSelect" class="select-filter font-mono" style="min-width: 165px; font-weight: 600; font-size: 0.775rem;" onchange="handleDataMassModelChange(this.value)">
+                    <option value="ALL">Tất cả Group Model</option>
+                  </select>
+                </div>
+
+                <!-- 3. Filter by Model (Mã 1C) -->
+                <div style="display: flex; align-items: center; gap: 0.35rem;">
+                  <span style="font-size: 0.775rem; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 0.25rem;">
+                    📦 Model (1C):
+                  </span>
+                  <select id="datamassProduct1CSelect" class="select-filter font-mono" style="min-width: 180px; max-width: 250px; font-weight: 600; font-size: 0.775rem;" onchange="handleDataMassProduct1CChange(this.value)">
+                    <option value="ALL">Tất cả Model 1C</option>
+                  </select>
+                </div>
+
+                <!-- 4. Filter by Plan Status -->
+                <div style="display: flex; align-items: center; gap: 0.35rem;">
+                  <span style="font-size: 0.775rem; font-weight: 700; color: #34d399; display: flex; align-items: center; gap: 0.25rem;">
+                    📊 Kế Hoạch:
+                  </span>
+                  <select id="datamassPlanStatusSelect" class="select-filter font-mono" style="min-width: 165px; font-weight: 600; font-size: 0.775rem;" onchange="handleDataMassPlanStatusChange(this.value)">
+                    <option value="GAP_NEGATIVE" selected>Đang Thiếu Hụt (Gap &lt; 0)</option>
+                    <option value="HAS_PLAN">Có Kế Hoạch (Plan &gt; 0)</option>
+                    <option value="ALL">Tất cả (Mọi Kế Hoạch)</option>
+                    <option value="COMPLETED">Đã Hoàn Thành (Fact &ge; Plan)</option>
+                    <option value="NO_PLAN">Chưa Có Kế Hoạch (Plan = 0)</option>
+                  </select>
+                </div>
+
+                <!-- 5. Search Input -->
+                <div class="search-box" style="min-width: 180px; flex: 1;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <input id="datamassSearchInput" type="text" class="search-input" placeholder="Tìm nhanh..." oninput="renderDataMassView()">
+                </div>
+
+                <!-- 6. Reset Filters Button -->
+                <button type="button" class="btn btn-secondary" onclick="handleResetTable2Filters()" 
+                        style="padding: 0.35rem 0.65rem; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.3rem;"
+                        title="Đặt lại toàn bộ bộ lọc Công Đoạn, Group Model, Model về mặc định">
+                  <span>↺ Đặt lại</span>
+                </button>
+              </div>
+
+              <!-- Right: Model Count Badge & Collapse Button -->
+              <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+                <div id="datamassModelItemCount" style="font-size: 0.8rem; color: var(--text-secondary);">
+                  <!-- Dynamically populated -->
+                </div>
+                <button type="button" class="btn-filter-toggle" onclick="toggleTable2FilterCollapse()" style="font-size: 0.75rem; padding: 0.25rem 0.65rem;" title="Thu gọn thanh bộ lọc Bảng 2">
+                  🔼 Thu gọn
+                </button>
+              </div>
+            </div>
+
+            <!-- Detailed Table Container -->
+            <div id="datamassTableContainer" class="table-container">
+              <!-- Dynamically rendered -->
+            </div>
+            </div> <!-- End datamassTable2BodyWrap -->
+          </div>
+
+          <!-- Section Card 3: CÁC ĐIỂM CHÚ Ý & CẢNH BÁO MODEL MỚI SẢN XUẤT -->
+          <div class="section-card" id="datamassAttentionCard" style="margin-top: 1.5rem;">
+            <div class="section-header-row" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+              <div class="section-title-wrap">
+                <div class="section-icon-badge" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.35); color: #fbbf24;">⚡</div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
+                    <h2>3. CÁC ĐIỂM CHÚ Ý &amp; CẢNH BÁO MODEL MỚI SẢN XUẤT</h2>
+                    <span id="badgeAttentionNewModelsCount" class="badge badge-amber" style="font-size: 0.75rem; font-weight: 700;">
+                      Đang phân tích...
+                    </span>
+                    <button type="button" id="btnToggleAttentionSection" class="btn-filter-toggle" onclick="toggleAttentionSectionCollapse()" style="font-size: 0.75rem; padding: 0.25rem 0.65rem;" title="Thu gọn / Mở rộng Mục 3: Các điểm chú ý & cảnh báo Model mới">
+                      🔼 Thu gọn
+                    </button>
+                  </div>
+                  <span id="datamassAttentionSubtitle" class="section-subtitle">
+                    Phân loại, cảnh báo &amp; tìm kiếm Model Mới chưa từng sản xuất theo khoảng thời gian và tiến độ kế hoạch
+                  </span>
+                </div>
+              </div>
+
+              <!-- Action buttons for Attention Points -->
+              <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <button type="button" class="btn btn-outline" onclick="handleCopyNewModelsTable()" style="font-size: 0.8rem; padding: 0.4rem 0.75rem; display: inline-flex; align-items: center; gap: 0.35rem;" title="Sao chép toàn bộ danh sách Model Mới vào clipboard cho Google Sheets">
+                  <span>📋 Copy Model Mới Cho Sheet</span>
+                </button>
+                <button type="button" class="btn btn-outline" onclick="handleExportNewModelsCSV()" style="font-size: 0.8rem; padding: 0.4rem 0.75rem; display: inline-flex; align-items: center; gap: 0.35rem;" title="Xuất file CSV danh sách Model Mới">
+                  <span>📥 Xuất CSV Model Mới</span>
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="renderAttentionPointsSection(window.__LATEST_SCHEDULE__)" style="font-size: 0.8rem; padding: 0.4rem 0.75rem;" title="Làm mới cảnh báo">
+                  <span>🔄 Cập Nhật Cảnh Báo</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Dynamic Body of Attention Points -->
+            <div id="datamassAttentionPointsBody" style="margin-top: 1rem;">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW: CAPACITY PLANNING (NĂNG LỰC SẢN XUẤT) -->
+        <!-- ========================================== -->
+        <section id="tab-capacity" class="tab-content">
+          <div id="capacityContainer">
+            <!-- Dynamically rendered by renderCapacityView() -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW: WIP CONTROL (KIỂM SOÁT TỒN CHUYỀN)  -->
+        <!-- ========================================== -->
+        <section id="tab-wip" class="tab-content">
+          <div id="wipContainer">
+            <!-- Dynamically rendered by renderWipControlView() -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW: CLIPS ALL PLAN (TRA CỨU CLIPS PLAN)  -->
+        <!-- ========================================== -->
+        <!-- VIEW: CLIPS ALL PLAN                        -->
+        <!-- ========================================== -->
+        <section id="tab-clips-all-plan" class="tab-content">
+          <div id="clipsAllPlanContainer">
+            <!-- Dynamically rendered by renderClipsAllPlanView() -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW: KPI RESULT                           -->
+        <!-- ========================================== -->
+        <section id="tab-kpi-result" class="tab-content">
+          <div id="kpiResultContainer">
+            <!-- Dynamically rendered by renderKpiResultView() -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW: TRA CỨU LỊCH SỬ SẢN XUẤT (4 CÔNG ĐOẠN) -->
+        <!-- ========================================== -->
+        <section id="tab-prod-history" class="tab-content">
+          <div id="prodHistoryContainer">
+            <!-- Dynamically rendered by renderProdHistoryView() -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 2: ASSEMBLY PLANNING (As Form)       -->
+        <!-- ========================================== -->
+        <section id="tab-as" class="tab-content">
+          <div class="dev-notice-banner">
+            <div class="dev-notice-left">
+              <span class="dev-notice-icon">🚧</span>
+              <div class="dev-notice-text">
+                <strong>Phân hệ Kế Hoạch Lắp Ráp (As) đang trong lộ trình phát triển</strong>
+                <span>Hệ thống đang tập trung hoàn thiện tab <strong>[Kế Hoạch Tổng Thể (Data_Mass)]</strong> trước theo tiến độ ưu tiên.</span>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary dev-notice-action" onclick="switchToTab('datamass')">
+              <span>⬅️ Về Kế Hoạch Tổng Thể (Đang dùng)</span>
+            </button>
+          </div>
+
+          <div class="filter-toolbar">
+            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+              <div class="search-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input id="asSearchInput" type="text" class="search-input" placeholder="Tìm theo Model, Nhóm định mức, Board..." oninput="renderAsTable()">
+              </div>
+
+              <select id="asLineFilter" class="select-filter" onchange="renderAsTable()">
+                <option value="ALL">Tất cả Line</option>
+                <option value="1A">Line 1A</option>
+                <option value="2A">Line 2A</option>
+                <option value="1B">Line 1B</option>
+                <option value="2B">Line 2B</option>
+                <option value="1C">Line 1C</option>
+                <option value="2C">Line 2C</option>
+                <option value="1D">Line 1D</option>
+                <option value="2D">Line 2D</option>
+                <option value="3A">Line 3A</option>
+                <option value="3C">Line 3C (Kíp C)</option>
+                <option value="3D">Line 3D (Hành Chính)</option>
+              </select>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem;">
+              <button class="btn btn-primary" onclick="handleAutoAssignAll()">
+                ⚡ Tự Động Phân Bổ Tối Ưu Toàn Bộ
+              </button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 40px;">STT</th>
+                  <th>Nhóm Định Mức &amp; Tên Model</th>
+                  <th style="text-align: right;">Plan Qty</th>
+                  <th style="text-align: right;">Fact Qty</th>
+                  <th style="text-align: right;">Gap Qty</th>
+                  <th style="text-align: center;">CT Norm</th>
+                  <th style="text-align: right;">Giờ Plan</th>
+                  <th style="text-align: center; width: 140px;">Line Sản Xuất</th>
+                  <th style="text-align: center;">Năng Suất</th>
+                  <th style="text-align: right;">Giờ Actual</th>
+                  <th style="text-align: center;">Thao Tác</th>
+                </tr>
+              </thead>
+              <tbody id="asTableBody">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 3: HOAN THIEN & DONG GOI (HT Form)   -->
+        <!-- ========================================== -->
+        <section id="tab-ht" class="tab-content">
+          <div class="dev-notice-banner">
+            <div class="dev-notice-left">
+              <span class="dev-notice-icon">🚧</span>
+              <div class="dev-notice-text">
+                <strong>Phân hệ Hoàn Thiện / Đóng Gói (HT) đang trong lộ trình phát triển</strong>
+                <span>Hệ thống đang tập trung hoàn thiện tab <strong>[Kế Hoạch Tổng Thể (Data_Mass)]</strong> trước theo tiến độ ưu tiên.</span>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary dev-notice-action" onclick="switchToTab('datamass')">
+              <span>⬅️ Về Kế Hoạch Tổng Thể (Đang dùng)</span>
+            </button>
+          </div>
+
+          <div class="filter-toolbar">
+            <div class="search-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input id="htSearchInput" type="text" class="search-input" placeholder="Tìm theo Board, Model..." oninput="renderHtTable()">
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 40px;">STT</th>
+                  <th>Board / Operation &amp; Model</th>
+                  <th style="text-align: right;">Plan Qty</th>
+                  <th style="text-align: right;">Fact Qty</th>
+                  <th style="text-align: right;">Gap Qty</th>
+                  <th style="text-align: center;">CT Norm</th>
+                  <th style="text-align: right;">Giờ Yêu Cầu</th>
+                  <th style="text-align: center;">Test Blocks</th>
+                  <th style="text-align: right;">Mục Tiêu Ca Ngày</th>
+                  <th style="text-align: right;">Mục Tiêu Ca Đêm</th>
+                </tr>
+              </thead>
+              <tbody id="htTableBody">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 4: PRODUCTIVITY MATRIX                -->
+        <!-- ========================================== -->
+        <section id="tab-matrix" class="tab-content">
+          <div class="dev-notice-banner">
+            <div class="dev-notice-left">
+              <span class="dev-notice-icon">🚧</span>
+              <div class="dev-notice-text">
+                <strong>Phân hệ Ma Trận Năng Suất (Matrix) đang trong lộ trình phát triển</strong>
+                <span>Hệ thống đang tập trung hoàn thiện tab <strong>[Kế Hoạch Tổng Thể (Data_Mass)]</strong> trước theo tiến độ ưu tiên.</span>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary dev-notice-action" onclick="switchToTab('datamass')">
+              <span>⬅️ Về Kế Hoạch Tổng Thể (Đang dùng)</span>
+            </button>
+          </div>
+
+          <div style="margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h3 style="font-size: 1.1rem; font-weight: 800;">Ma Trận Năng Suất 10 Chuyền Theo Dòng Sản Phẩm</h3>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">Dữ liệu định mức năng suất (Productivity %) được dùng trực tiếp để tính số giờ chạy cho từng Chuyền</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; font-size: 0.75rem;">
+              <span class="badge badge-green">100% Năng suất</span>
+              <span class="badge badge-blue">85% Năng suất</span>
+              <span class="badge badge-amber">&lt; 85% Năng suất</span>
+              <span class="badge badge-red">Chưa đạt</span>
+            </div>
+          </div>
+
+          <div id="matrixTableContainer" class="table-container">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 5: LINE SCHEDULER & LOAD              -->
+        <!-- ========================================== -->
+        <section id="tab-scheduler" class="tab-content">
+          <div class="dev-notice-banner">
+            <div class="dev-notice-left">
+              <span class="dev-notice-icon">🚧</span>
+              <div class="dev-notice-text">
+                <strong>Phân hệ Điều Độ &amp; Tải Chuyền đang trong lộ trình phát triển</strong>
+                <span>Hệ thống đang tập trung hoàn thiện tab <strong>[Kế Hoạch Tổng Thể (Data_Mass)]</strong> trước theo tiến độ ưu tiên.</span>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary dev-notice-action" onclick="switchToTab('datamass')">
+              <span>⬅️ Về Kế Hoạch Tổng Thể (Đang dùng)</span>
+            </button>
+          </div>
+
+          <div style="margin-bottom: 1.25rem;">
+            <h3 style="font-size: 1.1rem; font-weight: 800;">Điều Độ &amp; Phân Bổ Tải Trọng Từng Chuyền</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">Theo dõi tổng thời gian gia công được gán vào mỗi chuyền so với định mức 2 ca (21.66 giờ)</p>
+          </div>
+
+          <div id="schedulerContainer">
+            <!-- Dynamically rendered -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 6: QUALITY & FTT REPORT               -->
+        <!-- ========================================== -->
+        <section id="tab-ftt" class="tab-content">
+          <div class="dev-notice-banner">
+            <div class="dev-notice-left">
+              <span class="dev-notice-icon">🚧</span>
+              <div class="dev-notice-text">
+                <strong>Phân hệ Chất Lượng &amp; FTT đang trong lộ trình phát triển</strong>
+                <span>Hệ thống đang tập trung hoàn thiện tab <strong>[Kế Hoạch Tổng Thể (Data_Mass)]</strong> trước theo tiến độ ưu tiên.</span>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary dev-notice-action" onclick="switchToTab('datamass')">
+              <span>⬅️ Về Kế Hoạch Tổng Thể (Đang dùng)</span>
+            </button>
+          </div>
+
+          <div style="margin-bottom: 1.25rem;">
+            <h3 style="font-size: 1.1rem; font-weight: 800;">Báo Cáo Chất Lượng &amp; First Time Through (FTT)</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">Đồng bộ từ sheet FTT - Thống kê tỷ lệ FTT, Fin OK, Fin NOK và Retest %</p>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 40px;">STT</th>
+                  <th>Dòng Sản Phẩm</th>
+                  <th style="text-align: right;">All Devices</th>
+                  <th style="text-align: right;">FTT</th>
+                  <th style="text-align: center;">FTT %</th>
+                  <th style="text-align: right;">All Test</th>
+                  <th style="text-align: right;">Fin OK</th>
+                  <th style="text-align: right;">Fin NOK</th>
+                  <th style="text-align: right;">Retest</th>
+                  <th style="text-align: center;">Retest %</th>
+                </tr>
+              </thead>
+              <tbody id="fttTableBody">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 7: GOOGLE SHEETS LIVE CONFIG          -->
+        <!-- ========================================== -->
+        <section id="tab-settings" class="tab-content">
+          <div class="dev-notice-banner">
+            <div class="dev-notice-left">
+              <span class="dev-notice-icon">🚧</span>
+              <div class="dev-notice-text">
+                <strong>Phân hệ Cấu Hình Google Sheets sẽ hoàn thiện sau khi xong Kế Hoạch Tổng Thể</strong>
+                <span>Hệ thống đang tập trung hoàn thiện tab <strong>[Kế Hoạch Tổng Thể (Data_Mass)]</strong> trước theo tiến độ ưu tiên.</span>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary dev-notice-action" onclick="switchToTab('datamass')">
+              <span>⬅️ Về Kế Hoạch Tổng Thể (Đang dùng)</span>
+            </button>
+          </div>
+
+          <div class="card" style="max-width: 800px; margin: 0 auto;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-glass);">
+              <div style="width: 40px; height: 40px; border-radius: var(--radius-md); background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; color: var(--success); font-size: 1.25rem;">📊</div>
+              <div>
+                <h3 style="font-size: 1.1rem; font-weight: 800;">Cấu Hình Kết Nối Google Sheets</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Hệ thống tự động đồng bộ dữ liệu trực tiếp từ Google Sheets của bạn</p>
+              </div>
+            </div>
+
+            <form onsubmit="handleSaveSettings(event)">
+              <div class="form-group">
+                <label class="form-label" for="cfgSheetId">Google Spreadsheet ID</label>
+                <input id="cfgSheetId" type="text" class="form-control font-mono" placeholder="1wtuLHVwH4U4OfJ3bKQjTgC13g8EZfZePOyLnqnWzfl4" required>
+                <span style="font-size: 0.725rem; color: var(--text-muted);">ID nằm giữa "/d/" và "/edit" trong đường dẫn Google Sheet.</span>
+              </div>
+
+              <div class="settings-grid">
+                <div class="form-group">
+                  <label class="form-label" for="cfgAsGid">GID Tab As Form (Lắp Ráp)</label>
+                  <input id="cfgAsGid" type="text" class="form-control font-mono" placeholder="826027730" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="cfgHtGid">GID Tab HT Form (Hoàn Thiện)</label>
+                  <input id="cfgHtGid" type="text" class="form-control font-mono" placeholder="136756709" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="cfgFttGid">GID Tab FTT (Chất Lượng)</label>
+                  <input id="cfgFttGid" type="text" class="form-control font-mono" placeholder="954480354" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="cfgDataMassGid">GID Tab Data_Mass (Tổng Thể)</label>
+                  <input id="cfgDataMassGid" type="text" class="form-control font-mono" placeholder="1404131818" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="cfgSyncInterval">Tần Suất Tự Động Đồng Bộ (Phút)</label>
+                  <input id="cfgSyncInterval" type="number" class="form-control font-mono" min="1" max="60" value="5">
+                </div>
+              </div>
+
+              <div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: var(--radius-md); padding: 1rem; margin: 1.5rem 0;">
+                <div style="font-weight: 700; color: #60a5fa; font-size: 0.85rem; margin-bottom: 0.35rem;">🔗 Link Google Sheet hiện tại:</div>
+                <a href="https://docs.google.com/spreadsheets/d/1wtuLHVwH4U4OfJ3bKQjTgC13g8EZfZePOyLnqnWzfl4/edit?gid=954480354#gid=954480354" target="_blank" style="font-size: 0.8rem; color: var(--text-secondary); word-break: break-all; text-decoration: underline;">
+                  https://docs.google.com/spreadsheets/d/1wtuLHVwH4U4OfJ3bKQjTgC13g8EZfZePOyLnqnWzfl4
+                </a>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+                <button type="button" class="btn btn-secondary" onclick="handleResetDefaultData()">
+                  Khôi Phục Dữ Liệu Gốc
+                </button>
+
+                <div style="display: flex; gap: 0.75rem;">
+                  <button type="button" class="btn btn-secondary" onclick="window.SyncService.fetchLiveData()">
+                    Kiểm Tra Kết Nối Ngay
+                  </button>
+                  <button type="submit" class="btn btn-primary">
+                    Lưu Cấu Hình
+                  </button>
+                </div>
+              </div>
+          </div>
+
+          <!-- ======================================================== -->
+          <!-- CARD QUẢN LÝ NGƯỜI DÙNG & PHÂN QUYỀN TRUY CẬP              -->
+          <!-- ======================================================== -->
+          <div class="user-management-card">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-glass);">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.35); display: flex; align-items: center; justify-content: center; color: #38bdf8; font-size: 1.35rem;">
+                  👥
+                </div>
+                <div>
+                  <h3 style="font-size: 1.15rem; font-weight: 800; margin: 0; color: #f8fafc;">
+                    Quản Lý Người Dùng &amp; Phân Quyền Truy Cập
+                  </h3>
+                  <p style="font-size: 0.775rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">
+                    Tạo tài khoản và phân quyền: <strong>Admin (Toàn quyền)</strong>, <strong>Nhập data / Lập Kế Hoạch</strong>, <strong>Chỉ xem (Viewer)</strong>
+                  </p>
+                </div>
+              </div>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <button type="button" class="btn btn-secondary" onclick="handleFetchUsersList()" style="font-size: 0.75rem; padding: 0.35rem 0.75rem;" title="Làm mới danh sách từ máy chủ">
+                  <span>🔄 Tải Lại</span>
+                </button>
+                <button type="button" class="btn btn-primary" onclick="handleToggleAddUserForm()" style="font-size: 0.75rem; padding: 0.35rem 0.85rem; font-weight: 700;">
+                  <span>➕ Thêm Người Dùng</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Form Thêm Người Dùng Mới (Toggle) -->
+            <div id="addUserFormWrap" class="user-add-form-wrap" style="display: none;">
+              <div style="font-weight: 800; color: #38bdf8; font-size: 0.875rem; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
+                <span>✨ Tạo Tài Khoản &amp; Phân Quyền Mới</span>
+                <button type="button" class="btn-close-modal" onclick="handleToggleAddUserForm(false)" style="font-size: 0.75rem;">✕</button>
+              </div>
+              <form id="formAddNewUser" onsubmit="handleCreateNewUserSubmit(event)">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.85rem;">
+                  <div class="form-group" style="margin: 0;">
+                    <label class="form-label" style="font-size: 0.75rem;">Tên Đăng Nhập (Username) *</label>
+                    <input id="newUsername" type="text" class="form-control font-mono" placeholder="vd: Lich GLD, tuan_plan, nguyen_van_a..." required style="font-size: 0.8rem; padding: 0.35rem 0.6rem;">
+                  </div>
+                  <div class="form-group" style="margin: 0;">
+                    <label class="form-label" style="font-size: 0.75rem;">Họ &amp; Tên Hiển Thị (Tên Người Lập) *</label>
+                    <input id="newUserFullName" type="text" class="form-control" placeholder="vd: Nguyen Tuan Lich, Bùi Anh Tuấn..." required style="font-size: 0.8rem; padding: 0.35rem 0.6rem;">
+                  </div>
+                  <div class="form-group" style="margin: 0;">
+                    <label class="form-label" style="font-size: 0.75rem;">Mật Khẩu Đăng Nhập *</label>
+                    <input id="newUserPassword" type="password" class="form-control font-mono" placeholder="Mật khẩu đăng nhập..." required style="font-size: 0.8rem; padding: 0.35rem 0.6rem;">
+                  </div>
+                  <div class="form-group" style="margin: 0;">
+                    <label class="form-label" style="font-size: 0.75rem;">Phân Quyền (Vai Trò) *</label>
+                    <select id="newUserRole" class="form-control font-mono" required style="font-size: 0.8rem; padding: 0.35rem 0.6rem; cursor: pointer;">
+                      <option value="editor">✍️ Nhập data / Lập Kế Hoạch (Editor)</option>
+                      <option value="admin">👑 Quản Trị Viên Tối Cao (Admin)</option>
+                      <option value="viewer">👁️ Khách Xem / Tra Cứu (Viewer)</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group" style="margin-top: 0.75rem;">
+                  <label class="form-label" style="font-size: 0.75rem;">Ghi Chú / Chức Vụ (Tùy chọn)</label>
+                  <input id="newUserDesc" type="text" class="form-control" placeholder="vd: Trưởng ca lắp ráp 1, Kế hoạch chuyền 2..." style="font-size: 0.8rem; padding: 0.35rem 0.6rem;">
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.85rem;">
+                  <button type="button" class="btn btn-secondary" onclick="handleToggleAddUserForm(false)" style="font-size: 0.75rem; padding: 0.35rem 0.75rem;">
+                    Hủy Bỏ
+                  </button>
+                  <button type="submit" class="btn btn-primary" style="font-size: 0.75rem; padding: 0.35rem 1rem; font-weight: 700;">
+                    💾 Lưu &amp; Cấp Quyền Người Dùng
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Bảng Danh Sách Người Dùng Hiện Tại -->
+            <div style="overflow-x: auto;">
+              <table class="user-table">
+                <thead>
+                  <tr>
+                    <th style="width: 40px; text-align: center;">STT</th>
+                    <th>Tên Đăng Nhập</th>
+                    <th>Họ &amp; Tên Hiển Thị (Người Lập)</th>
+                    <th>Phân Quyền</th>
+                    <th>Mật Khẩu</th>
+                    <th>Ghi Chú / Chức Vụ</th>
+                    <th style="width: 130px; text-align: center;">Thao Tác</th>
+                  </tr>
+                </thead>
+                <tbody id="userManagementTableBody">
+                  <tr>
+                    <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                      Đang tải danh sách người dùng từ máy chủ...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: LỊCH SỬ & NHẬT KÝ NHẬP LIỆU NHÂN LỰC THỰC TẾ        -->
+  <!-- ======================================================== -->
+  <div id="attendanceHistoryModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div class="section-icon-badge" style="background: rgba(147, 51, 234, 0.15); border-color: rgba(147, 51, 234, 0.35); color: #c084fc; width: 38px; height: 38px; font-size: 1.15rem;">
+            📜
+          </div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--text-primary);">
+                Nhật Ký &amp; Lịch Sử Nhập Liệu Nhân Lực Thực Tế
+              </h3>
+              <span id="historyModalTotalCount" class="badge badge-purple" style="font-size: 0.725rem; font-weight: 800;">
+                0 bản ghi
+              </span>
+            </div>
+            <div style="font-size: 0.775rem; color: var(--text-secondary); margin-top: 0.2rem;">
+              Theo dõi chi tiết mọi thay đổi số người thực tế, chênh lệch và số giờ OT cần bù (Quy chuẩn: 1 người bổ sung = 12h OT)
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" onclick="closeAttendanceHistoryModal()" title="Đóng cửa sổ">✕</button>
+      </div>
+
+      <!-- Modal Filter Toolbar -->
+      <div class="modal-filter-toolbar">
+        <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; flex: 1;">
+          <!-- Filter Date -->
+          <div class="filter-group">
+            <label style="font-size: 0.725rem; color: var(--text-secondary); margin-bottom: 0.2rem;">Ngày làm việc:</label>
+            <select id="historyFilterDate" class="form-select" onchange="handleAttendanceHistoryFilterChange()" style="font-size: 0.775rem; padding: 0.35rem 0.65rem;">
+              <option value="ALL">📅 Tất cả các ngày</option>
+            </select>
+          </div>
+
+          <!-- Filter Stage -->
+          <div class="filter-group">
+            <label style="font-size: 0.725rem; color: var(--text-secondary); margin-bottom: 0.2rem;">Công đoạn:</label>
+            <select id="historyFilterStage" class="form-select" onchange="handleAttendanceHistoryFilterChange()" style="font-size: 0.775rem; padding: 0.35rem 0.65rem;">
+              <option value="ALL">🏭 Tất cả công đoạn</option>
+              <option value="HARD TEST">🔬 HARD TEST</option>
+              <option value="OPTICS ASM">🔭 OPTICS ASM</option>
+              <option value="A IMP ASM">⚙️ A IMP ASM</option>
+              <option value="FOCUS">🎯 FOCUS</option>
+              <option value="ASSEMBLY">🔧 ASSEMBLY</option>
+            </select>
+          </div>
+
+          <!-- Filter Shift -->
+          <div class="filter-group">
+            <label style="font-size: 0.725rem; color: var(--text-secondary); margin-bottom: 0.2rem;">Ca làm việc:</label>
+            <select id="historyFilterShift" class="form-select" onchange="handleAttendanceHistoryFilterChange()" style="font-size: 0.775rem; padding: 0.35rem 0.65rem;">
+              <option value="ALL">🌐 Tất cả các ca</option>
+              <option value="Day">☀️ Ca Ngày</option>
+              <option value="Night">🌙 Ca Đêm</option>
+            </select>
+          </div>
+
+          <!-- Search Input -->
+          <div class="filter-group" style="flex: 1; min-width: 180px;">
+            <label style="font-size: 0.725rem; color: var(--text-secondary); margin-bottom: 0.2rem;">Tìm kiếm nhanh:</label>
+            <input type="text" id="historySearch" class="form-input" placeholder="Tìm theo công đoạn, ghi chú, ca..."
+                   oninput="handleAttendanceHistoryFilterChange()" style="font-size: 0.775rem; padding: 0.35rem 0.65rem;" />
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 0.5rem; align-items: flex-end;">
+          <button type="button" class="btn btn-secondary" onclick="handleExportAttendanceHistoryCsv()"
+                  style="font-size: 0.775rem; padding: 0.4rem 0.75rem; display: inline-flex; align-items: center; gap: 0.3rem;"
+                  title="Xuất danh sách lịch sử ra file CSV tương thích Excel">
+            📥 Xuất CSV
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="renderAttendanceHistoryTable()"
+                  style="font-size: 0.775rem; padding: 0.4rem 0.6rem;" title="Làm mới bảng">
+            🔄
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="handleClearAttendanceHistory()"
+                  style="font-size: 0.775rem; padding: 0.4rem 0.65rem; color: #ef4444; border-color: rgba(239, 68, 68, 0.3);"
+                  title="Xóa toàn bộ lịch sử ghi">
+            🗑️ Xóa
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body (History Table) -->
+      <div class="modal-body-table" style="max-height: 480px; overflow-y: auto;">
+        <table class="data-table history-table">
+          <thead>
+            <tr>
+              <th style="width: 45px; text-align: center;">STT</th>
+              <th style="min-width: 140px;">Thời Gian Lưu</th>
+              <th style="min-width: 105px;">Ngày Làm</th>
+              <th style="min-width: 125px;">Ca Làm Việc</th>
+              <th style="min-width: 120px;">Công Đoạn</th>
+              <th style="text-align: right; min-width: 80px;">Kế Hoạch</th>
+              <th style="text-align: right; min-width: 80px;">Thực Tế Cũ</th>
+              <th style="text-align: right; min-width: 95px; background: rgba(16, 185, 129, 0.08);">Thực Tế Mới</th>
+              <th style="text-align: right; min-width: 85px;">Chênh Lệch</th>
+              <th style="text-align: center; min-width: 95px;">Giờ OT Cần</th>
+              <th style="min-width: 180px;">Ghi Chú</th>
+              <th style="text-align: center; min-width: 90px;">Thao Tác</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--border-glass);">
+        <div style="font-size: 0.75rem; color: var(--text-secondary); display: flex; align-items: center; gap: 0.4rem;">
+          <span>💡 <b>Quy chuẩn tính OT:</b> 1 người bổ sung = 12h OT</span>
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="closeAttendanceHistoryModal()" style="font-size: 0.8rem; padding: 0.4rem 1rem;">
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: LỊCH SỬ NGUYÊN NHÂN THIẾU HỤT SẢN LƯỢNG THEO CA     -->
+  <!-- ======================================================== -->
+  <div id="shortageHistoryModal" class="modal-overlay" style="display: none;" onclick="if(event.target === this) closeModelShortageHistoryModal()">
+    <div class="modal-card" style="max-width: 860px; width: 92%;">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div class="section-icon-badge" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.35); color: #f87171; width: 38px; height: 38px; font-size: 1.15rem;">
+            📋
+          </div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--text-primary);">
+                Tổng Hợp Nguyên Nhân Thiếu Hụt Sản Lượng
+              </h3>
+              <span id="shortageModalBadge" class="badge badge-red" style="font-size: 0.725rem; font-weight: 800;">
+                0 ca thiếu hụt
+              </span>
+            </div>
+            <div id="shortageModalSubTitle" style="font-size: 0.775rem; color: #93c5fd; margin-top: 0.2rem; font-family: monospace;">
+              Model: --
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-icon" onclick="closeModelShortageHistoryModal()" title="Đóng" style="font-size: 1.25rem;">
+          ✕
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body" style="padding: 1.25rem; max-height: 60vh; overflow-y: auto;">
+        <div id="shortageModalContent">
+          <!-- Dynamic Content -->
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer" style="padding: 0.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-glass);">
+        <div style="font-size: 0.75rem; color: #94a3b8;">
+          💡 Dữ liệu trích xuất tự động từ Sheet <b>Mass-History</b> (Kế hoạch vs Thực tế &amp; Nguyên nhân)
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="closeModelShortageHistoryModal()">
+          Đóng cửa sổ
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: THỨ TỰ SẢN XUẤT CHI TIẾT THEO TỪNG LINE          -->
+  <!-- ======================================================== -->
+  <div id="lineSequenceModal" class="modal-overlay" style="display: none;" onclick="if(event.target === this) closeLineSequenceModal()">
+    <div class="modal-card" style="max-width: 1200px;">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div class="section-icon-badge" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.35); color: #fbbf24; width: 38px; height: 38px; font-size: 1.15rem;">
+            📑
+          </div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--text-primary);">
+                Kế Hoạch &amp; Thứ Tự Sản Xuất Chi Tiết Theo Từng Line
+              </h3>
+              <span id="lineSeqModalCountBadge" class="badge badge-green" style="font-size: 0.725rem; font-weight: 800;">
+                0 Chuyền
+              </span>
+            </div>
+            <div style="font-size: 0.775rem; color: var(--text-secondary); margin-top: 0.2rem;">
+              Thứ tự ưu tiên sản xuất (#1, #2, #3...) của các Model trên từng Chuyền đi làm • Giới hạn Ca Ngày ≤ 10.83h • Ca Đêm ≤ 10.58h
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" onclick="closeLineSequenceModal()" title="Đóng cửa sổ">✕</button>
+      </div>
+
+      <!-- Modal Filter Toolbar -->
+      <div class="modal-filter-toolbar" style="padding: 0.65rem 1.25rem; background: rgba(15, 23, 42, 0.6); border-bottom: 1px solid var(--border-glass); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.65rem;">
+        <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 0.35rem;">
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Lọc Chuyền:</span>
+            <select id="lineSeqFilterSelect" class="select-filter font-mono" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" onchange="handleLineSeqFilterChange(this.value)">
+              <option value="ALL">-- Tất cả các Chuyền --</option>
+            </select>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.35rem;">
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Lọc Ca:</span>
+            <select id="lineSeqShiftFilterSelect" class="select-filter font-mono" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" onchange="handleLineSeqShiftFilterChange(this.value)">
+              <option value="ALL">Cả 2 Ca (Ngày &amp; Đêm)</option>
+              <option value="DAY">☀️ Chỉ Ca Ngày (≤ 10.83h)</option>
+              <option value="NIGHT">🌙 Chỉ Ca Đêm (≤ 10.58h)</option>
+            </select>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.35rem;">
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Hiển thị:</span>
+            <select id="lineSeqViewModeSelect" class="select-filter font-mono" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" onchange="handleLineSeqViewModeChange(this.value)">
+              <option value="CARDS">🗂️ Gom Theo Từng Chuyền</option>
+              <option value="TABLE">📋 1 Bảng Tổng Hợp</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <button type="button" class="sim-btn-export-sheet" onclick="handleExportLineSequenceGoogleSheet()" title="Xuất toàn bộ dữ liệu thứ tự sản xuất theo từng Line ra file CSV tương thích Google Sheets &amp; Excel">
+            📥 Xuất Google Sheets (CSV)
+          </button>
+          <button type="button" class="sim-btn-copy-sheet" onclick="handleCopyLineSequenceClipboard()" title="Sao chép toàn bộ dữ liệu thứ tự sản xuất theo từng Line để dán (Ctrl+V) vào Google Sheets">
+            📋 Copy Cho Google Sheet
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body (Grouped by Line) -->
+      <div id="lineSeqModalBody" class="modal-body-table" style="max-height: 520px; overflow-y: auto; padding: 1rem 1.25rem;">
+        <!-- Dynamically populated -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.25rem; border-top: 1px solid var(--border-glass);">
+        <div id="lineSeqModalSummaryInfo" style="font-size: 0.775rem; color: var(--text-secondary);">
+          Đang tải dữ liệu thứ tự sản xuất...
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="closeLineSequenceModal()" style="font-size: 0.8rem; padding: 0.4rem 1.15rem;">
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: LỊCH SỬ KẾ HOẠCH SẢN XUẤT (PLAN HISTORY)          -->
+  <!-- ======================================================== -->
+  <div id="simPlanHistoryModal" class="modal-overlay" style="display: none;" onclick="if(event.target === this) handleCloseSimPlanHistoryModal()">
+    <div class="modal-card" style="max-width: 1150px;">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div class="section-icon-badge" style="background: rgba(251, 191, 36, 0.15); border-color: rgba(251, 191, 36, 0.35); color: #fbbf24; width: 38px; height: 38px; font-size: 1.15rem;">
+            📜
+          </div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--text-primary);">
+                Lịch Sử Kế Hoạch Sản Xuất &amp; Đề Xuất Chuyền
+              </h3>
+              <span id="simHistoryModalBadge" class="badge badge-amber" style="font-size: 0.725rem; font-weight: 800;">
+                0 Bản ghi
+              </span>
+            </div>
+            <div style="font-size: 0.775rem; color: var(--text-secondary); margin-top: 0.2rem;">
+              Tra cứu danh sách các kế hoạch đã lập theo ngày, người lập và 1-click khôi phục lại khi cần
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" onclick="handleCloseSimPlanHistoryModal()" title="Đóng cửa sổ">✕</button>
+      </div>
+
+      <!-- Modal Filter Toolbar -->
+      <div class="modal-filter-toolbar" style="padding: 0.65rem 1.25rem; background: rgba(15, 23, 42, 0.6); border-bottom: 1px solid var(--border-glass); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.65rem;">
+        <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap; flex: 1;">
+          <div class="search-box" style="min-width: 250px; max-width: 380px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input id="simHistorySearchInput" type="text" class="search-input" placeholder="Tìm theo Người lập, Ngày hoặc Công đoạn..." oninput="handleSearchSimPlanHistory(this.value)" style="padding: 0.25rem 0.5rem 0.25rem 1.8rem; font-size: 0.8rem;">
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <button type="button" class="btn btn-secondary" onclick="handleClearAllSimPlanHistory()" style="font-size: 0.75rem; color: #ef4444; border-color: rgba(239, 68, 68, 0.4); padding: 0.25rem 0.65rem;" title="Xóa toàn bộ lịch sử kế hoạch">
+            🗑️ Xóa Tất Cả Lịch Sử
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body (History Table) -->
+      <div id="simHistoryModalBody" class="modal-body-table" style="max-height: 520px; overflow-y: auto; padding: 1rem 1.25rem;">
+        <!-- Dynamically rendered -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.25rem; border-top: 1px solid var(--border-glass);">
+        <div id="simHistoryModalSummaryInfo" style="font-size: 0.775rem; color: var(--text-secondary);">
+          Hệ thống lưu lại đầy đủ lịch sử người lập, ngày giờ và chi tiết plan.
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="handleCloseSimPlanHistoryModal()" style="font-size: 0.8rem; padding: 0.4rem 1.15rem;">
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- ROLE MANAGEMENT & SWITCH MODAL             -->
+  <!-- ========================================== -->
+  <div id="roleSwitchModal" class="modal-backdrop" style="display: none; align-items: center; justify-content: center; z-index: 99999;">
+    <div class="modal-card role-modal-card">
+      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-glass);">
+        <div class="modal-title-wrap" style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="font-size: 1.25rem;">🛡️</span>
+          <h3 style="margin: 0; font-size: 1.05rem; font-weight: 700; color: #fff;">Quản Lý Phân Quyền &amp; Đổi Vai Trò</h3>
+        </div>
+        <button type="button" class="btn-close-modal" onclick="closeRoleSwitchModal()" style="background: none; border: none; color: #94a3b8; font-size: 1.15rem; cursor: pointer;">✕</button>
+      </div>
+
+      <div class="role-modal-body" style="padding: 1.25rem;">
+        <!-- Current Active Role Banner -->
+        <div class="current-role-banner" id="currentRoleBanner">
+          <div class="current-role-left">
+            <span class="current-role-avatar" id="modalRoleAvatar">👑</span>
+            <div>
+              <div class="current-role-title" id="modalRoleTitle">Quản Trị Viên (Admin)</div>
+              <div class="current-role-desc" id="modalRoleDesc">Đang có toàn quyền quản trị, đồng bộ Google Sheets và cấu hình hệ thống.</div>
+            </div>
+          </div>
+          <span class="current-role-status-badge">Đang dùng</span>
+        </div>
+
+        <div style="font-size: 0.8rem; font-weight: 700; color: #cbd5e1; margin-bottom: 0.65rem;">
+          Chọn vai trò muốn chuyển sang:
+        </div>
+
+        <!-- Role Selection Grid -->
+        <div class="role-selection-grid">
+          <!-- Admin Option -->
+          <div class="role-card-opt" data-role="admin" onclick="selectModalTargetRole('admin')">
+            <div class="role-opt-header">
+              <span class="role-opt-icon">👑</span>
+              <span class="role-opt-name">Admin</span>
+            </div>
+            <p class="role-opt-detail">Toàn quyền: Đồng bộ Cloud, Khôi phục dữ liệu gốc, phân bổ và chỉnh sửa chuyền.</p>
+            <span class="role-opt-pill admin-pill">Toàn quyền</span>
+          </div>
+
+          <!-- Editor Option -->
+          <div class="role-card-opt" data-role="editor" onclick="selectModalTargetRole('editor')">
+            <div class="role-opt-header">
+              <span class="role-opt-icon">✍️</span>
+              <span class="role-opt-name">Chỉnh Sửa</span>
+            </div>
+            <p class="role-opt-detail">Nhập liệu, chọn Line Ca Ngày/Đêm, chọn Line Support (1, 2, 3), chạy Simulator, xuất CSV.</p>
+            <span class="role-opt-pill editor-pill">Nhập data</span>
+          </div>
+
+          <!-- Viewer Option -->
+          <div class="role-card-opt" data-role="viewer" onclick="selectModalTargetRole('viewer')">
+            <div class="role-opt-header">
+              <span class="role-opt-icon">👁️</span>
+              <span class="role-opt-name">Chỉ Xem</span>
+            </div>
+            <p class="role-opt-detail">Tra cứu, xem kế hoạch, báo cáo năng lực chuyền, thứ tự sản xuất, xuất CSV. Khóa sửa.</p>
+            <span class="role-opt-pill viewer-pill">Viewer</span>
+          </div>
+        </div>
+
+        <!-- Role Switch Form -->
+        <form id="roleSwitchForm" onsubmit="handleRoleSwitchSubmit(event)">
+          <div id="roleSwitchPwdGroup" class="form-group" style="margin-top: 1rem;">
+            <label for="roleSwitchPasswordInput" id="roleSwitchPwdLabel" style="display: block; font-size: 0.8rem; font-weight: 600; color: #cbd5e1; margin-bottom: 0.45rem;">Nhập mật khẩu cho vai trò đã chọn:</label>
+            <div class="auth-input-wrapper">
+              <span class="auth-input-icon">🔑</span>
+              <input type="password" id="roleSwitchPasswordInput" class="auth-password-input" placeholder="Nhập mật khẩu..." style="font-size: 0.875rem; padding: 0.6rem 1rem 0.6rem 2.4rem;" />
+            </div>
+          </div>
+          <div id="roleSwitchErrorMsg" class="auth-error-msg" style="display: none; margin-top: 0.5rem;"></div>
+
+          <div class="modal-actions-row" style="margin-top: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+            <button type="button" class="btn btn-secondary" onclick="window.UserAuth.logout()" style="color: #f87171; border-color: rgba(239, 68, 68, 0.4); font-size: 0.8rem;">
+              <span>🔒 Đăng Xuất / Khóa</span>
+            </button>
+            <div style="display: flex; gap: 0.5rem;">
+              <button type="button" class="btn btn-secondary" onclick="closeRoleSwitchModal()" style="font-size: 0.8rem;">Hủy</button>
+              <button type="submit" class="btn btn-primary" id="btnConfirmRoleSwitch" style="font-size: 0.8rem;">Xác Nhận Đổi Vai Trò</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- MODAL: CẤU HÌNH LINE & ĐỊNH MỨC NHÂN LỰC THEO KÍP & HÀNH CHÍNH -->
+  <!-- ============================================================== -->
+  <div id="kipLineConfigModal" class="modal-overlay" style="display: none;" onclick="if(event.target === this) closeKipLineConfigModal()">
+    <div class="modal-card" style="max-width: 960px; width: 95%; max-height: 90vh; display: flex; flex-direction: column;">
+      <!-- Modal Header -->
+      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-glass); background: rgba(15, 23, 42, 0.7);">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);">
+            ⚙️
+          </div>
+          <div>
+            <h3 style="margin: 0; font-size: 1.15rem; font-weight: 700; color: #fff;">Cấu Hình Line &amp; Định Mức Nhân Lực</h3>
+            <div style="font-size: 0.775rem; color: #94a3b8; margin-top: 0.15rem;">
+              Tùy chỉnh danh sách Line &amp; định mức nhân sự trực tiếp/gián tiếp theo từng Kíp A, B, C, D và Hành Chính
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" onclick="closeKipLineConfigModal()" title="Đóng cửa sổ" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; font-size: 1.1rem; width: 32px; height: 32px; border-radius: 8px; cursor: pointer;">✕</button>
+      </div>
+
+      <!-- Kíp Navigation Tabs -->
+      <div class="kip-config-tabs-bar" style="display: flex; gap: 0.4rem; padding: 0.65rem 1.5rem; background: rgba(15, 23, 42, 0.5); border-bottom: 1px solid var(--border-glass); overflow-x: auto;">
+        <button type="button" class="btn-kip-tab active" data-kip="A" onclick="switchKipConfigTab('A')">
+          <span class="badge-shift-pill shift-a">Kíp A</span>
+        </button>
+        <button type="button" class="btn-kip-tab" data-kip="B" onclick="switchKipConfigTab('B')">
+          <span class="badge-shift-pill shift-b">Kíp B</span>
+        </button>
+        <button type="button" class="btn-kip-tab" data-kip="C" onclick="switchKipConfigTab('C')">
+          <span class="badge-shift-pill shift-c">Kíp C</span>
+        </button>
+        <button type="button" class="btn-kip-tab" data-kip="D" onclick="switchKipConfigTab('D')">
+          <span class="badge-shift-pill shift-d">Kíp D</span>
+        </button>
+        <button type="button" class="btn-kip-tab" data-kip="HC" onclick="switchKipConfigTab('HC')">
+          <span class="badge-shift-pill" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);">🏢 Hành Chính (Line 3D)</span>
+        </button>
+      </div>
+
+      <!-- Modal Body Content -->
+      <div id="kipConfigModalBody" style="padding: 1.25rem 1.5rem; overflow-y: auto; flex: 1;">
+        <!-- Dynamically rendered by renderKipConfigModal() -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1.5rem; border-top: 1px solid var(--border-glass); background: rgba(15, 23, 42, 0.7); flex-wrap: wrap; gap: 0.75rem;">
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <button type="button" class="btn btn-secondary" onclick="resetKipConfigToDefault()" style="font-size: 0.8rem; color: #f59e0b; border-color: rgba(245, 158, 11, 0.4);" title="Khôi phục dữ liệu gốc theo Sheet Manpower">
+            🔄 Khôi Phục Mặc Định Sheet Manpower
+          </button>
+        </div>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <button type="button" class="btn btn-secondary" onclick="closeKipLineConfigModal()" style="font-size: 0.8rem; padding: 0.45rem 1rem;">
+            Đóng
+          </button>
+          <button type="button" class="btn btn-primary" onclick="saveKipLineConfig()" style="font-size: 0.8rem; padding: 0.45rem 1.25rem; font-weight: 700; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);">
+            💾 Lưu Cấu Hình &amp; Cập Nhật Hệ Thống
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastBox" class="toast-box"></div>
+
+  <!-- Application Scripts (in strict dependency order) -->
+  <script src="js/matrix.js?v=20261102_wip_v4"></script>
+  <script src="js/datamass-data.js?v=20261102_wip_v4"></script>
+  <script src="js/assembly-capacity-data.js?v=20261102_wip_v4"></script>
+  <script src="js/hardtest-capacity-data.js?v=20261102_wip_v4"></script>
+  <script src="js/inventory-1c-data.js?v=20261104_final_bal_v3"></script>
+  <script src="js/bom-data.js?v=20261104_bom_plan_v5"></script>
+  <script src="js/mass-history-data.js?v=20261102_wip_v4"></script>
+  <script src="js/clips-alls-data.js?v=20261103_clips_nov_v1"></script>
+  <script src="js/sync.js?v=20261102_wip_v4"></script>
+  <script src="js/data.js?v=20261104_data_v3"></script>
+  <script src="js/app.js?v=20261103_mp_chart_v5"></script>
+  <script src="js/capacity.js?v=20261103_ht_b2_v1"></script>
+  <script src="js/wip-control.js?v=20261104_wip_v16"></script>
+  <script src="js/clips-all-plan.js?v=20261103_clips_nov_v1"></script>
+  <script src="js/kpi-result.js?v=20261106_kpi_v1"></script>
+  <script src="js/prod-history.js?v=20261107_prod_hist_v1"></script>
+</body>
+</html>

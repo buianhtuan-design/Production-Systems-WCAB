@@ -1,0 +1,26 @@
+[
+  {
+    "username": "admin",
+    "fullName": "Bùi Anh Tuấn (Admin)",
+    "role": "admin",
+    "password": "admin123",
+    "createdAt": "2026-11-06T00:00:00.000Z",
+    "description": "Quản trị viên tối cao, toàn quyền hệ thống"
+  },
+  {
+    "username": "Lich GLD",
+    "fullName": "Nguyen Tuan Lich",
+    "role": "editor",
+    "password": "12345",
+    "createdAt": "2026-11-06T11:50:00.000Z",
+    "description": "Trưởng Ca"
+  },
+  {
+    "username": "viewer",
+    "fullName": "Khách Tham Quan (Viewer)",
+    "role": "viewer",
+    "password": "viewer123",
+    "createdAt": "2026-11-06T00:00:00.000Z",
+    "description": "Tài khoản tra cứu tiến độ và sản lượng, chỉ xem"
+  }
+]

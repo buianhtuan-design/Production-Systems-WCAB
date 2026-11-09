@@ -1,0 +1,119 @@
+{
+  "A": {
+    "shift": "A",
+    "name": "Shift A",
+    "assyDirect": 41.0,
+    "assyTotal": 56.0,
+    "assyLinesDirect": {
+      "1A": 13.0,
+      "2A": 14.0,
+      "3A": 14.0
+    },
+    "assyLinesTotal": {
+      "1A": 18.0,
+      "2A": 19.0,
+      "3A": 19.0
+    },
+    "htDirect": 24.0,
+    "htTotal": 26.0,
+    "htBreakdown": {
+      "cleanroom": 3.0,
+      "operator": 21.0,
+      "feeder": 1.0,
+      "leader": 1.0
+    }
+  },
+  "B": {
+    "shift": "B",
+    "name": "Shift B",
+    "assyDirect": 28.0,
+    "assyTotal": 38.0,
+    "assyLinesDirect": {
+      "1B": 14.0,
+      "2B": 14.0
+    },
+    "assyLinesTotal": {
+      "1B": 19.0,
+      "2B": 19.0
+    },
+    "htDirect": 23.0,
+    "htTotal": 25.0,
+    "htBreakdown": {
+      "cleanroom": 4.0,
+      "operator": 19.0,
+      "feeder": 1.0,
+      "leader": 1.0
+    }
+  },
+  "C": {
+    "shift": "C",
+    "name": "Shift C",
+    "assyDirect": 43.0,
+    "assyTotal": 58.0,
+    "assyLinesDirect": {
+      "1C": 15.0,
+      "2C": 13.0,
+      "3C": 15.0
+    },
+    "assyLinesTotal": {
+      "1C": 20.0,
+      "2C": 18.0,
+      "3C": 20.0
+    },
+    "htDirect": 23.0,
+    "htTotal": 25.0,
+    "htBreakdown": {
+      "cleanroom": 2.0,
+      "operator": 21.0,
+      "feeder": 1.0,
+      "leader": 1.0
+    }
+  },
+  "D": {
+    "shift": "D",
+    "name": "Shift D",
+    "assyDirect": 28.0,
+    "assyTotal": 38.0,
+    "assyLinesDirect": {
+      "1D": 14.0,
+      "2D": 14.0
+    },
+    "assyLinesTotal": {
+      "1D": 19.0,
+      "2D": 19.0
+    },
+    "htDirect": 22.0,
+    "htTotal": 24.0,
+    "htBreakdown": {
+      "cleanroom": 4.0,
+      "operator": 18.0,
+      "feeder": 1.0,
+      "leader": 1.0
+    }
+  },
+  "HC": {
+    "shift": "HC",
+    "name": "Hành Chính",
+    "lines": [
+      "3D"
+    ],
+    "assyDirect": 11.0,
+    "assyTotal": 16.0,
+    "assyLinesDirect": {
+      "3D": 11.0
+    },
+    "assyLinesTotal": {
+      "3D": 16.0
+    },
+    "htDirect": 0.0,
+    "htTotal": 0.0,
+    "htBreakdown": {
+      "cleanroom": 0.0,
+      "operator": 0.0,
+      "feeder": 0.0,
+      "leader": 0.0
+    },
+    "workShift": "Day",
+    "workingDays": "Mon-Fri"
+  }
+}

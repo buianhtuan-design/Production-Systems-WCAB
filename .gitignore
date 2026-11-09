@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# Temporary & test files
+scratch/
+*.log
+server.log
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class

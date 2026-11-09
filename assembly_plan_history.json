@@ -1,0 +1,298 @@
+[
+  {
+    "id": "PLAN_1793954185201",
+    "createdAt": "2026-11-06T08:36:24.267Z",
+    "dateStr": "6/11/2026",
+    "timeStr": "15:36:24",
+    "planner": "KS. Nguyễn Văn Planner (User Khác)",
+    "stage": "ASSEMBLY",
+    "modelsCount": 59,
+    "grandPlan": 17229,
+    "grandFact": 8826,
+    "grandPlanDay": 3632,
+    "grandPlanNight": 3624,
+    "workingLinesDay": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "2B",
+      "3D",
+      "1B"
+    ],
+    "workingLinesNight": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "1A",
+      "2A",
+      "3A"
+    ],
+    "snapshot": {
+      "plannerName": "KS. Nguyễn Văn Planner (User Khác)",
+      "stageFilter": "ASSEMBLY",
+      "simFromDate": "2026-11-05",
+      "simToDate": "2026-11-06",
+      "simWorkingLinesDay": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "2B",
+        "3D",
+        "1B"
+      ],
+      "simWorkingLinesNight": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "1A",
+        "2A",
+        "3A"
+      ],
+      "simManualLinesDay": {
+        "F-M15": "Line 1",
+        "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": "1B",
+        "ASSEMBLY___Keypad (8xx)___Ajax Keypad white EU (напівфабрикат)": "3D",
+        "ASSEMBLY___MotionCam HDR (8xx) white___Ajax MotionCam HDR (8EU) white (напівфабрикат)": "2B",
+        "ASSEMBLY___Hub 4G UEU___Ajax Hub 4G (8EU/UEU) white (напівфабрикат)": "3D"
+      },
+      "simManualLinesNight": {
+        "F-M15": "Line 2",
+        "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": "1A",
+        "ASSEMBLY___Keypad (8xx)___Ajax Keypad white EU (напівфабрикат)": "2A",
+        "ASSEMBLY___MotionCam HDR (8xx) white___Ajax MotionCam HDR (8EU) white (напівфабрикат)": "3A",
+        "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": "3A",
+        "ASSEMBLY___DoorProtect Plus 8xx___Ajax DoorProtect Plus white EU (напівфабрикат)": "3A",
+        "ASSEMBLY___MotionProtect (8xx)___Ajax MotionProtect white EU (напівфабрикат)": "3A",
+        "ASSEMBLY___HomeSiren white___Ajax HomeSiren white EU (напівфабрикат)": "3A",
+        "ASSEMBLY___HomeSiren white___Ajax HomeSiren (8EU) WL Standard white (напівфабрикат)": "3A",
+        "ASSEMBLY___DualCurtain Outdoor (8XX)___Ajax DualCurtain Outdoor (8EU) white (напівфабрикат)": "3A",
+        "ASSEMBLY___MotionProtect Outdoor___Ajax MotionProtect Outdoor white EU (напівфабрикат)": "3A",
+        "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus white EU (напівфабрикат)": "3A",
+        "ASSEMBLY___StreetSiren black___Ajax StreetSiren black EU (напівфабрикат)": "3A",
+        "ASSEMBLY___DoorProtect Plus 8xx___Ajax DoorProtect Plus black EU (напівфабрикат)": "3A",
+        "ASSEMBLY___KeyPad TouchScreen white NA UPC___Ajax KeyPad TouchScreen (9NA) UPC white (напівфабрикат)": "3A",
+        "ASSEMBLY___HomeSiren 9AU white___Ajax HomeSiren (9AU) white (напівфабрикат)": "3A",
+        "ASSEMBLY___StreetSiren white___Ajax StreetSiren white EU (напівфабрикат)": "2A"
+      },
+      "simLineOverridesDay": {
+        "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": "1B",
+        "ASSEMBLY___Keypad (8xx)___Ajax Keypad white EU (напівфабрикат)": "3D",
+        "ASSEMBLY___MotionCam HDR (8xx) white___Ajax MotionCam HDR (8EU) white (напівфабрикат)": "2B",
+        "ASSEMBLY___Hub 4G UEU___Ajax Hub 4G (8EU/UEU) white (напівфабрикат)": "3D"
+      },
+      "simLineOverridesNight": {
+        "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": "1A",
+        "ASSEMBLY___Keypad (8xx)___Ajax Keypad white EU (напівфабрикат)": "2A",
+        "ASSEMBLY___MotionCam HDR (8xx) white___Ajax MotionCam HDR (8EU) white (напівфабрикат)": "3A",
+        "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": "3A",
+        "ASSEMBLY___DoorProtect Plus 8xx___Ajax DoorProtect Plus white EU (напівфабрикат)": "3A",
+        "ASSEMBLY___MotionProtect (8xx)___Ajax MotionProtect white EU (напівфабрикат)": "3A",
+        "ASSEMBLY___HomeSiren white___Ajax HomeSiren white EU (напівфабрикат)": "3A",
+        "ASSEMBLY___HomeSiren white___Ajax HomeSiren (8EU) WL Standard white (напівфабрикат)": "3A",
+        "ASSEMBLY___DualCurtain Outdoor (8XX)___Ajax DualCurtain Outdoor (8EU) white (напівфабрикат)": "3A",
+        "ASSEMBLY___MotionProtect Outdoor___Ajax MotionProtect Outdoor white EU (напівфабрикат)": "3A",
+        "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus white EU (напівфабрикат)": "3A",
+        "ASSEMBLY___StreetSiren black___Ajax StreetSiren black EU (напівфабрикат)": "3A",
+        "ASSEMBLY___DoorProtect Plus 8xx___Ajax DoorProtect Plus black EU (напівфабрикат)": "3A",
+        "ASSEMBLY___KeyPad TouchScreen white NA UPC___Ajax KeyPad TouchScreen (9NA) UPC white (напівфабрикат)": "3A",
+        "ASSEMBLY___HomeSiren 9AU white___Ajax HomeSiren (9AU) white (напівфабрикат)": "3A",
+        "ASSEMBLY___StreetSiren white___Ajax StreetSiren white EU (напівфабрикат)": "2A"
+      },
+      "simLineOverrides": {
+        "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": "1B",
+        "ASSEMBLY___Keypad (8xx)___Ajax Keypad white EU (напівфабрикат)": "3D",
+        "ASSEMBLY___MotionCam HDR (8xx) white___Ajax MotionCam HDR (8EU) white (напівфабрикат)": "2B",
+        "ASSEMBLY___Hub 4G UEU___Ajax Hub 4G (8EU/UEU) white (напівфабрикат)": "3D"
+      },
+      "simManualSeqsDay": {
+        "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": "1",
+        "ASSEMBLY___Keypad (8xx)___Ajax Keypad white EU (напівфабрикат)": "2",
+        "ASSEMBLY___MotionCam HDR (8xx) white___Ajax MotionCam HDR (8EU) white (напівфабрикат)": "1",
+        "ASSEMBLY___Hub 4G UEU___Ajax Hub 4G (8EU/UEU) white (напівфабрикат)": "1"
+      },
+      "simManualSeqsNight": {
+        "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": "1",
+        "ASSEMBLY___Keypad (8xx)___Ajax Keypad white EU (напівфабрикат)": "1",
+        "ASSEMBLY___MotionCam HDR (8xx) white___Ajax MotionCam HDR (8EU) white (напівфабрикат)": "1",
+        "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": "2",
+        "ASSEMBLY___DoorProtect Plus 8xx___Ajax DoorProtect Plus white EU (напівфабрикат)": "4",
+        "ASSEMBLY___MotionProtect (8xx)___Ajax MotionProtect white EU (напівфабрикат)": "5",
+        "ASSEMBLY___HomeSiren white___Ajax HomeSiren white EU (напівфабрикат)": "6",
+        "ASSEMBLY___HomeSiren white___Ajax HomeSiren (8EU) WL Standard white (напівфабрикат)": "7",
+        "ASSEMBLY___DualCurtain Outdoor (8XX)___Ajax DualCurtain Outdoor (8EU) white (напівфабрикат)": "8",
+        "ASSEMBLY___MotionProtect Outdoor___Ajax MotionProtect Outdoor white EU (напівфабрикат)": "9",
+        "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus white EU (напівфабрикат)": "10",
+        "ASSEMBLY___StreetSiren black___Ajax StreetSiren black EU (напівфабрикат)": "11",
+        "ASSEMBLY___DoorProtect Plus 8xx___Ajax DoorProtect Plus black EU (напівфабрикат)": "12",
+        "ASSEMBLY___KeyPad TouchScreen white NA UPC___Ajax KeyPad TouchScreen (9NA) UPC white (напівфабрикат)": "13",
+        "ASSEMBLY___HomeSiren 9AU white___Ajax HomeSiren (9AU) white (напівфабрикат)": "14",
+        "ASSEMBLY___StreetSiren white___Ajax StreetSiren white EU (напівфабрикат)": "2"
+      },
+      "simManualPfDay": {
+        "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": 85,
+        "ASSEMBLY___Keypad (8xx)___Ajax Keypad white EU (напівфабрикат)": 45,
+        "ASSEMBLY___MotionCam HDR (8xx) white___Ajax MotionCam HDR (8EU) white (напівфабрикат)": 45,
+        "ASSEMBLY___Hub 4G UEU___Ajax Hub 4G (8EU/UEU) white (напівфабрикат)": 45
+      },
+      "simManualPfNight": {
+        "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": 45
+      },
+      "simManualPlanDay": {},
+      "simManualPlanNight": {},
+      "simManualShifts": {},
+      "simManualNotes": {
+        "F-M15": "Kế hoạch đã được user khác hoàn thành và tự động đồng bộ sang Admin"
+      }
+    }
+  },
+  {
+    "id": "PLAN_TEST_1793938175914",
+    "createdAt": "2026-11-06T10:35:00.000Z",
+    "dateStr": "06/11/2026",
+    "timeStr": "10:35:00",
+    "planner": "KS. Nguyễn Văn Planner (User Khác)",
+    "stage": "ASSEMBLY",
+    "modelsCount": 18,
+    "grandPlan": 125000,
+    "grandFact": 0,
+    "grandPlanDay": 65000,
+    "grandPlanNight": 60000,
+    "workingLinesDay": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    "workingLinesNight": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    "snapshot": {
+      "plannerName": "KS. Nguyễn Văn Planner (User Khác)",
+      "stageFilter": "ASSEMBLY",
+      "simFromDate": "2026-11-06",
+      "simToDate": "2026-11-06",
+      "simWorkingLinesDay": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "simWorkingLinesNight": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "simManualLinesDay": {
+        "F-M15": "Line 1"
+      },
+      "simManualLinesNight": {
+        "F-M15": "Line 2"
+      },
+      "simManualNotes": {
+        "F-M15": "Kế hoạch đã được user khác hoàn thành và tự động đồng bộ sang Admin"
+      }
+    }
+  },
+  {
+    "id": "PLAN_1793934993595",
+    "createdAt": "2026-11-06T03:16:33.595Z",
+    "dateStr": "6/11/2026",
+    "timeStr": "10:16:33",
+    "planner": "Bùi Anh Tuấn (Planner A)",
+    "stage": "ASSEMBLY",
+    "modelsCount": 59,
+    "grandPlan": 17229,
+    "grandFact": 8826,
+    "grandPlanDay": 0,
+    "grandPlanNight": 0,
+    "workingLinesDay": [],
+    "workingLinesNight": [],
+    "snapshot": {
+      "plannerName": "Bùi Anh Tuấn (Planner A)",
+      "stageFilter": "ASSEMBLY",
+      "simFromDate": "2026-11-05",
+      "simToDate": "2026-11-06",
+      "simWorkingLinesDay": [],
+      "simWorkingLinesNight": [],
+      "simManualLinesDay": {},
+      "simManualLinesNight": {},
+      "simLineOverridesDay": {},
+      "simLineOverridesNight": {},
+      "simLineOverrides": {},
+      "simManualSeqsDay": {},
+      "simManualSeqsNight": {},
+      "simManualPfDay": {},
+      "simManualPfNight": {},
+      "simManualPlanDay": {},
+      "simManualPlanNight": {},
+      "simManualShifts": {},
+      "simManualNotes": {
+        "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": "Gấp - Ưu tiên ráp sớm ca sáng",
+        "ASSEMBLY___Keypad (8xx)___Ajax Keypad white EU (напівфабрикат)": "Chờ cấp thêm linh kiện từ kho dập"
+      }
+    }
+  },
+  {
+    "id": "PLAN_1793934958429",
+    "createdAt": "2026-11-06T03:15:58.428Z",
+    "dateStr": "6/11/2026",
+    "timeStr": "10:15:58",
+    "planner": "Bùi Anh Tuấn (Planner A)",
+    "stage": "ASSEMBLY",
+    "modelsCount": 59,
+    "grandPlan": 17229,
+    "grandFact": 8826,
+    "grandPlanDay": 0,
+    "grandPlanNight": 0,
+    "workingLinesDay": [],
+    "workingLinesNight": [],
+    "snapshot": {
+      "plannerName": "Bùi Anh Tuấn (Planner A)",
+      "stageFilter": "ASSEMBLY",
+      "simFromDate": "2026-11-05",
+      "simToDate": "2026-11-06",
+      "simWorkingLinesDay": [],
+      "simWorkingLinesNight": [],
+      "simManualLinesDay": {},
+      "simManualLinesNight": {},
+      "simLineOverridesDay": {},
+      "simLineOverridesNight": {},
+      "simLineOverrides": {},
+      "simManualSeqsDay": {},
+      "simManualSeqsNight": {},
+      "simManualPfDay": {},
+      "simManualPfNight": {},
+      "simManualPlanDay": {},
+      "simManualPlanNight": {},
+      "simManualShifts": {},
+      "simManualNotes": {
+        "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": "Gấp - Ưu tiên ráp sớm ca sáng",
+        "ASSEMBLY___Keypad (8xx)___Ajax Keypad white EU (напівфабрикат)": "Chờ cấp thêm linh kiện từ kho dập"
+      }
+    }
+  }
+]
