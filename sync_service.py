@@ -1540,6 +1540,13 @@ def sync_datamass():
         'hardtest_items_count': hardtest_capacity_data.get('totalItems', 0)
     }
 
+    try:
+        from github_sync_helper import auto_push_data_to_github
+        gh_res = auto_push_data_to_github()
+        status['github_sync'] = gh_res
+    except Exception as gh_ex:
+        print(f"⚠️ [GitHub Auto-Sync Warning]: {gh_ex}")
+
     with open(STATUS_FILE, 'w', encoding='utf-8') as f:
         json.dump(status, f, indent=2, ensure_ascii=False)
 
@@ -1611,6 +1618,12 @@ def sync_clips_alls_only(target_month='2026-11', period_name='01/Nov - 30/Nov', 
 
     elapsed = round(time.time() - t0, 2)
     print(f"✅ [Sync Clips All Only] Đã nạp thành công kỳ {target_month}: {clips_alls_data['totalItems']} mã, Plan {clips_alls_data['totalPlan']:,.0f} pcs trong {elapsed}s.")
+
+    try:
+        from github_sync_helper import auto_push_data_to_github
+        auto_push_data_to_github()
+    except Exception as gh_ex:
+        print(f"⚠️ [GitHub Auto-Sync Warning]: {gh_ex}")
 
     return {
         'success': True,

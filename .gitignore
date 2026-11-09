@@ -10,3 +10,7 @@ server.log
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Local credentials
+sync_credentials.json
+
