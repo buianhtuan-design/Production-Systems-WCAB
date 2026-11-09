@@ -2080,7 +2080,7 @@ function renderDataMassView() {
       const stageCls = isGrand ? 'row-stage-total' : '';
       const targetSaveStage = sum.saveStage || (sum.isMajorComposite || (isGrand && !sum.isHardtestGroup) ? 'major_composite' : (sum.isHardtestGroup ? 'HARDTEST_TOTAL' : (stageName === 'ASSEMBLY' ? 'ASSEMBLY' : stageName)));
       const isAssembly = Boolean(stageName === 'ASSEMBLY' || targetSaveStage === 'ASSEMBLY' || sum.saveStage === 'ASSEMBLY');
-      const rowSpanCount = isCompact ? (isAssembly ? 5 : 3) : (isAssembly ? 8 : 6);
+      const rowSpanCount = isCompact ? (isAssembly ? 5 : 3) : (isAssembly ? 6 : 4);
       // Chỉ dòng tổng hợp 2 cụm là tự động cộng dồn (Auto-Sum). Assembly và Tổng Hard Test cho phép điền / hiển thị đúng nhân lực có mặt theo kíp trực
       const isAutoSumRow = Boolean(sum.isMajorComposite || (isGrand && !sum.isHardtestGroup && !stageName.includes('Plan HT Total') && !stageName.includes('HARD TEST')));
 
@@ -2491,21 +2491,14 @@ function renderDataMassView() {
       const lineDiff = Math.round(((avgActVal - avgPlanVal) / 14) * 10) / 10;
 
       const evalHtml = cumShortage > 0 
-        ? `<div style="margin-top: 0.35rem; display: flex; flex-direction: column; gap: 0.25rem;">
-             <div>
-               <span class="badge-mp-shortage" style="font-size: 0.72rem; padding: 0.15rem 0.45rem;">
-                 🚨 Thiếu: <strong>${cumShortage.toFixed(1)}</strong> lượt ng
-               </span>
-             </div>
-             <div style="font-size: 0.7rem; color: #cbd5e1; line-height: 1.35; display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
-               <span style="color: #c084fc; font-weight: 600;">🙋‍♂️ Bổ sung: ${cumSupp.toFixed(1)} lượt</span>
-               <span style="color: var(--text-muted);">•</span>
-               <span style="color: #fbbf24; font-weight: 600;">⏰ ${cumOt.toFixed(1)}h OT</span>
-             </div>
+        ? `<div style="margin-top: 0.35rem;">
+             <span class="badge-mp-shortage" style="font-size: 0.72rem; padding: 0.15rem 0.45rem;">
+               🚨 Thiếu: <strong>${cumShortage.toFixed(1)}</strong> lượt ng
+             </span>
            </div>`
         : `<div style="margin-top: 0.35rem;">
              <span class="badge-mp-ok" style="font-size: 0.72rem; padding: 0.15rem 0.45rem;">
-               ✅ Đủ nhân sự (0h OT)
+               ✅ Đủ nhân sự
              </span>
            </div>`;
 
@@ -2624,7 +2617,7 @@ function renderDataMassView() {
 
         ${!isCompact ? `
           <!-- Hàng 4: Số Người Cần Bổ Sung (Thiếu hụt) -->
-          <tr class="${stageCls} row-manpower-shortage">
+          <tr class="${stageCls} row-manpower-shortage" style="border-bottom: 2px solid var(--border-glass);">
             <td class="sticky-col-metric" style="text-align: center;">
               <span class="metric-pill" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35);" title="Số người cần bổ sung khi chênh lệch âm">
                 🚨 4. Người Cần Bổ Sung
@@ -2639,48 +2632,6 @@ function renderDataMassView() {
             </td>
             <td style="text-align: center; font-size: 0.75rem;">
               ${cumShortage > 0 ? '<span class="badge-mp-shortage">Cần tuyển / điều động</span>' : '<span class="badge-mp-ok">Đạt chuẩn</span>'}
-            </td>
-          </tr>
-
-          <!-- Hàng 5: Thực Tế Số Người Bổ Sung (Actual Supplement) -->
-          <tr class="${stageCls} row-manpower-supplement">
-            <td class="sticky-col-metric" style="text-align: center;">
-              <span class="metric-pill" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.35);" title="Thực tế số người bổ sung / tăng cường (Nhập trực tiếp theo ngày hoặc tự động cộng tổng)">
-                🙋‍♂️ 5. Thực Tế Bổ Sung
-              </span>
-            </td>
-            ${supplementCells}
-            <td class="font-mono" style="text-align: right; font-weight: 800; font-size: 0.875rem; color: #c084fc;">
-              ${cumSupp.toFixed(1)}
-            </td>
-            <td class="font-mono week-summary-col" style="font-weight: 800; font-size: 0.875rem; text-align: right; color: ${avgSuppVal > 0 ? '#c084fc' : 'var(--text-muted)'};">
-              ${avgSuppVal.toFixed(1)}
-            </td>
-            <td style="text-align: center; font-size: 0.75rem;">
-              ${cumSupp >= cumShortage && cumShortage > 0 
-                ? '<span class="badge-mp-ok">✅ Đã bù đủ nhân sự</span>' 
-                : cumShortage > 0 
-                  ? `<span class="badge-mp-shortage">⚠️ Còn thiếu ${(cumShortage - cumSupp).toFixed(1)} ng</span>`
-                  : '<span class="badge-mp-ok">Đủ nhân sự</span>'}
-            </td>
-          </tr>
-
-          <!-- Hàng 6: Số Giờ OT Cần Bù (Quy chuẩn: 1 người bổ sung = 12h OT) -->
-          <tr class="${stageCls} row-manpower-ot" style="border-bottom: 2px solid var(--border-glass);">
-            <td class="sticky-col-metric" style="text-align: center;">
-              <span class="metric-pill" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35);" title="Số giờ OT tương ứng với số người bổ sung = Số người bổ sung × 12h OT">
-                ⏰ 6. Số Giờ OT Cần Bù
-              </span>
-            </td>
-            ${otCells}
-            <td class="font-mono" style="text-align: right; font-weight: 900; font-size: 0.9rem; color: ${cumOt > 0 ? '#fbbf24' : '#34d399'};">
-              ${cumOt.toFixed(1)}
-            </td>
-            <td class="font-mono week-summary-col" style="font-weight: 800; font-size: 0.875rem; text-align: right; color: ${avgOtVal > 0 ? '#fbbf24' : 'var(--text-muted)'};">
-              ${avgOtVal.toFixed(1)}
-            </td>
-            <td style="text-align: center; font-size: 0.75rem;">
-              ${cumOt > 0 ? `<span class="badge-mp-ot">${cumOt.toFixed(1)}h OT (${cumSupp.toFixed(1)} ng)</span>` : '<span class="badge-mp-ok">0h OT</span>'}
             </td>
           </tr>
         ` : ''}
@@ -4351,17 +4302,50 @@ window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, is
     const isOver = (d.hasActual && (d.loadingPct > 100 || d.planVal > d.actVal));
     const shortage = Math.max(0, Math.round((d.planVal - d.actVal) * 10) / 10);
 
-    // Plan Bar (Vàng) & Actual Bar (Xanh ngọc)
+    // Plan Bar (Màu Xanh) & Actual Bar (Màu Cam) + Hiển thị số người ở chân biểu đồ
+    const cxPlan = xPlan + barW / 2;
+    const cxAct = xAct + barW / 2;
+    const planValStr = d.planVal > 0 ? (d.planVal % 1 === 0 ? d.planVal.toFixed(0) : d.planVal.toFixed(1)) : '0';
+    const actValStr = d.actVal > 0 ? (d.actVal % 1 === 0 ? d.actVal.toFixed(0) : d.actVal.toFixed(1)) : '0';
+    const numFontSize = isExpanded ? 8.5 : 7.2;
+
+    // Số người Kế hoạch ở chân cột (Xanh)
+    let planFootLabelHtml = '';
+    if (d.planVal > 0) {
+      if (hPlan >= 15) {
+        planFootLabelHtml = `<text x="${cxPlan}" y="${yBase - 4}" fill="#ffffff" font-size="${numFontSize}" font-weight="900" font-family="'JetBrains Mono', monospace" text-anchor="middle" style="paint-order: stroke; stroke: rgba(2,132,199,0.9); stroke-width: 2px;">${planValStr}</text>`;
+      } else {
+        planFootLabelHtml = `<text x="${cxPlan}" y="${yPlan - 3}" fill="#38bdf8" font-size="${numFontSize}" font-weight="900" font-family="'JetBrains Mono', monospace" text-anchor="middle">${planValStr}</text>`;
+      }
+    }
+
+    // Số người Nhân lực có ở chân cột (Cam)
+    let actFootLabelHtml = '';
+    if (d.actVal > 0) {
+      if (hAct >= 15) {
+        actFootLabelHtml = `<text x="${cxAct}" y="${yBase - 4}" fill="#ffffff" font-size="${numFontSize}" font-weight="900" font-family="'JetBrains Mono', monospace" text-anchor="middle" style="paint-order: stroke; stroke: rgba(234,88,12,0.9); stroke-width: 2px;">${actValStr}</text>`;
+      } else {
+        actFootLabelHtml = `<text x="${cxAct}" y="${yAct - 3}" fill="#fb923c" font-size="${numFontSize}" font-weight="900" font-family="'JetBrains Mono', monospace" text-anchor="middle">${actValStr}</text>`;
+      }
+    } else if (d.planVal > 0) {
+      actFootLabelHtml = `<text x="${cxAct}" y="${yBase - 4}" fill="#fca5a5" font-size="${numFontSize}" font-weight="900" font-family="'JetBrains Mono', monospace" text-anchor="middle">0</text>`;
+    }
+
     barsHtml += `
       <g class="chart-day-bar-group" data-day-index="${i}">
+        <!-- Cột Kế Hoạch Cần (Màu Xanh) -->
         <rect x="${xPlan}" y="${yPlan}" width="${barW}" height="${hPlan}" rx="2.5" 
               fill="url(#gradPlanBar)" opacity="${barOpacity}">
           <title>Plan ${d.date}: ${d.planVal} người</title>
         </rect>
+        ${planFootLabelHtml}
+
+        <!-- Cột Nhân Lực Có (Màu Cam) -->
         <rect x="${xAct}" y="${yAct}" width="${barW}" height="${hAct}" rx="2.5" 
               fill="url(#gradActBar)" opacity="${barOpacity}">
-          <title>Thực tế ${d.date}: ${d.actVal} người</title>
+          <title>Nhân lực có ${d.date}: ${d.actVal} người</title>
         </rect>
+        ${actFootLabelHtml}
       </g>
     `;
 
@@ -4448,17 +4432,15 @@ window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, is
     const dayWeight = (d.isWeekend || d.isSelected) ? '800' : '600';
     const rotText = d.rot ? `${d.rot.day}/${d.rot.night}` : '';
 
-    // Badge báo số người thiếu chuyển xuống dưới sát chân biểu đồ
+    // Badge báo số người thiếu chuyển xuống dưới sát chân biểu đồ (Chỉ để dạng -0.8 theo chỉ đạo)
     let shortageFootBadgeHtml = '';
     if (isOver && shortage > 0) {
       const shortageStr = (shortage % 1 === 0) ? shortage.toFixed(0) : shortage.toFixed(1);
       const shortageH = isExpanded ? 16 : 13.5;
-      const shortageText = isExpanded ? `Thiếu ${shortageStr} ng` : `-${shortageStr} ng`;
-      const shortageFontSize = isExpanded ? 8.5 : 7.2;
+      const shortageText = `-${shortageStr}`;
+      const shortageFontSize = isExpanded ? 9 : 7.8;
       const isStaggerShortage = (!isExpanded && (i % 2 === 1));
-      const shortageW = isExpanded 
-        ? Math.min(54, Math.max(44, shortageText.length * 5.4 + 8)) 
-        : Math.min(32, Math.max(26, shortageText.length * 4.4 + 6));
+      const shortageW = Math.max(isExpanded ? 32 : 25, shortageText.length * (isExpanded ? 6.5 : 5.5) + 8);
       const shortageY = isExpanded ? (yBase + 48) : (yBase + (isStaggerShortage ? 61 : 47));
 
       shortageFootBadgeHtml = `
@@ -4592,19 +4574,19 @@ window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, is
             📊 Loading TB: <strong style="color: ${rateColor}; font-size: 0.95rem;">${cumAct > 0 ? `${overallLoadingRate.toFixed(1)}%` : '--%'}</strong>
             <span class="manpower-strip-tag" style="background: ${statusTagBg}; color: ${statusTagText};">${statusTagLabel}</span>
           </span>
-          <span class="manpower-strip-item" style="border-left: 2.5px solid #fbbf24;">
-            👷 Kế Hoạch Cần: <strong style="color: #fbbf24;">${cumPlan.toLocaleString('vi-VN')}</strong> <span style="font-size: 0.72rem; color: #cbd5e1;">(BQ: ${avgPlan}/ng)</span>
+          <span class="manpower-strip-item" style="border-left: 2.5px solid #38bdf8;">
+            👷 Kế Hoạch Cần: <strong style="color: #38bdf8;">${cumPlan.toLocaleString('vi-VN')}</strong> <span style="font-size: 0.72rem; color: #cbd5e1;">(BQ: ${avgPlan}/ng)</span>
           </span>
-          <span class="manpower-strip-item" style="border-left: 2.5px solid #34d399;">
-            👥 Nhân Lực Có: <strong style="color: #34d399;">${cumAct.toLocaleString('vi-VN')}</strong> <span style="font-size: 0.72rem; color: #cbd5e1;">(BQ: ${avgAct}/ng)</span>
+          <span class="manpower-strip-item" style="border-left: 2.5px solid #fb923c;">
+            👥 Nhân Lực Có: <strong style="color: #fb923c;">${cumAct.toLocaleString('vi-VN')}</strong> <span style="font-size: 0.72rem; color: #cbd5e1;">(BQ: ${avgAct}/ng)</span>
           </span>
           <span class="manpower-strip-item" style="border-left: 2.5px solid ${cumDiff < 0 ? '#ef4444' : '#10b981'};">
             ⚖️ Cân Đối: <strong style="color: ${cumDiff < 0 ? '#f87171' : '#34d399'};">${cumDiff > 0 ? '+' : ''}${cumDiff.toFixed(1)}</strong> ng
           </span>
         </div>
         <div class="manpower-strip-legend">
-          <span class="strip-legend-item"><span class="strip-legend-dot" style="background: #fbbf24;"></span> Plan (người)</span>
-          <span class="strip-legend-item"><span class="strip-legend-dot" style="background: #34d399;"></span> Thực Tế (người)</span>
+          <span class="strip-legend-item"><span class="strip-legend-dot" style="background: #38bdf8;"></span> Plan (người)</span>
+          <span class="strip-legend-item"><span class="strip-legend-dot" style="background: #fb923c;"></span> Nhân Lực Có (người)</span>
           <span class="strip-legend-item"><span class="strip-legend-line" style="background: linear-gradient(90deg, #c084fc, #38bdf8);"></span> % Loading</span>
           <span class="strip-legend-item"><span class="strip-legend-dot" style="background: #dc2626; border-radius: 2px;"></span> Over (Thiếu ng)</span>
           <span class="strip-legend-item"><span class="strip-legend-dash"></span> 100% Chuẩn</span>
@@ -4621,13 +4603,13 @@ window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, is
             </filter>
 
             <linearGradient id="gradPlanBar" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.95" />
-              <stop offset="100%" stop-color="#d97706" stop-opacity="0.75" />
+              <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.95" />
+              <stop offset="100%" stop-color="#0284c7" stop-opacity="0.8" />
             </linearGradient>
 
             <linearGradient id="gradActBar" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#34d399" stop-opacity="0.95" />
-              <stop offset="100%" stop-color="#059669" stop-opacity="0.75" />
+              <stop offset="0%" stop-color="#fb923c" stop-opacity="0.95" />
+              <stop offset="100%" stop-color="#ea580c" stop-opacity="0.8" />
             </linearGradient>
 
             <linearGradient id="loadingLineGradient" x1="0" y1="0" x2="1" y2="0">
@@ -4692,11 +4674,11 @@ window.showManpowerLoadingTooltip = function(event, encodedPayload) {
         </div>
         <div style="display: flex; justify-content: space-between;">
           <span style="color: #cbd5e1;">👷 1. Kế Hoạch Cần:</span>
-          <strong style="color: #fbbf24;">${data.planVal.toFixed(1)} người</strong>
+          <strong style="color: #38bdf8;">${data.planVal.toFixed(1)} người</strong>
         </div>
         <div style="display: flex; justify-content: space-between;">
           <span style="color: #cbd5e1;">👥 2. Nhân Lực Có:</span>
-          <strong style="color: #34d399;">${data.actVal.toFixed(1)} người</strong>
+          <strong style="color: #fb923c;">${data.actVal.toFixed(1)} người</strong>
         </div>
         <div style="display: flex; justify-content: space-between;">
           <span style="color: #cbd5e1;">⚖️ 3. Chênh Lệch:</span>
