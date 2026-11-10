@@ -24,29 +24,48 @@ function getOrCreateSyncSheet_() {
   return sheet;
 }
 
-function writePlanChunksToRow_(sheet, rowIdx, planObj) {
+function splitPlanChunks_(planObj) {
   var jsonStr = JSON.stringify(planObj);
   var chunks = [];
   for (var i = 0; i < jsonStr.length; i += CHUNK_SIZE) {
     chunks.push(jsonStr.substring(i, i + CHUNK_SIZE));
   }
+  return chunks;
+}
+
+function writeAllPlansBatch_(sheet, plansList) {
+  var rows = [];
+  var maxNeededCols = 5;
+  for (var i = 0; i < plansList.length; i++) {
+    var planObj = plansList[i];
+    var chunks = splitPlanChunks_(planObj);
+    var row = [
+      planObj.id || '',
+      planObj.createdAt || '',
+      planObj.planner || '',
+      ((planObj.dateStr || '') + ' ' + (planObj.timeStr || '')).trim()
+    ].concat(chunks);
+    if (row.length > maxNeededCols) maxNeededCols = row.length;
+    rows.push(row);
+  }
+
   var maxCols = sheet.getMaxColumns();
-  var neededCols = 4 + chunks.length;
-  if (neededCols > maxCols) {
-    sheet.insertColumnsAfter(maxCols, neededCols - maxCols);
+  if (maxNeededCols > maxCols) {
+    sheet.insertColumnsAfter(maxCols, maxNeededCols - maxCols);
   }
-  // Xóa dữ liệu cũ của hàng trước khi ghi
-  var clearWidth = Math.max(sheet.getLastColumn(), neededCols);
-  if (clearWidth >= 1) {
-    sheet.getRange(rowIdx, 1, 1, clearWidth).clearContent();
+  for (var r = 0; r < rows.length; r++) {
+    while (rows[r].length < maxNeededCols) rows[r].push('');
   }
-  var rowValues = [
-    planObj.id || '',
-    planObj.createdAt || '',
-    planObj.planner || '',
-    ((planObj.dateStr || '') + ' ' + (planObj.timeStr || '')).trim()
-  ].concat(chunks);
-  sheet.getRange(rowIdx, 1, 1, rowValues.length).setValues([rowValues]);
+
+  var existingLastRow = sheet.getLastRow();
+  if (existingLastRow >= 2) {
+    sheet.getRange(2, 1, existingLastRow - 1, sheet.getMaxColumns()).clearContent();
+  }
+  if (rows.length > 0) {
+    var targetRange = sheet.getRange(2, 1, rows.length, maxNeededCols);
+    targetRange.setNumberFormat('@');
+    targetRange.setValues(rows);
+  }
 }
 
 function readPlanFromRow_(rowArr) {
@@ -130,14 +149,8 @@ function doPost(e) {
     });
     merged = merged.slice(0, 30);
 
-    // Ghi đè gọn từ hàng 2 trở đi
-    var existingLastRow = sheet.getLastRow();
-    if (existingLastRow >= 2) {
-      sheet.getRange(2, 1, existingLastRow - 1, sheet.getMaxColumns()).clearContent();
-    }
-    for (var idx = 0; idx < merged.length; idx++) {
-      writePlanChunksToRow_(sheet, idx + 2, merged[idx]);
-    }
+    // Ghi đè gọn từ hàng 2 trở đi bằng 1 lần ghi batch + plain text '@'
+    writeAllPlansBatch_(sheet, merged);
 
     return jsonOutput_({
       success: true,
