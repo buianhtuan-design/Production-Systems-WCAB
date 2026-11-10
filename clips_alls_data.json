@@ -936,7 +936,7 @@
       "agg": "",
       "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
       "plan": 9569.0,
-      "sheetFact": 482.0,
+      "sheetFact": 552.0,
       "done": 0,
       "isDone": false
     },
@@ -1066,7 +1066,7 @@
       "agg": "",
       "device": "Ajax Hub 2 Plus (8EU/ECG) ASP white охоронна централь",
       "plan": 3680.0,
-      "sheetFact": 2417.0,
+      "sheetFact": 2414.0,
       "done": 0,
       "isDone": false
     },
@@ -1416,7 +1416,7 @@
       "agg": "KeyPad",
       "device": "Ajax Keypad (8EU) ASP black клавіатура",
       "plan": 320.0,
-      "sheetFact": 358.0,
+      "sheetFact": 682.0,
       "done": 1,
       "isDone": true
     },
@@ -3538,7 +3538,7 @@
       "agg": "",
       "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
       "plan": 9569.0,
-      "sheetFact": 482.0,
+      "sheetFact": 552.0,
       "done": 0,
       "isDone": false
     },
@@ -3668,7 +3668,7 @@
       "agg": "",
       "device": "Ajax Hub 2 Plus (8EU/ECG) ASP white охоронна централь",
       "plan": 3680.0,
-      "sheetFact": 2417.0,
+      "sheetFact": 2414.0,
       "done": 0,
       "isDone": false
     },
@@ -4018,7 +4018,7 @@
       "agg": "KeyPad",
       "device": "Ajax Keypad (8EU) ASP black клавіатура",
       "plan": 320.0,
-      "sheetFact": 358.0,
+      "sheetFact": 682.0,
       "done": 1,
       "isDone": true
     },
@@ -5210,7 +5210,7 @@
   "clipAllPlant": "40.0%",
   "clipAllPlantPct": 40.0,
   "totalPlan": 485822.0,
-  "totalSheetFact": 133582.0,
+  "totalSheetFact": 133973.0,
   "hasPlanCount": 219,
   "gt90Count": 104,
   "lt90Count": 156,
@@ -9507,10 +9507,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-10 18:01:46",
+        "archivedAt": "2026-11-10 20:14:19",
         "totalItems": 260,
         "totalPlan": 485822.0,
-        "totalSheetFact": 133582.0,
+        "totalSheetFact": 133973.0,
         "qtyAllDevice": 260,
         "qtyDoneDevice": 104,
         "qtyNotDoneDevice": 156,
@@ -10452,7 +10452,7 @@
             "agg": "",
             "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
             "plan": 9569.0,
-            "sheetFact": 482.0,
+            "sheetFact": 552.0,
             "done": 0,
             "isDone": false
           },
@@ -10582,7 +10582,7 @@
             "agg": "",
             "device": "Ajax Hub 2 Plus (8EU/ECG) ASP white охоронна централь",
             "plan": 3680.0,
-            "sheetFact": 2417.0,
+            "sheetFact": 2414.0,
             "done": 0,
             "isDone": false
           },
@@ -10932,7 +10932,7 @@
             "agg": "KeyPad",
             "device": "Ajax Keypad (8EU) ASP black клавіатура",
             "plan": 320.0,
-            "sheetFact": 358.0,
+            "sheetFact": 682.0,
             "done": 1,
             "isDone": true
           },
@@ -13054,7 +13054,7 @@
             "agg": "",
             "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
             "plan": 9569.0,
-            "sheetFact": 482.0,
+            "sheetFact": 552.0,
             "done": 0,
             "isDone": false
           },
@@ -13184,7 +13184,7 @@
             "agg": "",
             "device": "Ajax Hub 2 Plus (8EU/ECG) ASP white охоронна централь",
             "plan": 3680.0,
-            "sheetFact": 2417.0,
+            "sheetFact": 2414.0,
             "done": 0,
             "isDone": false
           },
@@ -13534,7 +13534,7 @@
             "agg": "KeyPad",
             "device": "Ajax Keypad (8EU) ASP black клавіатура",
             "plan": 320.0,
-            "sheetFact": 358.0,
+            "sheetFact": 682.0,
             "done": 1,
             "isDone": true
           },
