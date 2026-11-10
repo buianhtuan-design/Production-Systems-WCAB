@@ -9215,7 +9215,7 @@ body[data-user-role="viewer"] .sim-line-input {
     flex-direction: row !important;
     align-items: stretch !important;
     justify-content: flex-start !important;
-    z-index: 9990 !important;
+    z-index: 8000 !important;
     background: rgba(8, 13, 25, 0.98) !important;
     backdrop-filter: blur(18px) !important;
     -webkit-backdrop-filter: blur(18px) !important;
@@ -9451,13 +9451,13 @@ body[data-user-role="viewer"] .sim-line-input {
     font-size: calc(20px * var(--font-scale, 1)) !important;
   }
 
-  /* Toast Notification stays cleanly above Bottom Navigation */
+  /* Toast Notification stays cleanly above Bottom Navigation and below Modals */
   .toast-box {
     bottom: calc(74px + env(safe-area-inset-bottom, 0px)) !important;
     left: 0.5rem !important;
     right: 0.5rem !important;
     max-width: calc(100vw - 1rem) !important;
-    z-index: 10020 !important;
+    z-index: 9000 !important;
   }
 
   .toast {

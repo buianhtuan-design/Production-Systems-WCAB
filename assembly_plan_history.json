@@ -158,66 +158,6 @@
     }
   },
   {
-    "id": "PLAN_TEST_1793938175914",
-    "createdAt": "2026-11-06T10:35:00.000Z",
-    "dateStr": "06/11/2026",
-    "timeStr": "10:35:00",
-    "planner": "KS. Nguyễn Văn Planner (User Khác)",
-    "stage": "ASSEMBLY",
-    "modelsCount": 18,
-    "grandPlan": 125000,
-    "grandFact": 0,
-    "grandPlanDay": 65000,
-    "grandPlanNight": 60000,
-    "workingLinesDay": [
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6"
-    ],
-    "workingLinesNight": [
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6"
-    ],
-    "snapshot": {
-      "plannerName": "KS. Nguyễn Văn Planner (User Khác)",
-      "stageFilter": "ASSEMBLY",
-      "simFromDate": "2026-11-06",
-      "simToDate": "2026-11-06",
-      "simWorkingLinesDay": [
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6"
-      ],
-      "simWorkingLinesNight": [
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6"
-      ],
-      "simManualLinesDay": {
-        "F-M15": "Line 1"
-      },
-      "simManualLinesNight": {
-        "F-M15": "Line 2"
-      },
-      "simManualNotes": {
-        "F-M15": "Kế hoạch đã được user khác hoàn thành và tự động đồng bộ sang Admin"
-      }
-    }
-  },
-  {
     "id": "PLAN_1793934993595",
     "createdAt": "2026-11-06T03:16:33.595Z",
     "dateStr": "6/11/2026",
