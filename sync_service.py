@@ -20,6 +20,7 @@ MANPOWER_GID = '1491986705'
 INVENTORY_1C_GID = '629613225'
 MASS_HISTORY_GID = '568706266'
 CLIPS_ALLS_GID = '997908205'
+KPI_DATA_GID = '56968671'
 WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_FILE = os.path.join(WORKSPACE_DIR, 'js', 'datamass-data.js')
 MANPOWER_JSON_FILE = os.path.join(WORKSPACE_DIR, 'manpower_data.json')
@@ -32,6 +33,8 @@ HARDTEST_JS_FILE = os.path.join(WORKSPACE_DIR, 'js', 'hardtest-capacity-data.js'
 CLIPS_ALLS_JSON_FILE = os.path.join(WORKSPACE_DIR, 'clips_alls_data.json')
 CLIPS_ALLS_HISTORY_JSON_FILE = os.path.join(WORKSPACE_DIR, 'clips_alls_history.json')
 CLIPS_ALLS_JS_FILE = os.path.join(WORKSPACE_DIR, 'js', 'clips-alls-data.js')
+KPI_JSON_FILE = os.path.join(WORKSPACE_DIR, 'kpi_data.json')
+KPI_JS_FILE = os.path.join(WORKSPACE_DIR, 'js', 'kpi-data.js')
 STATUS_FILE = os.path.join(WORKSPACE_DIR, 'sync_status.json')
 
 def fetch_and_parse_manpower(ctx):
@@ -1263,6 +1266,12 @@ def sync_datamass():
     except Exception as bome:
         print(f"⚠️ Lỗi khi đồng bộ BOM: {bome}")
 
+    # 0g. Đồng bộ Sheet KPI Data (gid: 56968671 - Productivity, Remarks, FTT, Scrap)
+    try:
+        fetch_and_parse_kpi_data(ctx)
+    except Exception as kpie:
+        print(f"⚠️ Lỗi khi đồng bộ KPI Data: {kpie}")
+
     url = f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid={DATA_MASS_GID}'
     
     req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'})
@@ -1642,6 +1651,208 @@ def sync_clips_alls_only(target_month='2026-11', period_name='01/Nov - 30/Nov', 
         'history': history_data,
         'clipsMaster': clips_alls_data
     }
+
+def fetch_and_parse_kpi_data(ctx):
+    """
+    Tải và bóc tách dữ liệu từ sheet 'KPI Data' (gid=56968671):
+    1. Productivity (cột A-M, fill-down District & Stage khi ô gộp trống)
+    2. Inspection remarks, % (cột O-Q)
+    3. FTT (cột S-AA)
+    4. SCRAP (cột AC-AJ)
+    """
+    import io, urllib.parse
+    content = None
+    urls = [
+        f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid={KPI_DATA_GID}',
+        f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&gid={KPI_DATA_GID}',
+        f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet=' + urllib.parse.quote('KPI Data')
+    ]
+    for u in urls:
+        try:
+            req = urllib.request.Request(u, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'})
+            with urllib.request.urlopen(req, context=ctx, timeout=30) as resp:
+                txt = resp.read().decode('utf-8', errors='ignore')
+                if txt and len(txt.splitlines()) > 5:
+                    content = txt
+                    break
+        except Exception:
+            continue
+
+    if not content:
+        raise ValueError('Không thể tải sheet KPI Data từ Google Sheets')
+
+    rows = list(csv.reader(io.StringIO(content)))
+    if len(rows) < 3:
+        raise ValueError('Sheet KPI Data rỗng hoặc thiếu dữ liệu')
+
+    productivity = []
+    remarks = []
+    ftt_items = []
+    scrap_items = []
+    scrap_target = ''
+    scrap_actual = ''
+    total_productivity = ''
+    total_remarks = ''
+    prod_filter_note = ''
+    remarks_filter_note = ''
+
+    # Đọc Target / Actual SCRAP ở hàng 0 (cột AC..AJ)
+    r0 = rows[0]
+    for idx_c in range(27, len(r0) - 1):
+        lbl = (r0[idx_c] or '').strip().lower()
+        val = (r0[idx_c + 1] or '').strip()
+        if lbl == 'target' and val:
+            scrap_target = val
+        elif lbl == 'actual' and val:
+            scrap_actual = val
+
+    cur_dist = ''
+    cur_stage = ''
+    prod_stopped = False
+    remarks_started = False
+    remarks_stopped = False
+    ftt_started = False
+    scrap_started = False
+
+    for r_idx in range(1, len(rows)):
+        r = rows[r_idx]
+        c0 = r[0].strip() if len(r) > 0 else ''
+        c1 = r[1].strip() if len(r) > 1 else ''
+        c2 = r[2].strip() if len(r) > 2 else ''
+
+        # 1. Productivity (cols 0..12)
+        if not prod_stopped:
+            if c0.startswith('Applied filters') or c0.startswith('[Param]'):
+                prod_filter_note = c0
+                prod_stopped = True
+            elif c0.lower() != 'district' and (c0 or c1 or c2):
+                if c0:
+                    cur_dist = c0
+                    if c1.lower() == 'total' or not c1:
+                        cur_stage = ''
+                if c1 and c1.lower() != 'total':
+                    cur_stage = c1
+                use_dist = c0 if c0 else cur_dist
+                use_stage = c1 if c1 else cur_stage
+                res_pct = r[6].strip() if len(r) > 6 else ''
+                if use_dist:
+                    rec = {
+                        'id': f'prod_{len(productivity) + 1}',
+                        'district': use_dist,
+                        'stage': use_stage,
+                        'team': c2,
+                        'fact': r[3].strip() if len(r) > 3 else '',
+                        'normH': r[4].strip() if len(r) > 4 else '',
+                        'haveH': r[5].strip() if len(r) > 5 else '',
+                        'result': res_pct,
+                        'retest': r[7].strip() if len(r) > 7 else '',
+                        'downtime': r[11].strip() if len(r) > 11 else '',
+                        'downtimePct': r[12].strip() if len(r) > 12 else ''
+                    }
+                    productivity.append(rec)
+                    if use_dist.lower() == 'total' and not use_stage and not c2 and res_pct:
+                        total_productivity = res_pct
+
+        # 2. Inspection remarks, % (cols 14..16)
+        c14 = r[14].strip() if len(r) > 14 else ''
+        c15 = r[15].strip() if len(r) > 15 else ''
+        c16 = r[16].strip() if len(r) > 16 else ''
+        if not remarks_stopped:
+            if c14.lower().startswith('otvrukovod') or c14.lower() == 'date':
+                remarks_started = True
+            elif c14.startswith('Applied filters'):
+                remarks_filter_note = c14
+                remarks_stopped = True
+            elif remarks_started and c14:
+                remarks.append({
+                    'team': c14,
+                    'resultAve': c15,
+                    'count': c16
+                })
+                if c14.lower() == 'total' and c15:
+                    total_remarks = c15
+
+        # 3. FTT (cols 18..26)
+        c18 = r[18].strip() if len(r) > 18 else ''
+        if c18.lower() == 'product name':
+            ftt_started = True
+        elif ftt_started and c18 and not c18.startswith('Applied filters'):
+            ftt_items.append({
+                'productName': c18,
+                'allDevices': r[19].strip() if len(r) > 19 else '',
+                'ftt': r[20].strip() if len(r) > 20 else '',
+                'fttPct': r[21].strip() if len(r) > 21 else '',
+                'allTest': r[22].strip() if len(r) > 22 else '',
+                'finOK': r[23].strip() if len(r) > 23 else '',
+                'finNOK': r[24].strip() if len(r) > 24 else '',
+                'retest': r[25].strip() if len(r) > 25 else '',
+                'retestPct': r[26].strip() if len(r) > 26 else ''
+            })
+
+        # 4. SCRAP (cols 28..35)
+        c28 = r[28].strip() if len(r) > 28 else ''
+        if c28.lower() == 'item':
+            scrap_started = True
+        elif scrap_started and c28 and not c28.startswith('Applied filters'):
+            scrap_items.append({
+                'item': c28,
+                'code': r[29].strip() if len(r) > 29 else '',
+                'rejectQty': r[30].strip() if len(r) > 30 else '',
+                'itemPrice': r[31].strip() if len(r) > 31 else '',
+                'qty': r[32].strip() if len(r) > 32 else '',
+                'rejectionRate': r[33].strip() if len(r) > 33 else '',
+                'rejectCost': r[34].strip() if len(r) > 34 else '',
+                'dumpQty': r[35].strip() if len(r) > 35 else ''
+            })
+
+    workcell_count = sum(
+        1 for it in productivity
+        if 'WORKCELL A' in it['team'].upper() or 'WORKCEL A' in it['team'].upper()
+        or 'WORKCELL B' in it['team'].upper() or 'WORKCEL B' in it['team'].upper()
+    )
+
+    kpi_payload = {
+        'success': True,
+        'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'version': int(time.strftime('%Y%m%d%H%M%S')),
+        'productivity': productivity,
+        'remarks': remarks,
+        'ftt': ftt_items,
+        'scrap': {
+            'target': scrap_target,
+            'actual': scrap_actual,
+            'items': scrap_items
+        },
+        'summary': {
+            'totalProductivity': total_productivity,
+            'totalRemarks': total_remarks,
+            'scrapTarget': scrap_target,
+            'scrapActual': scrap_actual,
+            'workcellTeamsCount': workcell_count
+        },
+        'meta': {
+            'prodFilterNote': prod_filter_note,
+            'remarksFilterNote': remarks_filter_note
+        }
+    }
+
+    with open(KPI_JSON_FILE, 'w', encoding='utf-8') as kf:
+        json.dump(kpi_payload, kf, ensure_ascii=False, indent=2)
+    with open(KPI_JS_FILE, 'w', encoding='utf-8') as kjf:
+        kjf.write('// Tự động sinh từ Google Sheet KPI Data (gid=56968671)\n')
+        kjf.write('window.KPI_MASTER_DATA = ' + json.dumps(kpi_payload, ensure_ascii=False) + ';\n')
+
+    print(f"✅ Đã đồng bộ Sheet KPI Data: {workcell_count} Workcell teams, Total Prod={total_productivity}, Remarks={total_remarks}, Scrap={scrap_actual}")
+    return kpi_payload
+
+def sync_kpi_only():
+    t0 = time.time()
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+    res = fetch_and_parse_kpi_data(ctx)
+    res['elapsed'] = round(time.time() - t0, 2)
+    return res
 
 if __name__ == '__main__':
     print('Starting manual Google Sheets Data_Mass sync...')

@@ -63,6 +63,21 @@
     return map;
   }
 
+  // Kiểm tra danh sách Productivity có chứa ít nhất 1 team Workcell A/B hợp lệ hay không
+  function hasValidWorkcellTeams(list) {
+    return Array.isArray(list) && list.some(item => item && isWorkcellAorB(item.team));
+  }
+
+  function getMasterRemarksList() {
+    if (window.KpiResultStore && Array.isArray(window.KpiResultStore.customRemarksData) && window.KpiResultStore.customRemarksData.length > 0) {
+      return window.KpiResultStore.customRemarksData;
+    }
+    if (window.KPI_MASTER_DATA && Array.isArray(window.KPI_MASTER_DATA.remarks) && window.KPI_MASTER_DATA.remarks.length > 0) {
+      return window.KPI_MASTER_DATA.remarks;
+    }
+    return RAW_KPI_REMARKS_DATA;
+  }
+
   // Khởi tạo Store lưu trữ trạng thái KPI Result
   window.KpiResultStore = {
     fromDate: defaultRange.fromDate,
@@ -71,8 +86,12 @@
     evalFilter: 'ALL',    // 'ALL' | 'PROD_PASS' | 'PROD_FAIL' | 'REM_PASS' | 'REM_FAIL'
     customProductivityData: null,
     customRemarksData: null,
-    remarksMap: buildRemarksLookupMap(RAW_KPI_REMARKS_DATA),
-    targetsMap: {} // Lưu toàn bộ targets theo key: `${metric}_${district}_${stage}_${team}`
+    customScrapData: null,
+    lastSyncedAt: (window.KPI_MASTER_DATA && window.KPI_MASTER_DATA.timestamp) || null,
+    filterNote: (window.KPI_MASTER_DATA && window.KPI_MASTER_DATA.meta && window.KPI_MASTER_DATA.meta.remarksFilterNote) || '',
+    remarksMap: buildRemarksLookupMap((window.KPI_MASTER_DATA && window.KPI_MASTER_DATA.remarks) || RAW_KPI_REMARKS_DATA),
+    targetsMap: {}, // Lưu toàn bộ targets theo key: `${metric}_${district}_${stage}_${team}`
+    resultsMap: {}  // Lưu các kết quả nhập tay (Scrap, Blocked...) theo key: `${metric}_${district}_${stage}_${team}`
   };
 
   // Khôi phục targets và custom data từ localStorage
@@ -90,14 +109,40 @@
       }
     }
 
+    const savedResults = localStorage.getItem('AJAX_PROPLAN_KPI_ALL_RESULTS');
+    if (savedResults) {
+      window.KpiResultStore.resultsMap = JSON.parse(savedResults) || {};
+    }
+
     const savedCustomProd = localStorage.getItem('AJAX_PROPLAN_KPI_PRODUCTIVITY_CUSTOM_DATA');
     if (savedCustomProd) {
-      window.KpiResultStore.customProductivityData = JSON.parse(savedCustomProd);
+      const parsedProd = JSON.parse(savedCustomProd);
+      // Nếu bản lưu tạm bị rỗng Workcell teams (do lỗi sync cũ), tự động loại bỏ để không hiển thị 0 Teams
+      if (hasValidWorkcellTeams(parsedProd)) {
+        window.KpiResultStore.customProductivityData = parsedProd;
+      } else {
+        localStorage.removeItem('AJAX_PROPLAN_KPI_PRODUCTIVITY_CUSTOM_DATA');
+      }
     }
     const savedCustomRemarks = localStorage.getItem('AJAX_PROPLAN_KPI_REMARKS_CUSTOM_DATA');
     if (savedCustomRemarks) {
-      window.KpiResultStore.customRemarksData = JSON.parse(savedCustomRemarks);
-      window.KpiResultStore.remarksMap = buildRemarksLookupMap(window.KpiResultStore.customRemarksData);
+      const parsedRem = JSON.parse(savedCustomRemarks);
+      if (Array.isArray(parsedRem) && parsedRem.length > 0) {
+        window.KpiResultStore.customRemarksData = parsedRem;
+        window.KpiResultStore.remarksMap = buildRemarksLookupMap(parsedRem);
+      } else {
+        localStorage.removeItem('AJAX_PROPLAN_KPI_REMARKS_CUSTOM_DATA');
+      }
+    }
+    const savedCustomScrap = localStorage.getItem('AJAX_PROPLAN_KPI_SCRAP_CUSTOM_DATA');
+    if (savedCustomScrap) {
+      window.KpiResultStore.customScrapData = JSON.parse(savedCustomScrap);
+    }
+    const savedMeta = localStorage.getItem('AJAX_PROPLAN_KPI_META_CUSTOM_DATA');
+    if (savedMeta) {
+      const parsedMeta = JSON.parse(savedMeta);
+      if (parsedMeta && parsedMeta.timestamp) window.KpiResultStore.lastSyncedAt = parsedMeta.timestamp;
+      if (parsedMeta && parsedMeta.filterNote) window.KpiResultStore.filterNote = parsedMeta.filterNote;
     }
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -114,7 +159,13 @@
    * Lấy dữ liệu Productivity hiện hành
    */
   function getCurrentProductivityData() {
-    return window.KpiResultStore.customProductivityData || RAW_KPI_PRODUCTIVITY_DATA;
+    if (hasValidWorkcellTeams(window.KpiResultStore.customProductivityData)) {
+      return window.KpiResultStore.customProductivityData;
+    }
+    if (window.KPI_MASTER_DATA && hasValidWorkcellTeams(window.KPI_MASTER_DATA.productivity)) {
+      return window.KPI_MASTER_DATA.productivity;
+    }
+    return RAW_KPI_PRODUCTIVITY_DATA;
   }
 
   /**
@@ -166,35 +217,157 @@
   }
 
   /**
+   * Lấy Result nhập tay (Scrap, Blocked...) theo metric và record
+   */
+  function getMetricResultInput(metric, district, stage, team, defaultVal = '') {
+    const key = `${metric}_${district}_${stage}_${team}`;
+    if (window.KpiResultStore.resultsMap && window.KpiResultStore.resultsMap[key] !== undefined) {
+      return window.KpiResultStore.resultsMap[key];
+    }
+    return defaultVal;
+  }
+
+  function parseNumericInput(val) {
+    if (val === null || val === undefined) return null;
+    const s = String(val).replace('%', '').replace(',', '.').trim();
+    if (!s) return null;
+    const n = parseFloat(s);
+    return isNaN(n) ? null : n;
+  }
+
+  function evaluateRowMetricBadge(row, metric) {
+    if (!row) return;
+    const badge = row.querySelector(`.kpi-eval-badge-${metric}`);
+    const targetInput = row.querySelector(`.kpi-target-input-${metric}`);
+    const resultInput = row.querySelector(`.kpi-result-input-${metric}`);
+
+    const targetVal = targetInput ? parseNumericInput(targetInput.value) : parseNumericInput(row.getAttribute(`data-${metric}-target`));
+    const resVal = resultInput ? parseNumericInput(resultInput.value) : parseNumericInput(row.getAttribute(`data-${metric}-val`));
+
+    if (targetInput) {
+      row.setAttribute(`data-${metric}-target`, targetVal !== null ? String(targetVal) : '');
+    }
+    if (resultInput) {
+      row.setAttribute(`data-${metric}-val`, resVal !== null ? String(resVal) : '');
+    }
+
+    if (!badge) return;
+    if (targetVal !== null && resVal !== null) {
+      const isBetterLower = metric === 'scrap' || metric === 'blocked';
+      const isPass = isBetterLower ? (resVal <= targetVal) : (resVal >= targetVal);
+      if (isPass) {
+        badge.className = `badge badge-green kpi-eval-badge-${metric}`;
+        badge.style.color = '';
+        badge.style.fontSize = '';
+        badge.textContent = '🟢 Đạt';
+      } else {
+        badge.className = `badge badge-red kpi-eval-badge-${metric}`;
+        badge.style.color = '';
+        badge.style.fontSize = '';
+        badge.textContent = '🔴 Chưa đạt';
+      }
+      if (resultInput) {
+        resultInput.style.color = isPass ? '#34d399' : '#f87171';
+      }
+    } else {
+      badge.className = `kpi-eval-badge-${metric}`;
+      badge.style.color = 'var(--text-muted)';
+      badge.style.fontSize = '0.675rem';
+      badge.textContent = '-';
+      if (resultInput) {
+        resultInput.style.color = row.getAttribute('data-is-sfpd') === 'true' ? '#ffffff' : '#f8fafc';
+      }
+    }
+  }
+
+  function refreshStageAveManualMetric(stageName, metric) {
+    if (!stageName) return;
+    const table = document.getElementById('kpiMasterTableMain');
+    if (!table) return;
+    const aveRow = table.querySelector(`tr[data-is-ave="true"][data-stage-group="${CSS.escape ? CSS.escape(stageName) : stageName}"]`);
+    if (!aveRow) return;
+    const aveDistrict = aveRow.getAttribute('data-district') || '';
+    const aveKey = `${metric}_${aveDistrict}_${stageName}_Ave`;
+    // Nếu người dùng tự nhập trực tiếp cho hàng Ave thì giữ nguyên giá trị nhập tay ở hàng Ave
+    if (window.KpiResultStore.resultsMap && window.KpiResultStore.resultsMap[aveKey] !== undefined && String(window.KpiResultStore.resultsMap[aveKey]).trim() !== '') {
+      return;
+    }
+
+    const teamRows = table.querySelectorAll(`tr[data-is-team="true"][data-stage-group="${CSS.escape ? CSS.escape(stageName) : stageName}"]`);
+    const nums = [];
+    teamRows.forEach(tr => {
+      const inp = tr.querySelector(`.kpi-result-input-${metric}`);
+      const n = inp ? parseNumericInput(inp.value) : null;
+      if (n !== null) nums.push(n);
+    });
+
+    const aveInp = aveRow.querySelector(`.kpi-result-input-${metric}`);
+    if (aveInp) {
+      if (nums.length > 0) {
+        const avg = Math.round((nums.reduce((a, b) => a + b, 0) / nums.length) * 100) / 100;
+        aveInp.value = String(avg);
+        aveRow.setAttribute(`data-${metric}-val`, String(avg));
+      } else {
+        aveInp.value = '';
+        aveRow.setAttribute(`data-${metric}-val`, '');
+      }
+    }
+    evaluateRowMetricBadge(aveRow, metric);
+  }
+
+  /**
    * Lưu target khi người dùng tự input
    */
   window.handleKpiUniversalTargetChange = function(inputElem, metric, district, stage, team) {
-    let val = parseFloat(inputElem.value);
-    if (isNaN(val)) val = 95;
+    const raw = String(inputElem.value || '').trim();
     const key = `${metric}_${district}_${stage}_${team}`;
     if (!window.KpiResultStore.targetsMap) window.KpiResultStore.targetsMap = {};
-    window.KpiResultStore.targetsMap[key] = val;
+
+    if (raw === '') {
+      // Nếu người dùng xóa trắng Target của Scrap/Blocked thì giữ rỗng, các chỉ số khác giữ mặc định hoặc rỗng
+      if (metric === 'scrap' || metric === 'blocked' || team !== 'ALL') {
+        window.KpiResultStore.targetsMap[key] = '';
+      } else {
+        delete window.KpiResultStore.targetsMap[key];
+      }
+    } else {
+      const val = parseNumericInput(raw);
+      if (val !== null) {
+        window.KpiResultStore.targetsMap[key] = val;
+      }
+    }
+
     try {
       localStorage.setItem('AJAX_PROPLAN_KPI_ALL_TARGETS', JSON.stringify(window.KpiResultStore.targetsMap));
     } catch (e) {}
 
-    // Cập nhật ngay badge đánh giá tại cột đó trong hàng
     const row = inputElem.closest('tr');
-    if (row) {
-      const resValAttr = row.getAttribute(`data-${metric}-val`);
-      const badge = row.querySelector(`.kpi-eval-badge-${metric}`);
-      if (badge && resValAttr !== null && resValAttr !== '') {
-        const resVal = parseFloat(resValAttr);
-        const isBetterLower = metric === 'scrap' || metric === 'blocked';
-        const isPass = isBetterLower ? (resVal <= val) : (resVal >= val);
-        if (isPass) {
-          badge.className = `badge badge-green kpi-eval-badge-${metric}`;
-          badge.textContent = '🟢 Đạt';
-        } else {
-          badge.className = `badge badge-red kpi-eval-badge-${metric}`;
-          badge.textContent = '🔴 Chưa đạt';
-        }
-      }
+    evaluateRowMetricBadge(row, metric);
+  };
+
+  /**
+   * Lưu Result khi người dùng tự input (dành cho Scrap, % All và Blocked batches (v1))
+   */
+  window.handleKpiUniversalResultChange = function(inputElem, metric, district, stage, team) {
+    const raw = String(inputElem.value || '').trim();
+    const key = `${metric}_${district}_${stage}_${team}`;
+    if (!window.KpiResultStore.resultsMap) window.KpiResultStore.resultsMap = {};
+
+    if (raw === '') {
+      delete window.KpiResultStore.resultsMap[key];
+    } else {
+      window.KpiResultStore.resultsMap[key] = raw;
+    }
+
+    try {
+      localStorage.setItem('AJAX_PROPLAN_KPI_ALL_RESULTS', JSON.stringify(window.KpiResultStore.resultsMap));
+    } catch (e) {}
+
+    const row = inputElem.closest('tr');
+    evaluateRowMetricBadge(row, metric);
+
+    if (team !== 'Ave' && team !== 'ALL') {
+      refreshStageAveManualMetric(stage, metric);
     }
   };
 
@@ -330,8 +503,10 @@
 
     const st = window.KpiResultStore;
     const allData = getCurrentProductivityData();
+    const activeRemarksList = getMasterRemarksList();
+    st.remarksMap = buildRemarksLookupMap(activeRemarksList);
 
-    // 1. Lọc tất cả các Team thuộc Workcell A và Workcell B (26 teams theo mẫu ảnh số 2)
+    // 1. Lọc tất cả các Team thuộc Workcell A và Workcell B
     const workcellTeams = allData.filter(item => isWorkcellAorB(item.team));
 
     // 2. Sắp xếp theo dòng chảy: Focus ➔ HardTest ➔ Assembly và Workcell A ➔ Workcell B
@@ -345,6 +520,10 @@
       if (wTeamA.rank !== wTeamB.rank) return wTeamA.rank - wTeamB.rank;
       return wTeamA.text.localeCompare(wTeamB.text);
     });
+
+    const focusTeamsCount = sortedTeams.filter(it => (it.stage || '').toLowerCase() === 'focus').length;
+    const htTeamsCount = sortedTeams.filter(it => (it.stage || '').toLowerCase() === 'hardtest').length;
+    const asmTeamsCount = sortedTeams.filter(it => (it.stage || '').toLowerCase() === 'assembly').length;
 
     // 3. Lọc theo bộ lọc Stage nếu người dùng chọn
     const activeStageFilter = st.stageFilter || 'ALL';
@@ -411,26 +590,48 @@
     const clipsActual = getClipsAllActualFromClipsTab();
     const clipTarget = getMetricTarget('clip', 'SFPD', 'SFPD', 'ALL', 98);
 
+    const hasLiveProd = hasValidWorkcellTeams(st.customProductivityData) || (window.KPI_MASTER_DATA && hasValidWorkcellTeams(window.KPI_MASTER_DATA.productivity));
+    const totalProdRow = allData.find(it => (it.district || '').trim().toLowerCase() === 'total' && !(it.stage || '').trim() && !(it.team || '').trim() && it.result);
+    const liveProdStr = (hasLiveProd && totalProdRow && totalProdRow.result) ? totalProdRow.result : '116,94%';
+    const liveProdVal = parsePercentVal(liveProdStr);
+
+    const hasLiveRemarks = (Array.isArray(st.customRemarksData) && st.customRemarksData.length > 0) || (window.KPI_MASTER_DATA && Array.isArray(window.KPI_MASTER_DATA.remarks) && window.KPI_MASTER_DATA.remarks.length > 0);
+    const totalRemRow = activeRemarksList.find(it => (it.team || '').trim().toLowerCase() === 'total' && it.resultAve);
+    const liveRemStr = (hasLiveRemarks && totalRemRow && totalRemRow.resultAve) ? String(totalRemRow.resultAve).replace(/\s+/g, '') : '98,45%';
+    const liveRemVal = parsePercentVal(liveRemStr);
+
+    const sfpdScrapTarget = getMetricTarget('scrap', 'SFPD', 'SFPD', 'ALL', '');
+    const sfpdScrapResultInput = getMetricResultInput('scrap', 'SFPD', 'SFPD', 'ALL', '');
+    const sfpdScrapTargetNum = parseNumericInput(sfpdScrapTarget);
+    const sfpdScrapResultNum = parseNumericInput(sfpdScrapResultInput);
+
+    const sfpdBlockedTarget = getMetricTarget('blocked', 'SFPD', 'SFPD', 'ALL', '');
+    const sfpdBlockedResultInput = getMetricResultInput('blocked', 'SFPD', 'SFPD', 'ALL', '');
+    const sfpdBlockedTargetNum = parseNumericInput(sfpdBlockedTarget);
+    const sfpdBlockedResultNum = parseNumericInput(sfpdBlockedResultInput);
+
     const sfpdData = {
       district: 'SFPD',
       stage: 'SFPD',
       team: 'ALL',
       // 1. Productivity
       prodTarget: getMetricTarget('prod', 'SFPD', 'SFPD', 'ALL', 95),
-      prodResult: '116,94%',
-      prodVal: 116.94,
+      prodResult: liveProdStr,
+      prodVal: liveProdVal !== null ? liveProdVal : 116.94,
       // 2. Remarks
       remTarget: getMetricTarget('rem', 'SFPD', 'SFPD', 'ALL', 95),
-      remResult: '98,45%',
-      remVal: 98.45,
-      // 3. Scrap
-      scrapTarget: getMetricTarget('scrap', 'SFPD', 'SFPD', 'ALL', 0.5),
-      scrapResult: '0,45%',
-      scrapVal: 0.45,
-      // 4. Blocked batches
-      blockedTarget: getMetricTarget('blocked', 'SFPD', 'SFPD', 'ALL', 0),
-      blockedResult: '0',
-      blockedVal: 0,
+      remResult: liveRemStr,
+      remVal: liveRemVal !== null ? liveRemVal : 98.45,
+      // 3. Scrap (Tự input Target và Result)
+      scrapTarget: sfpdScrapTarget,
+      scrapResultInput: sfpdScrapResultInput,
+      scrapTargetNum: sfpdScrapTargetNum,
+      scrapVal: sfpdScrapResultNum,
+      // 4. Blocked batches (Tự input Target và Result)
+      blockedTarget: sfpdBlockedTarget,
+      blockedResultInput: sfpdBlockedResultInput,
+      blockedTargetNum: sfpdBlockedTargetNum,
+      blockedVal: sfpdBlockedResultNum,
       // 5. Clip (Lấy kết quả thực tế từ Tab Tra Cứu Clips All)
       clipTarget: clipTarget,
       clipResult: clipsActual.str,
@@ -442,16 +643,28 @@
       clipPeriod: clipsActual.period
     };
 
+    const sfpdProdPass = sfpdData.prodVal >= sfpdData.prodTarget;
+    const sfpdRemPass = sfpdData.remVal >= sfpdData.remTarget;
+    const sfpdHasScrapEval = sfpdData.scrapVal !== null && sfpdData.scrapTargetNum !== null;
+    const sfpdScrapPass = sfpdHasScrapEval ? (sfpdData.scrapVal <= sfpdData.scrapTargetNum) : null;
+    const sfpdHasBlockedEval = sfpdData.blockedVal !== null && sfpdData.blockedTargetNum !== null;
+    const sfpdBlockedPass = sfpdHasBlockedEval ? (sfpdData.blockedVal <= sfpdData.blockedTargetNum) : null;
+    const sfpdClipPass = sfpdData.clipVal >= sfpdData.clipTarget;
+
     // Xác định xem dòng SFPD có hiển thị không dựa vào bộ lọc Đánh giá
     let showSfpdRow = true;
     if (activeEvalFilter === 'PROD_FAIL' || activeEvalFilter === 'FAIL') {
-      showSfpdRow = false; // SFPD ALL đạt 116.94% nên ẩn khi chỉ xem Chưa đạt
+      showSfpdRow = !sfpdProdPass;
+    } else if (activeEvalFilter === 'PROD_PASS' || activeEvalFilter === 'PASS') {
+      showSfpdRow = sfpdProdPass;
     } else if (activeEvalFilter === 'REM_FAIL') {
-      showSfpdRow = false;
+      showSfpdRow = !sfpdRemPass;
+    } else if (activeEvalFilter === 'REM_PASS') {
+      showSfpdRow = sfpdRemPass;
     } else if (activeEvalFilter === 'CLIP_FAIL') {
-      showSfpdRow = !(sfpdData.clipVal >= sfpdData.clipTarget);
+      showSfpdRow = !sfpdClipPass;
     } else if (activeEvalFilter === 'CLIP_PASS') {
-      showSfpdRow = (sfpdData.clipVal >= sfpdData.clipTarget);
+      showSfpdRow = sfpdClipPass;
     }
 
     // 7. Danh sách các đầu mục tiếp theo (Mục 6, 7, 8)
@@ -479,6 +692,11 @@
                 <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.5rem;">
                   🟢 DATA REAL-TIME
                 </span>
+                ${st.lastSyncedAt || (window.KPI_MASTER_DATA && window.KPI_MASTER_DATA.timestamp) ? `
+                  <span style="font-size: 0.7rem; color: #94a3b8; font-weight: 600;">
+                    Cập nhật Sheet: <strong style="color: #cbd5e1;">${st.lastSyncedAt || window.KPI_MASTER_DATA.timestamp}</strong>
+                  </span>
+                ` : ''}
               </div>
             </div>
 
@@ -521,9 +739,9 @@
                 <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">🔍 Công đoạn:</span>
                 <select id="kpiStageFilterSelect" onchange="handleKpiStageFilter(this.value)" style="background: transparent; color: #f8fafc; border: none; font-size: 0.75rem; font-weight: 700; outline: none; cursor: pointer;">
                   <option value="ALL" ${activeStageFilter === 'ALL' ? 'selected' : ''} style="background: #0f172a; color: #fff;">Tất Cả (${sortedTeams.length} Teams)</option>
-                  <option value="Focus" ${activeStageFilter === 'Focus' ? 'selected' : ''} style="background: #0f172a; color: #fff;">Focus (4 Teams)</option>
-                  <option value="HardTest" ${activeStageFilter === 'HardTest' ? 'selected' : ''} style="background: #0f172a; color: #fff;">HardTest (10 Teams)</option>
-                  <option value="Assembly" ${activeStageFilter === 'Assembly' ? 'selected' : ''} style="background: #0f172a; color: #fff;">Assembly (12 Teams)</option>
+                  <option value="Focus" ${activeStageFilter === 'Focus' ? 'selected' : ''} style="background: #0f172a; color: #fff;">Focus (${focusTeamsCount} Teams)</option>
+                  <option value="HardTest" ${activeStageFilter === 'HardTest' ? 'selected' : ''} style="background: #0f172a; color: #fff;">HardTest (${htTeamsCount} Teams)</option>
+                  <option value="Assembly" ${activeStageFilter === 'Assembly' ? 'selected' : ''} style="background: #0f172a; color: #fff;">Assembly (${asmTeamsCount} Teams)</option>
                 </select>
               </div>
 
@@ -664,8 +882,10 @@
                       data-is-sfpd="true"
                       data-prod-val="${sfpdData.prodVal}"
                       data-rem-val="${sfpdData.remVal}"
-                      data-scrap-val="${sfpdData.scrapVal}"
-                      data-blocked-val="${sfpdData.blockedVal}"
+                      data-scrap-val="${sfpdData.scrapVal !== null ? sfpdData.scrapVal : ''}"
+                      data-scrap-target="${sfpdData.scrapTargetNum !== null ? sfpdData.scrapTargetNum : ''}"
+                      data-blocked-val="${sfpdData.blockedVal !== null ? sfpdData.blockedVal : ''}"
+                      data-blocked-target="${sfpdData.blockedTargetNum !== null ? sfpdData.blockedTargetNum : ''}"
                       data-clip-val="${sfpdData.clipVal}">
                     
                     <!-- District -->
@@ -689,7 +909,10 @@
                       <span style="color: #ffffff;">${sfpdData.prodResult}</span>
                     </td>
                     <td style="padding: 0.35rem 0.45rem; text-align: center; white-space: nowrap;">
-                      <span class="badge badge-green kpi-eval-badge-prod">🟢 Đạt</span>
+                      ${sfpdProdPass ?
+                        `<span class="badge badge-green kpi-eval-badge-prod">🟢 Đạt</span>` :
+                        `<span class="badge badge-red kpi-eval-badge-prod">🔴 Chưa đạt</span>`
+                      }
                     </td>
 
                     <!-- 2. Inspection remarks, % -->
@@ -704,37 +927,60 @@
                       <span style="color: #ffffff;">${sfpdData.remResult}</span>
                     </td>
                     <td style="padding: 0.35rem 0.45rem; text-align: center; white-space: nowrap;">
-                      <span class="badge badge-green kpi-eval-badge-rem">🟢 Đạt</span>
+                      ${sfpdRemPass ?
+                        `<span class="badge badge-green kpi-eval-badge-rem">🟢 Đạt</span>` :
+                        `<span class="badge badge-red kpi-eval-badge-rem">🔴 Chưa đạt</span>`
+                      }
                     </td>
 
-                    <!-- 3. Scrap, % All -->
+                    <!-- 3. Scrap, % All (Cho phép tự input cả Target và Result) -->
                     <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; border-left: 2px solid rgba(34, 197, 94, 0.6);">
                       <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
-                        <input type="number" step="0.1" value="${sfpdData.scrapTarget}" class="font-mono"
+                        <input type="number" step="any" value="${sfpdData.scrapTarget}" class="font-mono kpi-target-input-scrap" placeholder="-"
                                oninput="handleKpiUniversalTargetChange(this, 'scrap', 'SFPD', 'SFPD', 'ALL')"
-                               style="width: 44px; padding: 0.15rem 0.25rem; font-size: 0.7rem; font-weight: 800; color: #fbbf24; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(245, 158, 11, 0.5); border-radius: 3px; text-align: right; outline: none;">
+                               style="width: 48px; padding: 0.15rem 0.25rem; font-size: 0.7rem; font-weight: 800; color: #fbbf24; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(245, 158, 11, 0.5); border-radius: 3px; text-align: right; outline: none;">
                       </div>
                     </td>
-                    <td style="padding: 0.35rem 0.45rem; text-align: right; font-weight: 800; font-size: 0.75rem; white-space: nowrap;" class="font-mono">
-                      <span style="color: #ffffff;">${sfpdData.scrapResult}</span>
+                    <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap;">
+                      <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
+                        <input type="number" step="any" value="${sfpdData.scrapResultInput}" class="font-mono kpi-result-input-scrap" placeholder="-"
+                               oninput="handleKpiUniversalResultChange(this, 'scrap', 'SFPD', 'SFPD', 'ALL')"
+                               title="Nhập kết quả Scrap (%) thực tế"
+                               style="width: 54px; padding: 0.15rem 0.25rem; font-size: 0.725rem; font-weight: 800; color: ${sfpdScrapPass === true ? '#34d399' : (sfpdScrapPass === false ? '#f87171' : '#ffffff')}; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(245, 158, 11, 0.45); border-radius: 3px; text-align: right; outline: none;">
+                      </div>
                     </td>
                     <td style="padding: 0.35rem 0.45rem; text-align: center; white-space: nowrap;">
-                      <span class="badge badge-green kpi-eval-badge-scrap">🟢 Đạt</span>
+                      ${sfpdScrapPass === true ?
+                        `<span class="badge badge-green kpi-eval-badge-scrap">🟢 Đạt</span>` :
+                        (sfpdScrapPass === false ?
+                          `<span class="badge badge-red kpi-eval-badge-scrap">🔴 Chưa đạt</span>` :
+                          `<span class="kpi-eval-badge-scrap" style="color: var(--text-muted); font-size: 0.675rem;">-</span>`)
+                      }
                     </td>
 
-                    <!-- 4. Blocked batches (v1) -->
+                    <!-- 4. Blocked batches (v1) (Cho phép tự input cả Target và Result) -->
                     <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; border-left: 2px solid rgba(34, 197, 94, 0.6);">
                       <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
-                        <input type="number" step="1" value="${sfpdData.blockedTarget}" class="font-mono"
+                        <input type="number" step="1" value="${sfpdData.blockedTarget}" class="font-mono kpi-target-input-blocked" placeholder="-"
                                oninput="handleKpiUniversalTargetChange(this, 'blocked', 'SFPD', 'SFPD', 'ALL')"
-                               style="width: 44px; padding: 0.15rem 0.25rem; font-size: 0.7rem; font-weight: 800; color: #fbbf24; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(245, 158, 11, 0.5); border-radius: 3px; text-align: right; outline: none;">
+                               style="width: 48px; padding: 0.15rem 0.25rem; font-size: 0.7rem; font-weight: 800; color: #fbbf24; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(245, 158, 11, 0.5); border-radius: 3px; text-align: right; outline: none;">
                       </div>
                     </td>
-                    <td style="padding: 0.35rem 0.45rem; text-align: right; font-weight: 800; font-size: 0.75rem; white-space: nowrap;" class="font-mono">
-                      <span style="color: #ffffff;">${sfpdData.blockedResult}</span>
+                    <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap;">
+                      <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
+                        <input type="number" step="any" value="${sfpdData.blockedResultInput}" class="font-mono kpi-result-input-blocked" placeholder="-"
+                               oninput="handleKpiUniversalResultChange(this, 'blocked', 'SFPD', 'SFPD', 'ALL')"
+                               title="Nhập kết quả Blocked batches thực tế"
+                               style="width: 54px; padding: 0.15rem 0.25rem; font-size: 0.725rem; font-weight: 800; color: ${sfpdBlockedPass === true ? '#34d399' : (sfpdBlockedPass === false ? '#f87171' : '#ffffff')}; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(244, 63, 94, 0.45); border-radius: 3px; text-align: right; outline: none;">
+                      </div>
                     </td>
                     <td style="padding: 0.35rem 0.45rem; text-align: center; white-space: nowrap;">
-                      <span class="badge badge-green kpi-eval-badge-blocked">🟢 Đạt</span>
+                      ${sfpdBlockedPass === true ?
+                        `<span class="badge badge-green kpi-eval-badge-blocked">🟢 Đạt</span>` :
+                        (sfpdBlockedPass === false ?
+                          `<span class="badge badge-red kpi-eval-badge-blocked">🔴 Chưa đạt</span>` :
+                          `<span class="kpi-eval-badge-blocked" style="color: var(--text-muted); font-size: 0.675rem;">-</span>`)
+                      }
                     </td>
 
                     <!-- 5. Clip (all plant) -->
@@ -800,9 +1046,34 @@
                   // Targets cho hàng Ave
                   const aveProdTarget = getMetricTarget('prod', group.district, group.stage, 'Ave', 95);
                   const aveRemTarget = getMetricTarget('rem', group.district, group.stage, 'Ave', 95);
-                  const aveScrapTarget = getMetricTarget('scrap', group.district, group.stage, 'Ave', 0.5);
-                  const aveBlockedTarget = getMetricTarget('blocked', group.district, group.stage, 'Ave', 0);
+                  const aveScrapTarget = getMetricTarget('scrap', group.district, group.stage, 'Ave', '');
+                  const aveBlockedTarget = getMetricTarget('blocked', group.district, group.stage, 'Ave', '');
                   const aveClipTarget = getMetricTarget('clip', group.district, group.stage, 'Ave', 98);
+
+                  // Giá trị nhập tay hoặc tự trung bình từ các team cho Scrap & Blocked ở hàng Ave
+                  const validScrapList = group.teams
+                    .map(it => parseNumericInput(getMetricResultInput('scrap', it.district, it.stage, it.team, '')))
+                    .filter(v => v !== null);
+                  const autoAveScrap = validScrapList.length > 0
+                    ? Math.round((validScrapList.reduce((a, b) => a + b, 0) / validScrapList.length) * 100) / 100
+                    : '';
+                  const aveScrapResultManual = getMetricResultInput('scrap', group.district, group.stage, 'Ave', '');
+                  const aveScrapResultInput = String(aveScrapResultManual).trim() !== '' ? aveScrapResultManual : (autoAveScrap !== '' ? String(autoAveScrap) : '');
+                  const aveScrapTargetNum = parseNumericInput(aveScrapTarget);
+                  const aveScrapResultNum = parseNumericInput(aveScrapResultInput);
+                  const aveScrapPass = (aveScrapTargetNum !== null && aveScrapResultNum !== null) ? (aveScrapResultNum <= aveScrapTargetNum) : null;
+
+                  const validBlockedList = group.teams
+                    .map(it => parseNumericInput(getMetricResultInput('blocked', it.district, it.stage, it.team, '')))
+                    .filter(v => v !== null);
+                  const autoAveBlocked = validBlockedList.length > 0
+                    ? Math.round((validBlockedList.reduce((a, b) => a + b, 0) / validBlockedList.length) * 100) / 100
+                    : '';
+                  const aveBlockedResultManual = getMetricResultInput('blocked', group.district, group.stage, 'Ave', '');
+                  const aveBlockedResultInput = String(aveBlockedResultManual).trim() !== '' ? aveBlockedResultManual : (autoAveBlocked !== '' ? String(autoAveBlocked) : '');
+                  const aveBlockedTargetNum = parseNumericInput(aveBlockedTarget);
+                  const aveBlockedResultNum = parseNumericInput(aveBlockedResultInput);
+                  const aveBlockedPass = (aveBlockedTargetNum !== null && aveBlockedResultNum !== null) ? (aveBlockedResultNum <= aveBlockedTargetNum) : null;
 
                   // Đánh giá hàng Ave Productivity & Remarks
                   let aveProdBadge = `<span style="color: var(--text-muted); font-size: 0.675rem;">-</span>`;
@@ -845,9 +1116,19 @@
                         `<span class="badge badge-red kpi-eval-badge-rem">🔴 Chưa đạt</span>`;
                     }
 
-                    // Scrap, Blocked, Clip (Tự input target, result tạm để trống theo yêu cầu user)
+                    // Scrap, Blocked (Tự input Target & Result), Clip (Tự input Target)
                     const scrapTarget = getMetricTarget('scrap', item.district, item.stage, item.team, '');
+                    const scrapResultInput = getMetricResultInput('scrap', item.district, item.stage, item.team, '');
+                    const scrapTargetNum = parseNumericInput(scrapTarget);
+                    const scrapResultNum = parseNumericInput(scrapResultInput);
+                    const scrapPass = (scrapTargetNum !== null && scrapResultNum !== null) ? (scrapResultNum <= scrapTargetNum) : null;
+
                     const blockedTarget = getMetricTarget('blocked', item.district, item.stage, item.team, '');
+                    const blockedResultInput = getMetricResultInput('blocked', item.district, item.stage, item.team, '');
+                    const blockedTargetNum = parseNumericInput(blockedTarget);
+                    const blockedResultNum = parseNumericInput(blockedResultInput);
+                    const blockedPass = (blockedTargetNum !== null && blockedResultNum !== null) ? (blockedResultNum <= blockedTargetNum) : null;
+
                     const clipTarget = getMetricTarget('clip', item.district, item.stage, item.team, '');
 
                     const rowBg = idx % 2 === 0 ? 'background: rgba(255, 255, 255, 0.015);' : '';
@@ -855,8 +1136,15 @@
 
                     return `
                       <tr style="border-bottom: 1px solid var(--border-glass); ${rowBg}" 
+                          data-is-team="true"
+                          data-stage-group="${group.stage}"
+                          data-district="${item.district}"
                           data-prod-val="${prodNum !== null ? prodNum : ''}"
-                          data-rem-val="${remNum !== null ? remNum : ''}">
+                          data-rem-val="${remNum !== null ? remNum : ''}"
+                          data-scrap-val="${scrapResultNum !== null ? scrapResultNum : ''}"
+                          data-scrap-target="${scrapTargetNum !== null ? scrapTargetNum : ''}"
+                          data-blocked-val="${blockedResultNum !== null ? blockedResultNum : ''}"
+                          data-blocked-target="${blockedTargetNum !== null ? blockedTargetNum : ''}">
                         
                         <!-- District -->
                         <td style="padding: 0.35rem 0.5rem; font-weight: 600; color: #cbd5e1; white-space: nowrap;">
@@ -909,34 +1197,54 @@
                           ${remBadge}
                         </td>
 
-                        <!-- 3. Scrap, % All (Tạm chưa có data từng team -> chỉ có ô Target) -->
+                        <!-- 3. Scrap, % All (Cho phép tự input cả Target và Result) -->
                         <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; border-left: 2px solid rgba(245, 158, 11, 0.25);">
                           <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
-                            <input type="number" step="0.1" value="${scrapTarget}" class="font-mono" placeholder="-"
+                            <input type="number" step="any" value="${scrapTarget}" class="font-mono kpi-target-input-scrap" placeholder="-"
                                    oninput="handleKpiUniversalTargetChange(this, 'scrap', '${item.district}', '${item.stage}', '${item.team}')"
-                                   style="width: 44px; padding: 0.15rem 0.25rem; font-size: 0.7rem; font-weight: 800; color: #fbbf24; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 3px; text-align: right; outline: none;">
+                                   style="width: 48px; padding: 0.15rem 0.25rem; font-size: 0.7rem; font-weight: 800; color: #fbbf24; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 3px; text-align: right; outline: none;">
                           </div>
                         </td>
-                        <td style="padding: 0.35rem 0.45rem; text-align: right; font-weight: 600; font-size: 0.75rem; color: var(--text-muted); white-space: nowrap;" class="font-mono">
-                          -
+                        <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap;">
+                          <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
+                            <input type="number" step="any" value="${scrapResultInput}" class="font-mono kpi-result-input-scrap" placeholder="-"
+                                   oninput="handleKpiUniversalResultChange(this, 'scrap', '${item.district}', '${item.stage}', '${item.team}')"
+                                   title="Nhập kết quả Scrap (%) cho ${item.team}"
+                                   style="width: 54px; padding: 0.15rem 0.25rem; font-size: 0.725rem; font-weight: 800; color: ${scrapPass === true ? '#34d399' : (scrapPass === false ? '#f87171' : '#f8fafc')}; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 3px; text-align: right; outline: none;">
+                          </div>
                         </td>
-                        <td style="padding: 0.35rem 0.45rem; text-align: center; color: var(--text-muted); font-size: 0.675rem; white-space: nowrap;">
-                          -
+                        <td style="padding: 0.35rem 0.45rem; text-align: center; white-space: nowrap;">
+                          ${scrapPass === true ?
+                            `<span class="badge badge-green kpi-eval-badge-scrap">🟢 Đạt</span>` :
+                            (scrapPass === false ?
+                              `<span class="badge badge-red kpi-eval-badge-scrap">🔴 Chưa đạt</span>` :
+                              `<span class="kpi-eval-badge-scrap" style="color: var(--text-muted); font-size: 0.675rem;">-</span>`)
+                          }
                         </td>
 
-                        <!-- 4. Blocked batches (v1) -->
+                        <!-- 4. Blocked batches (v1) (Cho phép tự input cả Target và Result) -->
                         <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; border-left: 2px solid rgba(244, 63, 94, 0.25);">
                           <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
-                            <input type="number" step="1" value="${blockedTarget}" class="font-mono" placeholder="-"
+                            <input type="number" step="1" value="${blockedTarget}" class="font-mono kpi-target-input-blocked" placeholder="-"
                                    oninput="handleKpiUniversalTargetChange(this, 'blocked', '${item.district}', '${item.stage}', '${item.team}')"
-                                   style="width: 44px; padding: 0.15rem 0.25rem; font-size: 0.7rem; font-weight: 800; color: #fbbf24; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 3px; text-align: right; outline: none;">
+                                   style="width: 48px; padding: 0.15rem 0.25rem; font-size: 0.7rem; font-weight: 800; color: #fbbf24; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 3px; text-align: right; outline: none;">
                           </div>
                         </td>
-                        <td style="padding: 0.35rem 0.45rem; text-align: right; font-weight: 600; font-size: 0.75rem; color: var(--text-muted); white-space: nowrap;" class="font-mono">
-                          -
+                        <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap;">
+                          <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
+                            <input type="number" step="any" value="${blockedResultInput}" class="font-mono kpi-result-input-blocked" placeholder="-"
+                                   oninput="handleKpiUniversalResultChange(this, 'blocked', '${item.district}', '${item.stage}', '${item.team}')"
+                                   title="Nhập kết quả Blocked batches cho ${item.team}"
+                                   style="width: 54px; padding: 0.15rem 0.25rem; font-size: 0.725rem; font-weight: 800; color: ${blockedPass === true ? '#34d399' : (blockedPass === false ? '#f87171' : '#f8fafc')}; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(244, 63, 94, 0.35); border-radius: 3px; text-align: right; outline: none;">
+                          </div>
                         </td>
-                        <td style="padding: 0.35rem 0.45rem; text-align: center; color: var(--text-muted); font-size: 0.675rem; white-space: nowrap;">
-                          -
+                        <td style="padding: 0.35rem 0.45rem; text-align: center; white-space: nowrap;">
+                          ${blockedPass === true ?
+                            `<span class="badge badge-green kpi-eval-badge-blocked">🟢 Đạt</span>` :
+                            (blockedPass === false ?
+                              `<span class="badge badge-red kpi-eval-badge-blocked">🔴 Chưa đạt</span>` :
+                              `<span class="kpi-eval-badge-blocked" style="color: var(--text-muted); font-size: 0.675rem;">-</span>`)
+                          }
                         </td>
 
                         <!-- 5. Clip (all plant) -->
@@ -962,8 +1270,14 @@
                   const aveRowHtml = `
                     <tr style="border-top: 1px solid rgba(234, 179, 8, 0.6); border-bottom: 2px solid rgba(234, 179, 8, 0.6); background: rgba(234, 179, 8, 0.18); font-weight: 800;" 
                         data-is-ave="true" 
+                        data-stage-group="${group.stage}"
+                        data-district="${group.district}"
                         data-prod-val="${aveProdNum !== null ? aveProdNum : ''}"
-                        data-rem-val="${aveRemNum !== null ? aveRemNum : ''}">
+                        data-rem-val="${aveRemNum !== null ? aveRemNum : ''}"
+                        data-scrap-val="${aveScrapResultNum !== null ? aveScrapResultNum : ''}"
+                        data-scrap-target="${aveScrapTargetNum !== null ? aveScrapTargetNum : ''}"
+                        data-blocked-val="${aveBlockedResultNum !== null ? aveBlockedResultNum : ''}"
+                        data-blocked-target="${aveBlockedTargetNum !== null ? aveBlockedTargetNum : ''}">
                       
                       <!-- District -->
                       <td style="padding: 0.35rem 0.5rem; font-weight: 800; color: #fef08a; white-space: nowrap;">
@@ -1014,34 +1328,54 @@
                         ${aveRemBadge}
                       </td>
 
-                      <!-- 3. Scrap Ave -->
+                      <!-- 3. Scrap Ave (Cho phép tự input cả Target và Result) -->
                       <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; border-left: 2px solid rgba(234, 179, 8, 0.5);">
                         <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
-                          <input type="number" step="0.1" value="${aveScrapTarget}" class="font-mono" placeholder="-"
+                          <input type="number" step="any" value="${aveScrapTarget}" class="font-mono kpi-target-input-scrap" placeholder="-"
                                  oninput="handleKpiUniversalTargetChange(this, 'scrap', '${group.district}', '${group.stage}', 'Ave')"
-                                 style="width: 44px; padding: 0.15rem 0.25rem; font-size: 0.7rem; font-weight: 800; color: #fbbf24; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(245, 158, 11, 0.5); border-radius: 3px; text-align: right; outline: none;">
+                                 style="width: 48px; padding: 0.15rem 0.25rem; font-size: 0.7rem; font-weight: 800; color: #fbbf24; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(245, 158, 11, 0.5); border-radius: 3px; text-align: right; outline: none;">
                         </div>
                       </td>
-                      <td style="padding: 0.35rem 0.45rem; text-align: right; font-weight: 600; font-size: 0.75rem; color: var(--text-muted); white-space: nowrap;" class="font-mono">
-                        -
+                      <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap;">
+                        <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
+                          <input type="number" step="any" value="${aveScrapResultInput}" class="font-mono kpi-result-input-scrap" placeholder="-"
+                                 oninput="handleKpiUniversalResultChange(this, 'scrap', '${group.district}', '${group.stage}', 'Ave')"
+                                 title="Nhập kết quả Scrap (%) trung bình cho Stage ${group.stage}"
+                                 style="width: 54px; padding: 0.15rem 0.25rem; font-size: 0.725rem; font-weight: 800; color: ${aveScrapPass === true ? '#34d399' : (aveScrapPass === false ? '#f87171' : '#fef08a')}; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(245, 158, 11, 0.45); border-radius: 3px; text-align: right; outline: none;">
+                        </div>
                       </td>
-                      <td style="padding: 0.35rem 0.45rem; text-align: center; color: var(--text-muted); font-size: 0.675rem; white-space: nowrap;">
-                        -
+                      <td style="padding: 0.35rem 0.45rem; text-align: center; white-space: nowrap;">
+                        ${aveScrapPass === true ?
+                          `<span class="badge badge-green kpi-eval-badge-scrap">🟢 Đạt</span>` :
+                          (aveScrapPass === false ?
+                            `<span class="badge badge-red kpi-eval-badge-scrap">🔴 Chưa đạt</span>` :
+                            `<span class="kpi-eval-badge-scrap" style="color: var(--text-muted); font-size: 0.675rem;">-</span>`)
+                        }
                       </td>
 
-                      <!-- 4. Blocked Ave -->
+                      <!-- 4. Blocked Ave (Cho phép tự input cả Target và Result) -->
                       <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; border-left: 2px solid rgba(234, 179, 8, 0.5);">
                         <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
-                          <input type="number" step="1" value="${aveBlockedTarget}" class="font-mono" placeholder="-"
+                          <input type="number" step="1" value="${aveBlockedTarget}" class="font-mono kpi-target-input-blocked" placeholder="-"
                                  oninput="handleKpiUniversalTargetChange(this, 'blocked', '${group.district}', '${group.stage}', 'Ave')"
-                                 style="width: 44px; padding: 0.15rem 0.25rem; font-size: 0.7rem; font-weight: 800; color: #fbbf24; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(245, 158, 11, 0.5); border-radius: 3px; text-align: right; outline: none;">
+                                 style="width: 48px; padding: 0.15rem 0.25rem; font-size: 0.7rem; font-weight: 800; color: #fbbf24; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(245, 158, 11, 0.5); border-radius: 3px; text-align: right; outline: none;">
                         </div>
                       </td>
-                      <td style="padding: 0.35rem 0.45rem; text-align: right; font-weight: 600; font-size: 0.75rem; color: var(--text-muted); white-space: nowrap;" class="font-mono">
-                        -
+                      <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap;">
+                        <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
+                          <input type="number" step="any" value="${aveBlockedResultInput}" class="font-mono kpi-result-input-blocked" placeholder="-"
+                                 oninput="handleKpiUniversalResultChange(this, 'blocked', '${group.district}', '${group.stage}', 'Ave')"
+                                 title="Nhập kết quả Blocked batches trung bình cho Stage ${group.stage}"
+                                 style="width: 54px; padding: 0.15rem 0.25rem; font-size: 0.725rem; font-weight: 800; color: ${aveBlockedPass === true ? '#34d399' : (aveBlockedPass === false ? '#f87171' : '#fef08a')}; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(244, 63, 94, 0.45); border-radius: 3px; text-align: right; outline: none;">
+                        </div>
                       </td>
-                      <td style="padding: 0.35rem 0.45rem; text-align: center; color: var(--text-muted); font-size: 0.675rem; white-space: nowrap;">
-                        -
+                      <td style="padding: 0.35rem 0.45rem; text-align: center; white-space: nowrap;">
+                        ${aveBlockedPass === true ?
+                          `<span class="badge badge-green kpi-eval-badge-blocked">🟢 Đạt</span>` :
+                          (aveBlockedPass === false ?
+                            `<span class="badge badge-red kpi-eval-badge-blocked">🔴 Chưa đạt</span>` :
+                            `<span class="kpi-eval-badge-blocked" style="color: var(--text-muted); font-size: 0.675rem;">-</span>`)
+                        }
                       </td>
 
                       <!-- 5. Clip Ave -->
@@ -1209,8 +1543,10 @@
         rowVals.push(tds[2].textContent.trim());
 
         for (let colIdx = 3; colIdx < 18; colIdx += 3) {
-          const target = tds[colIdx].querySelector('input')?.value || tds[colIdx].textContent.trim();
-          const result = tds[colIdx + 1].textContent.trim();
+          const targetInp = tds[colIdx].querySelector('input');
+          const target = targetInp ? (targetInp.value.trim() || '-') : tds[colIdx].textContent.trim();
+          const resInp = tds[colIdx + 1].querySelector('input');
+          const result = resInp ? (resInp.value.trim() || '-') : tds[colIdx + 1].textContent.trim();
           const evalText = tds[colIdx + 2].textContent.trim();
           rowVals.push(target, result, evalText);
         }
@@ -1282,8 +1618,10 @@
         rowVals.push(`"${tds[2].textContent.trim().replace(/"/g, '""')}"`);
 
         for (let colIdx = 3; colIdx < 18; colIdx += 3) {
-          const target = (tds[colIdx].querySelector('input')?.value || tds[colIdx].textContent.trim()).replace(/"/g, '""');
-          const result = tds[colIdx + 1].textContent.trim().replace(/"/g, '""');
+          const targetInp = tds[colIdx].querySelector('input');
+          const target = (targetInp ? (targetInp.value.trim() || '-') : tds[colIdx].textContent.trim()).replace(/"/g, '""');
+          const resInp = tds[colIdx + 1].querySelector('input');
+          const result = (resInp ? (resInp.value.trim() || '-') : tds[colIdx + 1].textContent.trim()).replace(/"/g, '""');
           const evalText = tds[colIdx + 2].textContent.trim().replace(/"/g, '""');
           rowVals.push(`"${target}"`, `"${result}"`, `"${evalText}"`);
         }
@@ -1320,84 +1658,220 @@
   };
 
   /**
-   * Live Sync trực tiếp từ Google Sheet "KPI Data"
+   * Chuẩn hóa dữ liệu 4 khối (Productivity, Remarks, FTT, Scrap) từ mảng rows CSV
+   * Hỗ trợ fill-down District & Stage khi ô gộp trong Google Sheet bị trống
    */
-  window.handleKpiLiveSyncGoogleSheet = function() {
+  function parseKpiMasterFromRows(rows) {
+    const parsedProd = [];
+    const parsedRemarks = [];
+    let scrapTarget = '';
+    let scrapActual = '';
+    let prodFilterNote = '';
+    let remarksFilterNote = '';
+
+    if (!rows || rows.length < 2) {
+      return { productivity: parsedProd, remarks: parsedRemarks, scrap: null, meta: {} };
+    }
+
+    const r0 = rows[0] || [];
+    for (let c = 27; c < r0.length - 1; c++) {
+      const lbl = String(r0[c] || '').trim().toLowerCase();
+      const val = String(r0[c + 1] || '').trim();
+      if (lbl === 'target' && val) scrapTarget = val;
+      if (lbl === 'actual' && val) scrapActual = val;
+    }
+
+    let curDist = '';
+    let curStage = '';
+    let prodStopped = false;
+    let remarksStarted = false;
+    let remarksStopped = false;
+
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      if (!r || r.length === 0) continue;
+
+      const c0 = String(r[0] || '').trim();
+      const c1 = String(r[1] || '').trim();
+      const c2 = String(r[2] || '').trim();
+
+      if (!prodStopped) {
+        if (c0.startsWith('Applied filters') || c0.startsWith('[Param]')) {
+          prodFilterNote = c0;
+          prodStopped = true;
+        } else if (c0.toLowerCase() !== 'district' && (c0 || c1 || c2)) {
+          if (c0) {
+            curDist = c0;
+            if (c1.toLowerCase() === 'total' || !c1) curStage = '';
+          }
+          if (c1 && c1.toLowerCase() !== 'total') {
+            curStage = c1;
+          }
+          const useDist = c0 || curDist;
+          const useStage = c1 || curStage;
+          if (useDist) {
+            parsedProd.push({
+              id: `prod_live_${parsedProd.length + 1}`,
+              district: useDist,
+              stage: useStage,
+              team: c2,
+              fact: r[3] ? String(r[3]).trim() : '',
+              normH: r[4] ? String(r[4]).trim() : '',
+              haveH: r[5] ? String(r[5]).trim() : '',
+              result: r[6] ? String(r[6]).trim() : (r.length <= 6 && r[4] ? String(r[4]).trim() : '')
+            });
+          }
+        }
+      }
+
+      const c14 = String(r[14] || '').trim();
+      const c15 = String(r[15] || '').trim();
+      const c16 = String(r[16] || '').trim();
+      if (!remarksStopped) {
+        if (c14.toLowerCase().startsWith('otvrukovod') || c14.toLowerCase() === 'date') {
+          remarksStarted = true;
+        } else if (c14.startsWith('Applied filters')) {
+          remarksFilterNote = c14;
+          remarksStopped = true;
+        } else if (remarksStarted && c14) {
+          parsedRemarks.push({
+            team: c14,
+            resultAve: c15,
+            count: c16
+          });
+        }
+      }
+    }
+
+    const scrapObj = (scrapTarget || scrapActual) ? { target: scrapTarget, actual: scrapActual } : null;
+    return {
+      productivity: parsedProd,
+      remarks: parsedRemarks,
+      scrap: scrapObj,
+      meta: { prodFilterNote, remarksFilterNote }
+    };
+  }
+
+  function applySyncedKpiPayload(payload) {
+    const prodList = payload && Array.isArray(payload.productivity) ? payload.productivity : [];
+    const remList = payload && Array.isArray(payload.remarks) ? payload.remarks : [];
+    const scrapObj = (payload && payload.scrap) ? payload.scrap : null;
+    const syncTs = (payload && payload.timestamp) || new Date().toLocaleString('vi-VN');
+    const filterNote = (payload && payload.meta && (payload.meta.remarksFilterNote || payload.meta.prodFilterNote)) || '';
+
+    if (!hasValidWorkcellTeams(prodList)) {
+      throw new Error('Không tìm thấy dữ liệu team Workcell A/B hợp lệ từ Sheet KPI Data');
+    }
+
+    window.KpiResultStore.customProductivityData = prodList;
+    window.KpiResultStore.lastSyncedAt = syncTs;
+    if (filterNote) window.KpiResultStore.filterNote = filterNote;
+    try {
+      localStorage.setItem('AJAX_PROPLAN_KPI_PRODUCTIVITY_CUSTOM_DATA', JSON.stringify(prodList));
+      localStorage.setItem('AJAX_PROPLAN_KPI_META_CUSTOM_DATA', JSON.stringify({ timestamp: syncTs, filterNote }));
+    } catch (e) {}
+
+    if (remList.length > 0) {
+      window.KpiResultStore.customRemarksData = remList;
+      window.KpiResultStore.remarksMap = buildRemarksLookupMap(remList);
+      try {
+        localStorage.setItem('AJAX_PROPLAN_KPI_REMARKS_CUSTOM_DATA', JSON.stringify(remList));
+      } catch (e) {}
+    }
+
+    if (scrapObj && (scrapObj.actual || scrapObj.target)) {
+      window.KpiResultStore.customScrapData = scrapObj;
+      try {
+        localStorage.setItem('AJAX_PROPLAN_KPI_SCRAP_CUSTOM_DATA', JSON.stringify(scrapObj));
+      } catch (e) {}
+    }
+
+    return prodList.filter(it => isWorkcellAorB(it.team)).length;
+  }
+
+  /**
+   * Live Sync trực tiếp từ Google Sheet "KPI Data" (gid=56968671)
+   * Ưu tiên gọi API /api/sync-kpi trên máy chủ local, fallback sang CSV Google Sheets
+   */
+  window.handleKpiLiveSyncGoogleSheet = async function() {
     const btn = document.getElementById('btnKpiLiveSync');
     if (btn) {
       btn.disabled = true;
       btn.textContent = 'Đang đồng bộ... ⏳';
     }
 
-    const sheetId = '1wtuLHVwH4U4OfJ3bKQjTgC13g8EZfZePOyLnqnWzfl4';
-    const sheetName = encodeURIComponent('KPI Data');
-    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${sheetName}`;
-
-    fetch(url)
-      .then(resp => resp.text())
-      .then(csvText => {
-        const rows = parseCsvText(csvText);
-        if (rows.length > 2) {
-          const parsedProd = [];
-          const parsedRemarks = [];
-
-          for (let i = 1; i < rows.length; i++) {
-            const r = rows[i];
-            if (r.length > 6 && r[0].trim()) {
-              const dist = r[0].trim();
-              if (!dist.includes('Applied filters') && !dist.includes('[Param]')) {
-                parsedProd.push({
-                  id: `prod_live_${i}`,
-                  district: dist,
-                  stage: r[1] ? r[1].trim() : '',
-                  team: r[2] ? r[2].trim() : '',
-                  fact: r[3] ? r[3].trim() : '',
-                  normH: r[4] ? r[4].trim() : '',
-                  haveH: r[5] ? r[5].trim() : '',
-                  result: r[6] ? r[6].trim() : ''
-                });
-              }
+    try {
+      // 1. Ưu tiên gọi máy chủ local (/api/sync-kpi) để tải trọn vẹn trực tiếp từ Sheet gid=56968671
+      try {
+        const apiResp = await fetch('/api/sync-kpi?t=' + Date.now(), { method: 'GET', cache: 'no-cache' });
+        if (apiResp && apiResp.ok) {
+          const apiData = await apiResp.json();
+          if (apiData && apiData.success && hasValidWorkcellTeams(apiData.productivity)) {
+            const wcCount = applySyncedKpiPayload(apiData);
+            if (window.SyncService && typeof window.SyncService.reloadScriptFile === 'function') {
+              await window.SyncService.reloadScriptFile('js/kpi-data.js');
             }
-            if (r.length > 15 && r[14].trim() && i >= 2) {
-              parsedRemarks.push({
-                team: r[14].trim(),
-                resultAve: r[15] ? r[15].trim() : ''
-              });
-            }
-          }
-
-          if (parsedProd.length > 0) {
-            window.KpiResultStore.customProductivityData = parsedProd;
-            try {
-              localStorage.setItem('AJAX_PROPLAN_KPI_PRODUCTIVITY_CUSTOM_DATA', JSON.stringify(parsedProd));
-            } catch (e) {}
-
-            if (parsedRemarks.length > 0) {
-              window.KpiResultStore.customRemarksData = parsedRemarks;
-              window.KpiResultStore.remarksMap = buildRemarksLookupMap(parsedRemarks);
-              try {
-                localStorage.setItem('AJAX_PROPLAN_KPI_REMARKS_CUSTOM_DATA', JSON.stringify(parsedRemarks));
-              } catch (e) {}
-            }
-
             window.closeKpiUploadModal();
             window.renderKpiResultView();
-            if (window.showToast) window.showToast('success', `✅ Đã đồng bộ thành công dữ liệu KPI mới nhất!`);
+            if (window.showToast) {
+              window.showToast('success', `✅ Đã đồng bộ KPI mới nhất từ Google Sheet (${wcCount} Workcell Teams)!`);
+            }
             return;
           }
         }
-        throw new Error('Dữ liệu tải về trống');
-      })
-      .catch(err => {
-        console.error('Live Sync Error:', err);
-        if (window.showToast) window.showToast('error', 'Không thể kết nối trực tiếp Google Sheets. Bạn có thể dán bảng vào ô bên dưới!');
-      })
-      .finally(() => {
-        if (btn) {
-          btn.disabled = false;
-          btn.textContent = 'Đồng Bộ Ngay ⚡';
+      } catch (apiErr) {
+        console.warn('API /api/sync-kpi không khả dụng, chuyển sang tải CSV trực tiếp:', apiErr);
+      }
+
+      // 2. Fallback trình duyệt trực tiếp (GitHub Pages / tĩnh)
+      const sheetId = '1wtuLHVwH4U4OfJ3bKQjTgC13g8EZfZePOyLnqnWzfl4';
+      const kpiGid = '56968671';
+      const candidateUrls = [
+        `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${kpiGid}`,
+        `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('KPI Data')}`,
+        `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${kpiGid}`,
+        `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${kpiGid}`)}`
+      ];
+
+      let parsedOk = false;
+      for (const u of candidateUrls) {
+        try {
+          const resp = await fetch(u, { cache: 'no-cache' });
+          if (!resp || !resp.ok) continue;
+          const csvText = await resp.text();
+          if (!csvText || csvText.trim().startsWith('<!DOCTYPE') || csvText.trim().startsWith('<html')) continue;
+          const rows = parseCsvText(csvText);
+          const parsed = parseKpiMasterFromRows(rows);
+          if (hasValidWorkcellTeams(parsed.productivity)) {
+            const wcCount = applySyncedKpiPayload({
+              ...parsed,
+              timestamp: new Date().toLocaleString('vi-VN')
+            });
+            window.closeKpiUploadModal();
+            window.renderKpiResultView();
+            if (window.showToast) {
+              window.showToast('success', `✅ Đã đồng bộ thành công dữ liệu KPI mới nhất (${wcCount} Teams)!`);
+            }
+            parsedOk = true;
+            break;
+          }
+        } catch (uErr) {
+          continue;
         }
-      });
+      }
+
+      if (!parsedOk) {
+        throw new Error('Không thể bóc tách dữ liệu từ Sheet KPI Data');
+      }
+    } catch (err) {
+      console.error('Live Sync Error:', err);
+      if (window.showToast) window.showToast('error', 'Không thể kết nối trực tiếp Google Sheets. Bạn có thể dán bảng vào ô bên dưới!');
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Đồng Bộ Ngay ⚡';
+      }
+    }
   };
 
   /**
@@ -1432,23 +1906,51 @@
       return;
     }
 
-    const parsedList = [];
-    const startIndex = (rows[0][0] || '').toLowerCase().includes('district') ? 1 : 0;
-    for (let i = startIndex; i < rows.length; i++) {
-      const r = rows[i];
-      if (r.length >= 3) {
-        parsedList.push({
-          id: `prod_custom_${i}`,
-          district: r[0] ? r[0].trim() : '',
-          stage: r[1] ? r[1].trim() : '',
-          team: r[2] ? r[2].trim() : '',
-          fact: r[3] ? r[3].trim() : '',
-          result: r[6] ? r[6].trim() : (r[4] ? r[4].trim() : '')
-        });
+    const parsed = parseKpiMasterFromRows(rows);
+    let parsedList = parsed.productivity;
+
+    // Fallback nếu user chỉ dán bảng 3-5 cột không có header chuẩn Sheet
+    if (!hasValidWorkcellTeams(parsedList)) {
+      parsedList = [];
+      let curDist = '';
+      let curStage = '';
+      const startIndex = (rows[0][0] || '').toLowerCase().includes('district') ? 1 : 0;
+      for (let i = startIndex; i < rows.length; i++) {
+        const r = rows[i];
+        if (r.length >= 3) {
+          const c0 = (r[0] || '').trim();
+          const c1 = (r[1] || '').trim();
+          const c2 = (r[2] || '').trim();
+          if (c0.startsWith('Applied filters')) break;
+          if (c0) {
+            curDist = c0;
+            if (c1.toLowerCase() === 'total' || !c1) curStage = '';
+          }
+          if (c1 && c1.toLowerCase() !== 'total') curStage = c1;
+          parsedList.push({
+            id: `prod_custom_${i}`,
+            district: c0 || curDist,
+            stage: c1 || curStage,
+            team: c2,
+            fact: r[3] ? r[3].trim() : '',
+            result: r[6] ? r[6].trim() : (r[4] ? r[4].trim() : '')
+          });
+        }
       }
     }
 
-    if (parsedList.length > 0) {
+    if (parsedList.length > 0 && hasValidWorkcellTeams(parsedList)) {
+      const wcCount = applySyncedKpiPayload({
+        productivity: parsedList,
+        remarks: parsed.remarks,
+        scrap: parsed.scrap,
+        meta: parsed.meta,
+        timestamp: new Date().toLocaleString('vi-VN')
+      });
+      window.closeKpiUploadModal();
+      window.renderKpiResultView();
+      if (window.showToast) window.showToast('success', `✅ Đã cập nhật thành công ${wcCount} Teams từ dữ liệu dán!`);
+    } else if (parsedList.length > 0) {
       window.KpiResultStore.customProductivityData = parsedList;
       try {
         localStorage.setItem('AJAX_PROPLAN_KPI_PRODUCTIVITY_CUSTOM_DATA', JSON.stringify(parsedList));
@@ -1467,42 +1969,70 @@
   window.handleResetKpiProductivityDefault = function() {
     window.KpiResultStore.customProductivityData = null;
     window.KpiResultStore.customRemarksData = null;
-    window.KpiResultStore.remarksMap = buildRemarksLookupMap(RAW_KPI_REMARKS_DATA);
+    window.KpiResultStore.customScrapData = null;
+    window.KpiResultStore.lastSyncedAt = (window.KPI_MASTER_DATA && window.KPI_MASTER_DATA.timestamp) || null;
+    window.KpiResultStore.remarksMap = buildRemarksLookupMap((window.KPI_MASTER_DATA && window.KPI_MASTER_DATA.remarks) || RAW_KPI_REMARKS_DATA);
     try {
       localStorage.removeItem('AJAX_PROPLAN_KPI_PRODUCTIVITY_CUSTOM_DATA');
       localStorage.removeItem('AJAX_PROPLAN_KPI_REMARKS_CUSTOM_DATA');
+      localStorage.removeItem('AJAX_PROPLAN_KPI_SCRAP_CUSTOM_DATA');
+      localStorage.removeItem('AJAX_PROPLAN_KPI_META_CUSTOM_DATA');
     } catch (e) {}
     window.closeKpiUploadModal();
     window.renderKpiResultView();
-    if (window.showToast) window.showToast('info', 'Đã khôi phục dữ liệu gốc từ Sheet KPI Data!');
+    if (window.showToast) window.showToast('info', 'Đã khôi phục dữ liệu chuẩn từ Sheet KPI Data!');
   };
 
   /**
-   * Tiện ích parse CSV/TSV
+   * Tiện ích parse CSV/TSV hỗ trợ xuống dòng bên trong dấu nháy kép ("Applied filters:\n...")
    */
   function parseCsvText(text) {
-    const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
-    return lines.map(line => {
-      if (line.includes('\t')) {
-        return line.split('\t').map(c => c.trim().replace(/^"|"$/g, ''));
-      }
-      const res = [];
-      let inQuotes = false;
-      let cur = '';
-      for (let i = 0; i < line.length; i++) {
-        const c = line[i];
-        if (c === '"') {
-          inQuotes = !inQuotes;
-        } else if (c === ',' && !inQuotes) {
-          res.push(cur.trim());
-          cur = '';
+    if (!text) return [];
+    const sampleLine = text.split(/\r?\n/, 1)[0] || '';
+    if (sampleLine.includes('\t')) {
+      return text.split(/\r?\n/).filter(l => l.trim().length > 0).map(line =>
+        line.split('\t').map(c => c.trim().replace(/^"|"$/g, ''))
+      );
+    }
+
+    const rows = [];
+    let row = [];
+    let cur = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      const next = text[i + 1];
+
+      if (c === '"') {
+        if (inQuotes && next === '"') {
+          cur += '"';
+          i++;
         } else {
-          cur += c;
+          inQuotes = !inQuotes;
         }
+      } else if (c === ',' && !inQuotes) {
+        row.push(cur.trim());
+        cur = '';
+      } else if ((c === '\r' || c === '\n') && !inQuotes) {
+        if (c === '\r' && next === '\n') i++;
+        row.push(cur.trim());
+        if (row.some(cell => cell.length > 0)) {
+          rows.push(row);
+        }
+        row = [];
+        cur = '';
+      } else {
+        cur += c;
       }
-      res.push(cur.trim());
-      return res;
-    });
+    }
+    if (cur.length > 0 || row.length > 0) {
+      row.push(cur.trim());
+      if (row.some(cell => cell.length > 0)) {
+        rows.push(row);
+      }
+    }
+    return rows;
   }
 
 })();

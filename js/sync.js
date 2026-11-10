@@ -138,11 +138,12 @@ window.SyncService = {
     throw new Error(`Không thể kết nối tải sheet GID: ${gid}`);
   },
 
-  reloadDatamassScript() {
+  reloadScriptFile(basePath) {
     return new Promise((resolve) => {
-      const oldScript = document.querySelector('script[src*="datamass-data.js"]');
+      const ts = Date.now();
+      const oldScript = document.querySelector(`script[src*="${basePath}"]`);
       const newScript = document.createElement('script');
-      newScript.src = `js/datamass-data.js?t=${Date.now()}`;
+      newScript.src = `${basePath}?t=${ts}`;
       newScript.onload = () => resolve(true);
       newScript.onerror = () => resolve(false);
       if (oldScript && oldScript.parentNode) {
@@ -151,6 +152,17 @@ window.SyncService = {
         document.body.appendChild(newScript);
       }
     });
+  },
+
+  async reloadDatamassScript() {
+    const results = await Promise.all([
+      this.reloadScriptFile('js/datamass-data.js'),
+      this.reloadScriptFile('js/inventory-1c-data.js'),
+      this.reloadScriptFile('js/bom-data.js'),
+      this.reloadScriptFile('js/mass-history-data.js'),
+      this.reloadScriptFile('js/kpi-data.js')
+    ]);
+    return results[0];
   },
 
   startStatusWatcher() {

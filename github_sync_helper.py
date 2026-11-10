@@ -20,12 +20,14 @@ DATA_FILE_PATHS = [
     'js/hardtest-capacity-data.js',
     'js/assembly-capacity-data.js',
     'js/clips-alls-data.js',
+    'js/kpi-data.js',
     'manpower_data.json',
     'inventory_1c_data.json',
     'mass_history_data.json',
     'hardtest_data.json',
     'clips_alls_data.json',
     'clips_alls_history.json',
+    'kpi_data.json',
     'sync_status.json'
 ]
 

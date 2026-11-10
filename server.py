@@ -47,6 +47,8 @@ class AppRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.handle_api_sync()
         elif self.path == '/api/sync-clips' or self.path.startswith('/api/sync-clips?'):
             self.handle_api_sync_clips()
+        elif self.path == '/api/sync-kpi' or self.path.startswith('/api/sync-kpi?'):
+            self.handle_api_sync_kpi()
         elif self.path == '/api/status' or self.path.startswith('/api/status?'):
             self.handle_api_status()
         elif self.path == '/api/completed-plan' or self.path.startswith('/api/completed-plan?'):
@@ -118,6 +120,24 @@ class AppRequestHandler(http.server.SimpleHTTPRequestHandler):
                     period_name=period_name,
                     month_label=month_label
                 )
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps(res, ensure_ascii=False).encode('utf-8'))
+        except Exception as e:
+            self.send_response(500)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            err_data = {'success': False, 'error': str(e)}
+            self.wfile.write(json.dumps(err_data, ensure_ascii=False).encode('utf-8'))
+
+    def handle_api_sync_kpi(self):
+        try:
+            with is_syncing_lock:
+                import importlib
+                import sync_service
+                importlib.reload(sync_service)
+                res = sync_service.sync_kpi_only()
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
             self.end_headers()

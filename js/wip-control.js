@@ -1628,6 +1628,25 @@
     window.renderWipControlView();
   };
 
+  function reloadWipScriptTag(basePath) {
+    if (window.SyncService && typeof window.SyncService.reloadScriptFile === 'function') {
+      return window.SyncService.reloadScriptFile(basePath);
+    }
+    return new Promise((resolve) => {
+      if (typeof document === 'undefined') { resolve(false); return; }
+      const oldScript = document.querySelector(`script[src*="${basePath}"]`);
+      const newScript = document.createElement('script');
+      newScript.src = `${basePath}?t=${Date.now()}`;
+      newScript.onload = () => resolve(true);
+      newScript.onerror = () => resolve(false);
+      if (oldScript && oldScript.parentNode) {
+        oldScript.parentNode.replaceChild(newScript, oldScript);
+      } else {
+        document.head.appendChild(newScript);
+      }
+    });
+  }
+
   window.handleWipLoadData = async function() {
     const fromEl = document.getElementById('wipFromDate');
     const toEl = document.getElementById('wipToDate');
@@ -1647,28 +1666,50 @@
     }
     if (text) text.textContent = 'Đang tải...';
 
+    let syncMeta = null;
     try {
       if (typeof fetch === 'function') {
-        const resp = await fetch('/api/sync', { method: 'GET', cache: 'no-cache' });
-        if (resp && resp.ok && typeof document !== 'undefined') {
-          // Nạp lại dữ liệu Inventory 1C và Datamass mới nhất
-          await new Promise(resolve => {
-            const s1 = document.createElement('script');
-            s1.src = 'js/inventory-1c-data.js?t=' + Date.now();
-            s1.onload = () => {
-              const s2 = document.createElement('script');
-              s2.src = 'js/datamass-data.js?t=' + Date.now();
-              s2.onload = () => resolve();
-              s2.onerror = () => resolve();
-              document.head.appendChild(s2);
-            };
-            s1.onerror = () => resolve();
-            document.head.appendChild(s1);
-          });
+        const resp = await fetch('/api/sync?t=' + Date.now(), { method: 'GET', cache: 'no-cache' });
+        if (resp && resp.ok) {
+          syncMeta = await resp.json();
+          if (syncMeta && syncMeta.success && typeof document !== 'undefined') {
+            // Nạp lại đồng thời dữ liệu mới nhất: Inventory 1C, BOM, Mass-History và Data_Mass
+            await Promise.all([
+              reloadWipScriptTag('js/inventory-1c-data.js'),
+              reloadWipScriptTag('js/bom-data.js'),
+              reloadWipScriptTag('js/mass-history-data.js'),
+              reloadWipScriptTag('js/datamass-data.js')
+            ]);
+
+            // Cập nhật trực tiếp vào AppStore để getWipControlData() tính đúng Plan/Fact/Stock1C mới nhất
+            if (window.AppStore && window.DEFAULT_DATAMASS_DATA && Array.isArray(window.DEFAULT_DATAMASS_DATA.items)) {
+              if (typeof window.AppStore.updateDataMassData === 'function') {
+                window.AppStore.updateDataMassData(window.DEFAULT_DATAMASS_DATA);
+              } else {
+                window.AppStore.dataMass = window.DEFAULT_DATAMASS_DATA;
+                window.AppStore._normalizedWeeks = null;
+              }
+            }
+
+            if (window.SyncService) {
+              window.SyncService.lastSyncTime = new Date();
+              try {
+                localStorage.setItem('AJAX_PROPLAN_LAST_SYNC', window.SyncService.lastSyncTime.toISOString());
+              } catch (e) {}
+              if (typeof window.SyncService.updateStatusUI === 'function') {
+                window.SyncService.updateStatusUI('online', `Đã đồng bộ ${window.SyncService.formatTime(window.SyncService.lastSyncTime)}`);
+              }
+            }
+          }
+        } else if (window.SyncService && typeof window.SyncService.fetchLiveData === 'function') {
+          await window.SyncService.fetchLiveData(true);
         }
       }
     } catch (err) {
-      console.log('Chế độ cục bộ, tải dữ liệu nội bộ:', err);
+      console.log('Chế độ cục bộ / fallback live CSV:', err);
+      if (window.SyncService && typeof window.SyncService.fetchLiveData === 'function') {
+        try { await window.SyncService.fetchLiveData(true); } catch (e2) {}
+      }
     } finally {
       if (btn) btn.disabled = false;
       if (icon) {
@@ -1680,7 +1721,14 @@
       window.renderWipControlView();
 
       if (window.showToast) {
-        window.showToast('success', `Đã tra cứu dữ liệu WIP từ ${toVnDate(window.WipStore.fromDate)} đến ${toVnDate(window.WipStore.toDate)} thành công!`);
+        if (syncMeta && syncMeta.success) {
+          window.showToast(
+            'success',
+            `Đã đồng bộ & tra cứu dữ liệu mới nhất (${syncMeta.inventory_items_count || 0} mã 1C • ${syncMeta.items_count || 0} models) từ ${toVnDate(window.WipStore.fromDate)} → ${toVnDate(window.WipStore.toDate)}!`
+          );
+        } else {
+          window.showToast('success', `Đã tra cứu dữ liệu WIP từ ${toVnDate(window.WipStore.fromDate)} đến ${toVnDate(window.WipStore.toDate)} thành công!`);
+        }
       }
     }
   };

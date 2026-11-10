@@ -1522,12 +1522,18 @@ class Store {
       localStorage.setItem('AJAX_PROPLAN_AS_PLAN', JSON.stringify(this.asPlan));
       localStorage.setItem('AJAX_PROPLAN_HT_PLAN', JSON.stringify(this.htPlan));
       localStorage.setItem('AJAX_PROPLAN_FTT', JSON.stringify(this.fttStats));
-      if (this.dataMass) this.dataMass._v = 2026102501;
-      localStorage.setItem('AJAX_PROPLAN_DATAMASS', JSON.stringify(this.dataMass));
-      this.notify();
+      if (this.dataMass && !this.dataMass._v) this.dataMass._v = 2026102501;
+      try {
+        localStorage.setItem('AJAX_PROPLAN_DATAMASS', JSON.stringify(this.dataMass));
+      } catch (dmErr) {
+        if (this.dataMass && this.dataMass._v) {
+          localStorage.setItem('AJAX_PROPLAN_DATAMASS', JSON.stringify({ _v: this.dataMass._v }));
+        }
+      }
     } catch(e) {
       console.error('Save store error:', e);
     }
+    this.notify();
   }
 
   updateLiveCloudData({ asPlan, htPlan, fttStats, dataMass }) {
@@ -1535,7 +1541,7 @@ class Store {
     if (htPlan && htPlan.length > 0) this.htPlan = htPlan;
     if (fttStats && fttStats.length > 0) this.fttStats = fttStats;
     if (dataMass && dataMass.weeks && dataMass.weeks.length > 0) {
-      dataMass._v = 2026102501;
+      if (!dataMass._v) dataMass._v = 2026102501;
       if (window.DEFAULT_DATAMASS_DATA) {
         const def = window.DEFAULT_DATAMASS_DATA;
         // Merge missing dates
