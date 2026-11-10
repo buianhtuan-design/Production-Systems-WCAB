@@ -2472,8 +2472,11 @@
                 <span>📜 Lịch Sử Plan</span>
                 <span id="simHistoryBadge" style="background: rgba(251, 191, 36, 0.3); color: #fbbf24; padding: 0.05rem 0.35rem; border-radius: 9999px; font-size: 0.65rem; font-weight: 800;">${simHistoryCount}</span>
               </button>
-              <button type="button" class="btn btn-secondary sim-btn-cloud-sync" onclick="handleForceSyncLatestPlan()" style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #34d399; border-color: rgba(52, 211, 153, 0.45); display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 6px; background: rgba(52, 211, 153, 0.1); cursor: pointer;" title="Nạp ngay lập tức bản kế hoạch sản xuất mới nhất từ máy chủ">
+              <button type="button" class="btn btn-secondary sim-btn-cloud-sync" onclick="handleForceSyncLatestPlan()" style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #34d399; border-color: rgba(52, 211, 153, 0.45); display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 6px; background: rgba(52, 211, 153, 0.1); cursor: pointer;" title="Nạp ngay lập tức bản kế hoạch sản xuất mới nhất từ máy chủ / Cloud">
                 <span>🔄 Đồng Bộ Plan</span>
+              </button>
+              <button type="button" class="btn btn-secondary sim-btn-cloud-setup" onclick="handleOpenCloudSyncModal()" style="padding: 0.2rem 0.6rem; font-size: 0.725rem; font-weight: 700; color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; background: rgba(56, 189, 248, 0.1); cursor: pointer;" title="Cấu hình đồng bộ Cloud (GitHub Pages / Google Apps Script), xem link LAN và Xuất/Nhập file Plan (.json)">
+                <span>☁️ Cloud / File</span>
               </button>
             </div>
             <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
@@ -6032,55 +6035,184 @@
     }
   }
 
-  async function fetchStaticCompletedPlanFallback() {
-    const bust = Date.now();
-    const [latestRes, histRes] = await Promise.allSettled([
-      fetch('./assembly_completed_plan_latest.json?t=' + bust, { cache: 'no-store' }),
-      fetch('./assembly_plan_history.json?t=' + bust, { cache: 'no-store' })
-    ]);
+  const RAW_GITHUB_BASE = 'https://raw.githubusercontent.com/buianhtuan-design/Production-Systems-WCAB/main/';
+  const CLOUD_URL_STORAGE_KEY = 'AJAX_CLOUD_PLAN_SYNC_URL';
 
-    let latestPlan = null;
-    if (latestRes.status === 'fulfilled' && latestRes.value && latestRes.value.ok) {
-      try { latestPlan = await latestRes.value.json(); } catch (e) {}
+  function getStoredCloudPlanSyncUrl() {
+    try {
+      if (typeof window !== 'undefined' && window.location && window.location.search && typeof URLSearchParams === 'function') {
+        const sp = new URLSearchParams(window.location.search);
+        const paramUrl = (sp.get('planSyncUrl') || '').trim();
+        if (paramUrl && (paramUrl.startsWith('https://') || paramUrl.startsWith('http://'))) {
+          try { localStorage.setItem(CLOUD_URL_STORAGE_KEY, paramUrl); } catch (e) {}
+          if (window.AppStore) window.AppStore.cloudPlanSyncUrl = paramUrl;
+          return paramUrl;
+        }
+      }
+      if (window.AppStore && window.AppStore.cloudPlanSyncUrl) {
+        return String(window.AppStore.cloudPlanSyncUrl).trim();
+      }
+      return (localStorage.getItem(CLOUD_URL_STORAGE_KEY) || '').trim();
+    } catch (e) {
+      return '';
     }
-    let history = [];
-    if (histRes.status === 'fulfilled' && histRes.value && histRes.value.ok) {
+  }
+
+  async function resolveCloudSyncConfigAsync() {
+    const existing = getStoredCloudPlanSyncUrl();
+    const now = Date.now();
+    if (window.AppStore && window.AppStore._cloudCfgFetchedAt && (now - window.AppStore._cloudCfgFetchedAt) < 15000) {
+      return existing || (window.AppStore.cloudPlanSyncUrl || '');
+    }
+    if (window.AppStore) window.AppStore._cloudCfgFetchedAt = now;
+
+    const urlsToTry = [];
+    const isGh = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
+    if (!isGh) urlsToTry.push('/api/cloud-sync-config?t=' + now);
+    urlsToTry.push('./cloud_sync_config.json?t=' + now);
+    if (isGh) urlsToTry.push(RAW_GITHUB_BASE + 'cloud_sync_config.json?t=' + now);
+
+    for (const u of urlsToTry) {
       try {
-        const h = await histRes.value.json();
-        if (Array.isArray(h)) history = h;
+        const res = await fetch(u, { cache: 'no-store' });
+        if (res && res.ok) {
+          const cfg = await res.json();
+          if (cfg && typeof cfg === 'object') {
+            if (cfg.lanUrl && window.AppStore) window.AppStore._detectedLanUrl = cfg.lanUrl;
+            if (cfg.cloudPlanSyncUrl && String(cfg.cloudPlanSyncUrl).trim()) {
+              const cleanUrl = String(cfg.cloudPlanSyncUrl).trim();
+              if (window.AppStore) window.AppStore.cloudPlanSyncUrl = cleanUrl;
+              if (!existing) {
+                try { localStorage.setItem(CLOUD_URL_STORAGE_KEY, cleanUrl); } catch (e) {}
+              }
+              return existing || cleanUrl;
+            }
+          }
+        }
       } catch (e) {}
     }
-    if (!latestPlan && history.length > 0) {
-      latestPlan = history[0];
+    return existing;
+  }
+
+  function pickNewestPlan(candidates) {
+    let best = null;
+    let bestMs = -1;
+    (candidates || []).forEach(p => {
+      if (!p || !p.id) return;
+      const ms = p.createdAt ? Date.parse(p.createdAt) : 0;
+      const validMs = isNaN(ms) ? 0 : ms;
+      if (!best || validMs > bestMs) {
+        best = p;
+        bestMs = validMs;
+      }
+    });
+    return best;
+  }
+
+  async function safeFetchJson(url) {
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res || !res.ok) return null;
+      return await res.json();
+    } catch (e) {
+      return null;
     }
+  }
+
+  async function fetchStaticCompletedPlanFallback() {
+    const bust = Date.now();
+    const isGh = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
+    const calls = [
+      safeFetchJson('./assembly_completed_plan_latest.json?t=' + bust),
+      safeFetchJson('./assembly_plan_history.json?t=' + bust)
+    ];
+    if (isGh) {
+      calls.push(safeFetchJson(RAW_GITHUB_BASE + 'assembly_completed_plan_latest.json?t=' + bust));
+      calls.push(safeFetchJson(RAW_GITHUB_BASE + 'assembly_plan_history.json?t=' + bust));
+    }
+
+    const results = await Promise.all(calls);
+    const localLatest = results[0] && results[0].id ? results[0] : null;
+    const localHist = Array.isArray(results[1]) ? results[1] : [];
+    const rawLatest = results[2] && results[2].id ? results[2] : null;
+    const rawHist = Array.isArray(results[3]) ? results[3] : [];
+
+    const histMap = new Map();
+    [...localHist, ...rawHist].forEach(item => { if (item && item.id) histMap.set(item.id, item); });
+    const mergedHist = Array.from(histMap.values()).sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+    const latestPlan = pickNewestPlan([localLatest, rawLatest, mergedHist[0]]);
     return {
       success: true,
       hasPlan: !!(latestPlan && latestPlan.id),
       latestPlan: (latestPlan && latestPlan.id) ? latestPlan : null,
-      history,
+      history: mergedHist,
       source: 'static'
     };
   }
 
   async function fetchCompletedPlanBundle() {
     const isGitHubPages = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
-    if (!isGitHubPages) {
-      try {
-        const res = await fetch('/api/completed-plan?t=' + Date.now(), { cache: 'no-store' });
-        if (res && res.ok) {
-          const contentType = (res.headers.get('content-type') || '').toLowerCase();
-          if (!contentType || contentType.includes('application/json')) {
-            const data = await res.json();
-            if (data && data.success) {
-              return { ...data, source: 'api' };
-            }
-          }
-        }
-      } catch (e) {
-        // Fallback sang file tĩnh bên dưới nếu server cục bộ không phản hồi
+    const cloudUrl = await resolveCloudSyncConfigAsync();
+
+    const apiPromise = !isGitHubPages
+      ? safeFetchJson('/api/completed-plan?t=' + Date.now())
+      : Promise.resolve(null);
+
+    const cloudPromise = cloudUrl
+      ? safeFetchJson(cloudUrl + (cloudUrl.includes('?') ? '&' : '?') + 'action=get&t=' + Date.now())
+      : Promise.resolve(null);
+
+    const [apiData, cloudData] = await Promise.all([apiPromise, cloudPromise]);
+
+    let staticData = null;
+    const hasApi = !!(apiData && apiData.success);
+    if (hasApi && apiData.lanUrl && window.AppStore) {
+      window.AppStore._detectedLanUrl = apiData.lanUrl;
+    }
+    if (!hasApi) {
+      staticData = await fetchStaticCompletedPlanFallback();
+    }
+
+    const candidates = [];
+    const histMap = new Map();
+    [apiData, staticData, cloudData].forEach(src => {
+      if (!src || !src.success) return;
+      if (src.latestPlan && src.latestPlan.id) candidates.push(src.latestPlan);
+      if (Array.isArray(src.history)) {
+        src.history.forEach(item => {
+          if (item && item.id) histMap.set(item.id, item);
+        });
+      }
+    });
+
+    const newestPlan = pickNewestPlan(candidates);
+    const mergedHistory = Array.from(histMap.values()).sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+    // Nếu Web Local nhận được bản Cloud mới hơn bản Local -> tự đồng bộ ngược xuống /api/completed-plan
+    if (!isGitHubPages && hasApi && cloudData && cloudData.latestPlan && cloudData.latestPlan.id) {
+      const apiMs = (apiData.latestPlan && apiData.latestPlan.createdAt) ? Date.parse(apiData.latestPlan.createdAt) : 0;
+      const cloudMs = cloudData.latestPlan.createdAt ? Date.parse(cloudData.latestPlan.createdAt) : 0;
+      if (!isNaN(cloudMs) && (isNaN(apiMs) || cloudMs > apiMs)) {
+        try {
+          fetch('/api/completed-plan', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(cloudData.latestPlan)
+          }).catch(() => {});
+        } catch (e) {}
       }
     }
-    return fetchStaticCompletedPlanFallback();
+
+    return {
+      success: true,
+      hasPlan: !!(newestPlan && newestPlan.id),
+      latestPlan: newestPlan || null,
+      history: mergedHistory,
+      lanUrl: (apiData && apiData.lanUrl) || (window.AppStore && window.AppStore._detectedLanUrl) || '',
+      cloudUrl: cloudUrl || '',
+      source: cloudData && cloudData.latestPlan === newestPlan ? 'cloud' : (hasApi ? 'api' : 'static')
+    };
   }
 
   function handleIncomingCompletedPlan(remotePlan, isManualClick = false) {
@@ -6499,31 +6631,231 @@
 
     window.renderCapacityView();
     if (window.showToast) {
-      window.showToast('info', `💾 Đã lưu kế hoạch (${dateStr} ${timeStr}), đang đồng bộ lên máy chủ cho các User khác...`);
+      window.showToast('info', `💾 Đã lưu kế hoạch (${dateStr} ${timeStr}), đang đồng bộ lên máy chủ / Cloud cho các User khác...`);
     }
 
-    // Gửi đồng bộ lên máy chủ (server.py sẽ tự động đẩy lên GitHub ở nền)
-    fetch('/api/completed-plan', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(historyItem)
-    }).then(res => {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.json();
-    }).then(resp => {
-      if (!resp || !resp.success) {
-        throw new Error((resp && resp.error) || 'Server rejected completed plan');
+    const isGitHubPages = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
+    resolveCloudSyncConfigAsync().then(async (cloudUrl) => {
+      let localSynced = false;
+      let cloudSynced = false;
+
+      if (!isGitHubPages) {
+        try {
+          const res = await fetch('/api/completed-plan', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(historyItem)
+          });
+          if (res && res.ok) {
+            const resp = await res.json();
+            if (resp && resp.success) localSynced = true;
+          }
+        } catch (err) {
+          console.warn('⚠️ Lỗi gửi đồng bộ lên server nội bộ:', err);
+        }
       }
-      console.log('✅ Kế hoạch đã được lưu và đồng bộ lên server:', resp);
-      if (window.showToast) {
-        window.showToast('success', `🎉 ĐÃ HOÀN THÀNH & ĐỒNG BỘ LÊN MÁY CHỦ! Các User khác sẽ tự động thấy bản mới nhất (${dateStr} ${timeStr} - ${plannerName}).`);
+
+      if (cloudUrl) {
+        try {
+          // Dùng text/plain để Google Apps Script nhận trực tiếp qua CORS mà không bị block preflight
+          const cRes = await fetch(cloudUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(historyItem)
+          });
+          if (cRes && cRes.ok) {
+            const cResp = await cRes.json().catch(() => ({ success: true }));
+            if (!cResp || cResp.success !== false) cloudSynced = true;
+          }
+        } catch (cerr) {
+          console.warn('⚠️ Lỗi gửi đồng bộ lên Cloud Apps Script:', cerr);
+        }
       }
-    }).catch(err => {
-      console.warn('⚠️ Lỗi gửi đồng bộ lên server:', err);
-      if (window.showToast) {
-        window.showToast('warning', `⚠️ Đã lưu cục bộ trên máy này, NHƯNG chưa kết nối được Web Server nội bộ (/api/completed-plan) nên các User khác chưa nhận được! Hãy thao tác hoàn thành trên Web Local.`);
+
+      window.AppStore._lastCompletedPlanObj = historyItem;
+
+      if (localSynced || cloudSynced) {
+        const targets = [];
+        if (localSynced) targets.push('Web Server & GitHub');
+        if (cloudSynced) targets.push('Google Cloud Sync');
+        if (window.showToast) {
+          window.showToast('success', `🎉 ĐÃ HOÀN THÀNH & ĐỒNG BỘ (${targets.join(' + ')})! Các User khác sẽ tự động thấy bản mới nhất (${dateStr} ${timeStr} - ${plannerName}).`);
+        }
+      } else {
+        if (window.showToast) {
+          window.showToast('warning', `⚠️ Đã lưu cục bộ trên máy này, NHƯNG chưa kết nối được Web Server nội bộ (/api/completed-plan) hoặc Cloud Sync nên User khác chưa tự thấy được!`);
+        }
+        if (isGitHubPages && typeof window.handleOpenCloudSyncModal === 'function') {
+          window.handleOpenCloudSyncModal(true);
+        }
       }
     });
+  };
+
+  window.handleExportPlanJsonFile = function() {
+    if (!window.AppStore) return;
+    let plan = window.AppStore._lastCompletedPlanObj || null;
+    if (!plan) {
+      try {
+        const hist = JSON.parse(localStorage.getItem('AJAX_SIM_PLAN_HISTORY') || '[]');
+        if (Array.isArray(hist) && hist.length > 0) plan = hist[0];
+      } catch (e) {}
+    }
+    if (!plan) {
+      if (window.showToast) window.showToast('warning', 'Hãy bấm "✅ Hoàn Thành" trước khi xuất file chia sẻ (.json)!');
+      return;
+    }
+    const blob = new Blob([JSON.stringify(plan, null, 2)], { type: 'application/json;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const safePlanner = String(plan.planner || 'Planner').replace(/[^a-zA-Z0-9_-]/g, '_');
+    a.download = `AJAX_Completed_Plan_${safePlanner}_${plan.id || Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    if (window.showToast) {
+      window.showToast('success', '📤 Đã tải xuống file Kế hoạch (.json). Gửi file này cho User khác hoặc máy chủ nạp trực tiếp!');
+    }
+  };
+
+  window.handleImportPlanJsonFile = function(inputEl) {
+    const file = inputEl && inputEl.files && inputEl.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      try {
+        const parsed = JSON.parse(String(ev.target.result || '{}'));
+        const plan = parsed.plan || parsed.latestPlan || parsed;
+        if (!plan || !plan.id || !plan.snapshot) {
+          throw new Error('File không đúng định dạng kế hoạch AJAX ProPlan (.json)');
+        }
+        window.AppStore._pendingRemotePlan = plan;
+        window.handleApplyLatestCompletedPlan(false, false);
+
+        const isGh = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
+        if (!isGh) {
+          fetch('/api/completed-plan', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(plan)
+          }).catch(() => {});
+        }
+        const modal = document.getElementById('planCloudSyncModal');
+        if (modal) modal.style.display = 'none';
+      } catch (err) {
+        if (window.showToast) window.showToast('danger', 'Lỗi đọc file Plan: ' + err.message);
+      }
+      inputEl.value = '';
+    };
+    reader.readAsText(file, 'utf-8');
+  };
+
+  window.handleSaveCloudPlanSyncUrl = async function() {
+    const inp = document.getElementById('cloudPlanSyncUrlInput');
+    if (!inp) return;
+    const val = (inp.value || '').trim();
+    if (val && !val.startsWith('https://') && !val.startsWith('http://')) {
+      if (window.showToast) window.showToast('warning', 'Link Cloud phải bắt đầu bằng https:// hoặc http://');
+      return;
+    }
+    try {
+      if (val) localStorage.setItem(CLOUD_URL_STORAGE_KEY, val);
+      else localStorage.removeItem(CLOUD_URL_STORAGE_KEY);
+    } catch (e) {}
+    if (window.AppStore) {
+      window.AppStore.cloudPlanSyncUrl = val;
+      window.AppStore._cloudCfgFetchedAt = 0;
+    }
+
+    const isGh = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
+    if (!isGh) {
+      try {
+        const res = await fetch('/api/cloud-sync-config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cloudPlanSyncUrl: val })
+        });
+        if (res && res.ok) {
+          if (window.showToast) window.showToast('success', '✅ Đã lưu cấu hình Cloud Sync lên Server & tự đẩy lên GitHub cho tất cả User!');
+          if (window.handleCheckAndSyncCompletedPlan) window.handleCheckAndSyncCompletedPlan(true);
+          return;
+        }
+      } catch (e) {}
+    }
+    if (window.showToast) window.showToast('success', '✅ Đã lưu Link Cloud Sync trên trình duyệt này!');
+    if (window.handleCheckAndSyncCompletedPlan) window.handleCheckAndSyncCompletedPlan(true);
+  };
+
+  window.handleCopyLanUrl = function(lanUrl) {
+    if (!lanUrl || !navigator.clipboard) return;
+    navigator.clipboard.writeText(lanUrl).then(() => {
+      if (window.showToast) window.showToast('success', `📋 Đã sao chép link Web LAN: ${lanUrl}`);
+    }).catch(() => {});
+  };
+
+  window.handleOpenCloudSyncModal = async function(isNotSyncedWarning = false) {
+    if (typeof document === 'undefined' || !document.body || typeof document.createElement !== 'function') return;
+    const currentCloudUrl = await resolveCloudSyncConfigAsync();
+    const isGh = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
+    const lanUrl = (window.AppStore && window.AppStore._detectedLanUrl) || (!isGh ? window.location.origin : 'http://10.84.165.2:8088');
+
+    let modal = document.getElementById('planCloudSyncModal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'planCloudSyncModal';
+      modal.style.cssText = 'position:fixed;inset:0;background:rgba(2,6,23,0.78);backdrop-filter:blur(4px);z-index:10050;display:none;align-items:center;justify-content:center;padding:1rem;';
+      document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = `
+      <div style="background:#0f172a;border:1px solid rgba(56,189,248,0.35);border-radius:14px;max-width:660px;width:100%;padding:1.25rem;box-shadow:0 20px 50px rgba(0,0,0,0.65);color:#e2e8f0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.85rem;">
+          <h3 style="margin:0;font-size:1rem;font-weight:900;color:#38bdf8;">☁️ ĐỒNG BỘ KẾ HOẠCH ĐA NGƯỜI DÙNG (WEB LOCAL • LAN • GITHUB PAGES)</h3>
+          <button type="button" onclick="document.getElementById('planCloudSyncModal').style.display='none'" style="background:none;border:none;color:#94a3b8;font-size:1.2rem;cursor:pointer;">✕</button>
+        </div>
+        ${isNotSyncedWarning ? `
+          <div style="padding:0.65rem 0.85rem;margin-bottom:0.85rem;border-radius:8px;background:rgba(239,68,68,0.14);border:1px solid rgba(248,113,113,0.55);color:#fecaca;font-size:0.8rem;line-height:1.45;">
+            <strong>⚠️ Lưu ý:</strong> Bạn đang bấm Hoàn Thành trên <strong>GitHub Pages (web tĩnh)</strong> và chưa kết nối <strong>Cloud Sync URL</strong> nên kế hoạch hiện chỉ lưu trên máy bạn. Chọn 1 trong 3 cách dưới đây để gửi/đồng bộ cho cả nhóm:
+          </div>
+        ` : ''}
+        <div style="display:flex;flex-direction:column;gap:0.75rem;font-size:0.8rem;">
+          <div style="padding:0.7rem 0.85rem;border-radius:8px;background:rgba(16,185,129,0.08);border:1px solid rgba(52,211,153,0.3);">
+            <div style="font-weight:800;color:#34d399;margin-bottom:0.25rem;">1️⃣ Cách nhanh nhất trong công ty (Cùng Wi-Fi / Mạng LAN):</div>
+            <div style="color:#cbd5e1;margin-bottom:0.4rem;">Các User khác truy cập đúng địa chỉ LAN của máy chủ thay vì GitHub Pages để đồng bộ tức thì 2 chiều:</div>
+            <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+              <code style="background:#020617;color:#38bdf8;padding:0.3rem 0.6rem;border-radius:6px;font-weight:800;">${lanUrl}</code>
+              <button type="button" class="btn btn-secondary" onclick="handleCopyLanUrl('${lanUrl}')" style="padding:0.25rem 0.6rem;font-size:0.75rem;">📋 Copy Link LAN</button>
+            </div>
+          </div>
+
+          <div style="padding:0.7rem 0.85rem;border-radius:8px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.3);">
+            <div style="font-weight:800;color:#38bdf8;margin-bottom:0.25rem;">2️⃣ Đồng bộ qua Internet / GitHub Pages (Google Apps Script gắn Sheet nguồn):</div>
+            <div style="color:#cbd5e1;margin-bottom:0.4rem;">Gắn script trong file <code>google_apps_script_plan_sync.gs</code> vào Google Sheet nguồn (Deploy Web App → Anyone) rồi dán URL vào đây 1 lần:</div>
+            <div style="display:flex;gap:0.45rem;flex-wrap:wrap;">
+              <input id="cloudPlanSyncUrlInput" type="text" value="${String(currentCloudUrl || '').replace(/"/g, '&quot;')}" placeholder="https://script.google.com/macros/s/.../exec" style="flex:1;min-width:240px;padding:0.35rem 0.6rem;border-radius:6px;border:1px solid rgba(56,189,248,0.45);background:#020617;color:#f8fafc;font-size:0.78rem;">
+              <button type="button" class="btn btn-primary" onclick="handleSaveCloudPlanSyncUrl()" style="padding:0.35rem 0.75rem;font-size:0.78rem;font-weight:800;">💾 Lưu Cloud URL</button>
+            </div>
+          </div>
+
+          <div style="padding:0.7rem 0.85rem;border-radius:8px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;">
+            <div>
+              <div style="font-weight:800;color:#fbbf24;">3️⃣ Gửi / Nạp nhanh qua File Kế Hoạch (.json):</div>
+              <div style="color:#cbd5e1;font-size:0.75rem;">Xuất file từ máy người lập và nạp trực tiếp trên máy chủ để cả hệ thống đồng bộ theo.</div>
+            </div>
+            <div style="display:flex;gap:0.45rem;align-items:center;">
+              <button type="button" class="btn btn-secondary" onclick="handleExportPlanJsonFile()" style="padding:0.3rem 0.65rem;font-size:0.75rem;font-weight:700;color:#fbbf24;border-color:rgba(251,191,36,0.45);">📤 Xuất File Plan</button>
+              <label style="padding:0.3rem 0.65rem;font-size:0.75rem;font-weight:700;color:#34d399;border:1px solid rgba(52,211,153,0.45);border-radius:6px;background:rgba(52,211,153,0.12);cursor:pointer;">
+                📥 Nạp File Plan
+                <input type="file" accept=".json,application/json" onchange="handleImportPlanJsonFile(this)" style="display:none;">
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    modal.style.display = 'flex';
   };
 
   window.handleOpenSimPlanHistoryModal = function() {

@@ -11,6 +11,7 @@ Serves the web app on port 8088 and provides:
 import http.server
 import json
 import os
+import socket
 import sys
 import threading
 import time
@@ -22,6 +23,32 @@ SYNC_INTERVAL_SECONDS = 300  # 5 minutes
 WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 is_syncing_lock = threading.Lock()
+
+
+def get_local_lan_ip():
+    """Detect active LAN IPv4 address dynamically instead of relying on hardcoded IPs."""
+    s = None
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(('8.8.8.8', 80))
+        ip = s.getsockname()[0]
+        if ip and not ip.startswith('127.'):
+            return ip
+    except Exception:
+        pass
+    finally:
+        if s:
+            try:
+                s.close()
+            except Exception:
+                pass
+    try:
+        ip = socket.gethostbyname(socket.gethostname())
+        if ip and not ip.startswith('127.'):
+            return ip
+    except Exception:
+        pass
+    return '127.0.0.1'
 
 def background_sync_worker():
     time.sleep(10)  # Chờ 10 giây sau khi khởi động trước khi bắt đầu chu kỳ đầu tiên
@@ -53,6 +80,8 @@ class AppRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.handle_api_status()
         elif self.path == '/api/completed-plan' or self.path.startswith('/api/completed-plan?'):
             self.handle_api_get_completed_plan()
+        elif self.path == '/api/cloud-sync-config' or self.path.startswith('/api/cloud-sync-config?'):
+            self.handle_api_get_cloud_sync_config()
         elif self.path == '/api/users' or self.path.startswith('/api/users?'):
             self.handle_api_get_users()
         else:
@@ -61,6 +90,8 @@ class AppRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_POST(self):
         if self.path == '/api/completed-plan' or self.path.startswith('/api/completed-plan?'):
             self.handle_api_post_completed_plan()
+        elif self.path == '/api/cloud-sync-config' or self.path.startswith('/api/cloud-sync-config?'):
+            self.handle_api_post_cloud_sync_config()
         elif self.path == '/api/users' or self.path.startswith('/api/users?'):
             self.handle_api_post_users()
         else:
@@ -151,7 +182,13 @@ class AppRequestHandler(http.server.SimpleHTTPRequestHandler):
 
     def handle_api_status(self):
         status_file = os.path.join(WORKSPACE_DIR, 'sync_status.json')
-        data = {'running': True, 'interval_minutes': SYNC_INTERVAL_SECONDS // 60}
+        lan_ip = get_local_lan_ip()
+        data = {
+            'running': True,
+            'interval_minutes': SYNC_INTERVAL_SECONDS // 60,
+            'lanIp': lan_ip,
+            'lanUrl': f"http://{lan_ip}:{PORT}"
+        }
         if os.path.exists(status_file):
             try:
                 with open(status_file, 'r', encoding='utf-8') as f:
@@ -183,17 +220,78 @@ class AppRequestHandler(http.server.SimpleHTTPRequestHandler):
             except Exception as e:
                 print(f"[Error reading plan history]: {e}")
 
+        lan_ip = get_local_lan_ip()
         data = {
             'success': True,
             'hasPlan': latest_plan is not None,
             'latestPlan': latest_plan,
             'history': history,
+            'lanIp': lan_ip,
+            'lanUrl': f"http://{lan_ip}:{PORT}",
             'serverTime': time.strftime('%Y-%m-%d %H:%M:%S')
         }
         self.send_response(200)
         self.send_header('Content-Type', 'application/json; charset=utf-8')
         self.end_headers()
         self.wfile.write(json.dumps(data, ensure_ascii=False).encode('utf-8'))
+
+    def handle_api_get_cloud_sync_config(self):
+        cfg_file = os.path.join(WORKSPACE_DIR, 'cloud_sync_config.json')
+        lan_ip = get_local_lan_ip()
+        cfg = {'cloudPlanSyncUrl': '', 'lanUrl': f"http://{lan_ip}:{PORT}", 'updatedAt': ''}
+        if os.path.exists(cfg_file):
+            try:
+                with open(cfg_file, 'r', encoding='utf-8') as f:
+                    loaded = json.load(f)
+                if isinstance(loaded, dict):
+                    cfg.update(loaded)
+            except Exception:
+                pass
+        cfg['lanUrl'] = f"http://{lan_ip}:{PORT}"
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json; charset=utf-8')
+        self.end_headers()
+        self.wfile.write(json.dumps({'success': True, **cfg}, ensure_ascii=False).encode('utf-8'))
+
+    def handle_api_post_cloud_sync_config(self):
+        try:
+            content_length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(content_length).decode('utf-8')
+            payload = json.loads(body or '{}')
+            cloud_url = str(payload.get('cloudPlanSyncUrl') or '').strip()
+            if cloud_url and not (cloud_url.startswith('https://') or cloud_url.startswith('http://')):
+                raise ValueError('URL đồng bộ Cloud phải bắt đầu bằng https:// hoặc http://')
+
+            lan_ip = get_local_lan_ip()
+            cfg = {
+                'cloudPlanSyncUrl': cloud_url,
+                'lanUrl': f"http://{lan_ip}:{PORT}",
+                'updatedAt': time.strftime('%Y-%m-%d %H:%M:%S')
+            }
+            cfg_file = os.path.join(WORKSPACE_DIR, 'cloud_sync_config.json')
+            tmp_file = cfg_file + '.tmp'
+            with open(tmp_file, 'w', encoding='utf-8') as f:
+                json.dump(cfg, f, ensure_ascii=False, indent=2)
+            os.replace(tmp_file, cfg_file)
+
+            def _push_cfg_async():
+                try:
+                    from github_sync_helper import auto_push_data_to_github
+                    auto_push_data_to_github()
+                except Exception as push_err:
+                    print(f"[Cloud Sync Config Push] ⚠️ {push_err}")
+
+            threading.Thread(target=_push_cfg_async, daemon=True).start()
+
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps({'success': True, **cfg}, ensure_ascii=False).encode('utf-8'))
+        except Exception as e:
+            self.send_response(500)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps({'success': False, 'error': str(e)}, ensure_ascii=False).encode('utf-8'))
 
     def handle_api_post_completed_plan(self):
         try:
@@ -413,10 +511,11 @@ def main():
 
     server_address = ('0.0.0.0', PORT)
     httpd = http.server.ThreadingHTTPServer(server_address, AppRequestHandler)
+    lan_ip = get_local_lan_ip()
     print("=" * 65)
     print("🚀 AJAX PROPLAN MES - MÁY CHỦ WEB TỰ ĐỘNG ĐỒNG BỘ GOOGLE SHEETS")
     print(f"📡 Địa chỉ truy cập nội bộ (Mac):   http://localhost:{PORT}")
-    print(f"📱 Địa chỉ truy cập qua Wi-Fi (LAN): http://192.168.1.249:{PORT}")
+    print(f"📱 Địa chỉ truy cập qua Wi-Fi (LAN): http://{lan_ip}:{PORT}")
     print(f"🔄 Chu kỳ tự động đồng bộ ngầm:     Mỗi {SYNC_INTERVAL_SECONDS // 60} phút / lần")
     print(f"⚡ Endpoint đồng bộ tức thì:        http://localhost:{PORT}/api/sync")
     print("=" * 65)

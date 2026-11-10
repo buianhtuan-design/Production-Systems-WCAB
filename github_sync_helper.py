@@ -32,7 +32,8 @@ DATA_FILE_PATHS = [
     'kpi_data.json',
     'sync_status.json',
     'assembly_completed_plan_latest.json',
-    'assembly_plan_history.json'
+    'assembly_plan_history.json',
+    'cloud_sync_config.json'
 ]
 
 def load_credentials():
