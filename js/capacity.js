@@ -143,6 +143,32 @@
                 TOTAL HARDTEST
               </button>
             </div>
+
+            <!-- Live Synced Plan Status Pill (Visible in both MATRIX & SIMULATOR) -->
+            <div id="capacitySyncStatusBar" style="margin-left: auto; display: inline-flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
+              ${(() => {
+                const meta = window.AppStore._lastSyncedPlanMeta;
+                if (meta && meta.id) {
+                  return `
+                    <span class="badge" style="background: rgba(16, 185, 129, 0.14); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); font-size: 0.725rem; font-weight: 700; padding: 0.25rem 0.6rem; display: inline-flex; align-items: center; gap: 0.35rem;">
+                      <span>🟢 KH mới nhất:</span>
+                      <strong style="color: #f8fafc;">${meta.planner || 'Thành viên'}</strong>
+                      <span style="color: #a7f3d0;">(${meta.dateStr || ''} ${meta.timeStr || ''})</span>
+                    </span>
+                    ${viewMode !== 'SIMULATOR' ? `
+                      <button type="button" class="btn btn-primary" onclick="handleCapacityModeChange('SIMULATOR')" style="padding: 0.22rem 0.6rem; font-size: 0.725rem; font-weight: 800; background: linear-gradient(135deg, #059669, #10b981); border-color: #10b981; border-radius: 6px; color: #fff;">
+                        📋 Xem Kế Hoạch
+                      </button>
+                    ` : ''}
+                  `;
+                }
+                return `
+                  <button type="button" class="btn btn-secondary" onclick="handleForceSyncLatestPlan()" style="padding: 0.22rem 0.6rem; font-size: 0.725rem; font-weight: 700; color: #34d399; border-color: rgba(52, 211, 153, 0.4); border-radius: 6px; background: rgba(52, 211, 153, 0.08);" title="Kiểm tra và đồng bộ bản kế hoạch mới nhất">
+                    🔄 Đồng Bộ KH Mới Nhất
+                  </button>
+                `;
+              })()}
+            </div>
           </div>
         </div>
     `;
@@ -892,6 +918,29 @@
             }
             if (draft.stageFilter && !window.AppStore.simStageFilter) {
               window.AppStore.simStageFilter = draft.stageFilter;
+            }
+            if (draft.simFromDate && !window.AppStore.simFromDate) {
+              window.AppStore.simFromDate = draft.simFromDate;
+              window.AppStore.fromDate = draft.simFromDate;
+            }
+            if (draft.simToDate && !window.AppStore.simToDate) {
+              window.AppStore.simToDate = draft.simToDate;
+              window.AppStore.toDate = draft.simToDate;
+            }
+            if (draft.simTargetDate && !window.AppStore.simTargetDate) {
+              window.AppStore.simTargetDate = draft.simTargetDate;
+            }
+            if (draft.simScope && !window.AppStore.simScope) {
+              window.AppStore.simScope = draft.simScope;
+            }
+            if (draft.simPlanStatusFilter && !window.AppStore.simPlanStatusFilter) {
+              window.AppStore.simPlanStatusFilter = draft.simPlanStatusFilter;
+            }
+            if (draft.simGroupFilter && !window.AppStore.simGroupFilter) {
+              window.AppStore.simGroupFilter = draft.simGroupFilter;
+            }
+            if (draft.simSearchVal !== undefined && !window.AppStore.simSearchVal) {
+              window.AppStore.simSearchVal = draft.simSearchVal;
             }
             if (Array.isArray(draft.simWorkingLinesDay) && draft.simWorkingLinesDay.length > 0 && (!window.AppStore.simWorkingLinesDay || window.AppStore.simWorkingLinesDay.length === 0)) {
               window.AppStore.simWorkingLinesDay = [...draft.simWorkingLinesDay];
@@ -2056,7 +2105,7 @@
             ${finalShortage > 0 ? '-' + finalShortage.toLocaleString('vi-VN') : ''}
           </td>
           <td style="text-align: left; padding: 0.2rem 0.35rem; min-width: 140px;">
-            <input type="text" class="sim-table-note-input" value="${(window.AppStore.simManualNotes && window.AppStore.simManualNotes[rowKey]) ? String(window.AppStore.simManualNotes[rowKey]).replace(/"/g, '&quot;') : ''}" placeholder="Nhập ghi chú..." onchange="handleTableNoteChange('${rowKey}', this.value)" onkeydown="if(event.key==='Enter') this.blur();" title="Ghi chú cho Model ${(it.productName1C || it.model || '').replace(/"/g, '&quot;')}">
+            <input type="text" class="sim-table-note-input" data-row-key="${encodeURIComponent(rowKey)}" value="${(window.AppStore.simManualNotes && window.AppStore.simManualNotes[rowKey]) ? String(window.AppStore.simManualNotes[rowKey]).replace(/"/g, '&quot;') : ''}" placeholder="Nhập ghi chú..." onchange="handleTableNoteChange('${rowKey}', this.value)" onkeydown="if(event.key==='Enter') this.blur();" title="Ghi chú cho Model ${(it.productName1C || it.model || '').replace(/"/g, '&quot;')}">
           </td>
         </tr>
       `;
@@ -2407,7 +2456,7 @@
                 📋 TIẾN ĐỘ SẢN LƯỢNG &amp; ĐỀ XUẤT LINE TẢI CHUYỀN (THEO BẢNG 2)
               </span>
               <button type="button" class="btn btn-secondary sim-btn-planner" onclick="handleEditPlannerName()" style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 6px; background: rgba(15, 23, 42, 0.8); cursor: pointer;" title="Bấm để cập nhật tên Người lập Plan">
-                <span>👤 Người lập Plan: <strong style="color: #fbbf24;">${plannerName}</strong></span>
+                <span>👤 Người lập Plan: <strong id="simPlannerBadgeName" style="color: #fbbf24;">${plannerName}</strong></span>
                 <span style="font-size: 0.65rem; opacity: 0.8;">✏️</span>
               </button>
               <button type="button" class="btn btn-secondary sim-btn-draft" onclick="handleSaveSimPlanDraft()" style="padding: 0.2rem 0.6rem; font-size: 0.725rem; font-weight: 700; color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; background: rgba(56, 189, 248, 0.12);" title="Lưu tạm tiến độ lập kế hoạch để không bị mất dữ liệu khi refresh">
@@ -3727,6 +3776,9 @@
   window.handleCapacityModeChange = function(mode) {
     window.AppStore.capacityViewMode = mode;
     window.renderCapacityView();
+    if (mode === 'SIMULATOR' && typeof window.handleCheckAndSyncCompletedPlan === 'function') {
+      window.handleCheckAndSyncCompletedPlan(false);
+    }
   };
 
   window.handleCapacitySearch = function(val) {
@@ -4499,20 +4551,67 @@
   // GOOGLE SHEETS EXPORT & LINE SEQUENCE ORDER
   // ==========================================
 
+  function resolveSimRowNote(r) {
+    if (!r || !window.AppStore || !window.AppStore.simManualNotes) return '';
+    const notes = window.AppStore.simManualNotes;
+    const it = r.it || {};
+    const rawKey = r.rowKey || `${it.stage || ''}___${it.model || ''}___${it.productName1C || ''}`.replace(/"/g, '&quot;');
+    const unescapedKey = rawKey.replace(/&quot;/g, '"');
+    const val = notes[rawKey] || notes[unescapedKey] || notes[it.productName1C] || notes[it.model] || '';
+    return String(val).trim();
+  }
+
+  function getUnscheduledWarningModels() {
+    const rows = window.AppStore.lastProcessedSimRows || [];
+    const list = [];
+
+    rows.forEach((r, i) => {
+      const hasDay = !!(r.assignedDayLineId && r.assignedDayLineId !== 'NONE' && String(r.assignedDayLineId).trim() !== '');
+      const hasNight = !!(r.assignedNightLineId && r.assignedNightLineId !== 'NONE' && String(r.assignedNightLineId).trim() !== '');
+      const it = r.it || {};
+      const gapQty = it.cumGapQty !== undefined ? it.cumGapQty : (r.shortage ? -r.shortage : 0);
+      const shortage = r.shortage !== undefined ? r.shortage : (gapQty < 0 ? Math.abs(gapQty) : 0);
+
+      // Các Model đang thiếu sản lượng nhưng CHƯA được nhập Line SX vào Ca Ngày hoặc Ca Đêm
+      if (!hasDay && !hasNight && (shortage > 0 || gapQty < 0)) {
+        const rowKey = r.rowKey || `${it.stage || 'ASSEMBLY'}___${it.model || ''}___${it.productName1C || ''}`.replace(/"/g, '&quot;');
+        list.push({
+          idx: r.idx !== undefined ? r.idx : i,
+          rowKey,
+          stage: it.stage || 'ASSEMBLY',
+          modelGroup: it.model || '',
+          productName1C: it.productName1C || '',
+          planQty: it.cumPlanQty || 0,
+          factQty: it.cumFactQty || 0,
+          gapQty,
+          shortage,
+          norm: r.norm || 0,
+          stdHours: Math.round(((r.stdHours || 0)) * 100) / 100,
+          note: resolveSimRowNote(r)
+        });
+      }
+    });
+
+    return list;
+  }
+  window.getUnscheduledWarningModels = getUnscheduledWarningModels;
+
   function getScheduledLineJobs() {
     const rows = window.AppStore.lastProcessedSimRows || [];
     const jobs = [];
 
     rows.forEach(r => {
-      // 1. Day Shift scheduled job (từ kế hoạch hoàn thành hoặc đang lập)
-      const dayLineId = r.assignedDayLineId || (r.chosenDayLine ? r.chosenDayLine.lineId : null);
-      const dayQty = (r.planDay !== undefined && r.planDay !== null && r.planDay > 0) ? r.planDay : (r.dayOutput || 0);
-      const dayH = (r.dayAvailHours !== undefined && r.dayAvailHours !== null && r.dayAvailHours > 0) ? r.dayAvailHours : (r.dayHours || 0);
-      const dayCt = r.actualCtDay || (r.chosenDayLine ? r.chosenDayLine.actualCt : (r.norm || 0));
-      const daySeq = (r.seqDay && !isNaN(parseInt(r.seqDay))) ? parseInt(r.seqDay) : ((r.seqDayNum && isFinite(r.seqDayNum)) ? r.seqDayNum : (r.daySeq || 99));
-      const dayPerf = (r.perfPctDay !== undefined && r.perfPctDay !== null && r.perfPctDay !== '') ? r.perfPctDay : (r.chosenDayLine ? r.chosenDayLine.perfPct : 100);
+      // 1. Day Shift scheduled job - CHỈ lấy các Model thực sự đã được sắp xếp/gán Line SX sau khi lưu
+      const dayLineId = (r.assignedDayLineId && r.assignedDayLineId !== 'NONE' && String(r.assignedDayLineId).trim() !== '')
+        ? String(r.assignedDayLineId).trim()
+        : null;
+      if (dayLineId) {
+        const dayQty = (r.planDay !== undefined && r.planDay !== null && r.planDay > 0) ? r.planDay : 0;
+        const dayH = (r.dayAvailHours !== undefined && r.dayAvailHours !== null && r.dayAvailHours > 0) ? r.dayAvailHours : 0;
+        const dayCt = r.actualCtDay || r.norm || 0;
+        const daySeq = (r.seqDay && !isNaN(parseInt(r.seqDay))) ? parseInt(r.seqDay) : ((r.seqDayNum && isFinite(r.seqDayNum)) ? r.seqDayNum : 99);
+        const dayPerf = (r.perfPctDay !== undefined && r.perfPctDay !== null && r.perfPctDay !== '') ? r.perfPctDay : 100;
 
-      if (dayLineId && (dayQty > 0 || dayH > 0)) {
         jobs.push({
           lineId: dayLineId,
           shiftName: 'Ca Ngày',
@@ -4529,19 +4628,22 @@
           actualCt: dayCt,
           perfPct: dayPerf,
           hours: Math.round(dayH * 100) / 100,
-          quotaHours: 10.83
+          quotaHours: 10.83,
+          isZeroQuota: (dayQty === 0 && dayH === 0)
         });
       }
 
-      // 2. Night Shift scheduled job (từ kế hoạch hoàn thành hoặc đang lập)
-      const nightLineId = r.assignedNightLineId || (r.chosenNightLine ? r.chosenNightLine.lineId : null);
-      const nightQty = (r.planNight !== undefined && r.planNight !== null && r.planNight > 0) ? r.planNight : (r.nightOutput || 0);
-      const nightH = (r.nightAvailHours !== undefined && r.nightAvailHours !== null && r.nightAvailHours > 0) ? r.nightAvailHours : (r.nightHours || 0);
-      const nightCt = r.actualCtNight || (r.chosenNightLine ? r.chosenNightLine.actualCt : (r.norm || 0));
-      const nightSeq = (r.seqNight && !isNaN(parseInt(r.seqNight))) ? parseInt(r.seqNight) : ((r.seqNightNum && isFinite(r.seqNightNum)) ? r.seqNightNum : (r.nightSeq || 99));
-      const nightPerf = (r.perfPctNight !== undefined && r.perfPctNight !== null && r.perfPctNight !== '') ? r.perfPctNight : (r.chosenNightLine ? r.chosenNightLine.perfPct : 100);
+      // 2. Night Shift scheduled job - CHỈ lấy các Model thực sự đã được sắp xếp/gán Line SX sau khi lưu
+      const nightLineId = (r.assignedNightLineId && r.assignedNightLineId !== 'NONE' && String(r.assignedNightLineId).trim() !== '')
+        ? String(r.assignedNightLineId).trim()
+        : null;
+      if (nightLineId) {
+        const nightQty = (r.planNight !== undefined && r.planNight !== null && r.planNight > 0) ? r.planNight : 0;
+        const nightH = (r.nightAvailHours !== undefined && r.nightAvailHours !== null && r.nightAvailHours > 0) ? r.nightAvailHours : 0;
+        const nightCt = r.actualCtNight || r.norm || 0;
+        const nightSeq = (r.seqNight && !isNaN(parseInt(r.seqNight))) ? parseInt(r.seqNight) : ((r.seqNightNum && isFinite(r.seqNightNum)) ? r.seqNightNum : 99);
+        const nightPerf = (r.perfPctNight !== undefined && r.perfPctNight !== null && r.perfPctNight !== '') ? r.perfPctNight : 100;
 
-      if (nightLineId && (nightQty > 0 || nightH > 0)) {
         jobs.push({
           lineId: nightLineId,
           shiftName: 'Ca Đêm',
@@ -4558,7 +4660,8 @@
           actualCt: nightCt,
           perfPct: nightPerf,
           hours: Math.round(nightH * 100) / 100,
-          quotaHours: 10.58
+          quotaHours: 10.58,
+          isZeroQuota: (nightQty === 0 && nightH === 0)
         });
       }
     });
@@ -4956,24 +5059,260 @@
     }
   };
 
+  function populateLineSeqFilterOptions(allJobs) {
+    const select = document.getElementById('lineSeqFilterSelect');
+    if (!select) return [];
+    const lineOrder = { '1A': 1, '1B': 2, '1C': 3, '1D': 4, '2A': 5, '2B': 6, '2C': 7, '2D': 8, '3A': 9, '3B': 10, '3C': 11, '3D': 12, 'Support 1': 13, 'Support 2': 14, 'Support 3': 15, 'Support': 13 };
+    const scheduledLines = Array.from(new Set((allJobs || []).map(j => j.lineId).filter(Boolean))).sort((a, b) => {
+      const oa = lineOrder[a] || 99;
+      const ob = lineOrder[b] || 99;
+      if (oa !== ob) return oa - ob;
+      return String(a).localeCompare(String(b));
+    });
+    const currentVal = window.AppStore.lineSeqFilterLine || 'ALL';
+    select.innerHTML = `<option value="ALL">-- Tất cả các Chuyền (${scheduledLines.length}) --</option>` +
+      scheduledLines.map(lid => `<option value="${lid}">Line ${lid}</option>`).join('');
+    if (currentVal !== 'ALL' && scheduledLines.includes(currentVal)) {
+      select.value = currentVal;
+    } else {
+      window.AppStore.lineSeqFilterLine = 'ALL';
+      select.value = 'ALL';
+    }
+    return scheduledLines;
+  }
+
+  window.handleLineSeqWarningNoteChange = function(inputEl, shouldSyncDraft = false) {
+    if (!inputEl) return;
+    const rawEnc = inputEl.getAttribute('data-row-key') || '';
+    let rowKey = '';
+    try { rowKey = decodeURIComponent(rawEnc); } catch (e) { rowKey = rawEnc; }
+    if (!rowKey) return;
+
+    const val = (inputEl.value || '').trim();
+    const hasNote = val.length > 0;
+
+    if (!window.AppStore.simManualNotes) window.AppStore.simManualNotes = {};
+    if (!hasNote) {
+      delete window.AppStore.simManualNotes[rowKey];
+    } else {
+      window.AppStore.simManualNotes[rowKey] = val;
+    }
+
+    inputEl.style.background = hasNote ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.14)';
+    inputEl.style.borderColor = hasNote ? 'rgba(16, 185, 129, 0.6)' : 'rgba(248, 113, 113, 0.75)';
+
+    const tr = inputEl.closest('tr');
+    if (tr) {
+      const pill = tr.querySelector('.line-seq-warning-status-pill');
+      if (pill) {
+        pill.className = `line-seq-warning-status-pill badge ${hasNote ? 'badge-green' : 'badge-red'}`;
+        pill.textContent = hasNote ? '✅ Đã ghi chú' : '⚠️ Chưa có KH';
+      }
+    }
+
+    // Đồng bộ giá trị ghi chú ngược lại bảng Simulator chính mà không làm mất focus ô đang nhập
+    document.querySelectorAll('.sim-table-note-input').forEach(simInp => {
+      if (simInp.getAttribute('data-row-key') === rawEnc) {
+        simInp.value = val;
+      }
+    });
+
+    // Cập nhật bộ đếm số model còn thiếu ghi chú trong modal
+    const unscheduled = getUnscheduledWarningModels();
+    const missingCount = unscheduled.filter(m => !m.note).length;
+    const missingBadge = document.getElementById('lineSeqWarningMissingBadge');
+    if (missingBadge) {
+      if (missingCount > 0) {
+        missingBadge.className = 'badge badge-red';
+        missingBadge.innerHTML = `⚠️ Còn ${missingCount}/${unscheduled.length} Model chưa nhập Ghi Chú`;
+      } else {
+        missingBadge.className = 'badge badge-green';
+        missingBadge.innerHTML = `✅ Đã nhập đủ Ghi Chú (${unscheduled.length}/${unscheduled.length})`;
+      }
+    }
+    const footerWarnSpan = document.getElementById('lineSeqFooterWarnSpan');
+    if (footerWarnSpan) {
+      footerWarnSpan.innerHTML = unscheduled.length > 0
+        ? `⚠️ ${unscheduled.length} Model chưa gán Line (${missingCount} thiếu ghi chú)`
+        : '';
+    }
+
+    if (shouldSyncDraft && window.handleSaveSimPlanDraft) {
+      window.handleSaveSimPlanDraft(true);
+    }
+  };
+
+  window.handleExportUnscheduledWarningCSV = function() {
+    const list = getUnscheduledWarningModels();
+    if (list.length === 0) {
+      if (window.showToast) window.showToast('info', 'Không có Model cảnh báo nào chưa có kế hoạch!');
+      return;
+    }
+    const now = new Date();
+    const dateStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
+    let csv = '\uFEFF';
+    csv += `"DANH SÁCH MODEL CẢNH BÁO CHƯA CÓ KẾ HOẠCH (CHƯA INPUT LINE) - TỔNG: ${list.length} MODEL"\n`;
+    const headers = ['STT', 'Công Đoạn', 'Group Model', 'Mã Model (1C)', 'Kế Hoạch', 'Thực Tế', 'Bù Thiếu', 'TG Tiêu Chuẩn (h)', 'Trạng Thái', 'Ghi Chú'];
+    csv += headers.map(h => `"${h}"`).join(',') + '\n';
+    list.forEach((m, idx) => {
+      const row = [
+        idx + 1,
+        m.stage,
+        m.modelGroup,
+        m.productName1C,
+        m.planQty,
+        m.factQty,
+        m.gapQty,
+        m.stdHours.toFixed(2),
+        'Chưa nhập Line',
+        m.note || '(Chưa nhập ghi chú)'
+      ];
+      csv += row.map(v => typeof v === 'number' ? v : `"${String(v).replace(/"/g, '""')}"`).join(',') + '\n';
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', `Canh_Bao_Model_Chua_Co_Ke_Hoach_${dateStr}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    if (window.showToast) window.showToast('success', `📥 Đã xuất CSV danh sách ${list.length} Model chưa có kế hoạch!`);
+  };
+
+  window.handleCopyUnscheduledWarningClipboard = function() {
+    const list = getUnscheduledWarningModels();
+    if (list.length === 0) {
+      if (window.showToast) window.showToast('info', 'Không có Model cảnh báo nào chưa có kế hoạch!');
+      return;
+    }
+    let tsv = `DANH SÁCH MODEL CẢNH BÁO CHƯA CÓ KẾ HOẠCH (CHƯA INPUT LINE)\tTổng: ${list.length} Model\n`;
+    tsv += ['STT', 'Công Đoạn', 'Group Model', 'Mã Model (1C)', 'Kế Hoạch', 'Thực Tế', 'Bù Thiếu', 'TG Tiêu Chuẩn (h)', 'Trạng Thái', 'Ghi Chú'].join('\t') + '\n';
+    list.forEach((m, idx) => {
+      tsv += [
+        idx + 1,
+        m.stage,
+        m.modelGroup,
+        m.productName1C,
+        m.planQty,
+        m.factQty,
+        m.gapQty,
+        m.stdHours.toFixed(2),
+        'Chưa nhập Line',
+        String(m.note || '(Chưa nhập ghi chú)').replace(/[\t\r\n]/g, ' ')
+      ].join('\t') + '\n';
+    });
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(tsv).then(() => {
+        if (window.showToast) window.showToast('success', `📋 Đã sao chép ${list.length} Model cảnh báo chưa có kế hoạch!`);
+      }).catch(() => {});
+    }
+  };
+
+  function buildUnscheduledWarningSectionHtml(unscheduledModels) {
+    if (!unscheduledModels || unscheduledModels.length === 0) return '';
+    const missingCount = unscheduledModels.filter(m => !m.note).length;
+
+    const rowsHtml = unscheduledModels.map((m, idx) => {
+      const hasNote = !!(m.note && m.note.trim() !== '');
+      const encKey = encodeURIComponent(m.rowKey);
+      const safeNoteAttr = String(m.note || '').replace(/"/g, '&quot;');
+      return `
+        <tr data-warning-row-key="${encKey}">
+          <td style="text-align: center; color: var(--text-muted); font-size: 0.75rem;">${idx + 1}</td>
+          <td style="text-align: center;">
+            <span class="badge badge-blue" style="font-size: 0.68rem; font-weight: 700;">${m.stage}</span>
+          </td>
+          <td style="font-weight: 800; color: #f8fafc; font-size: 0.78rem;">${m.modelGroup || '--'}</td>
+          <td style="font-family: var(--font-mono); font-size: 0.72rem; color: #93c5fd; max-width: 210px; word-break: break-word;">${m.productName1C}</td>
+          <td class="font-mono" style="text-align: right; color: #60a5fa; font-weight: 700;">${(m.planQty || 0).toLocaleString('vi-VN')}</td>
+          <td class="font-mono" style="text-align: right; color: #34d399; font-weight: 700;">${(m.factQty || 0).toLocaleString('vi-VN')}</td>
+          <td class="font-mono" style="text-align: right; color: #f87171; font-weight: 800;">${(m.gapQty || 0).toLocaleString('vi-VN')}</td>
+          <td class="font-mono" style="text-align: right; color: #fbbf24; font-weight: 700;">${m.stdHours.toFixed(2)}h</td>
+          <td style="text-align: center; white-space: nowrap;">
+            <span class="line-seq-warning-status-pill badge ${hasNote ? 'badge-green' : 'badge-red'}" style="font-size: 0.68rem; font-weight: 800;">
+              ${hasNote ? '✅ Đã ghi chú' : '⚠️ Chưa có KH'}
+            </span>
+          </td>
+          <td style="min-width: 185px; padding: 0.25rem 0.4rem;">
+            <input
+              type="text"
+              class="line-seq-warning-note-input"
+              data-row-key="${encKey}"
+              value="${safeNoteAttr}"
+              placeholder="⚠️ Bắt buộc nhập ghi chú..."
+              required
+              oninput="handleLineSeqWarningNoteChange(this, false)"
+              onchange="handleLineSeqWarningNoteChange(this, true)"
+              onkeydown="if(event.key==='Enter') this.blur();"
+              style="width: 100%; padding: 0.3rem 0.5rem; font-size: 0.76rem; color: #f8fafc; background: ${hasNote ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.14)'}; border: 1px solid ${hasNote ? 'rgba(16, 185, 129, 0.6)' : 'rgba(248, 113, 113, 0.75)'}; border-radius: 6px; outline: none; box-sizing: border-box;"
+              title="Yêu cầu nhập ghi chú cho Model chưa được input Line"
+            >
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    return `
+      <div id="lineSeqUnscheduledSection" style="margin-top: 1.5rem; border: 1px solid rgba(248, 113, 113, 0.45); border-radius: 10px; background: rgba(127, 29, 29, 0.14); overflow: hidden;">
+        <div style="padding: 0.75rem 1rem; background: rgba(239, 68, 68, 0.12); border-bottom: 1px solid rgba(248, 113, 113, 0.3); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.65rem;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <span style="font-size: 1.15rem;">⚠️</span>
+              <span style="font-weight: 900; font-size: 0.9rem; color: #fca5a5;">
+                DANH SÁCH MODEL CẢNH BÁO CHƯA CÓ KẾ HOẠCH (${unscheduledModels.length} Model chưa input Line)
+              </span>
+              <span id="lineSeqWarningMissingBadge" class="badge ${missingCount > 0 ? 'badge-red' : 'badge-green'}" style="font-size: 0.72rem; font-weight: 800;">
+                ${missingCount > 0 ? `⚠️ Còn ${missingCount}/${unscheduledModels.length} Model chưa nhập Ghi Chú` : `✅ Đã nhập đủ Ghi Chú (${unscheduledModels.length}/${unscheduledModels.length})`}
+              </span>
+            </div>
+            <div style="font-size: 0.75rem; color: #fecaca; margin-top: 0.25rem;">
+              Các Model thiếu sản lượng dưới đây chưa được nhập vào Line SX nào nên không xuất trong kế hoạch theo Line. Vui lòng nhập <strong>Ghi Chú</strong> lý do / hướng xử lý.
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.45rem;">
+            <button type="button" class="btn btn-secondary" onclick="handleExportUnscheduledWarningCSV()" style="padding: 0.25rem 0.6rem; font-size: 0.72rem; font-weight: 700; color: #fca5a5; border-color: rgba(248, 113, 113, 0.5); background: rgba(15, 23, 42, 0.75);">
+              <span>📥 Xuất CSV Cảnh Báo</span>
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="handleCopyUnscheduledWarningClipboard()" style="padding: 0.25rem 0.6rem; font-size: 0.72rem; font-weight: 700; color: #fde68a; border-color: rgba(251, 191, 36, 0.45); background: rgba(15, 23, 42, 0.75);">
+              <span>📋 Copy Cảnh Báo</span>
+            </button>
+          </div>
+        </div>
+        <div style="overflow-x: auto; max-height: 360px;">
+          <table class="sim-seq-table" style="width: 100%;">
+            <thead style="position: sticky; top: 0; z-index: 4; background: rgba(15, 23, 42, 0.98);">
+              <tr>
+                <th style="width: 38px; text-align: center;">STT</th>
+                <th style="width: 78px; text-align: center;">CÔNG ĐOẠN</th>
+                <th style="min-width: 105px;">GROUP MODEL</th>
+                <th style="min-width: 185px;">MÃ MODEL (1C)</th>
+                <th style="text-align: right; min-width: 68px; color: #60a5fa;">KẾ HOẠCH</th>
+                <th style="text-align: right; min-width: 65px; color: #34d399;">THỰC TẾ</th>
+                <th style="text-align: right; min-width: 72px; color: #f87171;">BÙ THIẾU</th>
+                <th style="text-align: right; min-width: 65px; color: #fbbf24;">TG TC</th>
+                <th style="text-align: center; min-width: 92px;">CẢNH BÁO</th>
+                <th style="min-width: 185px; color: #fca5a5;">GHI CHÚ (YÊU CẦU NHẬP) *</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }
+
   window.handleOpenLineSequenceModal = function() {
     const modal = document.getElementById('lineSequenceModal');
     if (!modal) return;
 
-    // Populate line filter dropdown
-    const select = document.getElementById('lineSeqFilterSelect');
-    if (select) {
-      const dayLines = window.AppStore.simWorkingLinesDay || [];
-      const nightLines = window.AppStore.simWorkingLinesNight || [];
-      const allActive = Array.from(new Set([...dayLines, ...nightLines])).sort();
-
-      select.innerHTML = `<option value="ALL">-- Tất cả các Chuyền (${allActive.length}) --</option>` +
-        allActive.map(lid => `<option value="${lid}">Line ${lid}</option>`).join('');
-    }
-
     window.AppStore.lineSeqFilterLine = 'ALL';
     window.AppStore.lineSeqFilterShift = 'ALL';
     if (!window.AppStore.lineSeqViewMode) window.AppStore.lineSeqViewMode = 'CARDS';
+
+    // Chỉ populate các Line thực sự đã được sắp xếp kế hoạch sau khi lưu
+    populateLineSeqFilterOptions(getScheduledLineJobs());
 
     const shiftSelect = document.getElementById('lineSeqShiftFilterSelect');
     if (shiftSelect) shiftSelect.value = 'ALL';
@@ -5019,6 +5358,11 @@
     if (!container) return;
 
     const allJobs = getScheduledLineJobs();
+    populateLineSeqFilterOptions(allJobs);
+    const unscheduledModels = getUnscheduledWarningModels();
+    const unscheduledWarningHtml = buildUnscheduledWarningSectionHtml(unscheduledModels);
+    const missingNotesCount = unscheduledModels.filter(m => !m.note).length;
+
     const filterLine = window.AppStore.lineSeqFilterLine || 'ALL';
     const filterShift = window.AppStore.lineSeqFilterShift || 'ALL';
     const viewMode = window.AppStore.lineSeqViewMode || 'CARDS';
@@ -5061,20 +5405,27 @@
       return orderA - orderB;
     });
 
-    if (badge) badge.innerText = `${groupKeys.length} Chuyền/Ca (${filteredJobs.length} Model)`;
+    if (badge) {
+      badge.innerText = `${groupKeys.length} Chuyền/Ca (${filteredJobs.length} Model)` +
+        (unscheduledModels.length > 0 ? ` • ⚠️ ${unscheduledModels.length} Chưa có KH` : '');
+    }
     if (summaryInfo) {
       const totalH = filteredJobs.reduce((s, j) => s + j.hours, 0);
       const totalQ = filteredJobs.reduce((s, j) => s + j.allocatedQty, 0);
-      summaryInfo.innerHTML = `Tổng cộng: <strong>${filteredJobs.length} lượt chạy</strong> • <strong>${totalH.toFixed(1)} giờ máy</strong> • <strong>${totalQ.toLocaleString('vi-VN')} pcs</strong> hoàn thành.`;
+      const warnSuffix = unscheduledModels.length > 0
+        ? ` • <span id="lineSeqFooterWarnSpan" style="color:#f87171; font-weight:700;">⚠️ ${unscheduledModels.length} Model chưa gán Line (${missingNotesCount} thiếu ghi chú)</span>`
+        : '<span id="lineSeqFooterWarnSpan"></span>';
+      summaryInfo.innerHTML = `Tổng cộng: <strong>${filteredJobs.length} lượt chạy</strong> • <strong>${totalH.toFixed(1)} giờ máy</strong> • <strong>${totalQ.toLocaleString('vi-VN')} pcs</strong> hoàn thành${warnSuffix}.`;
     }
 
     if (groupKeys.length === 0) {
       container.innerHTML = `
-        <div style="text-align: center; padding: 3rem 1rem; color: #94a3b8;">
-          <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">📋</div>
-          <div style="font-weight: 700; font-size: 0.95rem; color: #cbd5e1;">Chưa có Model nào được phân bổ vào các Chuyền đi làm!</div>
-          <div style="font-size: 0.8rem; margin-top: 0.35rem;">Vui lòng hoàn thành phân bổ Chuyền trên Bảng Kế Hoạch hoặc bật thêm Line đi làm.</div>
+        <div style="text-align: center; padding: 1.75rem 1rem; color: #94a3b8; border: 1px dashed rgba(255,255,255,0.12); border-radius: 10px; background: rgba(15, 23, 42, 0.45);">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">📋</div>
+          <div style="font-weight: 700; font-size: 0.95rem; color: #cbd5e1;">Chưa có Model nào được gán Line sản xuất sau khi lưu!</div>
+          <div style="font-size: 0.8rem; margin-top: 0.35rem;">Chỉ những Model đã nhập <strong>Line SX</strong> mới xuất hiện trong kế hoạch theo Chuyền. Các Model chưa nhập Line nằm ở danh sách cảnh báo bên dưới.</div>
         </div>
+        ${unscheduledWarningHtml}
       `;
       return;
     }
@@ -5112,7 +5463,7 @@
               +${j.allocatedQty.toLocaleString('vi-VN')}
             </td>
             <td class="font-mono" style="text-align: right; color: #cbd5e1; font-size: 0.775rem;">
-              ${j.actualCt}s
+              ${Math.round((Number(j.actualCt) || 0) * 10) / 10}s
             </td>
             <td class="font-mono" style="text-align: right; font-weight: 800; color: ${shiftColor}; font-size: 0.825rem;">
               ${j.hours.toFixed(1)}h
@@ -5121,8 +5472,8 @@
               ${j.startHours.toFixed(1)}h ➔ ${j.endHours.toFixed(1)}h
             </td>
             <td style="text-align: center;">
-              <span class="badge badge-green" style="font-size: 0.68rem; font-weight: 800;">
-                ${j.isFullQuota ? '✅ Đầy ca' : '✅ Trong ca'}
+              <span class="badge ${j.isZeroQuota ? 'badge-red' : 'badge-green'}" style="font-size: 0.68rem; font-weight: 800;">
+                ${j.isZeroQuota ? '⚠️ Chờ quota (0h)' : (j.isFullQuota ? '✅ Đầy ca' : '✅ Trong ca')}
               </span>
             </td>
           </tr>
@@ -5176,6 +5527,7 @@
             </table>
           </div>
         </div>
+        ${unscheduledWarningHtml}
       `;
       return;
     }
@@ -5229,7 +5581,7 @@
               +${j.allocatedQty.toLocaleString('vi-VN')}
             </td>
             <td class="font-mono" style="text-align: right; color: #cbd5e1;">
-              ${j.actualCt}s
+              ${Math.round((Number(j.actualCt) || 0) * 10) / 10}s
             </td>
             <td class="font-mono" style="text-align: right; font-weight: 800; color: ${shiftColor}; font-size: 0.825rem;">
               ${j.hours.toFixed(1)}h
@@ -5238,8 +5590,8 @@
               ${j.startHours.toFixed(1)}h ➔ ${j.endHours.toFixed(1)}h
             </td>
             <td style="text-align: center;">
-              <span class="badge badge-green" style="font-size: 0.68rem; font-weight: 800;">
-                ${j.isFullQuota ? '✅ Đầy ca' : '✅ Trong ca'}
+              <span class="badge ${j.isZeroQuota ? 'badge-red' : 'badge-green'}" style="font-size: 0.68rem; font-weight: 800;">
+                ${j.isZeroQuota ? '⚠️ Chờ quota (0h)' : (j.isFullQuota ? '✅ Đầy ca' : '✅ Trong ca')}
               </span>
             </td>
           </tr>
@@ -5293,7 +5645,7 @@
       `;
     }).join('');
 
-    container.innerHTML = html;
+    container.innerHTML = html + unscheduledWarningHtml;
   };
 
   /* ======================================================== */
@@ -5400,7 +5752,9 @@
     document.body.removeChild(link);
 
     if (window.showToast) {
-      window.showToast('success', `📥 Đã xuất file CSV kế hoạch thứ tự Line (${filteredJobs.length} lượt chạy) thành công!`);
+      const missingCount = getUnscheduledWarningModels().filter(m => !m.note).length;
+      const warnMsg = missingCount > 0 ? ` ⚠️ Còn ${missingCount} Model chưa có kế hoạch đang thiếu Ghi Chú!` : '';
+      window.showToast(missingCount > 0 ? 'warning' : 'success', `📥 Đã xuất file CSV kế hoạch thứ tự Line (${filteredJobs.length} lượt chạy) thành công!${warnMsg}`);
     }
   };
 
@@ -5498,7 +5852,9 @@
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(tsv).then(() => {
         if (window.showToast) {
-          window.showToast('success', `📋 Đã sao chép Kế hoạch thứ tự Line (${filteredJobs.length} lượt chạy) vào Clipboard! Dán ngay (Ctrl+V) vào Google Sheets.`);
+          const missingCount = getUnscheduledWarningModels().filter(m => !m.note).length;
+          const warnMsg = missingCount > 0 ? ` ⚠️ Còn ${missingCount} Model chưa có kế hoạch đang thiếu Ghi Chú!` : '';
+          window.showToast(missingCount > 0 ? 'warning' : 'success', `📋 Đã sao chép Kế hoạch thứ tự Line (${filteredJobs.length} lượt chạy) vào Clipboard! Dán ngay (Ctrl+V) vào Google Sheets.${warnMsg}`);
         }
       }).catch(err => {
         fallbackCopyText(tsv);
@@ -5556,6 +5912,12 @@
         stageFilter: window.AppStore.simStageFilter || 'ASSEMBLY',
         simFromDate: window.AppStore.simFromDate || window.AppStore.fromDate || '2026-11-05',
         simToDate: window.AppStore.simToDate || window.AppStore.toDate || '2026-11-05',
+        simTargetDate: window.AppStore.simTargetDate || window.AppStore.simToDate || window.AppStore.toDate || '2026-10-26',
+        simScope: window.AppStore.simScope || 'CUMULATIVE',
+        simPlanStatusFilter: window.AppStore.simPlanStatusFilter || 'GAP_NEGATIVE',
+        simGroupFilter: window.AppStore.simGroupFilter || 'ALL',
+        simSearchVal: window.AppStore.simSearchVal || '',
+        appliedPlanId: window.AppStore._currentAppliedPlanId || '',
         simWorkingLinesDay: window.AppStore.simWorkingLinesDay ? [...window.AppStore.simWorkingLinesDay] : [],
         simWorkingLinesNight: window.AppStore.simWorkingLinesNight ? [...window.AppStore.simWorkingLinesNight] : [],
         _simLinesManualConfigured: window.AppStore._simLinesManualConfigured,
@@ -5620,43 +5982,193 @@
   };
 
   /* Multi-User Broadcast Channel & Watcher */
+  function initAppliedPlanIdOnce() {
+    if (!window.AppStore || window.AppStore._appliedPlanIdInitialized) return;
+    window.AppStore._appliedPlanIdInitialized = true;
+    if (window.AppStore._currentAppliedPlanId === undefined) {
+      let seededId = '';
+      try {
+        const draftStr = localStorage.getItem('AJAX_SIM_PLAN_DRAFT');
+        if (draftStr) {
+          const parsedDraft = JSON.parse(draftStr);
+          seededId = (parsedDraft && parsedDraft.appliedPlanId) || localStorage.getItem('AJAX_CURRENT_APPLIED_PLAN_ID') || '';
+        }
+      } catch (e) {
+        seededId = '';
+      }
+      window.AppStore._currentAppliedPlanId = seededId;
+    }
+  }
+
+  function getCurrentTabAppliedPlanId() {
+    initAppliedPlanIdOnce();
+    return (window.AppStore && window.AppStore._currentAppliedPlanId) ? window.AppStore._currentAppliedPlanId : '';
+  }
+
+  function mergeServerHistoryIntoLocal(historyList, latestPlan) {
+    try {
+      let localHist = [];
+      try {
+        localHist = JSON.parse(localStorage.getItem('AJAX_SIM_PLAN_HISTORY') || '[]');
+      } catch (e) {}
+      if (!Array.isArray(localHist)) localHist = [];
+      const map = new Map();
+      localHist.forEach(item => { if (item && item.id) map.set(item.id, item); });
+      if (Array.isArray(historyList)) {
+        historyList.forEach(item => { if (item && item.id) map.set(item.id, item); });
+      }
+      if (latestPlan && latestPlan.id) {
+        map.set(latestPlan.id, latestPlan);
+      }
+      const merged = Array.from(map.values())
+        .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+        .slice(0, 50);
+      localStorage.setItem('AJAX_SIM_PLAN_HISTORY', JSON.stringify(merged));
+      const histBadge = document.getElementById('simHistoryBadge');
+      if (histBadge) histBadge.textContent = String(merged.length);
+      return merged;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  async function fetchStaticCompletedPlanFallback() {
+    const bust = Date.now();
+    const [latestRes, histRes] = await Promise.allSettled([
+      fetch('./assembly_completed_plan_latest.json?t=' + bust, { cache: 'no-store' }),
+      fetch('./assembly_plan_history.json?t=' + bust, { cache: 'no-store' })
+    ]);
+
+    let latestPlan = null;
+    if (latestRes.status === 'fulfilled' && latestRes.value && latestRes.value.ok) {
+      try { latestPlan = await latestRes.value.json(); } catch (e) {}
+    }
+    let history = [];
+    if (histRes.status === 'fulfilled' && histRes.value && histRes.value.ok) {
+      try {
+        const h = await histRes.value.json();
+        if (Array.isArray(h)) history = h;
+      } catch (e) {}
+    }
+    if (!latestPlan && history.length > 0) {
+      latestPlan = history[0];
+    }
+    return {
+      success: true,
+      hasPlan: !!(latestPlan && latestPlan.id),
+      latestPlan: (latestPlan && latestPlan.id) ? latestPlan : null,
+      history,
+      source: 'static'
+    };
+  }
+
+  async function fetchCompletedPlanBundle() {
+    const isGitHubPages = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
+    if (!isGitHubPages) {
+      try {
+        const res = await fetch('/api/completed-plan?t=' + Date.now(), { cache: 'no-store' });
+        if (res && res.ok) {
+          const contentType = (res.headers.get('content-type') || '').toLowerCase();
+          if (!contentType || contentType.includes('application/json')) {
+            const data = await res.json();
+            if (data && data.success) {
+              return { ...data, source: 'api' };
+            }
+          }
+        }
+      } catch (e) {
+        // Fallback sang file tĩnh bên dưới nếu server cục bộ không phản hồi
+      }
+    }
+    return fetchStaticCompletedPlanFallback();
+  }
+
+  function handleIncomingCompletedPlan(remotePlan, isManualClick = false) {
+    if (!window.AppStore || !remotePlan || !remotePlan.id) return false;
+    const currentId = getCurrentTabAppliedPlanId();
+    if (remotePlan.id === currentId) {
+      // Vẫn cập nhật metadata nếu chưa có trên giao diện
+      if (!window.AppStore._lastSyncedPlanMeta) {
+        window.AppStore._lastSyncedPlanMeta = {
+          id: remotePlan.id,
+          planner: remotePlan.planner,
+          dateStr: remotePlan.dateStr,
+          timeStr: remotePlan.timeStr,
+          modelsCount: remotePlan.modelsCount,
+          grandPlan: remotePlan.grandPlan,
+          grandPlanDay: remotePlan.grandPlanDay,
+          grandPlanNight: remotePlan.grandPlanNight
+        };
+      }
+      return false;
+    }
+
+    // Ngăn polling cũ/cache CDN ghi đè ngược bản mới hơn (ví dụ đã nhận qua BroadcastChannel nhưng server/CDN chưa cập nhật kịp)
+    if (!isManualClick && currentId && currentId === window.AppStore._currentAppliedPlanMetaId &&
+        window.AppStore._currentAppliedPlanCreatedAt && remotePlan.createdAt) {
+      const remoteMs = Date.parse(remotePlan.createdAt);
+      const curMs = Date.parse(window.AppStore._currentAppliedPlanCreatedAt);
+      if (!isNaN(remoteMs) && !isNaN(curMs) && remoteMs <= curMs) {
+        return false;
+      }
+    }
+
+    window.AppStore._pendingRemotePlan = remotePlan;
+    window.AppStore._hasPendingRemotePlan = true;
+    window.AppStore._pendingRemotePlanDesc = `Người lập: <strong>${remotePlan.planner || 'Thành viên'}</strong> • Hoàn thành lúc: <strong>${remotePlan.dateStr || ''} ${remotePlan.timeStr || ''}</strong> • ${remotePlan.modelsCount || 0} Model (${(remotePlan.grandPlan || 0).toLocaleString('vi-VN')} pcs)`;
+
+    // Tự động cập nhật ngay lập tức cho Admin và các User (trừ khi cố ý tắt _autoSyncRemotePlan)
+    const currentRole = window.UserAuth && typeof window.UserAuth.getCurrentRole === 'function' ? window.UserAuth.getCurrentRole() : 'admin';
+    const isAdmin = currentRole === 'admin';
+    if (isAdmin || window.AppStore._autoSyncRemotePlan !== false) {
+      console.log('⚡ [Auto Sync] Tự động cập nhật kế hoạch mới từ:', remotePlan.planner);
+      window.handleApplyLatestCompletedPlan(true, true);
+    } else {
+      const banner = document.getElementById('simNewPlanBanner');
+      const desc = document.getElementById('simBannerDesc');
+      if (banner) {
+        banner.style.display = 'flex';
+        if (desc) desc.innerHTML = window.AppStore._pendingRemotePlanDesc;
+      }
+      const syncBtn = document.querySelector('.sim-btn-cloud-sync');
+      if (syncBtn) syncBtn.classList.add('has-update');
+
+      if (isManualClick && window.showToast) {
+        window.showToast('info', `🔔 Phát hiện kế hoạch mới từ [${remotePlan.planner || 'Thành viên'}]! Bấm "Cập Nhật & Xem Ngay" trên banner.`);
+      }
+    }
+    return true;
+  }
+
   let simPlanSyncChannel = null;
   try {
     simPlanSyncChannel = new BroadcastChannel('AJAX_PROPLAN_PLAN_SYNC');
     simPlanSyncChannel.onmessage = function(ev) {
       if (ev && ev.data && ev.data.type === 'NEW_COMPLETED_PLAN') {
-        const remotePlan = ev.data.plan;
-        const currentId = window.AppStore ? (window.AppStore._currentAppliedPlanId || localStorage.getItem('AJAX_CURRENT_APPLIED_PLAN_ID') || '') : '';
-        if (remotePlan && remotePlan.id && remotePlan.id !== currentId) {
-          if (window.AppStore) {
-            window.AppStore._pendingRemotePlan = remotePlan;
-            window.AppStore._hasPendingRemotePlan = true;
-            window.AppStore._pendingRemotePlanDesc = `Người lập: <strong>${remotePlan.planner || 'Thành viên'}</strong> • Hoàn thành lúc: <strong>${remotePlan.dateStr || ''} ${remotePlan.timeStr || ''}</strong> • ${remotePlan.modelsCount || 0} Model (${(remotePlan.grandPlan || 0).toLocaleString('vi-VN')} pcs)`;
-          }
-
-          // Tự động cập nhật ngay cho Admin hoặc khi bật auto-sync
-          const isAdmin = window.UserAuth && typeof window.UserAuth.isAdmin === 'function' ? window.UserAuth.isAdmin() : true;
-          if (isAdmin || window.AppStore._autoSyncRemotePlan !== false) {
-            console.log('⚡ [Live Sync] Tự động cập nhật kế hoạch mới cho Admin từ:', remotePlan.planner);
-            window.handleApplyLatestCompletedPlan(true, true);
-          } else {
-            const banner = document.getElementById('simNewPlanBanner');
-            const desc = document.getElementById('simBannerDesc');
-            if (banner) {
-              banner.style.display = 'flex';
-              if (desc) desc.innerHTML = window.AppStore._pendingRemotePlanDesc;
-            }
-            const syncBtn = document.querySelector('.sim-btn-cloud-sync');
-            if (syncBtn) syncBtn.classList.add('has-update');
-          }
-        }
+        handleIncomingCompletedPlan(ev.data.plan, false);
       }
     };
   } catch (e) {
     console.warn('BroadcastChannel not supported:', e);
   }
 
+  // Fallback cross-tab sync qua localStorage storage event cho cùng trình duyệt / origin
+  if (!window._simStorageSyncBound) {
+    window._simStorageSyncBound = true;
+    window.addEventListener('storage', (ev) => {
+      if (ev && ev.key === 'AJAX_LATEST_COMPLETED_PLAN_EVENT' && ev.newValue) {
+        try {
+          const payload = JSON.parse(ev.newValue);
+          if (payload && payload.plan) {
+            handleIncomingCompletedPlan(payload.plan, false);
+          }
+        } catch (e) {}
+      }
+    });
+  }
+
   window.initPlanSyncWatcher = function() {
+    initAppliedPlanIdOnce();
     if (window._simPlanSyncWatcherInitialized) return;
     window._simPlanSyncWatcherInitialized = true;
 
@@ -5667,7 +6179,7 @@
       }
     }, 300);
 
-    // Tự động kiểm tra ngay khi Admin quay lại cửa sổ trình duyệt
+    // Tự động kiểm tra ngay khi người dùng quay lại cửa sổ trình duyệt
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden && window.handleCheckAndSyncCompletedPlan) {
         window.handleCheckAndSyncCompletedPlan(false);
@@ -5689,18 +6201,32 @@
 
   window.handleAutoCheckLatestCompletedPlanOnLoad = function() {
     if (!window.AppStore) return;
-    fetch('/api/completed-plan?t=' + Date.now(), { cache: 'no-store' })
-      .then(res => res.json())
+    initAppliedPlanIdOnce();
+    fetchCompletedPlanBundle()
       .then(data => {
-        if (!data || !data.success || !data.latestPlan) return;
+        if (!data || !data.success) return;
+        if (Array.isArray(data.history) || data.latestPlan) {
+          mergeServerHistoryIntoLocal(data.history, data.latestPlan);
+        }
+        if (!data.latestPlan) return;
         const remotePlan = data.latestPlan;
-        const currentAppliedId = window.AppStore._currentAppliedPlanId || (localStorage.getItem('AJAX_CURRENT_APPLIED_PLAN_ID') || '');
+        const currentAppliedId = getCurrentTabAppliedPlanId();
 
         // Bản kế hoạch trên server khác với bản hiện tại đang hiển thị -> Tự động nạp ngay
         if (remotePlan.id && remotePlan.id !== currentAppliedId) {
           console.log('⚡ [Auto Load] Phát hiện kế hoạch mới từ máy chủ, tự động áp dụng:', remotePlan.planner);
-          window.AppStore._pendingRemotePlan = remotePlan;
-          window.handleApplyLatestCompletedPlan(true, true);
+          handleIncomingCompletedPlan(remotePlan, false);
+        } else if (remotePlan.id) {
+          window.AppStore._lastSyncedPlanMeta = {
+            id: remotePlan.id,
+            planner: remotePlan.planner,
+            dateStr: remotePlan.dateStr,
+            timeStr: remotePlan.timeStr,
+            modelsCount: remotePlan.modelsCount,
+            grandPlan: remotePlan.grandPlan,
+            grandPlanDay: remotePlan.grandPlanDay,
+            grandPlanNight: remotePlan.grandPlanNight
+          };
         }
       })
       .catch(e => console.warn('Cannot auto check latest plan on load:', e));
@@ -5709,13 +6235,13 @@
   window.handleForceSyncLatestPlan = function() {
     if (!window.AppStore) return;
     if (window.showToast) window.showToast('info', '🔄 Đang kiểm tra và nạp bản kế hoạch mới nhất từ máy chủ...');
-    fetch('/api/completed-plan?t=' + Date.now(), { cache: 'no-store' })
-      .then(res => res.json())
+    fetchCompletedPlanBundle()
       .then(data => {
         if (!data || !data.success || !data.latestPlan) {
           if (window.showToast) window.showToast('warning', 'Chưa có bản kế hoạch nào được hoàn thành trên máy chủ.');
           return;
         }
+        mergeServerHistoryIntoLocal(data.history, data.latestPlan);
         const plan = data.latestPlan;
         window.AppStore._pendingRemotePlan = plan;
         window.handleApplyLatestCompletedPlan(false, false);
@@ -5727,43 +6253,16 @@
 
   window.handleCheckAndSyncCompletedPlan = function(isManualClick = false) {
     if (!window.AppStore) return;
-    fetch('/api/completed-plan?t=' + Date.now(), { cache: 'no-store' })
-      .then(res => res.json())
+    fetchCompletedPlanBundle()
       .then(data => {
         if (!data || !data.success) return;
+        if (Array.isArray(data.history) || data.latestPlan) {
+          mergeServerHistoryIntoLocal(data.history, data.latestPlan);
+        }
         if (data.latestPlan) {
-          const remotePlan = data.latestPlan;
-          const currentPlanId = window.AppStore._currentAppliedPlanId || (localStorage.getItem('AJAX_CURRENT_APPLIED_PLAN_ID') || '');
-
-          if (remotePlan.id && remotePlan.id !== currentPlanId) {
-            window.AppStore._pendingRemotePlan = remotePlan;
-            window.AppStore._hasPendingRemotePlan = true;
-            window.AppStore._pendingRemotePlanDesc = `Người lập: <strong>${remotePlan.planner || 'Thành viên'}</strong> • Hoàn thành lúc: <strong>${remotePlan.dateStr || ''} ${remotePlan.timeStr || ''}</strong> • ${remotePlan.modelsCount || 0} Model (${(remotePlan.grandPlan || 0).toLocaleString('vi-VN')} pcs)`;
-
-            // Luôn tự động cập nhật ngay lập tức cho Admin và chế độ xem để màn hình không bị trễ
-            const currentRole = window.UserAuth && typeof window.UserAuth.getCurrentRole === 'function' ? window.UserAuth.getCurrentRole() : 'admin';
-            const isAdmin = currentRole === 'admin';
-            if (isAdmin || window.AppStore._autoSyncRemotePlan !== false) {
-              console.log('⚡ [Auto Sync] Tự động cập nhật kế hoạch cho Admin/User:', remotePlan.planner);
-              window.handleApplyLatestCompletedPlan(true, true);
-            } else {
-              const banner = document.getElementById('simNewPlanBanner');
-              const desc = document.getElementById('simBannerDesc');
-              if (banner) {
-                banner.style.display = 'flex';
-                if (desc) desc.innerHTML = window.AppStore._pendingRemotePlanDesc;
-              }
-              const syncBtn = document.querySelector('.sim-btn-cloud-sync');
-              if (syncBtn) syncBtn.classList.add('has-update');
-
-              if (isManualClick && window.showToast) {
-                window.showToast('info', `🔔 Phát hiện kế hoạch mới từ [${remotePlan.planner || 'Thành viên'}]! Bấm "Cập Nhật & Xem Ngay" trên banner.`);
-              }
-            }
-          } else {
-            if (isManualClick && window.showToast) {
-              window.showToast('info', '✅ Kế hoạch hiện tại đã là phiên bản mới nhất từ máy chủ!');
-            }
+          const applied = handleIncomingCompletedPlan(data.latestPlan, isManualClick);
+          if (!applied && isManualClick && window.showToast) {
+            window.showToast('info', '✅ Kế hoạch hiện tại đã là phiên bản mới nhất từ máy chủ!');
           }
         } else {
           if (isManualClick && window.showToast) {
@@ -5782,10 +6281,10 @@
     if (!window.AppStore) return;
     const plan = window.AppStore._pendingRemotePlan;
     if (!plan || !plan.snapshot) {
-      fetch('/api/completed-plan?t=' + Date.now(), { cache: 'no-store' })
-        .then(res => res.json())
+      fetchCompletedPlanBundle()
         .then(data => {
           if (data && data.latestPlan && data.latestPlan.snapshot) {
+            mergeServerHistoryIntoLocal(data.history, data.latestPlan);
             window.AppStore._pendingRemotePlan = data.latestPlan;
             window.handleApplyLatestCompletedPlan(isSilent, isAuto);
           } else if (window.showToast && !isSilent) {
@@ -5801,8 +6300,19 @@
       try { localStorage.setItem('AJAX_SIM_PLANNER_NAME', s.plannerName); } catch (e) {}
     }
     if (s.stageFilter) window.AppStore.simStageFilter = s.stageFilter;
-    if (s.simFromDate) window.AppStore.simFromDate = s.simFromDate;
-    if (s.simToDate) window.AppStore.simToDate = s.simToDate;
+    if (s.simFromDate) {
+      window.AppStore.simFromDate = s.simFromDate;
+      window.AppStore.fromDate = s.simFromDate;
+    }
+    if (s.simToDate) {
+      window.AppStore.simToDate = s.simToDate;
+      window.AppStore.toDate = s.simToDate;
+    }
+    if (s.simTargetDate) window.AppStore.simTargetDate = s.simTargetDate;
+    if (s.simScope) window.AppStore.simScope = s.simScope;
+    if (s.simPlanStatusFilter) window.AppStore.simPlanStatusFilter = s.simPlanStatusFilter;
+    if (s.simGroupFilter) window.AppStore.simGroupFilter = s.simGroupFilter;
+    if (s.simSearchVal !== undefined) window.AppStore.simSearchVal = s.simSearchVal;
     if (s.simWorkingLinesDay) window.AppStore.simWorkingLinesDay = [...s.simWorkingLinesDay];
     if (s.simWorkingLinesNight) window.AppStore.simWorkingLinesNight = [...s.simWorkingLinesNight];
     window.AppStore._simLinesManualConfigured = true;
@@ -5820,17 +6330,38 @@
     window.AppStore.simManualShifts = { ...(s.simManualShifts || {}) };
     window.AppStore.simManualNotes = { ...(s.simManualNotes || {}) };
 
+    window.AppStore._appliedPlanIdInitialized = true;
     window.AppStore._currentAppliedPlanId = plan.id;
+    window.AppStore._currentAppliedPlanMetaId = plan.id;
+    window.AppStore._currentAppliedPlanCreatedAt = plan.createdAt || new Date().toISOString();
+    window.AppStore._lastSyncedPlanMeta = {
+      id: plan.id,
+      planner: plan.planner,
+      dateStr: plan.dateStr,
+      timeStr: plan.timeStr,
+      modelsCount: plan.modelsCount,
+      grandPlan: plan.grandPlan,
+      grandPlanDay: plan.grandPlanDay,
+      grandPlanNight: plan.grandPlanNight
+    };
     try { localStorage.setItem('AJAX_CURRENT_APPLIED_PLAN_ID', plan.id); } catch (e) {}
     window.AppStore._hasPendingRemotePlan = false;
+
+    mergeServerHistoryIntoLocal(null, plan);
 
     // Lưu vào draft để nếu F5 reload vẫn giữ đúng kế hoạch vừa nạp
     window.handleSaveSimPlanDraft(true);
 
-    // Cập nhật giao diện Simulator nếu đang ở tab Capacity
+    // Cập nhật giao diện Capacity nếu đang ở tab Capacity (cả Matrix status bar lẫn Simulator)
     const activeTab = document.querySelector('.nav-link.active')?.getAttribute('data-tab');
     if (activeTab === 'capacity' && window.renderCapacityView) {
       window.renderCapacityView();
+    }
+
+    // Cập nhật modal Thứ Tự Theo Chuyền nếu đang mở
+    const lineSeqModal = document.getElementById('lineSequenceModal');
+    if (lineSeqModal && lineSeqModal.style.display === 'flex' && typeof window.renderLineSequenceModalContent === 'function') {
+      window.renderLineSequenceModalContent();
     }
 
     // Ẩn banner hoặc cập nhật trạng thái
@@ -5892,7 +6423,7 @@
 
     // Snapshot object
     const historyItem = {
-      id: 'PLAN_' + Date.now(),
+      id: 'PLAN_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
       createdAt: now.toISOString(),
       dateStr: dateStr,
       timeStr: timeStr,
@@ -5910,6 +6441,11 @@
         stageFilter: window.AppStore.simStageFilter || 'ASSEMBLY',
         simFromDate: window.AppStore.simFromDate || window.AppStore.fromDate,
         simToDate: window.AppStore.simToDate || window.AppStore.toDate,
+        simTargetDate: window.AppStore.simTargetDate || window.AppStore.simToDate || window.AppStore.toDate,
+        simScope: window.AppStore.simScope || 'CUMULATIVE',
+        simPlanStatusFilter: window.AppStore.simPlanStatusFilter || 'GAP_NEGATIVE',
+        simGroupFilter: window.AppStore.simGroupFilter || 'ALL',
+        simSearchVal: window.AppStore.simSearchVal || '',
         simWorkingLinesDay: [...(window.AppStore.simWorkingLinesDay || [])],
         simWorkingLinesNight: [...(window.AppStore.simWorkingLinesNight || [])],
         simManualLinesDay: { ...(window.AppStore.simManualLinesDay || {}) },
@@ -5928,40 +6464,33 @@
       }
     };
 
-    let history = [];
-    try {
-      const stored = localStorage.getItem('AJAX_SIM_PLAN_HISTORY');
-      if (stored) history = JSON.parse(stored);
-      if (!Array.isArray(history)) history = [];
-    } catch (e) {
-      history = [];
-    }
+    // Đánh dấu bản hiện tại là do mình vừa hoàn thành trước khi lưu draft
+    window.AppStore._appliedPlanIdInitialized = true;
+    window.AppStore._currentAppliedPlanId = historyItem.id;
+    window.AppStore._currentAppliedPlanMetaId = historyItem.id;
+    window.AppStore._currentAppliedPlanCreatedAt = historyItem.createdAt;
+    window.AppStore._lastSyncedPlanMeta = {
+      id: historyItem.id,
+      planner: historyItem.planner,
+      dateStr: historyItem.dateStr,
+      timeStr: historyItem.timeStr,
+      modelsCount: historyItem.modelsCount,
+      grandPlan: historyItem.grandPlan,
+      grandPlanDay: historyItem.grandPlanDay,
+      grandPlanNight: historyItem.grandPlanNight
+    };
+    window.AppStore._hasPendingRemotePlan = false;
 
-    history.unshift(historyItem);
+    mergeServerHistoryIntoLocal(null, historyItem);
     try {
-      localStorage.setItem('AJAX_SIM_PLAN_HISTORY', JSON.stringify(history));
       window.handleSaveSimPlanDraft(true);
+      localStorage.setItem('AJAX_CURRENT_APPLIED_PLAN_ID', historyItem.id);
+      localStorage.setItem('AJAX_LATEST_COMPLETED_PLAN_EVENT', JSON.stringify({ id: historyItem.id, at: Date.now(), plan: historyItem }));
     } catch (e) {
       console.warn('LocalStorage error:', e);
     }
 
-    // Đánh dấu bản hiện tại là do mình vừa hoàn thành
-    window.AppStore._currentAppliedPlanId = historyItem.id;
-    try { localStorage.setItem('AJAX_CURRENT_APPLIED_PLAN_ID', historyItem.id); } catch (e) {}
-    window.AppStore._hasPendingRemotePlan = false;
-
-    // Gửi đồng bộ lên máy chủ cho các User khác
-    fetch('/api/completed-plan', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(historyItem)
-    }).then(res => res.json()).then(resp => {
-      console.log('✅ Kế hoạch đã được lưu và đồng bộ lên server:', resp);
-    }).catch(err => {
-      console.warn('⚠️ Lỗi gửi đồng bộ lên server:', err);
-    });
-
-    // Phát broadcast real-time cho các tab/cửa sổ khác
+    // Phát broadcast real-time cho các tab/cửa sổ cùng trình duyệt
     if (simPlanSyncChannel) {
       try {
         simPlanSyncChannel.postMessage({ type: 'NEW_COMPLETED_PLAN', plan: historyItem });
@@ -5970,8 +6499,31 @@
 
     window.renderCapacityView();
     if (window.showToast) {
-      window.showToast('success', `🎉 ĐÃ HOÀN THÀNH KẾ HOẠCH! Đã lưu và đồng bộ cho các User khác (${dateStr} ${timeStr} - ${plannerName})`);
+      window.showToast('info', `💾 Đã lưu kế hoạch (${dateStr} ${timeStr}), đang đồng bộ lên máy chủ cho các User khác...`);
     }
+
+    // Gửi đồng bộ lên máy chủ (server.py sẽ tự động đẩy lên GitHub ở nền)
+    fetch('/api/completed-plan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(historyItem)
+    }).then(res => {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }).then(resp => {
+      if (!resp || !resp.success) {
+        throw new Error((resp && resp.error) || 'Server rejected completed plan');
+      }
+      console.log('✅ Kế hoạch đã được lưu và đồng bộ lên server:', resp);
+      if (window.showToast) {
+        window.showToast('success', `🎉 ĐÃ HOÀN THÀNH & ĐỒNG BỘ LÊN MÁY CHỦ! Các User khác sẽ tự động thấy bản mới nhất (${dateStr} ${timeStr} - ${plannerName}).`);
+      }
+    }).catch(err => {
+      console.warn('⚠️ Lỗi gửi đồng bộ lên server:', err);
+      if (window.showToast) {
+        window.showToast('warning', `⚠️ Đã lưu cục bộ trên máy này, NHƯNG chưa kết nối được Web Server nội bộ (/api/completed-plan) nên các User khác chưa nhận được! Hãy thao tác hoàn thành trên Web Local.`);
+      }
+    });
   };
 
   window.handleOpenSimPlanHistoryModal = function() {
@@ -5983,20 +6535,11 @@
     window.renderSimPlanHistoryContent();
     modal.style.display = 'flex';
 
-    // Đồng bộ thêm các bản ghi lịch sử từ server
-    fetch('/api/completed-plan?t=' + Date.now())
-      .then(res => res.json())
+    // Đồng bộ thêm các bản ghi lịch sử từ server hoặc file tĩnh
+    fetchCompletedPlanBundle()
       .then(data => {
-        if (data && data.success && Array.isArray(data.history)) {
-          let localHist = [];
-          try {
-            localHist = JSON.parse(localStorage.getItem('AJAX_SIM_PLAN_HISTORY') || '[]');
-          } catch (e) {}
-          const map = new Map();
-          localHist.forEach(item => { if (item && item.id) map.set(item.id, item); });
-          data.history.forEach(item => { if (item && item.id) map.set(item.id, item); });
-          const merged = Array.from(map.values()).sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
-          localStorage.setItem('AJAX_SIM_PLAN_HISTORY', JSON.stringify(merged));
+        if (data && data.success && (Array.isArray(data.history) || data.latestPlan)) {
+          mergeServerHistoryIntoLocal(data.history, data.latestPlan);
           window.renderSimPlanHistoryContent();
         }
       })
@@ -6047,24 +6590,50 @@
       try { localStorage.setItem('AJAX_SIM_PLANNER_NAME', s.plannerName); } catch (e) {}
     }
     if (s.stageFilter) window.AppStore.simStageFilter = s.stageFilter;
+    if (s.simFromDate) {
+      window.AppStore.simFromDate = s.simFromDate;
+      window.AppStore.fromDate = s.simFromDate;
+    }
+    if (s.simToDate) {
+      window.AppStore.simToDate = s.simToDate;
+      window.AppStore.toDate = s.simToDate;
+    }
+    if (s.simTargetDate) window.AppStore.simTargetDate = s.simTargetDate;
+    if (s.simScope) window.AppStore.simScope = s.simScope;
+    if (s.simPlanStatusFilter) window.AppStore.simPlanStatusFilter = s.simPlanStatusFilter;
+    if (s.simGroupFilter) window.AppStore.simGroupFilter = s.simGroupFilter;
+    if (s.simSearchVal !== undefined) window.AppStore.simSearchVal = s.simSearchVal;
     if (s.simWorkingLinesDay) window.AppStore.simWorkingLinesDay = [...s.simWorkingLinesDay];
     if (s.simWorkingLinesNight) window.AppStore.simWorkingLinesNight = [...s.simWorkingLinesNight];
     window.AppStore._simLinesManualConfigured = true;
-    if (s.simManualLinesDay) window.AppStore.simManualLinesDay = { ...s.simManualLinesDay };
-    if (s.simManualLinesNight) window.AppStore.simManualLinesNight = { ...s.simManualLinesNight };
-    if (s.simLineOverridesDay) window.AppStore.simLineOverridesDay = { ...s.simLineOverridesDay };
-    if (s.simLineOverridesNight) window.AppStore.simLineOverridesNight = { ...s.simLineOverridesNight };
-    if (s.simLineOverrides) window.AppStore.simLineOverrides = { ...s.simLineOverrides };
-    if (s.simManualSeqsDay) window.AppStore.simManualSeqsDay = { ...s.simManualSeqsDay };
-    if (s.simManualSeqsNight) window.AppStore.simManualSeqsNight = { ...s.simManualSeqsNight };
-    if (s.simManualPfDay) window.AppStore.simManualPfDay = { ...s.simManualPfDay };
-    if (s.simManualPfNight) window.AppStore.simManualPfNight = { ...s.simManualPfNight };
-    if (s.simManualPlanDay) window.AppStore.simManualPlanDay = { ...s.simManualPlanDay };
-    if (s.simManualPlanNight) window.AppStore.simManualPlanNight = { ...s.simManualPlanNight };
-    if (s.simManualShifts) window.AppStore.simManualShifts = { ...s.simManualShifts };
-    if (s.simManualNotes) window.AppStore.simManualNotes = { ...s.simManualNotes };
+    window.AppStore.simManualLinesDay = { ...(s.simManualLinesDay || {}) };
+    window.AppStore.simManualLinesNight = { ...(s.simManualLinesNight || {}) };
+    window.AppStore.simLineOverridesDay = { ...(s.simLineOverridesDay || {}) };
+    window.AppStore.simLineOverridesNight = { ...(s.simLineOverridesNight || {}) };
+    window.AppStore.simLineOverrides = { ...(s.simLineOverrides || {}) };
+    window.AppStore.simManualSeqsDay = { ...(s.simManualSeqsDay || {}) };
+    window.AppStore.simManualSeqsNight = { ...(s.simManualSeqsNight || {}) };
+    window.AppStore.simManualPfDay = { ...(s.simManualPfDay || {}) };
+    window.AppStore.simManualPfNight = { ...(s.simManualPfNight || {}) };
+    window.AppStore.simManualPlanDay = { ...(s.simManualPlanDay || {}) };
+    window.AppStore.simManualPlanNight = { ...(s.simManualPlanNight || {}) };
+    window.AppStore.simManualShifts = { ...(s.simManualShifts || {}) };
+    window.AppStore.simManualNotes = { ...(s.simManualNotes || {}) };
 
+    window.AppStore._appliedPlanIdInitialized = true;
     window.AppStore._currentAppliedPlanId = item.id;
+    window.AppStore._currentAppliedPlanMetaId = item.id;
+    window.AppStore._currentAppliedPlanCreatedAt = item.createdAt || new Date().toISOString();
+    window.AppStore._lastSyncedPlanMeta = {
+      id: item.id,
+      planner: item.planner,
+      dateStr: item.dateStr,
+      timeStr: item.timeStr,
+      modelsCount: item.modelsCount,
+      grandPlan: item.grandPlan,
+      grandPlanDay: item.grandPlanDay,
+      grandPlanNight: item.grandPlanNight
+    };
     try { localStorage.setItem('AJAX_CURRENT_APPLIED_PLAN_ID', item.id); } catch (e) {}
 
     // Update draft to restored version

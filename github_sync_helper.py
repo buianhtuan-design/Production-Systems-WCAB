@@ -8,10 +8,12 @@ Only tracks and commits data files (never unfinished feature code).
 import json
 import os
 import subprocess
+import threading
 import time
 
 WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
 CREDENTIALS_FILE = os.path.join(WORKSPACE_DIR, 'sync_credentials.json')
+_GIT_PUSH_LOCK = threading.Lock()
 
 DATA_FILE_PATHS = [
     'js/datamass-data.js',
@@ -28,7 +30,9 @@ DATA_FILE_PATHS = [
     'clips_alls_data.json',
     'clips_alls_history.json',
     'kpi_data.json',
-    'sync_status.json'
+    'sync_status.json',
+    'assembly_completed_plan_latest.json',
+    'assembly_plan_history.json'
 ]
 
 def load_credentials():
@@ -59,77 +63,78 @@ def auto_push_data_to_github():
         return {'pushed': False, 'reason': 'GitHub token is missing'}
 
     # 1. Kiểm tra trạng thái git của các file dữ liệu
-    try:
-        cmd_status = ['git', 'status', '--porcelain'] + DATA_FILE_PATHS
-        proc_status = subprocess.run(
-            cmd_status,
-            cwd=WORKSPACE_DIR,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            timeout=10
-        )
-        changed_lines = proc_status.stdout.strip().splitlines()
-        if not changed_lines:
-            return {'pushed': False, 'reason': 'Dữ liệu không có thay đổi, không cần push'}
+    with _GIT_PUSH_LOCK:
+        try:
+            cmd_status = ['git', 'status', '--porcelain'] + DATA_FILE_PATHS
+            proc_status = subprocess.run(
+                cmd_status,
+                cwd=WORKSPACE_DIR,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                timeout=10
+            )
+            changed_lines = proc_status.stdout.strip().splitlines()
+            if not changed_lines:
+                return {'pushed': False, 'reason': 'Dữ liệu không có thay đổi, không cần push'}
 
-        print(f"[GitHub Auto-Sync] 📦 Phát hiện {len(changed_lines)} file dữ liệu thay đổi, chuẩn bị đẩy lên GitHub...")
+            print(f"[GitHub Auto-Sync] 📦 Phát hiện {len(changed_lines)} file dữ liệu thay đổi, chuẩn bị đẩy lên GitHub...")
 
-        # 2. Chỉ stage các file dữ liệu có thay đổi
-        files_to_add = []
-        for line in changed_lines:
-            parts = line.strip().split(maxsplit=1)
-            if len(parts) == 2:
-                files_to_add.append(parts[1])
+            # 2. Chỉ stage các file dữ liệu có thay đổi
+            files_to_add = []
+            for line in changed_lines:
+                parts = line.strip().split(maxsplit=1)
+                if len(parts) == 2:
+                    files_to_add.append(parts[1])
 
-        if not files_to_add:
-            files_to_add = DATA_FILE_PATHS
+            if not files_to_add:
+                files_to_add = DATA_FILE_PATHS
 
-        cmd_add = ['git', 'add'] + files_to_add
-        subprocess.run(cmd_add, cwd=WORKSPACE_DIR, check=True, timeout=15)
+            cmd_add = ['git', 'add'] + files_to_add
+            subprocess.run(cmd_add, cwd=WORKSPACE_DIR, check=True, timeout=15)
 
-        # 3. Commit dữ liệu mới
-        now_str = time.strftime('%Y-%m-%d %H:%M:%S')
-        commit_msg = f"Auto-sync: Cập nhật dữ liệu sản xuất mới nhất [{now_str}]"
-        subprocess.run(
-            ['git', 'commit', '-m', commit_msg],
-            cwd=WORKSPACE_DIR,
-            check=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            timeout=15
-        )
+            # 3. Commit dữ liệu mới
+            now_str = time.strftime('%Y-%m-%d %H:%M:%S')
+            commit_msg = f"Auto-sync: Cập nhật dữ liệu sản xuất mới nhất [{now_str}]"
+            subprocess.run(
+                ['git', 'commit', '-m', commit_msg],
+                cwd=WORKSPACE_DIR,
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                timeout=15
+            )
 
-        # 4. Push lên GitHub sử dụng Token an toàn
-        remote_url = f"https://{owner}:{token}@github.com/{owner}/{repo}.git"
-        push_cmd = ['git', 'push', remote_url, branch]
-        proc_push = subprocess.run(
-            push_cmd,
-            cwd=WORKSPACE_DIR,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            timeout=30
-        )
+            # 4. Push lên GitHub sử dụng Token an toàn
+            remote_url = f"https://{owner}:{token}@github.com/{owner}/{repo}.git"
+            push_cmd = ['git', 'push', remote_url, branch]
+            proc_push = subprocess.run(
+                push_cmd,
+                cwd=WORKSPACE_DIR,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                timeout=30
+            )
 
-        if proc_push.returncode != 0:
-            err_msg = proc_push.stderr.strip()
-            # Giấu token khỏi log lỗi để bảo mật
-            clean_err = err_msg.replace(token, 'ghp_***')
-            print(f"[GitHub Auto-Sync] ⚠️ Lỗi push: {clean_err}")
-            return {'pushed': False, 'error': clean_err}
+            if proc_push.returncode != 0:
+                err_msg = proc_push.stderr.strip()
+                # Giấu token khỏi log lỗi để bảo mật
+                clean_err = err_msg.replace(token, 'ghp_***')
+                print(f"[GitHub Auto-Sync] ⚠️ Lỗi push: {clean_err}")
+                return {'pushed': False, 'error': clean_err}
 
-        print(f"[GitHub Auto-Sync] 🚀 ĐÃ TỰ ĐỘNG ĐẨY DỮ LIỆU LÊN GITHUB THÀNH CÔNG [{now_str}]!")
-        return {
-            'pushed': True,
-            'timestamp': now_str,
-            'files_updated': len(files_to_add)
-        }
+            print(f"[GitHub Auto-Sync] 🚀 ĐÃ TỰ ĐỘNG ĐẨY DỮ LIỆU LÊN GITHUB THÀNH CÔNG [{now_str}]!")
+            return {
+                'pushed': True,
+                'timestamp': now_str,
+                'files_updated': len(files_to_add)
+            }
 
-    except Exception as e:
-        err_str = str(e).replace(token, 'ghp_***')
-        print(f"[GitHub Auto-Sync] ⚠️ Lỗi khi đồng bộ lên GitHub: {err_str}")
-        return {'pushed': False, 'error': err_str}
+        except Exception as e:
+            err_str = str(e).replace(token, 'ghp_***')
+            print(f"[GitHub Auto-Sync] ⚠️ Lỗi khi đồng bộ lên GitHub: {err_str}")
+            return {'pushed': False, 'error': err_str}
 
 if __name__ == '__main__':
     res = auto_push_data_to_github()

@@ -206,10 +206,10 @@ window.UserAuth = {
       }
     }
 
-    // Re-render Simulator in Tab 2 if active to update disabled states
+    // Re-render Capacity tab if active to update permission states
     const activeTab = document.querySelector('.nav-link.active')?.getAttribute('data-tab');
-    if (activeTab === 'capacity' && typeof window.renderCapacityPlanningSimulatorView === 'function') {
-      window.renderCapacityPlanningSimulatorView();
+    if (activeTab === 'capacity' && typeof window.renderCapacityView === 'function') {
+      window.renderCapacityView('capacityContainer');
     }
   }
 };
@@ -1117,6 +1117,9 @@ function initNavigation() {
 
       if (targetTab === 'capacity' && window.renderCapacityView) {
         window.renderCapacityView('capacityContainer');
+        if (typeof window.handleCheckAndSyncCompletedPlan === 'function') {
+          window.handleCheckAndSyncCompletedPlan(false);
+        }
       } else if (targetTab === 'wip' && window.renderWipControlView) {
         window.renderWipControlView('wipContainer');
       } else if (targetTab === 'clips-all-plan' && window.renderClipsAllPlanView) {

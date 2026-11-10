@@ -207,9 +207,11 @@ class AppRequestHandler(http.server.SimpleHTTPRequestHandler):
             latest_file = os.path.join(WORKSPACE_DIR, 'assembly_completed_plan_latest.json')
             history_file = os.path.join(WORKSPACE_DIR, 'assembly_plan_history.json')
 
-            # Lưu bản mới nhất
-            with open(latest_file, 'w', encoding='utf-8') as f:
+            # Lưu bản mới nhất (atomic write để tránh đọc dở khi polling)
+            latest_tmp = latest_file + '.tmp'
+            with open(latest_tmp, 'w', encoding='utf-8') as f:
                 json.dump(plan, f, ensure_ascii=False, indent=2)
+            os.replace(latest_tmp, latest_file)
 
             # Cập nhật danh sách lịch sử
             history = []
@@ -227,14 +229,27 @@ class AppRequestHandler(http.server.SimpleHTTPRequestHandler):
             history.insert(0, plan)
             history = history[:50]  # Giữ tối đa 50 bản ghi lịch sử
 
-            with open(history_file, 'w', encoding='utf-8') as f:
+            history_tmp = history_file + '.tmp'
+            with open(history_tmp, 'w', encoding='utf-8') as f:
                 json.dump(history, f, ensure_ascii=False, indent=2)
+            os.replace(history_tmp, history_file)
+
+            # Tự động đẩy bản kế hoạch vừa hoàn thành lên GitHub ở background để User truy cập GitHub Pages cũng đồng bộ được
+            def _push_completed_plan_async():
+                try:
+                    from github_sync_helper import auto_push_data_to_github
+                    auto_push_data_to_github()
+                except Exception as push_err:
+                    print(f"[Completed Plan GitHub Sync] ⚠️ {push_err}")
+
+            threading.Thread(target=_push_completed_plan_async, daemon=True).start()
 
             res = {
                 'success': True,
                 'id': plan.get('id'),
                 'planner': plan.get('planner'),
                 'savedAt': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'githubSyncStarted': True,
                 'message': 'Đã lưu và đồng bộ kế hoạch thành công lên máy chủ!'
             }
             self.send_response(200)
