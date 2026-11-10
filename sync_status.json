@@ -1,19 +1,19 @@
 {
   "success": true,
-  "timestamp": "2026-11-10 18:02:03",
-  "version": 202611101802,
-  "download_seconds": 25.82,
-  "total_seconds": 26.81,
+  "timestamp": "2026-11-10 20:14:41",
+  "version": 202611102014,
+  "download_seconds": 144.94,
+  "total_seconds": 145.9,
   "items_count": 2147,
   "dates_count": 439,
   "weeks_count": 62,
   "inventory_items_count": 4914,
   "inventory_total_stock": 247381029.29,
-  "mass_history_count": 3897,
+  "mass_history_count": 0,
   "hardtest_items_count": 89,
   "github_sync": {
     "pushed": true,
-    "timestamp": "2026-11-10 18:02:03",
-    "files_updated": 8
+    "timestamp": "2026-11-10 20:14:42",
+    "files_updated": 9
   }
 }
