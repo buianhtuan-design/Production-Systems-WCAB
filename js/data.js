@@ -1547,6 +1547,16 @@ class Store {
         : window.DEFAULT_DATAMASS_DATA;
       const isDirectCsv = !!dataMass._fromBrowserCsv;
 
+      // Reject severely truncated browser CSV payloads so partial downloads cannot wipe full Data_Mass models
+      if (isDirectCsv && baseRef && Array.isArray(baseRef.items) && baseRef.items.length >= 200) {
+        const incomingCount = Array.isArray(dataMass.items) ? dataMass.items.length : 0;
+        if (incomingCount < Math.floor(baseRef.items.length * 0.5)) {
+          console.warn(`⚠️ Bỏ qua payload Data_Mass bị thiếu (${incomingCount}/${baseRef.items.length} mã) để bảo toàn dữ liệu!`);
+          this.save();
+          return;
+        }
+      }
+
       if (baseRef && baseRef !== dataMass) {
         // Giữ nguyên các trường mở rộng (manpowerSheet, capacity, massHistory, clipsAlls) nếu bản mới từ CSV trình duyệt chưa có
         ['manpowerSheet', 'assemblyCapacity', 'hardtestCapacity', 'massHistory', 'clipsAlls'].forEach(k => {

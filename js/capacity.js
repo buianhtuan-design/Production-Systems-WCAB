@@ -900,6 +900,249 @@
     };
   }
 
+  function getTodayPlanReference() {
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    return {
+      todayIso: `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`,
+      todayDisplay: `${pad(now.getDate())}/${pad(now.getMonth() + 1)}/${now.getFullYear()}`
+    };
+  }
+
+  /**
+   * Xác định thông tin 2 cột "Date Plan" & "Shift Plan" cạnh cột Chênh Lệch:
+   * - Chỉ hiển thị ngày hiện tại kèm các ca trong ngày hiện tại mà Thực tế vẫn chưa chạy đủ Plan (Fact < Plan).
+   * - Nếu ngày hiện tại không có Plan hoặc đã chạy đủ Plan nhưng tổng vẫn âm do ngày cũ -> "Âm luỹ kế" & "--".
+   */
+  function resolvePlanDateAndShiftMeta(it, gapQty, todayRef, shiftFilter = 'ALL') {
+    const { todayIso, todayDisplay } = todayRef || getTodayPlanReference();
+    const dailyList = (it && Array.isArray(it.daily)) ? it.daily : [];
+    const todayEntry = dailyList.find(d => {
+      if (!d || d.isSelected === false) return false;
+      const dIso = (window.AppStore && window.AppStore.toISODate) ? window.AppStore.toISODate(d.date) : d.date;
+      return dIso === todayIso;
+    });
+
+    const pendingShifts = [];
+    if (todayEntry) {
+      const dayPlan = Number(todayEntry.planDay) || 0;
+      const dayFact = Number(todayEntry.factDay) || 0;
+      const nightPlan = Number(todayEntry.planNight) || 0;
+      const nightFact = Number(todayEntry.factNight) || 0;
+
+      if (shiftFilter !== 'NIGHT' && dayPlan > 0 && dayFact < dayPlan) {
+        pendingShifts.push('Ngày');
+      }
+      if (shiftFilter !== 'DAY' && nightPlan > 0 && nightFact < nightPlan) {
+        pendingShifts.push('Đêm');
+      }
+    }
+
+    if (pendingShifts.length > 0) {
+      return {
+        datePlanLabel: todayDisplay,
+        shiftPlanLabel: pendingShifts.join(' + '),
+        isCumNegative: false,
+        pendingShifts
+      };
+    }
+
+    if (gapQty < 0) {
+      return {
+        datePlanLabel: 'Âm luỹ kế',
+        shiftPlanLabel: '--',
+        isCumNegative: true,
+        pendingShifts: []
+      };
+    }
+
+    const todayPlanTotal = todayEntry ? (Number(todayEntry.plan) || 0) : 0;
+    if (todayEntry && todayPlanTotal > 0) {
+      return {
+        datePlanLabel: todayDisplay,
+        shiftPlanLabel: 'Đủ Plan',
+        isCumNegative: false,
+        pendingShifts: []
+      };
+    }
+
+    return {
+      datePlanLabel: '--',
+      shiftPlanLabel: '--',
+      isCumNegative: false,
+      pendingShifts: []
+    };
+  }
+
+  function renderPlanDateAndShiftCellsHtml(meta) {
+    const m = meta || { datePlanLabel: '--', shiftPlanLabel: '--', isCumNegative: false, pendingShifts: [] };
+    const dateBadgeClass = m.isCumNegative ? 'badge-amber' : 'badge-blue';
+
+    let shiftBadgeClass = '';
+    if (m.pendingShifts.length === 2 || m.shiftPlanLabel === 'Đủ Plan') {
+      shiftBadgeClass = 'badge-green';
+    } else if (m.pendingShifts[0] === 'Ngày') {
+      shiftBadgeClass = 'badge-blue';
+    } else if (m.pendingShifts[0] === 'Đêm') {
+      shiftBadgeClass = 'badge-purple';
+    }
+
+    const dateHtml = m.datePlanLabel === '--'
+      ? `<span style="color: var(--text-muted); font-size: 0.775rem;">--</span>`
+      : `<span class="badge ${dateBadgeClass} font-mono" style="font-size: 0.725rem; font-weight: 800; padding: 0.15rem 0.45rem; border-radius: 6px; white-space: nowrap;">${m.datePlanLabel}</span>`;
+
+    const shiftHtml = m.shiftPlanLabel === '--'
+      ? `<span style="color: var(--text-muted); font-size: 0.775rem;">--</span>`
+      : `<span class="badge ${shiftBadgeClass}" style="font-size: 0.725rem; font-weight: 800; padding: 0.15rem 0.45rem; border-radius: 6px; white-space: nowrap;">${m.shiftPlanLabel}</span>`;
+
+    return `
+      <td style="text-align: center; white-space: nowrap; padding: 0.35rem 0.35rem;">${dateHtml}</td>
+      <td style="text-align: center; white-space: nowrap; padding: 0.35rem 0.35rem;">${shiftHtml}</td>
+    `;
+  }
+
+  function formatIsoToVnDate(isoStr) {
+    if (!isoStr || typeof isoStr !== 'string') return isoStr || '--';
+    const parts = isoStr.split('-');
+    if (parts.length === 3 && parts[0].length === 4) {
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+    return isoStr;
+  }
+
+  /**
+   * Truy xuất nguồn ngày & ca sản xuất bắt đầu bị âm cho các Model "Âm luỹ kế":
+   * - Duyệt theo thứ tự thời gian từng ca (Ngày -> Đêm) trong kỳ đang lọc.
+   * - Tìm mốc cuối cùng tổng lũy kế (Fact - Plan) chuyển từ >= 0 sang < 0 và giữ âm liên tục tới cuối kỳ.
+   */
+  function resolveAccumulatedNegativeOrigin(it, shiftFilter = 'ALL') {
+    const dailyList = (it && Array.isArray(it.daily)) ? it.daily : [];
+    const slots = [];
+    let running = 0;
+
+    dailyList.forEach(d => {
+      if (!d || d.isSelected === false) return;
+      const dIso = (window.AppStore && window.AppStore.toISODate) ? window.AppStore.toISODate(d.date) : d.date;
+      const dDisp = formatIsoToVnDate(dIso);
+
+      if (shiftFilter !== 'NIGHT') {
+        const pDay = Number(d.planDay) || 0;
+        const fDay = Number(d.factDay) || 0;
+        running += (fDay - pDay);
+        slots.push({ dateIso: dIso, dateDisp: dDisp, shift: 'Ngày', plan: pDay, fact: fDay, running });
+      }
+      if (shiftFilter !== 'DAY') {
+        const pNight = Number(d.planNight) || 0;
+        const fNight = Number(d.factNight) || 0;
+        running += (fNight - pNight);
+        slots.push({ dateIso: dIso, dateDisp: dDisp, shift: 'Đêm', plan: pNight, fact: fNight, running });
+      }
+    });
+
+    if (slots.length === 0 || running >= 0) {
+      return { originDate: '', originShift: '', label: '--', tooltip: '' };
+    }
+
+    let streakStartIdx = -1;
+    for (let i = slots.length - 1; i >= 0; i--) {
+      if (slots[i].running < 0) {
+        streakStartIdx = i;
+      } else {
+        break;
+      }
+    }
+    if (streakStartIdx < 0) {
+      return { originDate: '', originShift: '', label: '--', tooltip: '' };
+    }
+
+    const startSlot = slots[streakStartIdx];
+    const sameDayMissingShifts = [];
+    for (let j = streakStartIdx; j < slots.length; j++) {
+      if (slots[j].dateIso !== startSlot.dateIso) break;
+      if (slots[j].plan > slots[j].fact && !sameDayMissingShifts.includes(slots[j].shift)) {
+        sameDayMissingShifts.push(slots[j].shift);
+      }
+    }
+    const originShift = sameDayMissingShifts.length > 0 ? sameDayMissingShifts.join(' + ') : startSlot.shift;
+    const timelineNotes = slots
+      .filter(s => s.plan > 0 || s.fact > 0)
+      .map(s => `${s.dateDisp.slice(0, 5)} ${s.shift}: P=${s.plan} / F=${s.fact} (LK: ${s.running >= 0 ? '+' : ''}${s.running})`);
+
+    return {
+      originDate: startSlot.dateDisp,
+      originShift,
+      label: `${startSlot.dateDisp} • ${originShift}`,
+      tooltip: timelineNotes.join(' | ')
+    };
+  }
+
+  function renderAccumulatedNegativeOriginCellHtml(negMeta) {
+    if (!negMeta || !negMeta.originDate) {
+      return `<td style="text-align: center; color: var(--text-muted); font-size: 0.775rem; white-space: nowrap; padding: 0.35rem 0.35rem;">--</td>`;
+    }
+    const shiftBadgeClass = negMeta.originShift === 'Ngày + Đêm'
+      ? 'badge-green'
+      : negMeta.originShift === 'Ngày'
+        ? 'badge-blue'
+        : 'badge-purple';
+    const titleAttr = (negMeta.tooltip || '').replace(/"/g, '&quot;');
+    return `
+      <td style="text-align: center; white-space: nowrap; padding: 0.35rem 0.4rem;" title="${titleAttr}">
+        <div style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem;">
+          <span class="badge badge-amber font-mono" style="font-size: 0.725rem; font-weight: 800; padding: 0.15rem 0.4rem; border-radius: 6px;">${negMeta.originDate}</span>
+          <span class="badge ${shiftBadgeClass}" style="font-size: 0.725rem; font-weight: 800; padding: 0.15rem 0.4rem; border-radius: 6px;">${negMeta.originShift}</span>
+        </div>
+      </td>
+    `;
+  }
+
+  /**
+   * Chuyển từ bảng Capacity Planning sang tab WIP Control và lọc đúng Model + Công đoạn tương ứng
+   */
+  window.handleCheckModelWip = function(stageEnc, modelGroupEnc, product1CEnc, gapQty, fromDateStr, toDateStr) {
+    const stage = decodeURIComponent(stageEnc || 'ASSEMBLY').trim() || 'ASSEMBLY';
+    const modelGroup = decodeURIComponent(modelGroupEnc || '').trim();
+    const product1C = decodeURIComponent(product1CEnc || '').trim();
+    const wipSearchText = product1C || modelGroup;
+
+    if (!window.WipStore) window.WipStore = {};
+    window.WipStore.stageFilter = stage;
+    window.WipStore.modelFilter = 'ALL';
+    window.WipStore.lastStepFilter = 'ALL';
+    window.WipStore.statusFilter = 'ALL';
+    window.WipStore.gapFilter = (Number(gapQty) !== 0) ? 'HAS_GAP' : 'ALL';
+    window.WipStore.sortBy = 'GAP_ASC';
+    window.WipStore.warehouseFilter = 'ALL';
+    window.WipStore.search = wipSearchText;
+    window.WipStore.pageIndex = 0;
+
+    if (fromDateStr) window.WipStore.fromDate = fromDateStr;
+    if (toDateStr) {
+      window.WipStore.toDate = toDateStr;
+      window.WipStore.date = toDateStr;
+    }
+
+    const wipNavLink = document.querySelector('.nav-link[data-tab="wip"]');
+    if (wipNavLink && typeof wipNavLink.click === 'function') {
+      wipNavLink.click();
+    } else {
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      const tabWip = document.getElementById('tab-wip');
+      if (tabWip) tabWip.classList.add('active');
+      if (typeof window.renderWipControlView === 'function') {
+        window.renderWipControlView('wipContainer');
+      }
+    }
+
+    try {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (e) {}
+    if (typeof window.showToast === 'function') {
+      window.showToast('info', `📦 Đang kiểm tra WIP [${stage}]: ${wipSearchText}`);
+    }
+  };
+
   /**
    * RENDER INTERACTIVE CAPACITY SIMULATOR (GIẢ LẬP TẢI CHUYỀN THEO BẢNG 2)
    */
@@ -1171,6 +1414,8 @@
     if (!window.AppStore.simManualPlanDay) window.AppStore.simManualPlanDay = {};
     if (!window.AppStore.simManualPlanNight) window.AppStore.simManualPlanNight = {};
 
+    const todayPlanRef = getTodayPlanReference();
+
     const processedRows = scheduleItems.map((it, idx) => {
       grandPlan += (it.cumPlanQty || 0);
       grandFact += (it.cumFactQty || 0);
@@ -1368,12 +1613,22 @@
 
       const manualPlanNight = window.AppStore.simManualPlanNight && window.AppStore.simManualPlanNight[rowKey];
 
+      const planMeta = resolvePlanDateAndShiftMeta(it, it.cumGapQty || 0, todayPlanRef, shiftFilter);
+      const cumNegOriginMeta = planMeta.isCumNegative
+        ? resolveAccumulatedNegativeOrigin(it, shiftFilter)
+        : { originDate: '', originShift: '', label: '--', tooltip: '' };
+
       return {
         it,
         idx,
         capInfo,
         rowKey,
         shortage,
+        planMeta,
+        datePlanLabel: planMeta.datePlanLabel,
+        shiftPlanLabel: planMeta.shiftPlanLabel,
+        cumNegOriginMeta,
+        cumNegOriginLabel: cumNegOriginMeta.label,
         norm,
         stdHours,
         assignedDayLineId,
@@ -1971,6 +2226,8 @@
         capInfo,
         rowKey,
         shortage,
+        planMeta,
+        cumNegOriginMeta,
         norm,
         stdHours,
         assignedDayLineId,
@@ -2044,6 +2301,7 @@
           <td class="font-mono" style="text-align: right; font-weight: 800; font-size: 0.825rem; padding: 0.35rem 0.45rem; ${gapColor}">
             ${it.cumGapQty !== 0 ? (it.cumGapQty > 0 ? '+' : '') + it.cumGapQty.toLocaleString('vi-VN') : '0'}
           </td>
+          ${renderPlanDateAndShiftCellsHtml(planMeta || resolvePlanDateAndShiftMeta(it, it.cumGapQty || 0, todayPlanRef, shiftFilter))}
           <td class="font-mono" style="text-align: center; font-weight: 600; color: #cbd5e1; font-size: 0.825rem; padding: 0.35rem 0.35rem;">
             ${norm}
           </td>
@@ -2106,6 +2364,16 @@
           </td>
           <td style="text-align: left; padding: 0.2rem 0.35rem; min-width: 140px;">
             <input type="text" class="sim-table-note-input" data-row-key="${encodeURIComponent(rowKey)}" value="${(window.AppStore.simManualNotes && window.AppStore.simManualNotes[rowKey]) ? String(window.AppStore.simManualNotes[rowKey]).replace(/"/g, '&quot;') : ''}" placeholder="Nhập ghi chú..." onchange="handleTableNoteChange('${rowKey}', this.value)" onkeydown="if(event.key==='Enter') this.blur();" title="Ghi chú cho Model ${(it.productName1C || it.model || '').replace(/"/g, '&quot;')}">
+          </td>
+          ${renderAccumulatedNegativeOriginCellHtml(cumNegOriginMeta)}
+          <td style="text-align: center; white-space: nowrap; padding: 0.25rem 0.35rem;">
+            <button type="button"
+              class="btn btn-xs"
+              onclick="handleCheckModelWip('${encodeURIComponent(it.stage || 'ASSEMBLY')}', '${encodeURIComponent(it.model || '')}', '${encodeURIComponent(it.productName1C || it.model || '')}', ${Number(it.cumGapQty || 0)}, '${queryFromDate}', '${queryToDate}')"
+              style="padding: 0.2rem 0.55rem; font-size: 0.725rem; font-weight: 800; color: #34d399; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.25rem;"
+              title="Mở WIP Control và lọc đúng Model ${(it.productName1C || it.model || '').replace(/"/g, '&quot;')} (${it.stage || 'ASSEMBLY'})">
+              <span>📦 Check WIP</span>
+            </button>
           </td>
         </tr>
       `;
@@ -2480,10 +2748,10 @@
               </button>
             </div>
             <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
-              <button type="button" class="sim-btn-export-sheet" onclick="handleExportCapacityScheduleGoogleSheet()" title="Xuất file CSV chuẩn UTF-8 tương thích Google Sheets &amp; Excel theo định dạng 26 cột kèm Ghi Chú">
+              <button type="button" class="sim-btn-export-sheet" onclick="handleExportCapacityScheduleGoogleSheet()" title="Xuất file CSV chuẩn UTF-8 tương thích Google Sheets &amp; Excel theo định dạng 29 cột kèm Date Plan, Shift Plan, Ghi Chú &amp; Âm Từ Ngày / Ca">
                 <span>📥 Xuất Google Sheets (CSV)</span>
               </button>
-              <button type="button" class="sim-btn-copy-sheet" onclick="handleCopyCapacityScheduleClipboard()" title="Sao chép toàn bộ bảng điều độ 26 cột kèm Ghi Chú để dán ngay (Ctrl+V) vào Google Sheets">
+              <button type="button" class="sim-btn-copy-sheet" onclick="handleCopyCapacityScheduleClipboard()" title="Sao chép toàn bộ bảng điều độ 29 cột kèm Date Plan, Shift Plan, Ghi Chú &amp; Âm Từ Ngày / Ca để dán ngay (Ctrl+V) vào Google Sheets">
                 <span>📋 Copy Cho Google Sheet</span>
               </button>
               <button type="button" class="btn btn-secondary" onclick="handleOpenLineSequenceModal()" style="padding: 0.25rem 0.55rem; font-size: 0.725rem; color: #fbbf24; border-color: rgba(251, 191, 36, 0.4); display: inline-flex; align-items: center; gap: 0.3rem;" title="Xem bảng phân bổ thứ tự sản xuất chi tiết gom theo từng Chuyền">
@@ -2542,6 +2810,8 @@
                     ${grandGap !== 0 ? (grandGap > 0 ? '+' : '') + grandGap.toLocaleString('vi-VN') : '0'}
                   </th>
                   <th style="padding: 0.35rem 0.35rem;"></th>
+                  <th style="padding: 0.35rem 0.35rem;"></th>
+                  <th style="padding: 0.35rem 0.35rem;"></th>
                   <th class="font-mono" style="text-align: right; color: #fbbf24; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
                     ${grandStdHours.toFixed(1)}
                   </th>
@@ -2580,9 +2850,11 @@
                     ${grandFinalShortage > 0 ? '-' + grandFinalShortage.toLocaleString('vi-VN') : ''}
                   </th>
                   <th style="padding: 0.35rem 0.25rem;"></th>
+                  <th style="padding: 0.35rem 0.25rem;"></th>
+                  <th style="padding: 0.35rem 0.25rem;"></th>
                 </tr>
 
-                <!-- HÀNG 1: TIÊU ĐỀ 26 CỘT (STICKY TOP: 36px) VỚI TEXT WRAPPING GỌN GÀNG -->
+                <!-- HÀNG 1: TIÊU ĐỀ 30 CỘT (STICKY TOP: 36px) VỚI TEXT WRAPPING GỌN GÀNG -->
                 <tr class="sim-header-titles">
                   <th class="sticky-sim-stt" style="text-align: center; width: 45px;">STT</th>
                   <th class="sticky-sim-stage" style="text-align: center; width: 95px;">Công Đoạn</th>
@@ -2591,6 +2863,8 @@
                   <th style="text-align: right; min-width: 65px; color: #60a5fa; padding: 0.35rem 0.35rem;">Kế Hoạch</th>
                   <th style="text-align: right; min-width: 65px; color: #34d399; padding: 0.35rem 0.35rem;">Thực Tế</th>
                   <th style="text-align: right; min-width: 65px; padding: 0.35rem 0.35rem;">Chênh Lệch</th>
+                  <th style="text-align: center; min-width: 90px; color: #38bdf8; padding: 0.35rem 0.35rem;" title="Ngày kế hoạch hiện tại; nếu hôm nay không có Plan hoặc đã chạy đủ Plan (âm do ngày cũ) mặc định là Âm luỹ kế">Date Plan</th>
+                  <th style="text-align: center; min-width: 78px; color: #a78bfa; padding: 0.35rem 0.35rem;" title="Ca sản xuất trong ngày hiện tại mà Thực tế chưa chạy đủ Plan (Ngày / Đêm)">Shift Plan</th>
                   <th style="text-align: center; min-width: 65px; padding: 0.35rem 0.25rem;">Cycle Time<br>TC</th>
                   <th style="text-align: right; min-width: 75px; color: #fbbf24; padding: 0.35rem 0.25rem;">Tổng TG<br>Tiêu Chuẩn</th>
                   <!-- Cụm Ca Ngày -->
@@ -2612,12 +2886,14 @@
                   <th style="text-align: right; min-width: 78px; color: #c084fc; padding: 0.35rem 0.25rem;">Plan<br>Ca Đêm</th>
                   <th style="text-align: right; min-width: 85px; color: #f87171; padding: 0.35rem 0.25rem;">Kế hoạch Còn<br>Thiếu Tổng</th>
                   <th style="text-align: left; min-width: 140px; color: #e2e8f0; padding: 0.35rem 0.35rem;">Ghi Chú</th>
+                  <th style="text-align: center; min-width: 132px; color: #fbbf24; padding: 0.35rem 0.35rem;" title="Truy xuất ngày và ca sản xuất (Ngày / Đêm) bắt đầu bị âm cho các Model Âm luỹ kế">Âm Từ<br>Ngày / Ca</th>
+                  <th style="text-align: center; min-width: 102px; color: #34d399; padding: 0.35rem 0.35rem;" title="Bấm để mở ngay tab WIP Control và lọc đúng Model này theo công đoạn">Check WIP</th>
                 </tr>
               </thead>
               <tbody>
                 ${tableRowsHtml.length > 0 ? tableRowsHtml : `
                   <tr>
-                    <td colspan="26" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                    <td colspan="30" style="text-align: center; padding: 3rem; color: var(--text-muted);">
                       <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔍</div>
                       <div style="font-weight: 700; color: #f8fafc;">Không tìm thấy Model nào theo tiêu chí lọc hiện tại</div>
                     </td>
@@ -4769,6 +5045,8 @@
       grandFact,
       grandGap,
       '',
+      '',
+      '',
       grandStdHours.toFixed(1),
       '',
       '',
@@ -4786,11 +5064,12 @@
       grandNightAvailHours > 0 ? grandNightAvailHours.toFixed(2) : '',
       grandPlanNight > 0 ? grandPlanNight : '',
       grandFinalShortage > 0 ? `-${grandFinalShortage}` : '',
+      '',
       ''
     ];
     csv += totalRow.map(v => typeof v === 'number' ? v : `"${v}"`).join(',') + '\n';
 
-    // Row 1: Headers 26 cột
+    // Row 1: Headers 28 cột
     const headers = [
       'STT',
       'Công Đoạn',
@@ -4799,6 +5078,8 @@
       'Kế Hoạch',
       'Thực Tế',
       'Chênh Lệch',
+      'Date Plan',
+      'Shift Plan',
       'Cycle Time TC',
       'Tổng TG Tiêu Chuẩn',
       'Ca Làm Việc',
@@ -4817,7 +5098,8 @@
       'Tổng TG Có Ca Đêm',
       'Plan Ca Đêm',
       'Kế hoạch Còn Thiếu Tổng',
-      'Ghi Chú'
+      'Ghi Chú',
+      'Âm Từ Ngày / Ca'
     ];
     csv += headers.map(h => `"${h}"`).join(',') + '\n';
 
@@ -4848,6 +5130,8 @@
         r.it.cumPlanQty || 0,
         r.it.cumFactQty || 0,
         r.it.cumGapQty || 0,
+        r.datePlanLabel || '--',
+        r.shiftPlanLabel || '--',
         r.norm || '',
         stdHStr,
         r.shiftTextDay || (r.shortage > 0 ? 'Ca Ngày' : ''),
@@ -4866,7 +5150,8 @@
         nightAvailHStr,
         r.planNight > 0 ? r.planNight : '',
         finalShortageStr,
-        cleanNote
+        cleanNote,
+        r.cumNegOriginLabel || '--'
       ];
       csv += row.map(v => typeof v === 'number' ? v : `"${v}"`).join(',') + '\n';
     });
@@ -4881,7 +5166,7 @@
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 
-    window.showToast('success', `📥 Đã xuất file CSV chuẩn 26 cột (${rows.length} Model kèm Ghi Chú)!`);
+    window.showToast('success', `📥 Đã xuất file CSV chuẩn 29 cột (${rows.length} Model kèm Date Plan, Shift Plan, Ghi Chú & Âm Từ Ngày / Ca)!`);
   };
 
   window.handleCopyCapacityScheduleClipboard = function() {
@@ -4931,6 +5216,8 @@
       'Kế Hoạch',
       'Thực Tế',
       'Chênh Lệch',
+      'Date Plan',
+      'Shift Plan',
       'Cycle Time TC',
       'Tổng TG Tiêu Chuẩn',
       'Ca Làm Việc',
@@ -4949,7 +5236,8 @@
       'Tổng TG Có Ca Đêm',
       'Plan Ca Đêm',
       'Kế hoạch Còn Thiếu Tổng',
-      'Ghi Chú'
+      'Ghi Chú',
+      'Âm Từ Ngày / Ca'
     ];
 
     let tsv = '';
@@ -4962,6 +5250,8 @@
       grandPlan,
       grandFact,
       grandGap,
+      '',
+      '',
       '',
       grandStdHours.toFixed(1),
       '',
@@ -4980,6 +5270,7 @@
       grandNightAvailHours > 0 ? grandNightAvailHours.toFixed(2) : '',
       grandPlanNight > 0 ? grandPlanNight : '',
       grandFinalShortage > 0 ? `-${grandFinalShortage}` : '',
+      '',
       ''
     ];
     tsv += totalRow.join('\t') + '\n';
@@ -5012,6 +5303,8 @@
         r.it.cumPlanQty || 0,
         r.it.cumFactQty || 0,
         r.it.cumGapQty || 0,
+        r.datePlanLabel || '--',
+        r.shiftPlanLabel || '--',
         r.norm || '',
         stdHStr,
         r.shiftTextDay || (r.shortage > 0 ? 'Ca Ngày' : ''),
@@ -5030,14 +5323,15 @@
         nightAvailHStr,
         r.planNight > 0 ? r.planNight : '',
         finalShortageStr,
-        cleanNote
+        cleanNote,
+        r.cumNegOriginLabel || '--'
       ];
       tsv += row.join('\t') + '\n';
     });
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(tsv).then(() => {
-        window.showToast('success', `📋 Đã sao chép bảng 26 cột (${rows.length} Model kèm Ghi Chú)! Mở Google Sheets và bấm Ctrl+V để dán ngay.`);
+        window.showToast('success', `📋 Đã sao chép bảng 29 cột (${rows.length} Model kèm Date Plan, Shift Plan, Ghi Chú & Âm Từ Ngày / Ca)! Mở Google Sheets và bấm Ctrl+V để dán ngay.`);
       }).catch(err => {
         fallbackCopyText(tsv);
       });
@@ -5054,7 +5348,7 @@
       ta.select();
       try {
         document.execCommand('copy');
-        window.showToast('success', `📋 Đã sao chép bảng 25 cột! Mở Google Sheets và bấm Ctrl+V để dán.`);
+        window.showToast('success', `📋 Đã sao chép bảng 29 cột! Mở Google Sheets và bấm Ctrl+V để dán.`);
       } catch (e) {
         window.showToast('error', 'Không thể sao chép tự động. Vui lòng thử nút Xuất Google Sheets (CSV)!');
       }

@@ -114,25 +114,36 @@ window.SyncService = {
 
   async fetchSheetCSV(gid) {
     const id = this.config.sheetId;
-    const gvizUrl = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&gid=${gid}&t=${Date.now()}`;
     const directUrl = `https://docs.google.com/spreadsheets/d/${id}/export?format=csv&gid=${gid}`;
+    const gvizUrl = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&gid=${gid}&t=${Date.now()}`;
+    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(directUrl)}`;
+    const isDataMass = String(gid) === String(this.config.dataMassGid);
 
-    try {
-      const res = await fetch(gvizUrl, { cache: 'no-store' });
-      if (res.ok) return await res.text();
-    } catch(e) {}
+    const tryFetchCsv = async (url, fetchOpts, rejectShortGviz) => {
+      try {
+        const res = await fetch(url, fetchOpts);
+        if (!res.ok) return null;
+        const text = await res.text();
+        if (!text || text.trimStart().startsWith('<')) return null;
+        // Google gviz silently truncates large Data_Mass sheets (~367 rows) while returning HTTP 200
+        if (rejectShortGviz && isDataMass && (text.match(/\n/g) || []).length < 1000) {
+          console.warn(`⚠️ Bỏ qua gviz CSV bị cắt xén cho Data_Mass GID ${gid}`);
+          return null;
+        }
+        return text;
+      } catch(e) {
+        return null;
+      }
+    };
 
-    try {
-      const res = await fetch(directUrl, { cache: 'no-store' });
-      if (res.ok) return await res.text();
-    } catch(e) {}
+    const directText = await tryFetchCsv(directUrl, { cache: 'no-store' }, false);
+    if (directText) return directText;
 
-    // Proxy fallback
-    try {
-      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(directUrl)}`;
-      const res = await fetch(proxyUrl);
-      if (res.ok) return await res.text();
-    } catch(e) {}
+    const proxyText = await tryFetchCsv(proxyUrl, { cache: 'no-store' }, false);
+    if (proxyText) return proxyText;
+
+    const gvizText = await tryFetchCsv(gvizUrl, { cache: 'no-store' }, true);
+    if (gvizText) return gvizText;
 
     throw new Error(`Không thể kết nối tải sheet GID: ${gid}`);
   },
