@@ -48,17 +48,17 @@
   "C": {
     "shift": "C",
     "name": "Shift C",
-    "assyDirect": 44.0,
-    "assyTotal": 59.0,
+    "assyDirect": 43.0,
+    "assyTotal": 58.0,
     "assyLinesDirect": {
-      "1C": 16.0,
+      "1C": 14.0,
       "2C": 15.0,
-      "3C": 13.0
+      "3C": 14.0
     },
     "assyLinesTotal": {
-      "1C": 21.0,
+      "1C": 19.0,
       "2C": 20.0,
-      "3C": 18.0
+      "3C": 19.0
     },
     "htDirect": 25.0,
     "htTotal": 27.0,
