@@ -4291,10 +4291,10 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-11 21:44:47",
+      "archivedAt": "2026-11-11 22:30:12",
       "totalItems": 260,
       "totalPlan": 485822.0,
-      "totalSheetFact": 149154.0,
+      "totalSheetFact": 151057.0,
       "qtyAllDevice": 260,
       "qtyDoneDevice": 108,
       "qtyNotDoneDevice": 152,
@@ -5126,7 +5126,7 @@
           "agg": "",
           "device": "Ajax SpaceControl (8EU) ASP white брелок",
           "plan": 20100.0,
-          "sheetFact": 11457.0,
+          "sheetFact": 12975.0,
           "done": 0,
           "isDone": false
         },
@@ -6386,7 +6386,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) WL Standard ASP white датчик відкриття",
           "plan": 15455.0,
-          "sheetFact": 1128.0,
+          "sheetFact": 1287.0,
           "done": 0,
           "isDone": false
         },
@@ -6426,7 +6426,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8MA) white датчик відкриття",
           "plan": 353.0,
-          "sheetFact": 269.0,
+          "sheetFact": 314.0,
           "done": 0,
           "isDone": false
         },
@@ -6596,7 +6596,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 3411.0,
+          "sheetFact": 3592.0,
           "done": 0,
           "isDone": false
         },
@@ -7728,7 +7728,7 @@
           "agg": "",
           "device": "Ajax SpaceControl (8EU) ASP white брелок",
           "plan": 20100.0,
-          "sheetFact": 11457.0,
+          "sheetFact": 12975.0,
           "done": 0,
           "isDone": false
         },
@@ -8988,7 +8988,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) WL Standard ASP white датчик відкриття",
           "plan": 15455.0,
-          "sheetFact": 1128.0,
+          "sheetFact": 1287.0,
           "done": 0,
           "isDone": false
         },
@@ -9028,7 +9028,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8MA) white датчик відкриття",
           "plan": 353.0,
-          "sheetFact": 269.0,
+          "sheetFact": 314.0,
           "done": 0,
           "isDone": false
         },
@@ -9198,7 +9198,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 3411.0,
+          "sheetFact": 3592.0,
           "done": 0,
           "isDone": false
         },
