@@ -1535,7 +1535,7 @@ function renderSettingsForm() {
   if (inputHtGid) inputHtGid.value = cfg.htGid || '';
   if (inputFttGid) inputFttGid.value = cfg.fttGid || '';
   if (inputDataMassGid) inputDataMassGid.value = cfg.dataMassGid || '';
-  if (inputInterval) inputInterval.value = cfg.autoSyncMinutes || 5;
+  if (inputInterval) inputInterval.value = cfg.autoSyncMinutes || 2;
 }
 
 window.handleSaveSettings = function(e) {
@@ -1546,7 +1546,7 @@ window.handleSaveSettings = function(e) {
     htGid: document.getElementById('cfgHtGid')?.value.trim(),
     fttGid: document.getElementById('cfgFttGid')?.value.trim(),
     dataMassGid: document.getElementById('cfgDataMassGid')?.value.trim(),
-    autoSyncMinutes: parseInt(document.getElementById('cfgSyncInterval')?.value) || 5
+    autoSyncMinutes: parseInt(document.getElementById('cfgSyncInterval')?.value) || 2
   };
   window.SyncService.saveConfig(newConfig);
   window.showToast('success', 'Đã lưu cấu hình kết nối Google Sheets!');

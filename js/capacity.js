@@ -911,8 +911,8 @@
 
   /**
    * Xác định thông tin 2 cột "Date Plan" & "Shift Plan" cạnh cột Chênh Lệch:
-   * - Chỉ hiển thị ngày hiện tại kèm các ca trong ngày hiện tại mà Thực tế vẫn chưa chạy đủ Plan (Fact < Plan).
-   * - Nếu ngày hiện tại không có Plan hoặc đã chạy đủ Plan nhưng tổng vẫn âm do ngày cũ -> "Âm luỹ kế" & "--".
+   * - Hiển thị ngày hiện tại kèm các ca có kế hoạch (Plan > 0) trong ngày hiện tại ("Ngày", "Đêm", hoặc "Ngày + Đêm").
+   * - Nếu ngày hiện tại không có Plan mà tổng lũy kế vẫn âm -> "Âm luỹ kế" & "--".
    */
   function resolvePlanDateAndShiftMeta(it, gapQty, todayRef, shiftFilter = 'ALL') {
     const { todayIso, todayDisplay } = todayRef || getTodayPlanReference();
@@ -923,27 +923,25 @@
       return dIso === todayIso;
     });
 
-    const pendingShifts = [];
+    const plannedShifts = [];
     if (todayEntry) {
       const dayPlan = Number(todayEntry.planDay) || 0;
-      const dayFact = Number(todayEntry.factDay) || 0;
       const nightPlan = Number(todayEntry.planNight) || 0;
-      const nightFact = Number(todayEntry.factNight) || 0;
 
-      if (shiftFilter !== 'NIGHT' && dayPlan > 0 && dayFact < dayPlan) {
-        pendingShifts.push('Ngày');
+      if (shiftFilter !== 'NIGHT' && dayPlan > 0) {
+        plannedShifts.push('Ngày');
       }
-      if (shiftFilter !== 'DAY' && nightPlan > 0 && nightFact < nightPlan) {
-        pendingShifts.push('Đêm');
+      if (shiftFilter !== 'DAY' && nightPlan > 0) {
+        plannedShifts.push('Đêm');
       }
     }
 
-    if (pendingShifts.length > 0) {
+    if (plannedShifts.length > 0) {
       return {
         datePlanLabel: todayDisplay,
-        shiftPlanLabel: pendingShifts.join(' + '),
+        shiftPlanLabel: plannedShifts.join(' + '),
         isCumNegative: false,
-        pendingShifts
+        pendingShifts: plannedShifts
       };
     }
 
@@ -952,16 +950,6 @@
         datePlanLabel: 'Âm luỹ kế',
         shiftPlanLabel: '--',
         isCumNegative: true,
-        pendingShifts: []
-      };
-    }
-
-    const todayPlanTotal = todayEntry ? (Number(todayEntry.plan) || 0) : 0;
-    if (todayEntry && todayPlanTotal > 0) {
-      return {
-        datePlanLabel: todayDisplay,
-        shiftPlanLabel: 'Đủ Plan',
-        isCumNegative: false,
         pendingShifts: []
       };
     }

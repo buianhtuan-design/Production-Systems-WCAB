@@ -1579,7 +1579,7 @@ class Store {
               if (!m.daily) m.daily = {};
               Object.keys(defMp.daily || {}).forEach(k => {
                 const baseDate = k.replace(/_(Day|Night)$/, '');
-                if (isDirectCsv && incomingDateSet.has(baseDate)) return;
+                if (incomingDateSet.has(baseDate)) return;
                 if (m.daily[k] === undefined || m.daily[k] === 0) {
                   m.daily[k] = defMp.daily[k];
                 }
@@ -1613,7 +1613,7 @@ class Store {
                 ['plan', 'fact', 'planDay', 'planNight', 'factDay', 'factNight'].forEach(dictKey => {
                   if (!it[dictKey]) it[dictKey] = {};
                   Object.keys(matched[dictKey] || {}).forEach(d => {
-                    if (isDirectCsv && incomingDateSet.has(d)) return;
+                    if (incomingDateSet.has(d)) return;
                     if (it[dictKey][d] === undefined || it[dictKey][d] === 0) {
                       it[dictKey][d] = matched[dictKey][d];
                     }

@@ -233,6 +233,7 @@
             <span style="color: var(--text-primary); font-size: 0.8rem;">Google Sheets</span>
           </div>
           <div id="cloudStatusText" style="color: var(--text-muted); font-size: 0.7rem;">Sẵn sàng</div>
+          <div id="cloudAutoSyncHint" style="color: #34d399; font-size: 0.65rem; margin-top: 0.15rem;">Tự động cập nhật: mỗi 2 phút</div>
         </div>
         <button type="button" class="btn btn-secondary" onclick="handleAppLock()" 
                 style="width: 100%; margin-top: 0.65rem; font-size: 0.75rem; padding: 0.4rem; justify-content: center; gap: 0.4rem; background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: #f87171;" 
@@ -1323,7 +1324,7 @@
 
                 <div class="form-group">
                   <label class="form-label" for="cfgSyncInterval">Tần Suất Tự Động Đồng Bộ (Phút)</label>
-                  <input id="cfgSyncInterval" type="number" class="form-control font-mono" min="1" max="60" value="5">
+                  <input id="cfgSyncInterval" type="number" class="form-control font-mono" min="1" max="60" value="2">
                 </div>
               </div>
 
@@ -1932,10 +1933,10 @@
   <script src="js/bom-data.js?v=20261104_bom_plan_v5"></script>
   <script src="js/mass-history-data.js?v=20261102_wip_v4"></script>
   <script src="js/clips-alls-data.js?v=20261103_clips_nov_v1"></script>
-  <script src="js/sync.js?v=20261111_sync_v4"></script>
-  <script src="js/data.js?v=20261111_data_v6"></script>
-  <script src="js/app.js?v=20261110_sync_fix_v3"></script>
-  <script src="js/capacity.js?v=20261111_date_shift_v3"></script>
+  <script src="js/sync.js?v=20261111_sync_v5"></script>
+  <script src="js/data.js?v=20261111_data_v7"></script>
+  <script src="js/app.js?v=20261111_app_v4"></script>
+  <script src="js/capacity.js?v=20261111_date_shift_v4"></script>
   <script src="js/wip-control.js?v=20261110_wip_v17"></script>
   <script src="js/clips-all-plan.js?v=20261103_clips_nov_v1"></script>
   <script src="js/kpi-data.js?v=20261110_kpi_v3"></script>

@@ -19,7 +19,7 @@ import time
 from sync_service import sync_datamass
 
 PORT = 8088
-SYNC_INTERVAL_SECONDS = 300  # 5 minutes
+SYNC_INTERVAL_SECONDS = 120  # 2 minutes
 WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 is_syncing_lock = threading.Lock()
@@ -510,6 +510,7 @@ def main():
     sync_thread.start()
 
     server_address = ('0.0.0.0', PORT)
+    http.server.ThreadingHTTPServer.allow_reuse_address = True
     httpd = http.server.ThreadingHTTPServer(server_address, AppRequestHandler)
     lan_ip = get_local_lan_ip()
     print("=" * 65)

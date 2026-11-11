@@ -9,13 +9,15 @@ const DEFAULT_CONFIG = {
   htGid: '136756709',   // HT Form (Hoan Thien & Packaging)
   fttGid: '954480354',  // FTT & Quality Testing
   dataMassGid: '1404131818', // Data_Mass Master Production Schedule
-  autoSyncMinutes: 5,   // 5 mins default
-  autoSyncEnabled: true
+  autoSyncMinutes: 2,   // 2 mins continuous auto-sync
+  autoSyncEnabled: true,
+  configVersion: 2
 };
 
 window.SyncService = {
   config: null,
   syncTimer: null,
+  statusTimer: null,
   lastSyncTime: null,
   isSyncing: false,
 
@@ -43,7 +45,18 @@ window.SyncService = {
     const saved = localStorage.getItem('AJAX_PROPLAN_CONFIG');
     if (saved) {
       try {
-        this.config = { ...DEFAULT_CONFIG, ...JSON.parse(saved) };
+        const parsed = JSON.parse(saved);
+        const merged = { ...DEFAULT_CONFIG, ...parsed };
+        // Nâng cấp từ cấu hình cũ (mặc định 5 phút) sang chu kỳ đồng bộ liên tục 2 phút
+        if (!parsed.configVersion || parsed.configVersion < 2) {
+          merged.autoSyncMinutes = DEFAULT_CONFIG.autoSyncMinutes;
+          merged.autoSyncEnabled = true;
+          merged.configVersion = DEFAULT_CONFIG.configVersion;
+          try {
+            localStorage.setItem('AJAX_PROPLAN_CONFIG', JSON.stringify(merged));
+          } catch (e) {}
+        }
+        this.config = merged;
         return;
       } catch(e) {}
     }
@@ -51,9 +64,13 @@ window.SyncService = {
   },
 
   saveConfig(newConfig) {
-    this.config = { ...this.config, ...newConfig };
+    this.config = { ...this.config, ...newConfig, configVersion: DEFAULT_CONFIG.configVersion };
     localStorage.setItem('AJAX_PROPLAN_CONFIG', JSON.stringify(this.config));
     this.restartAutoSync();
+    const hint = document.getElementById('cloudAutoSyncHint');
+    if (hint) {
+      hint.textContent = `Tự động cập nhật: mỗi ${Math.max(1, this.config.autoSyncMinutes || 2)} phút`;
+    }
   },
 
   restartAutoSync() {
@@ -202,6 +219,10 @@ window.SyncService = {
         const kpiTab = document.getElementById('tab-kpi-result');
         if (kpiTab && kpiTab.classList.contains('active')) window.renderKpiResultView('kpiResultContainer');
       }
+      if (typeof window.renderProdHistoryView === 'function') {
+        const histTab = document.getElementById('tab-prod-history');
+        if (histTab && histTab.classList.contains('active')) window.renderProdHistoryView('prodHistoryContainer');
+      }
     } catch (e) {}
   },
 
@@ -259,24 +280,37 @@ window.SyncService = {
             updateAttentionPlanAlertBox();
           }
 
-          // Nếu đang mở Web GitHub và bản tĩnh cũ hơn 12 phút (ví dụ máy Local đang tắt), tự kiểm tra live Google Sheets ngầm
+          // Nếu đang mở Web GitHub và bản tĩnh cũ hơn 2 phút (hoặc vừa mở trang), tự kéo live Google Sheets ngầm để data luôn mới
           if (isGitHubPages && !this.isSyncing) {
             const parsedStatMs = Date.parse(String(stat.timestamp).replace(' ', 'T') + '+07:00');
-            const isStale = !isNaN(parsedStatMs) && (Date.now() - parsedStatMs > 12 * 60 * 1000);
+            const isStale = !isNaN(parsedStatMs) && (Date.now() - parsedStatMs > 2 * 60 * 1000);
             const lastFb = this._lastCsvFallbackAt || 0;
-            if (isStale && (Date.now() - lastFb > 5 * 60 * 1000)) {
+            if (isStale && (Date.now() - lastFb > 2 * 60 * 1000)) {
               this._lastCsvFallbackAt = Date.now();
               this.fetchLiveData(true);
             }
           }
         }
-      } catch (e) {}
+      } catch (e) {} finally {
+        this._lastStatusCheckAt = Date.now();
+      }
     };
 
     // Kiểm tra ngay khi khởi động
-    setTimeout(checkStatus, 1500);
-    // Tự động kiểm tra ngầm mỗi 30 giây (trên Local qua /api/status, trên GitHub Pages qua sync_status.json + fallback Google Sheets)
-    setInterval(checkStatus, 30000);
+    setTimeout(checkStatus, 1200);
+    // Tự động kiểm tra ngầm mỗi 20 giây (Local qua /api/status, GitHub Pages qua sync_status.json + live Google Sheets)
+    if (this.statusTimer) clearInterval(this.statusTimer);
+    this.statusTimer = setInterval(checkStatus, 20000);
+
+    // Khi quay lại tab trình duyệt sau > 60 giây -> đồng bộ lại ngay
+    if (!this._visibilityListenerBound && typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+      this._visibilityListenerBound = true;
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible' && (!this._lastStatusCheckAt || Date.now() - this._lastStatusCheckAt > 60000)) {
+          checkStatus();
+        }
+      });
+    }
   },
 
   async fetchLiveData(silent = false) {
@@ -727,11 +761,18 @@ window.SyncService = {
   updateStatusUI(state, text) {
     const dot = document.getElementById('cloudStatusDot');
     const label = document.getElementById('cloudStatusText');
+    const hint = document.getElementById('cloudAutoSyncHint');
     const badge = document.getElementById('headerSyncBadge');
     if (dot) {
       dot.className = `status-dot ${state === 'syncing' ? 'syncing' : state === 'offline' ? 'error' : ''}`;
     }
     if (label) label.textContent = text;
+    if (hint) {
+      const mins = Math.max(1, (this.config && this.config.autoSyncMinutes) || 2);
+      hint.textContent = (this.config && this.config.autoSyncEnabled === false)
+        ? 'Tự động cập nhật: Đang tắt'
+        : `Tự động cập nhật: mỗi ${mins} phút`;
+    }
     if (badge) {
       badge.innerHTML = `<span class="status-dot ${state === 'syncing' ? 'syncing' : ''}"></span> ${text}`;
     }
