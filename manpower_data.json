@@ -14,11 +14,11 @@
       "2A": 19.0,
       "3A": 19.0
     },
-    "htDirect": 25.0,
-    "htTotal": 27.0,
+    "htDirect": 24.0,
+    "htTotal": 26.0,
     "htBreakdown": {
       "cleanroom": 3.0,
-      "operator": 22.0,
+      "operator": 21.0,
       "feeder": 1.0,
       "leader": 1.0
     }
@@ -97,13 +97,13 @@
     "lines": [
       "3D"
     ],
-    "assyDirect": 13.0,
-    "assyTotal": 18.0,
+    "assyDirect": 14.0,
+    "assyTotal": 19.0,
     "assyLinesDirect": {
-      "3D": 13.0
+      "3D": 14.0
     },
     "assyLinesTotal": {
-      "3D": 18.0
+      "3D": 19.0
     },
     "htDirect": 0.0,
     "htTotal": 0.0,
