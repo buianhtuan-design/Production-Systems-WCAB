@@ -4291,10 +4291,10 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-11 19:42:32",
+      "archivedAt": "2026-11-11 20:56:11",
       "totalItems": 260,
       "totalPlan": 485822.0,
-      "totalSheetFact": 148612.0,
+      "totalSheetFact": 149154.0,
       "qtyAllDevice": 260,
       "qtyDoneDevice": 108,
       "qtyNotDoneDevice": 152,
@@ -5236,7 +5236,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
           "plan": 9569.0,
-          "sheetFact": 1940.0,
+          "sheetFact": 2116.0,
           "done": 0,
           "isDone": false
         },
@@ -5716,7 +5716,7 @@
           "agg": "KeyPad",
           "device": "Ajax Keypad (8EU) ASP black клавіатура",
           "plan": 320.0,
-          "sheetFact": 1100.0,
+          "sheetFact": 1312.0,
           "done": 1,
           "isDone": true
         },
@@ -5876,7 +5876,7 @@
           "agg": "",
           "device": "Ajax MotionCam HDR (8EU) ASP white датчик руху з камерою",
           "plan": 15498.0,
-          "sheetFact": 12781.0,
+          "sheetFact": 12935.0,
           "done": 0,
           "isDone": false
         },
@@ -7838,7 +7838,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
           "plan": 9569.0,
-          "sheetFact": 1940.0,
+          "sheetFact": 2116.0,
           "done": 0,
           "isDone": false
         },
@@ -8318,7 +8318,7 @@
           "agg": "KeyPad",
           "device": "Ajax Keypad (8EU) ASP black клавіатура",
           "plan": 320.0,
-          "sheetFact": 1100.0,
+          "sheetFact": 1312.0,
           "done": 1,
           "isDone": true
         },
@@ -8478,7 +8478,7 @@
           "agg": "",
           "device": "Ajax MotionCam HDR (8EU) ASP white датчик руху з камерою",
           "plan": 15498.0,
-          "sheetFact": 12781.0,
+          "sheetFact": 12935.0,
           "done": 0,
           "isDone": false
         },
