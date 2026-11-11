@@ -1,7 +1,7 @@
 {
   "success": true,
-  "timestamp": "2026-11-11 11:39:14",
-  "version": 20261111113914,
+  "timestamp": "2026-11-11 11:40:16",
+  "version": 20261111114016,
   "productivity": [
     {
       "id": "prod_1",
@@ -954,12 +954,12 @@
     {
       "team": "[VTP] WH-Warehouse PROD-Team 1 C",
       "resultAve": "100 %",
-      "count": "4"
+      "count": "5"
     },
     {
       "team": "[VTP] WH-Warehouse PROD-Team 1 D",
       "resultAve": "98 %",
-      "count": "3"
+      "count": "4"
     },
     {
       "team": "[VTP] Workcell A-Assembly-Team 1 B",
@@ -968,8 +968,8 @@
     },
     {
       "team": "[VTP] Workcell A-Assembly-Team 2 C",
-      "resultAve": "97 %",
-      "count": "5"
+      "resultAve": "98 %",
+      "count": "6"
     },
     {
       "team": "[VTP] Workcell A-Hard Test-Team 1 A",
@@ -979,7 +979,7 @@
     {
       "team": "[VTP] Workcell A-Hard Test-Team 1 D",
       "resultAve": "100 %",
-      "count": "5"
+      "count": "6"
     },
     {
       "team": "[VTP] Workcell A-Long Test-Team 1 B",
@@ -1004,12 +1004,12 @@
     {
       "team": "[VTP] Workcell A-PKG-Team 1 C",
       "resultAve": "100 %",
-      "count": "5"
+      "count": "6"
     },
     {
       "team": "[VTP] Workcell A-QC-Team 1 C",
       "resultAve": "98 %",
-      "count": "7"
+      "count": "8"
     },
     {
       "team": "[VTP] Workcell B-Assembly-Team 1 A",
@@ -1018,13 +1018,13 @@
     },
     {
       "team": "[VTP] Workcell B-Assembly-Team 1 C",
-      "resultAve": "95 %",
-      "count": "5"
+      "resultAve": "96 %",
+      "count": "6"
     },
     {
       "team": "[VTP] Workcell B-Assembly-Team 1 D",
-      "resultAve": "96 %",
-      "count": "5"
+      "resultAve": "95 %",
+      "count": "6"
     },
     {
       "team": "[VTP] Workcell B-Assembly-Team 2 A",
@@ -1039,7 +1039,7 @@
     {
       "team": "[VTP] Workcell B-Assembly-Team 2 D",
       "resultAve": "90 %",
-      "count": "11"
+      "count": "12"
     },
     {
       "team": "[VTP] Workcell B-Assembly-Team 3 A",
@@ -1048,8 +1048,8 @@
     },
     {
       "team": "[VTP] Workcell B-Assembly-Team 3 C",
-      "resultAve": "95 %",
-      "count": "7"
+      "resultAve": "94 %",
+      "count": "8"
     },
     {
       "team": "[VTP] Workcell B-COM PKG-Team 1 A",
@@ -1064,12 +1064,12 @@
     {
       "team": "[VTP] Workcell B-COM PKG-Team 1 C",
       "resultAve": "100 %",
-      "count": "3"
+      "count": "4"
     },
     {
       "team": "[VTP] Workcell B-COM PKG-Team 1 D",
       "resultAve": "100 %",
-      "count": "5"
+      "count": "6"
     },
     {
       "team": "[VTP] Workcell B-Hard Test-Team 1 B",
@@ -1079,7 +1079,7 @@
     {
       "team": "[VTP] Workcell B-Hard Test-Team 1 C",
       "resultAve": "98 %",
-      "count": "6"
+      "count": "7"
     },
     {
       "team": "[VTP] Workcell B-Long Test-Team 1 A",
@@ -1089,12 +1089,12 @@
     {
       "team": "[VTP] Workcell B-Long Test-Team 1 C",
       "resultAve": "98 %",
-      "count": "7"
+      "count": "8"
     },
     {
       "team": "[VTP] Workcell B-Long Test-Team 1 D",
-      "resultAve": "100 %",
-      "count": "7"
+      "resultAve": "98 %",
+      "count": "9"
     },
     {
       "team": "[VTP] Workcell B-Masterbox-Team 1 A",
@@ -1113,8 +1113,8 @@
     },
     {
       "team": "[VTP] Workcell B-Masterbox-Team 1 D",
-      "resultAve": "100 %",
-      "count": "4"
+      "resultAve": "95 %",
+      "count": "5"
     },
     {
       "team": "[VTP] Workcell B-PKG FULL-Team 1 A",
@@ -1139,7 +1139,7 @@
     {
       "team": "[VTP] Workcell B-PKG-Team 1 D",
       "resultAve": "100 %",
-      "count": "5"
+      "count": "6"
     },
     {
       "team": "[VTP] Workcell B-QC-Team 1 A",
@@ -1154,7 +1154,7 @@
     {
       "team": "[VTP] Workcell B-QC-Team 1 D",
       "resultAve": "98 %",
-      "count": "6"
+      "count": "7"
     },
     {
       "team": "[VTP] Workcell DRD-Assembly Rework-Team 1 A",
@@ -1164,12 +1164,12 @@
     {
       "team": "[VTP] Workcell DRD-Assembly Rework-Team 1 C",
       "resultAve": "100 %",
-      "count": "4"
+      "count": "5"
     },
     {
       "team": "[VTP] Workcell DRD-Assembly Rework-Team 1 D",
       "resultAve": "97 %",
-      "count": "6"
+      "count": "7"
     },
     {
       "team": "[VTP] Workcell DRD-Debug-Team 1 A",
@@ -1189,7 +1189,7 @@
     {
       "team": "[VTP] Workcell DRD-Debug-Team 1 D",
       "resultAve": "100 %",
-      "count": "5"
+      "count": "6"
     },
     {
       "team": "[VTP] Workcell Fire-Assembly-Team 1 A",
@@ -1204,12 +1204,12 @@
     {
       "team": "[VTP] Workcell Fire-Assembly-Team 1 C",
       "resultAve": "100 %",
-      "count": "5"
+      "count": "6"
     },
     {
       "team": "[VTP] Workcell Fire-Assembly-Team 1 D",
-      "resultAve": "97 %",
-      "count": "5"
+      "resultAve": "98 %",
+      "count": "6"
     },
     {
       "team": "[VTP] Workcell Fire-Assembly-Team 2 C",
@@ -1224,12 +1224,12 @@
     {
       "team": "[VTP] Workcell Fire-Long Test-Team 1 C",
       "resultAve": "100 %",
-      "count": "5"
+      "count": "6"
     },
     {
       "team": "[VTP] Workcell Fire-Long Test-Team 1 D",
       "resultAve": "100 %",
-      "count": "2"
+      "count": "3"
     },
     {
       "team": "[VTP] Workcell Fire-PKG-Team 1 A",
@@ -1244,12 +1244,12 @@
     {
       "team": "[VTP] Workcell Fire-PKG-Team 1 C",
       "resultAve": "100 %",
-      "count": "5"
+      "count": "6"
     },
     {
       "team": "[VTP] Workcell Fire-PKG-Team 1 D",
-      "resultAve": "96 %",
-      "count": "4"
+      "resultAve": "97 %",
+      "count": "5"
     },
     {
       "team": "[VTP] Workcell UEA-DIP-Team 1 A",
@@ -1263,13 +1263,13 @@
     },
     {
       "team": "[VTP] Workcell UEA-DIP-Team 1 C",
-      "resultAve": "97 %",
-      "count": "5"
+      "resultAve": "96 %",
+      "count": "6"
     },
     {
       "team": "[VTP] Workcell UEA-DIP-Team 1 D",
       "resultAve": "99 %",
-      "count": "6"
+      "count": "7"
     },
     {
       "team": "[VTP] Workcell UEA-Lacquering-Team 1 A",
@@ -1284,12 +1284,12 @@
     {
       "team": "[VTP] Workcell UEA-Lacquering-Team 1 C",
       "resultAve": "100 %",
-      "count": "5"
+      "count": "6"
     },
     {
       "team": "[VTP] Workcell UEA-Lacquering-Team 1 D",
       "resultAve": "100 %",
-      "count": "6"
+      "count": "7"
     },
     {
       "team": "[VTP] Workcell UEA-Selective-Team 1 A",
@@ -1304,12 +1304,12 @@
     {
       "team": "[VTP] Workcell UEA-Selective-Team 1 C",
       "resultAve": "100 %",
-      "count": "5"
+      "count": "6"
     },
     {
       "team": "[VTP] Workcell UEA-Selective-Team 1 D",
       "resultAve": "97 %",
-      "count": "5"
+      "count": "6"
     },
     {
       "team": "[VTP] Workcell UEA-SMT-Team 1 A",
@@ -1324,12 +1324,12 @@
     {
       "team": "[VTP] Workcell UEA-SMT-Team 1 C",
       "resultAve": "99 %",
-      "count": "7"
+      "count": "8"
     },
     {
       "team": "[VTP] Workcell UEA-SMT-Team 1 D",
       "resultAve": "99 %",
-      "count": "5"
+      "count": "6"
     },
     {
       "team": "[VTP] Workcell Video-Assembly-Team 1 A",
@@ -1354,7 +1354,7 @@
     {
       "team": "Total",
       "resultAve": "98 %",
-      "count": "341"
+      "count": "377"
     }
   ],
   "ftt": [
@@ -5736,6 +5736,6 @@
   },
   "meta": {
     "prodFilterNote": "Applied filters:\nDowntime unit is man-hours\nDate is on or after 11/1/2026 12:00:00 AM\n[Param] Drilldown Productivity is District, Stage, or Team\nLocation is not (Blank)\nShift is not (Blank)\nproduct_name is not (Blank)\nHappened before update is True\nHappened before update is True\nLocStep is not GUM-DIP and is not GUM-Calibration - TERM\nLocStage is not GUM-DIP\nReason Key is not test in progress and is not Testing",
-    "remarksFilterNote": "Applied filters:\nDate is on or after 11/1/2026 and is before 11/10/2026"
+    "remarksFilterNote": "Applied filters:\nDate is on or after 11/1/2026 and is before 11/11/2026"
   }
 }
