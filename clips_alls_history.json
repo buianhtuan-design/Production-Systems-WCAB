@@ -4291,10 +4291,10 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-11 17:46:11",
+      "archivedAt": "2026-11-11 17:46:40",
       "totalItems": 260,
       "totalPlan": 485822.0,
-      "totalSheetFact": 148614.0,
+      "totalSheetFact": 148612.0,
       "qtyAllDevice": 260,
       "qtyDoneDevice": 108,
       "qtyNotDoneDevice": 152,
@@ -6796,7 +6796,7 @@
           "agg": "",
           "device": "Ajax TurretCam (5 Mp/4 mm) ASP white відеокамера спостереження",
           "plan": 126.0,
-          "sheetFact": 106.0,
+          "sheetFact": 104.0,
           "done": 0,
           "isDone": false
         },
@@ -9398,7 +9398,7 @@
           "agg": "",
           "device": "Ajax TurretCam (5 Mp/4 mm) ASP white відеокамера спостереження",
           "plan": 126.0,
-          "sheetFact": 106.0,
+          "sheetFact": 104.0,
           "done": 0,
           "isDone": false
         },
