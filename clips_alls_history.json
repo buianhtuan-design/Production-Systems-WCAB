@@ -4291,14 +4291,14 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-11 15:46:14",
+      "archivedAt": "2026-11-11 15:46:59",
       "totalItems": 260,
       "totalPlan": 485822.0,
-      "totalSheetFact": 141813.0,
+      "totalSheetFact": 148614.0,
       "qtyAllDevice": 260,
-      "qtyDoneDevice": 106,
-      "qtyNotDoneDevice": 154,
-      "clipAllPlant": "40.8%",
+      "qtyDoneDevice": 108,
+      "qtyNotDoneDevice": 152,
+      "clipAllPlant": "41.5%",
       "items": [
         {
           "category": "Comfort and productivity",
@@ -4436,7 +4436,7 @@
           "agg": "",
           "device": "Ajax WaterStop [3/4] (8MA) white розумний кран",
           "plan": 0.0,
-          "sheetFact": 27.0,
+          "sheetFact": 28.0,
           "done": 1,
           "isDone": true
         },
@@ -4546,7 +4546,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP black датчик диму та температури",
           "plan": 937.0,
-          "sheetFact": 775.0,
+          "sheetFact": 777.0,
           "done": 0,
           "isDone": false
         },
@@ -4556,7 +4556,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
           "plan": 14284.0,
-          "sheetFact": 1263.0,
+          "sheetFact": 1615.0,
           "done": 0,
           "isDone": false
         },
@@ -4566,7 +4566,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) WL Standard ASP white датчик диму та температури",
           "plan": 7237.0,
-          "sheetFact": 4943.0,
+          "sheetFact": 5012.0,
           "done": 0,
           "isDone": false
         },
@@ -4596,9 +4596,9 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8MA) white датчик диму та температури",
           "plan": 1127.0,
-          "sheetFact": 911.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 1019.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -4696,7 +4696,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke/CO) UL (9NA) white датчик диму, температури та чадного газу",
           "plan": 229.0,
-          "sheetFact": 1.0,
+          "sheetFact": 199.0,
           "done": 0,
           "isDone": false
         },
@@ -4786,7 +4786,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) PL white сповіщувач пожежний тепловий зі звуковим оповіщувачем",
           "plan": 588.0,
-          "sheetFact": 484.0,
+          "sheetFact": 508.0,
           "done": 0,
           "isDone": false
         },
@@ -4846,7 +4846,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke) (8EU) ASP white сповіщувач пожежний димовий",
           "plan": 16298.0,
-          "sheetFact": 163.0,
+          "sheetFact": 214.0,
           "done": 0,
           "isDone": false
         },
@@ -4886,7 +4886,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8EU) ASP black сповіщувач пожежний димовий зі звуковим оповіщувачем",
           "plan": 2454.0,
-          "sheetFact": 8.0,
+          "sheetFact": 63.0,
           "done": 0,
           "isDone": false
         },
@@ -4976,7 +4976,7 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Red) (8EU) ASP ручний пожежний сповіщувач",
           "plan": 11170.0,
-          "sheetFact": 6740.0,
+          "sheetFact": 7581.0,
           "done": 0,
           "isDone": false
         },
@@ -5006,7 +5006,7 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Red) (8MA) ручний пожежний сповіщувач",
           "plan": 450.0,
-          "sheetFact": 436.0,
+          "sheetFact": 437.0,
           "done": 1,
           "isDone": true
         },
@@ -5066,7 +5066,7 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Yellow) (8EU) ASP ручний сповіщувач",
           "plan": 283.0,
-          "sheetFact": 275.0,
+          "sheetFact": 281.0,
           "done": 1,
           "isDone": true
         },
@@ -5096,7 +5096,7 @@
           "agg": "",
           "device": "Ajax Type4 Manual Call Point (8EU) ASP ручний пожежний сповіщувач",
           "plan": 344.0,
-          "sheetFact": 331.0,
+          "sheetFact": 363.0,
           "done": 1,
           "isDone": true
         },
@@ -5236,7 +5236,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
           "plan": 9569.0,
-          "sheetFact": 1165.0,
+          "sheetFact": 1940.0,
           "done": 0,
           "isDone": false
         },
@@ -5466,7 +5466,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (9NA/AFA) UPC with SIM white охоронна централь",
           "plan": 1149.0,
-          "sheetFact": 939.0,
+          "sheetFact": 964.0,
           "done": 0,
           "isDone": false
         },
@@ -5716,7 +5716,7 @@
           "agg": "KeyPad",
           "device": "Ajax Keypad (8EU) ASP black клавіатура",
           "plan": 320.0,
-          "sheetFact": 989.0,
+          "sheetFact": 1100.0,
           "done": 1,
           "isDone": true
         },
@@ -5796,7 +5796,7 @@
           "agg": "",
           "device": "Ajax KeyPad TouchScreen (9NA) UPC white клавіатура",
           "plan": 28.0,
-          "sheetFact": 26.0,
+          "sheetFact": 31.0,
           "done": 1,
           "isDone": true
         },
@@ -5876,7 +5876,7 @@
           "agg": "",
           "device": "Ajax MotionCam HDR (8EU) ASP white датчик руху з камерою",
           "plan": 15498.0,
-          "sheetFact": 11208.0,
+          "sheetFact": 12781.0,
           "done": 0,
           "isDone": false
         },
@@ -6026,7 +6026,7 @@
           "agg": "",
           "device": "Ajax MotionProtect (8EU) ASP white датчик руху",
           "plan": 44114.0,
-          "sheetFact": 22421.0,
+          "sheetFact": 22764.0,
           "done": 0,
           "isDone": false
         },
@@ -6336,7 +6336,7 @@
           "agg": "",
           "device": "Ajax DoorProtect (9NA) white датчик відкриття",
           "plan": 33.0,
-          "sheetFact": 12.0,
+          "sheetFact": 13.0,
           "done": 0,
           "isDone": false
         },
@@ -6386,7 +6386,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) WL Standard ASP white датчик відкриття",
           "plan": 15455.0,
-          "sheetFact": 3.0,
+          "sheetFact": 1128.0,
           "done": 0,
           "isDone": false
         },
@@ -6416,9 +6416,9 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8MA) black датчик відкриття",
           "plan": 135.0,
-          "sheetFact": 82.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 135.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -6446,7 +6446,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (9AU) white датчик відкриття",
           "plan": 4581.0,
-          "sheetFact": 4501.0,
+          "sheetFact": 4505.0,
           "done": 1,
           "isDone": true
         },
@@ -6536,7 +6536,7 @@
           "agg": "",
           "device": "Ajax HomeSiren (8EU) WL Standard ASP white сирена",
           "plan": 3348.0,
-          "sheetFact": 66.0,
+          "sheetFact": 105.0,
           "done": 0,
           "isDone": false
         },
@@ -6596,7 +6596,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 2408.0,
+          "sheetFact": 3411.0,
           "done": 0,
           "isDone": false
         },
@@ -6686,7 +6686,7 @@
           "agg": "BulletCam",
           "device": "Ajax BulletCam (5 Mp/2.8 mm) ASP black відеокамера спостереження",
           "plan": 378.0,
-          "sheetFact": 51.0,
+          "sheetFact": 52.0,
           "done": 0,
           "isDone": false
         },
@@ -6796,7 +6796,7 @@
           "agg": "",
           "device": "Ajax TurretCam (5 Mp/4 mm) ASP white відеокамера спостереження",
           "plan": 126.0,
-          "sheetFact": 104.0,
+          "sheetFact": 106.0,
           "done": 0,
           "isDone": false
         },
@@ -6886,7 +6886,7 @@
           "agg": "",
           "device": "Ajax NVR (8ch) (8EU) plug type G black мережевий відеореєстратор",
           "plan": 0.0,
-          "sheetFact": 5.0,
+          "sheetFact": 6.0,
           "done": 1,
           "isDone": true
         },
@@ -7038,7 +7038,7 @@
           "agg": "",
           "device": "Ajax WaterStop [3/4] (8MA) white розумний кран",
           "plan": 0.0,
-          "sheetFact": 27.0,
+          "sheetFact": 28.0,
           "done": 1,
           "isDone": true
         },
@@ -7148,7 +7148,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP black датчик диму та температури",
           "plan": 937.0,
-          "sheetFact": 775.0,
+          "sheetFact": 777.0,
           "done": 0,
           "isDone": false
         },
@@ -7158,7 +7158,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
           "plan": 14284.0,
-          "sheetFact": 1263.0,
+          "sheetFact": 1615.0,
           "done": 0,
           "isDone": false
         },
@@ -7168,7 +7168,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) WL Standard ASP white датчик диму та температури",
           "plan": 7237.0,
-          "sheetFact": 4943.0,
+          "sheetFact": 5012.0,
           "done": 0,
           "isDone": false
         },
@@ -7198,9 +7198,9 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8MA) white датчик диму та температури",
           "plan": 1127.0,
-          "sheetFact": 911.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 1019.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax FireProtect 2 RB (Heat/Smoke) (9AU) white датчик диму та температури": {
           "category": "",
@@ -7298,7 +7298,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke/CO) UL (9NA) white датчик диму, температури та чадного газу",
           "plan": 229.0,
-          "sheetFact": 1.0,
+          "sheetFact": 199.0,
           "done": 0,
           "isDone": false
         },
@@ -7388,7 +7388,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) PL white сповіщувач пожежний тепловий зі звуковим оповіщувачем",
           "plan": 588.0,
-          "sheetFact": 484.0,
+          "sheetFact": 508.0,
           "done": 0,
           "isDone": false
         },
@@ -7448,7 +7448,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke) (8EU) ASP white сповіщувач пожежний димовий",
           "plan": 16298.0,
-          "sheetFact": 163.0,
+          "sheetFact": 214.0,
           "done": 0,
           "isDone": false
         },
@@ -7488,7 +7488,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8EU) ASP black сповіщувач пожежний димовий зі звуковим оповіщувачем",
           "plan": 2454.0,
-          "sheetFact": 8.0,
+          "sheetFact": 63.0,
           "done": 0,
           "isDone": false
         },
@@ -7578,7 +7578,7 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Red) (8EU) ASP ручний пожежний сповіщувач",
           "plan": 11170.0,
-          "sheetFact": 6740.0,
+          "sheetFact": 7581.0,
           "done": 0,
           "isDone": false
         },
@@ -7608,7 +7608,7 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Red) (8MA) ручний пожежний сповіщувач",
           "plan": 450.0,
-          "sheetFact": 436.0,
+          "sheetFact": 437.0,
           "done": 1,
           "isDone": true
         },
@@ -7668,7 +7668,7 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Yellow) (8EU) ASP ручний сповіщувач",
           "plan": 283.0,
-          "sheetFact": 275.0,
+          "sheetFact": 281.0,
           "done": 1,
           "isDone": true
         },
@@ -7698,7 +7698,7 @@
           "agg": "",
           "device": "Ajax Type4 Manual Call Point (8EU) ASP ручний пожежний сповіщувач",
           "plan": 344.0,
-          "sheetFact": 331.0,
+          "sheetFact": 363.0,
           "done": 1,
           "isDone": true
         },
@@ -7838,7 +7838,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
           "plan": 9569.0,
-          "sheetFact": 1165.0,
+          "sheetFact": 1940.0,
           "done": 0,
           "isDone": false
         },
@@ -8068,7 +8068,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (9NA/AFA) UPC with SIM white охоронна централь",
           "plan": 1149.0,
-          "sheetFact": 939.0,
+          "sheetFact": 964.0,
           "done": 0,
           "isDone": false
         },
@@ -8318,7 +8318,7 @@
           "agg": "KeyPad",
           "device": "Ajax Keypad (8EU) ASP black клавіатура",
           "plan": 320.0,
-          "sheetFact": 989.0,
+          "sheetFact": 1100.0,
           "done": 1,
           "isDone": true
         },
@@ -8398,7 +8398,7 @@
           "agg": "",
           "device": "Ajax KeyPad TouchScreen (9NA) UPC white клавіатура",
           "plan": 28.0,
-          "sheetFact": 26.0,
+          "sheetFact": 31.0,
           "done": 1,
           "isDone": true
         },
@@ -8478,7 +8478,7 @@
           "agg": "",
           "device": "Ajax MotionCam HDR (8EU) ASP white датчик руху з камерою",
           "plan": 15498.0,
-          "sheetFact": 11208.0,
+          "sheetFact": 12781.0,
           "done": 0,
           "isDone": false
         },
@@ -8628,7 +8628,7 @@
           "agg": "",
           "device": "Ajax MotionProtect (8EU) ASP white датчик руху",
           "plan": 44114.0,
-          "sheetFact": 22421.0,
+          "sheetFact": 22764.0,
           "done": 0,
           "isDone": false
         },
@@ -8938,7 +8938,7 @@
           "agg": "",
           "device": "Ajax DoorProtect (9NA) white датчик відкриття",
           "plan": 33.0,
-          "sheetFact": 12.0,
+          "sheetFact": 13.0,
           "done": 0,
           "isDone": false
         },
@@ -8988,7 +8988,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) WL Standard ASP white датчик відкриття",
           "plan": 15455.0,
-          "sheetFact": 3.0,
+          "sheetFact": 1128.0,
           "done": 0,
           "isDone": false
         },
@@ -9018,9 +9018,9 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8MA) black датчик відкриття",
           "plan": 135.0,
-          "sheetFact": 82.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 135.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax DoorProtect Plus (8MA) white датчик відкриття": {
           "category": "",
@@ -9048,7 +9048,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (9AU) white датчик відкриття",
           "plan": 4581.0,
-          "sheetFact": 4501.0,
+          "sheetFact": 4505.0,
           "done": 1,
           "isDone": true
         },
@@ -9138,7 +9138,7 @@
           "agg": "",
           "device": "Ajax HomeSiren (8EU) WL Standard ASP white сирена",
           "plan": 3348.0,
-          "sheetFact": 66.0,
+          "sheetFact": 105.0,
           "done": 0,
           "isDone": false
         },
@@ -9198,7 +9198,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 2408.0,
+          "sheetFact": 3411.0,
           "done": 0,
           "isDone": false
         },
@@ -9288,7 +9288,7 @@
           "agg": "BulletCam",
           "device": "Ajax BulletCam (5 Mp/2.8 mm) ASP black відеокамера спостереження",
           "plan": 378.0,
-          "sheetFact": 51.0,
+          "sheetFact": 52.0,
           "done": 0,
           "isDone": false
         },
@@ -9398,7 +9398,7 @@
           "agg": "",
           "device": "Ajax TurretCam (5 Mp/4 mm) ASP white відеокамера спостереження",
           "plan": 126.0,
-          "sheetFact": 104.0,
+          "sheetFact": 106.0,
           "done": 0,
           "isDone": false
         },
@@ -9488,7 +9488,7 @@
           "agg": "",
           "device": "Ajax NVR (8ch) (8EU) plug type G black мережевий відеореєстратор",
           "plan": 0.0,
-          "sheetFact": 5.0,
+          "sheetFact": 6.0,
           "done": 1,
           "isDone": true
         },
