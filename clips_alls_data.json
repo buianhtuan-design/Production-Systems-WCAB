@@ -476,9 +476,9 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) PL black сповіщувач пожежний тепловий зі звуковим оповіщувачем",
       "plan": 224.0,
-      "sheetFact": 174.0,
-      "done": 0,
-      "isDone": false
+      "sheetFact": 218.0,
+      "done": 1,
+      "isDone": true
     },
     {
       "category": "",
@@ -3078,9 +3078,9 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) PL black сповіщувач пожежний тепловий зі звуковим оповіщувачем",
       "plan": 224.0,
-      "sheetFact": 174.0,
-      "done": 0,
-      "isDone": false
+      "sheetFact": 218.0,
+      "done": 1,
+      "isDone": true
     },
     "Ajax EN54 FireProtect (Heat/Sounder) (8EU) PL white сповіщувач пожежний тепловий зі звуковим оповіщувачем": {
       "category": "",
@@ -5205,15 +5205,15 @@
   },
   "totalItems": 260,
   "qtyAllDevice": 260,
-  "qtyDoneDevice": 110,
-  "qtyNotDoneDevice": 150,
-  "clipAllPlant": "42.3%",
-  "clipAllPlantPct": 42.3,
+  "qtyDoneDevice": 111,
+  "qtyNotDoneDevice": 149,
+  "clipAllPlant": "42.7%",
+  "clipAllPlantPct": 42.7,
   "totalPlan": 485822.0,
-  "totalSheetFact": 155824.0,
+  "totalSheetFact": 155868.0,
   "hasPlanCount": 219,
-  "gt90Count": 110,
-  "lt90Count": 150,
+  "gt90Count": 111,
+  "lt90Count": 149,
   "history": {
     "months": [
       "2026-10",
@@ -9507,14 +9507,14 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-12 05:42:39",
+        "archivedAt": "2026-11-12 06:32:48",
         "totalItems": 260,
         "totalPlan": 485822.0,
-        "totalSheetFact": 155824.0,
+        "totalSheetFact": 155868.0,
         "qtyAllDevice": 260,
-        "qtyDoneDevice": 110,
-        "qtyNotDoneDevice": 150,
-        "clipAllPlant": "42.3%",
+        "qtyDoneDevice": 111,
+        "qtyNotDoneDevice": 149,
+        "clipAllPlant": "42.7%",
         "items": [
           {
             "category": "Comfort and productivity",
@@ -9992,9 +9992,9 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) PL black сповіщувач пожежний тепловий зі звуковим оповіщувачем",
             "plan": 224.0,
-            "sheetFact": 174.0,
-            "done": 0,
-            "isDone": false
+            "sheetFact": 218.0,
+            "done": 1,
+            "isDone": true
           },
           {
             "category": "",
@@ -12594,9 +12594,9 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) PL black сповіщувач пожежний тепловий зі звуковим оповіщувачем",
             "plan": 224.0,
-            "sheetFact": 174.0,
-            "done": 0,
-            "isDone": false
+            "sheetFact": 218.0,
+            "done": 1,
+            "isDone": true
           },
           "Ajax EN54 FireProtect (Heat/Sounder) (8EU) PL white сповіщувач пожежний тепловий зі звуковим оповіщувачем": {
             "category": "",
