@@ -121,10 +121,16 @@ def auto_push_data_to_github():
             )
 
             if proc_push.returncode != 0 and any(k in (proc_push.stderr or '').lower() for k in ('fetch first', 'non-fast-forward', 'rejected')):
+                git_env = os.environ.copy()
+                git_env['GIT_EDITOR'] = 'true'
+                git_env['GIT_SEQUENCE_EDITOR'] = 'true'
+                git_env['GIT_MERGE_AUTOEDIT'] = 'no'
+
                 def _run_git(args, check=False, timeout=25):
                     return subprocess.run(
                         ['git'] + args,
                         cwd=WORKSPACE_DIR,
+                        env=git_env,
                         stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE,
                         text=True,
