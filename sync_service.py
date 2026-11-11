@@ -1103,14 +1103,17 @@ def fetch_and_parse_bom(ctx):
         print(f"✅ Đã tổng hợp Sheet BOM-Plan & Sheet BOM: {len(bom_by_product)} mã sản phẩm (Đã xếp SFG lên đầu)")
     except Exception as e:
         print(f"⚠️ Lỗi tải Sheet BOM: {e}")
-        if os.path.exists('bom_data.json'):
-            with open('bom_data.json', 'r', encoding='utf-8') as bf:
+        bom_json_path = os.path.join(WORKSPACE_DIR, 'bom_data.json')
+        if os.path.exists(bom_json_path):
+            with open(bom_json_path, 'r', encoding='utf-8') as bf:
                 bom_by_product = json.load(bf)
 
     if bom_by_product:
-        with open('bom_data.json', 'w', encoding='utf-8') as bf:
+        bom_json_path = os.path.join(WORKSPACE_DIR, 'bom_data.json')
+        bom_js_path = os.path.join(WORKSPACE_DIR, 'js', 'bom-data.js')
+        with open(bom_json_path, 'w', encoding='utf-8') as bf:
             json.dump(bom_by_product, bf, ensure_ascii=False, indent=2)
-        with open('js/bom-data.js', 'w', encoding='utf-8') as jf:
+        with open(bom_js_path, 'w', encoding='utf-8') as jf:
             jf.write('window.BOM_MASTER_DATA = ' + json.dumps(bom_by_product, ensure_ascii=False) + ';\n')
     return bom_by_product
 
@@ -1549,15 +1552,15 @@ def sync_datamass():
         'hardtest_items_count': hardtest_capacity_data.get('totalItems', 0)
     }
 
+    with open(STATUS_FILE, 'w', encoding='utf-8') as f:
+        json.dump(status, f, indent=2, ensure_ascii=False)
+
     try:
         from github_sync_helper import auto_push_data_to_github
         gh_res = auto_push_data_to_github()
         status['github_sync'] = gh_res
     except Exception as gh_ex:
         print(f"⚠️ [GitHub Auto-Sync Warning]: {gh_ex}")
-
-    with open(STATUS_FILE, 'w', encoding='utf-8') as f:
-        json.dump(status, f, indent=2, ensure_ascii=False)
 
     return status
 

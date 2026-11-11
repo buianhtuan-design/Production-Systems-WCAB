@@ -114,17 +114,16 @@ window.SyncService = {
 
   async fetchSheetCSV(gid) {
     const id = this.config.sheetId;
+    const gvizUrl = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&gid=${gid}&t=${Date.now()}`;
     const directUrl = `https://docs.google.com/spreadsheets/d/${id}/export?format=csv&gid=${gid}`;
-    const gvizUrl = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&gid=${gid}`;
 
-    // Try direct export first, then gviz, then CORS proxy if needed
     try {
-      const res = await fetch(directUrl);
+      const res = await fetch(gvizUrl, { cache: 'no-store' });
       if (res.ok) return await res.text();
     } catch(e) {}
 
     try {
-      const res = await fetch(gvizUrl);
+      const res = await fetch(directUrl, { cache: 'no-store' });
       if (res.ok) return await res.text();
     } catch(e) {}
 
@@ -138,9 +137,9 @@ window.SyncService = {
     throw new Error(`Không thể kết nối tải sheet GID: ${gid}`);
   },
 
-  reloadScriptFile(basePath) {
+  reloadScriptFile(basePath, ver = null) {
     return new Promise((resolve) => {
-      const ts = Date.now();
+      const ts = ver ? `${ver}_${Date.now()}` : Date.now();
       const oldScript = document.querySelector(`script[src*="${basePath}"]`);
       const newScript = document.createElement('script');
       newScript.src = `${basePath}?t=${ts}`;
@@ -154,56 +153,109 @@ window.SyncService = {
     });
   },
 
-  async reloadDatamassScript() {
+  async reloadDatamassScript(ver = null) {
     const results = await Promise.all([
-      this.reloadScriptFile('js/datamass-data.js'),
-      this.reloadScriptFile('js/inventory-1c-data.js'),
-      this.reloadScriptFile('js/bom-data.js'),
-      this.reloadScriptFile('js/mass-history-data.js'),
-      this.reloadScriptFile('js/kpi-data.js')
+      this.reloadScriptFile('js/datamass-data.js', ver),
+      this.reloadScriptFile('js/inventory-1c-data.js', ver),
+      this.reloadScriptFile('js/bom-data.js', ver),
+      this.reloadScriptFile('js/mass-history-data.js', ver),
+      this.reloadScriptFile('js/kpi-data.js', ver),
+      this.reloadScriptFile('js/clips-alls-data.js', ver),
+      this.reloadScriptFile('js/assembly-capacity-data.js', ver),
+      this.reloadScriptFile('js/hardtest-capacity-data.js', ver)
     ]);
+    if (window.AppStore && window.ASSEMBLY_CAPACITY_DATA) {
+      window.AppStore.assemblyCapacity = window.ASSEMBLY_CAPACITY_DATA;
+    }
     return results[0];
+  },
+
+  refreshVisibleModulesAfterSync() {
+    try {
+      if (typeof renderAttentionPointsSection === 'function' && window.__LATEST_SCHEDULE__) {
+        renderAttentionPointsSection(window.__LATEST_SCHEDULE__);
+      }
+      if (typeof window.renderCapacityView === 'function') {
+        const capTab = document.getElementById('tab-capacity');
+        if (capTab && capTab.classList.contains('active')) window.renderCapacityView('capacityContainer');
+      }
+      if (typeof window.renderWipControlView === 'function') {
+        const wipTab = document.getElementById('tab-wip');
+        if (wipTab && wipTab.classList.contains('active')) window.renderWipControlView('wipContainer');
+      }
+      if (typeof window.renderClipsAllPlanView === 'function') {
+        const clipsTab = document.getElementById('tab-clips-all-plan');
+        if (clipsTab && clipsTab.classList.contains('active')) window.renderClipsAllPlanView('clipsAllPlanContainer');
+      }
+      if (typeof window.renderKpiResultView === 'function') {
+        const kpiTab = document.getElementById('tab-kpi-result');
+        if (kpiTab && kpiTab.classList.contains('active')) window.renderKpiResultView('kpiResultContainer');
+      }
+    } catch (e) {}
+  },
+
+  async fetchSyncStatusMeta() {
+    const now = Date.now();
+    const isGitHubPages = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
+    if (!isGitHubPages) {
+      try {
+        const res = await fetch('/api/status?t=' + now, { cache: 'no-store' });
+        if (res.ok) return await res.json();
+      } catch (e) {}
+    }
+    try {
+      const res = await fetch('./sync_status.json?t=' + now, { cache: 'no-store' });
+      if (res.ok) return await res.json();
+    } catch (e) {}
+    return null;
   },
 
   startStatusWatcher() {
     const checkStatus = async () => {
       try {
-        const res = await fetch('/api/status');
-        if (res.ok) {
-          const stat = await res.json();
-          const currentV = (window.DEFAULT_DATAMASS_DATA && window.DEFAULT_DATAMASS_DATA._v) || 0;
-          
-          if (stat.timestamp) {
-            const prev = window.LAST_PLAN_CHANGE_INFO || {};
-            const isNewer = (stat.version && stat.version > currentV) || (prev.timestamp && prev.timestamp !== stat.timestamp);
-            
-            window.LAST_PLAN_CHANGE_INFO = {
-              timestamp: stat.timestamp,
-              version: stat.version || currentV,
-              itemsCount: stat.items_count || 0,
-              datesCount: stat.dates_count || 0,
-              detectedAt: new Date()
-            };
-            try {
-              localStorage.setItem('AJAX_PROPLAN_LAST_PLAN_CHANGE', JSON.stringify(window.LAST_PLAN_CHANGE_INFO));
-            } catch(e) {}
+        const stat = await this.fetchSyncStatusMeta();
+        const currentV = (window.DEFAULT_DATAMASS_DATA && window.DEFAULT_DATAMASS_DATA._v) || 0;
+        const isGitHubPages = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
 
-            if (isNewer && stat.version && stat.version > currentV) {
-              console.log('🔄 Máy chủ đã cập nhật bản Data_Mass mới:', stat.version, '-> Đang nạp...');
-              await this.reloadDatamassScript();
-              if (window.DEFAULT_DATAMASS_DATA) {
-                window.AppStore.updateLiveCloudData({ dataMass: window.DEFAULT_DATAMASS_DATA });
-                this.lastSyncTime = new Date();
-                this.updateStatusUI('online', `Đã đồng bộ ${this.formatTime(this.lastSyncTime)}`);
-                if (window.showToast) {
-                  window.showToast('warning', `⚡ CẢNH BÁO: Phát hiện thay đổi Kế Hoạch Data_Mass lúc ${stat.timestamp}! Hệ thống đã cập nhật tự động.`);
-                }
-                if (typeof renderAttentionPointsSection === 'function') {
-                  renderAttentionPointsSection(window.__LATEST_SCHEDULE__);
-                }
+        if (stat && stat.timestamp) {
+          const prev = window.LAST_PLAN_CHANGE_INFO || {};
+          const isNewer = (stat.version && stat.version > currentV) || (prev.timestamp && prev.timestamp !== stat.timestamp);
+
+          window.LAST_PLAN_CHANGE_INFO = {
+            timestamp: stat.timestamp,
+            version: stat.version || currentV,
+            itemsCount: stat.items_count || 0,
+            datesCount: stat.dates_count || 0,
+            detectedAt: new Date()
+          };
+          try {
+            localStorage.setItem('AJAX_PROPLAN_LAST_PLAN_CHANGE', JSON.stringify(window.LAST_PLAN_CHANGE_INFO));
+          } catch(e) {}
+
+          if (isNewer && stat.version && stat.version > currentV) {
+            console.log('🔄 Phát hiện bản Data_Mass mới:', stat.version, '-> Đang nạp...');
+            await this.reloadDatamassScript(stat.version);
+            if (window.DEFAULT_DATAMASS_DATA) {
+              window.AppStore.updateLiveCloudData({ dataMass: window.DEFAULT_DATAMASS_DATA });
+              this.lastSyncTime = new Date();
+              this.updateStatusUI('online', `Đã đồng bộ ${this.formatTime(this.lastSyncTime)}`);
+              if (window.showToast) {
+                window.showToast('warning', `⚡ CẢNH BÁO: Phát hiện cập nhật Kế Hoạch Data_Mass lúc ${stat.timestamp}! Hệ thống đã tự làm mới dữ liệu.`);
               }
-            } else if (typeof updateAttentionPlanAlertBox === 'function') {
-              updateAttentionPlanAlertBox();
+              this.refreshVisibleModulesAfterSync();
+            }
+          } else if (typeof updateAttentionPlanAlertBox === 'function') {
+            updateAttentionPlanAlertBox();
+          }
+
+          // Nếu đang mở Web GitHub và bản tĩnh cũ hơn 12 phút (ví dụ máy Local đang tắt), tự kiểm tra live Google Sheets ngầm
+          if (isGitHubPages && !this.isSyncing) {
+            const parsedStatMs = Date.parse(String(stat.timestamp).replace(' ', 'T') + '+07:00');
+            const isStale = !isNaN(parsedStatMs) && (Date.now() - parsedStatMs > 12 * 60 * 1000);
+            const lastFb = this._lastCsvFallbackAt || 0;
+            if (isStale && (Date.now() - lastFb > 5 * 60 * 1000)) {
+              this._lastCsvFallbackAt = Date.now();
+              this.fetchLiveData(true);
             }
           }
         }
@@ -212,7 +264,7 @@ window.SyncService = {
 
     // Kiểm tra ngay khi khởi động
     setTimeout(checkStatus, 1500);
-    // Tự động kiểm tra máy chủ ngầm mỗi 30 giây xem có bản Data_Mass mới hơn không
+    // Tự động kiểm tra ngầm mỗi 30 giây (trên Local qua /api/status, trên GitHub Pages qua sync_status.json + fallback Google Sheets)
     setInterval(checkStatus, 30000);
   },
 
@@ -226,49 +278,62 @@ window.SyncService = {
     this.updateStatusUI('syncing', 'Đang kết nối...');
 
     try {
-      // 1. Ưu tiên gọi Endpoint máy chủ đồng bộ trực tiếp (/api/sync)
+      // 1. Ưu tiên gọi Endpoint máy chủ đồng bộ trực tiếp (/api/sync) nếu chạy Web Local
+      const isGitHubPages = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
       let syncedViaServer = false;
-      try {
-        const srvRes = await fetch('/api/sync');
-        if (srvRes.ok) {
-          const sJson = await srvRes.json();
-          if (sJson.success) {
-            syncedViaServer = true;
-            await this.reloadDatamassScript();
+      if (!isGitHubPages) {
+        try {
+          const srvRes = await fetch('/api/sync?t=' + Date.now(), { cache: 'no-store' });
+          if (srvRes.ok) {
+            const sJson = await srvRes.json();
+            if (sJson.success) {
+              syncedViaServer = true;
+              await this.reloadDatamassScript(sJson.version || null);
+              if (window.DEFAULT_DATAMASS_DATA) {
+                window.AppStore.updateLiveCloudData({ dataMass: window.DEFAULT_DATAMASS_DATA });
+              }
+              this.refreshVisibleModulesAfterSync();
+              this.lastSyncTime = new Date();
+              localStorage.setItem('AJAX_PROPLAN_LAST_SYNC', this.lastSyncTime.toISOString());
+              this.updateStatusUI('online', `Đã đồng bộ ${this.formatTime(this.lastSyncTime)}`);
+              if (!silent && window.showToast) {
+                window.showToast('success', `Đã đồng bộ Google Sheets thành công (${sJson.items_count} model trong ${sJson.total_seconds}s)!`);
+              }
+              return;
+            }
+          }
+        } catch (srvErr) {
+          // Máy chủ tĩnh hoặc Cloud không có /api/sync -> Chuyển sang fallback
+        }
+      } else {
+        try {
+          const stat = await this.fetchSyncStatusMeta();
+          const currentV = (window.DEFAULT_DATAMASS_DATA && window.DEFAULT_DATAMASS_DATA._v) || 0;
+          if (stat && stat.version && stat.version > currentV) {
+            await this.reloadDatamassScript(stat.version);
             if (window.DEFAULT_DATAMASS_DATA) {
               window.AppStore.updateLiveCloudData({ dataMass: window.DEFAULT_DATAMASS_DATA });
             }
-            this.lastSyncTime = new Date();
-            localStorage.setItem('AJAX_PROPLAN_LAST_SYNC', this.lastSyncTime.toISOString());
-            this.updateStatusUI('online', `Đã đồng bộ ${this.formatTime(this.lastSyncTime)}`);
-            if (!silent && window.showToast) {
-              window.showToast('success', `Đã đồng bộ Google Sheets thành công (${sJson.items_count} model trong ${sJson.total_seconds}s)!`);
-            }
-            return;
           }
-        }
-      } catch (srvErr) {
-        // Máy chủ tĩnh hoặc Cloud không có /api/sync -> Chuyển sang fallback
+        } catch (stErr) {}
       }
 
-      // 2. Chế độ Fallback: Tải trực tiếp từ trình duyệt (khi chạy Cloud Netlify/Vercel)
-      // Fetch As Form (Assembly)
-      const asCSV = await this.fetchSheetCSV(this.config.asGid);
-      const asRows = this.parseCSV(asCSV);
-      const parsedAsData = this.parseAsFormData(asRows);
-
-      // Fetch HT Form (Hoan Thien)
-      const htCSV = await this.fetchSheetCSV(this.config.htGid);
-      const htRows = this.parseCSV(htCSV);
-      const parsedHtData = this.parseHtFormData(htRows);
-
-      // Fetch FTT (Quality Testing)
-      const fttCSV = await this.fetchSheetCSV(this.config.fttGid);
-      const fttRows = this.parseCSV(fttCSV);
-      const parsedFttData = this.parseFttData(fttRows);
+      // 2. Chế độ Fallback: Tải trực tiếp từ trình duyệt (GitHub Pages / web tĩnh)
+      let parsedAsData = null, parsedHtData = null, parsedFttData = null, parsedDataMass = null;
+      try {
+        const asCSV = await this.fetchSheetCSV(this.config.asGid);
+        parsedAsData = this.parseAsFormData(this.parseCSV(asCSV));
+      } catch (e) {}
+      try {
+        const htCSV = await this.fetchSheetCSV(this.config.htGid);
+        parsedHtData = this.parseHtFormData(this.parseCSV(htCSV));
+      } catch (e) {}
+      try {
+        const fttCSV = await this.fetchSheetCSV(this.config.fttGid);
+        parsedFttData = this.parseFttData(this.parseCSV(fttCSV));
+      } catch (e) {}
 
       // Fetch Data_Mass (Master Production Schedule - Stages, Daily Fact/Plan, Weekly Cycle)
-      let parsedDataMass = null;
       try {
         if (this.config.dataMassGid) {
           const dataMassCSV = await this.fetchSheetCSV(this.config.dataMassGid);
@@ -279,20 +344,26 @@ window.SyncService = {
         console.warn('Data_Mass sync error:', dmErr);
       }
 
+      if (!parsedDataMass && !parsedAsData && !parsedHtData && !parsedFttData) {
+        throw new Error('Không thể tải dữ liệu trực tiếp từ Google Sheets');
+      }
+
       this.lastSyncTime = new Date();
       localStorage.setItem('AJAX_PROPLAN_LAST_SYNC', this.lastSyncTime.toISOString());
 
-      // Save to store
+      // Save to store (bảo toàn stock1C, manpowerSheet, capacity...)
       window.AppStore.updateLiveCloudData({
         asPlan: parsedAsData,
         htPlan: parsedHtData,
         fttStats: parsedFttData,
         dataMass: parsedDataMass
       });
+      this.refreshVisibleModulesAfterSync();
 
       this.updateStatusUI('online', `Đã đồng bộ ${this.formatTime(this.lastSyncTime)}`);
       if (!silent && window.showToast) {
-        window.showToast('success', 'Đồng bộ Google Sheets thành công!');
+        const dmCount = parsedDataMass && Array.isArray(parsedDataMass.items) ? parsedDataMass.items.length : 0;
+        window.showToast('success', dmCount > 0 ? `Đồng bộ trực tiếp Google Sheets thành công (${dmCount} models)!` : 'Đồng bộ Google Sheets thành công!');
       }
     } catch (err) {
       console.warn('Sync error:', err);
@@ -392,22 +463,50 @@ window.SyncService = {
     for (let r_idx = 40; r_idx < rows.length; r_idx++) {
       const r = rows[r_idx];
       if (r.length < 8) continue;
-      const stage = (r[0] || '').trim();
-      const pname = (r[1] || '').trim();
-      const model = (r[6] || '').trim();
-      const pkey = (r[7] || '').trim().toLowerCase();
-      const normName = (r[9] || '').trim();
-      const norm = parseFloat((r[10] || '').trim().replace(/,/g, '')) || 0;
+      let stage, pname, pnameEng, specCode, fpArticule, lastStep, model, pkey, normKey, normName, norm;
+      const col8Key = (r[8] || '').trim().toLowerCase();
+      if (r.length > 8 && (col8Key === 'plan' || col8Key === 'fact')) {
+        stage = (r[0] || '').trim();
+        pname = (r[1] || '').trim();
+        pnameEng = (r[2] || '').trim();
+        specCode = (r[3] || '').trim();
+        fpArticule = (r[5] || '').trim();
+        lastStep = (r[6] || '').trim();
+        model = (r[7] || '').trim();
+        pkey = col8Key;
+        normKey = (r[9] || '').trim();
+        normName = (r[10] || '').trim();
+        norm = parseFloat((r[11] || '').trim().replace(/,/g, '')) || 0;
+      } else {
+        stage = (r[0] || '').trim();
+        pname = (r[1] || '').trim();
+        pnameEng = (r[2] || '').trim();
+        specCode = (r[3] || '').trim();
+        fpArticule = (r[4] || '').trim();
+        lastStep = (r[5] || '').trim();
+        model = (r[6] || '').trim();
+        pkey = (r[7] || '').trim().toLowerCase();
+        normKey = (r[8] || '').trim();
+        normName = (r[9] || '').trim();
+        norm = parseFloat((r[10] || '').trim().replace(/,/g, '')) || 0;
+      }
 
       if (!stage || !pname || (pkey !== 'plan' && pkey !== 'fact')) continue;
       if (pname.toLowerCase() === 'people' || pname.toLowerCase() === 'hours') continue;
 
+      const normKeyShort = normKey.includes(' - ') ? normKey.split(' - ').pop().trim() : normKey;
       const key = `${stage}|||${model}|||${pname}`;
       if (!itemsDict[key]) {
         itemsDict[key] = {
           stage,
           model,
           productName1C: pname,
+          productNameEnglish: pnameEng,
+          specCode,
+          fpArticule,
+          normKey,
+          normKeyShort,
+          lastStep,
           norm,
           normName,
           plan: {},
@@ -417,6 +516,12 @@ window.SyncService = {
           factDay: {},
           factNight: {}
         };
+      } else {
+        if (lastStep && !itemsDict[key].lastStep) itemsDict[key].lastStep = lastStep;
+        if (normKey && !itemsDict[key].normKey) {
+          itemsDict[key].normKey = normKey;
+          itemsDict[key].normKeyShort = normKeyShort;
+        }
       }
 
       targetWeeks.forEach(tw => {
@@ -426,15 +531,16 @@ window.SyncService = {
           if (num > 0) {
             const rounded = Math.round(num);
             if (d.shift === 'Day') {
-              itemsDict[key][`${pkey}Day`][d.date] = rounded;
+              itemsDict[key][`${pkey}Day`][d.date] = (itemsDict[key][`${pkey}Day`][d.date] || 0) + rounded;
               itemsDict[key][pkey][d.date] = (itemsDict[key][pkey][d.date] || 0) + rounded;
             } else if (d.shift === 'Night') {
-              itemsDict[key][`${pkey}Night`][d.date] = rounded;
+              itemsDict[key][`${pkey}Night`][d.date] = (itemsDict[key][`${pkey}Night`][d.date] || 0) + rounded;
               itemsDict[key][pkey][d.date] = (itemsDict[key][pkey][d.date] || 0) + rounded;
             } else {
-              itemsDict[key][pkey][d.date] = rounded;
-              itemsDict[key][`${pkey}Day`][d.date] = Math.round(rounded * 0.6);
-              itemsDict[key][`${pkey}Night`][d.date] = rounded - Math.round(rounded * 0.6);
+              itemsDict[key][pkey][d.date] = (itemsDict[key][pkey][d.date] || 0) + rounded;
+              const dVal = Math.round(rounded * 0.6);
+              itemsDict[key][`${pkey}Day`][d.date] = (itemsDict[key][`${pkey}Day`][d.date] || 0) + dVal;
+              itemsDict[key][`${pkey}Night`][d.date] = (itemsDict[key][`${pkey}Night`][d.date] || 0) + (rounded - dVal);
             }
           }
         });
@@ -445,11 +551,16 @@ window.SyncService = {
       Object.keys(it.plan).length > 0 || Object.keys(it.fact).length > 0
     );
 
+    const dtNow = new Date();
+    const pad2 = n => String(n).padStart(2, '0');
+    const vStamp = Number(`${dtNow.getFullYear()}${pad2(dtNow.getMonth() + 1)}${pad2(dtNow.getDate())}${pad2(dtNow.getHours())}${pad2(dtNow.getMinutes())}`);
     return {
       dates: Array.from(validDates),
       weeks: targetWeeks,
       manpower,
-      items
+      items,
+      _v: vStamp,
+      _fromBrowserCsv: true
     };
   },
 

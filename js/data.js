@@ -1542,23 +1542,34 @@ class Store {
     if (fttStats && fttStats.length > 0) this.fttStats = fttStats;
     if (dataMass && dataMass.weeks && dataMass.weeks.length > 0) {
       if (!dataMass._v) dataMass._v = 2026102501;
-      if (window.DEFAULT_DATAMASS_DATA) {
-        const def = window.DEFAULT_DATAMASS_DATA;
-        // Merge missing dates
+      const baseRef = (this.dataMass && Array.isArray(this.dataMass.items) && this.dataMass.items.length > 0)
+        ? this.dataMass
+        : window.DEFAULT_DATAMASS_DATA;
+      const isDirectCsv = !!dataMass._fromBrowserCsv;
+
+      if (baseRef && baseRef !== dataMass) {
+        // Giữ nguyên các trường mở rộng (manpowerSheet, capacity, massHistory, clipsAlls) nếu bản mới từ CSV trình duyệt chưa có
+        ['manpowerSheet', 'assemblyCapacity', 'hardtestCapacity', 'massHistory', 'clipsAlls'].forEach(k => {
+          if (!dataMass[k] && baseRef[k]) dataMass[k] = baseRef[k];
+        });
+
+        const incomingDateSet = new Set(dataMass.dates || []);
         const dateSet = new Set(dataMass.dates || []);
-        (def.dates || []).forEach(d => dateSet.add(d));
+        (baseRef.dates || []).forEach(d => dateSet.add(d));
         dataMass.dates = Array.from(dateSet);
 
-        // Merge manpower People
-        if (def.manpower) {
+        // Merge manpower People (chỉ bổ sung ngày chưa có trong payload mới)
+        if (baseRef.manpower) {
           if (!dataMass.manpower) dataMass.manpower = [];
-          def.manpower.forEach(defMp => {
+          baseRef.manpower.forEach(defMp => {
             let m = dataMass.manpower.find(x => x.stage === defMp.stage && x.metric === defMp.metric);
             if (!m) {
               dataMass.manpower.push(JSON.parse(JSON.stringify(defMp)));
             } else {
               if (!m.daily) m.daily = {};
               Object.keys(defMp.daily || {}).forEach(k => {
+                const baseDate = k.replace(/_(Day|Night)$/, '');
+                if (isDirectCsv && incomingDateSet.has(baseDate)) return;
                 if (m.daily[k] === undefined || m.daily[k] === 0) {
                   m.daily[k] = defMp.daily[k];
                 }
@@ -1567,28 +1578,36 @@ class Store {
           });
         }
 
-        // Merge items plan & fact
-        if (def.items) {
+        // Merge items plan & fact + giữ nguyên tồn kho 1C / normKey / lastStep
+        if (baseRef.items) {
           if (!dataMass.items || dataMass.items.length === 0) {
-            dataMass.items = def.items;
+            dataMass.items = baseRef.items;
           } else {
-            def.items.forEach(defIt => {
-              const defPname = defIt.productName1C || defIt.productName || '';
-              let it = dataMass.items.find(x => x.stage === defIt.stage && (x.productName1C || x.productName || '') === defPname);
-              if (!it) {
-                dataMass.items.push(JSON.parse(JSON.stringify(defIt)));
-              } else {
-                if (!it.plan) it.plan = {};
-                if (!it.fact) it.fact = {};
-                Object.keys(defIt.plan || {}).forEach(d => {
-                  if (it.plan[d] === undefined || it.plan[d] === 0) {
-                    it.plan[d] = defIt.plan[d];
+            const baseItemMap = new Map();
+            baseRef.items.forEach(bIt => {
+              const bPname = bIt.productName1C || bIt.productName || '';
+              baseItemMap.set(`${bIt.stage}|||${bIt.model || ''}|||${bPname}`, bIt);
+              baseItemMap.set(`${bIt.stage}|||${bPname}`, bIt);
+            });
+            dataMass.items.forEach(it => {
+              const pName = it.productName1C || it.productName || '';
+              const matched = baseItemMap.get(`${it.stage}|||${it.model || ''}|||${pName}`) || baseItemMap.get(`${it.stage}|||${pName}`);
+              if (matched) {
+                ['stock1C', 'stock1CWarehouses', 'normKey', 'normKeyShort', 'lastStep', 'productNameEnglish', 'specCode', 'fpArticule'].forEach(f => {
+                  if ((it[f] === undefined || it[f] === '' || it[f] === null) && matched[f] !== undefined) {
+                    it[f] = matched[f];
                   }
                 });
-                Object.keys(defIt.fact || {}).forEach(d => {
-                  if (it.fact[d] === undefined || it.fact[d] === 0) {
-                    it.fact[d] = defIt.fact[d];
-                  }
+                if ((!it.norm || it.norm === 0) && matched.norm) it.norm = matched.norm;
+                if (!it.normName && matched.normName) it.normName = matched.normName;
+                ['plan', 'fact', 'planDay', 'planNight', 'factDay', 'factNight'].forEach(dictKey => {
+                  if (!it[dictKey]) it[dictKey] = {};
+                  Object.keys(matched[dictKey] || {}).forEach(d => {
+                    if (isDirectCsv && incomingDateSet.has(d)) return;
+                    if (it[dictKey][d] === undefined || it[dictKey][d] === 0) {
+                      it[dictKey][d] = matched[dictKey][d];
+                    }
+                  });
                 });
               }
             });
