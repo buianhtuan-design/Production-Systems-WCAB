@@ -4291,10 +4291,10 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-12 02:28:07",
+      "archivedAt": "2026-11-12 04:56:54",
       "totalItems": 260,
       "totalPlan": 485822.0,
-      "totalSheetFact": 155761.0,
+      "totalSheetFact": 155824.0,
       "qtyAllDevice": 260,
       "qtyDoneDevice": 110,
       "qtyNotDoneDevice": 150,
@@ -6236,7 +6236,7 @@
           "agg": "",
           "device": "Ajax DoorProtect (8EU) ASP white датчик відкриття",
           "plan": 48485.0,
-          "sheetFact": 4925.0,
+          "sheetFact": 4927.0,
           "done": 0,
           "isDone": false
         },
@@ -6706,7 +6706,7 @@
           "agg": "",
           "device": "Ajax BulletCam (5 Mp/4 mm) ASP black відеокамера спостереження",
           "plan": 260.0,
-          "sheetFact": 51.0,
+          "sheetFact": 78.0,
           "done": 0,
           "isDone": false
         },
@@ -6746,7 +6746,7 @@
           "agg": "",
           "device": "Ajax BulletCam (8 Mp/4 mm) ASP black відеокамера спостереження",
           "plan": 130.0,
-          "sheetFact": 39.0,
+          "sheetFact": 53.0,
           "done": 0,
           "isDone": false
         },
@@ -6756,7 +6756,7 @@
           "agg": "",
           "device": "Ajax BulletCam (8 Mp/4 mm) ASP white відеокамера спостереження",
           "plan": 260.0,
-          "sheetFact": 68.0,
+          "sheetFact": 84.0,
           "done": 0,
           "isDone": false
         },
@@ -6816,7 +6816,7 @@
           "agg": "",
           "device": "Ajax TurretCam (8 Mp/2.8 mm) ASP white відеокамера спостереження",
           "plan": 528.0,
-          "sheetFact": 435.0,
+          "sheetFact": 439.0,
           "done": 0,
           "isDone": false
         },
@@ -8838,7 +8838,7 @@
           "agg": "",
           "device": "Ajax DoorProtect (8EU) ASP white датчик відкриття",
           "plan": 48485.0,
-          "sheetFact": 4925.0,
+          "sheetFact": 4927.0,
           "done": 0,
           "isDone": false
         },
@@ -9308,7 +9308,7 @@
           "agg": "",
           "device": "Ajax BulletCam (5 Mp/4 mm) ASP black відеокамера спостереження",
           "plan": 260.0,
-          "sheetFact": 51.0,
+          "sheetFact": 78.0,
           "done": 0,
           "isDone": false
         },
@@ -9348,7 +9348,7 @@
           "agg": "",
           "device": "Ajax BulletCam (8 Mp/4 mm) ASP black відеокамера спостереження",
           "plan": 130.0,
-          "sheetFact": 39.0,
+          "sheetFact": 53.0,
           "done": 0,
           "isDone": false
         },
@@ -9358,7 +9358,7 @@
           "agg": "",
           "device": "Ajax BulletCam (8 Mp/4 mm) ASP white відеокамера спостереження",
           "plan": 260.0,
-          "sheetFact": 68.0,
+          "sheetFact": 84.0,
           "done": 0,
           "isDone": false
         },
@@ -9418,7 +9418,7 @@
           "agg": "",
           "device": "Ajax TurretCam (8 Mp/2.8 mm) ASP white відеокамера спостереження",
           "plan": 528.0,
-          "sheetFact": 435.0,
+          "sheetFact": 439.0,
           "done": 0,
           "isDone": false
         },
