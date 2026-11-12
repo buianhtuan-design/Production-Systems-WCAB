@@ -26,15 +26,15 @@
   "B": {
     "shift": "B",
     "name": "Shift B",
-    "assyDirect": 28.0,
-    "assyTotal": 38.0,
+    "assyDirect": 25.0,
+    "assyTotal": 35.0,
     "assyLinesDirect": {
       "1B": 14.0,
-      "2B": 14.0
+      "2B": 11.0
     },
     "assyLinesTotal": {
       "1B": 19.0,
-      "2B": 19.0
+      "2B": 16.0
     },
     "htDirect": 23.0,
     "htTotal": 25.0,
