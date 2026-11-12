@@ -48,16 +48,16 @@
   "C": {
     "shift": "C",
     "name": "Shift C",
-    "assyDirect": 43.0,
-    "assyTotal": 58.0,
+    "assyDirect": 42.0,
+    "assyTotal": 57.0,
     "assyLinesDirect": {
       "1C": 14.0,
-      "2C": 15.0,
+      "2C": 14.0,
       "3C": 14.0
     },
     "assyLinesTotal": {
       "1C": 19.0,
-      "2C": 20.0,
+      "2C": 19.0,
       "3C": 19.0
     },
     "htDirect": 25.0,
@@ -72,15 +72,15 @@
   "D": {
     "shift": "D",
     "name": "Shift D",
-    "assyDirect": 28.0,
-    "assyTotal": 38.0,
+    "assyDirect": 27.0,
+    "assyTotal": 37.0,
     "assyLinesDirect": {
       "1D": 14.0,
-      "2D": 14.0
+      "2D": 13.0
     },
     "assyLinesTotal": {
       "1D": 19.0,
-      "2D": 19.0
+      "2D": 18.0
     },
     "htDirect": 24.0,
     "htTotal": 26.0,
