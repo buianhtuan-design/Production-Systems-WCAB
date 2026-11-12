@@ -112,11 +112,6 @@
                 </div>
               </div>
             </div>
-            ${currentStage === 'TOTAL_HARDTEST' ? `
-              <p style="margin: 0; font-size: 0.75rem; color: #cbd5e1; line-height: 1.35;">
-                Quản trị năng lực cụm Total Hardtest: Cycle time tiêu chuẩn (Norm), số lượng thiết bị Test Block, tỉ lệ pass FTT, downtime máy/vật tư, UPH và công suất Ca Ngày (10.83h) / Ca Đêm (10.58h).
-              </p>
-            ` : ''}
           </div>
 
           <!-- Controls Bar: View Mode Switcher + Stage Selection Tabs (Tối ưu sát lên trên) -->
@@ -1085,6 +1080,317 @@
   }
 
   /**
+   * Mã hóa/giải mã an toàn rowKey đưa vào inline HTML handler (tránh lỗi SyntaxError khi Data_Mass chứa \n, \r, ')
+   */
+  function encodeSimRowKey(key) {
+    return encodeURIComponent(String(key || '')).replace(/'/g, '%27');
+  }
+
+  function sanitizeTsvCell(val) {
+    if (typeof val === 'number') return val;
+    if (val === undefined || val === null) return '';
+    return String(val).replace(/[\t\r\n]+/g, ' ').trim();
+  }
+
+  function hasSimRowPlanningNote(rowKey, model1c, modelGroup) {
+    const notes = window.AppStore && window.AppStore.simManualNotes;
+    if (!notes) return false;
+    const rawNote = notes[rowKey] !== undefined
+      ? notes[rowKey]
+      : ((model1c && notes[model1c] !== undefined)
+          ? notes[model1c]
+          : (modelGroup && notes[modelGroup] !== undefined ? notes[modelGroup] : ''));
+    return String(rawNote || '').trim().length > 0;
+  }
+
+  function getPlanningPriorityTier(gapQty, planMeta) {
+    if (gapQty < 0) {
+      return (planMeta && planMeta.isCumNegative) ? 0 : 1;
+    }
+    const hasTodayPlan = !!(planMeta && Array.isArray(planMeta.pendingShifts) && planMeta.pendingShifts.length > 0);
+    return hasTodayPlan ? 2 : 3;
+  }
+
+  function comparePlanningEntries(aGap, aPlanMeta, aPlanQty, aTieNum, bGap, bPlanMeta, bPlanQty, bTieNum) {
+    const aTier = getPlanningPriorityTier(aGap, aPlanMeta);
+    const bTier = getPlanningPriorityTier(bGap, bPlanMeta);
+    if (aTier !== bTier) return aTier - bTier;
+
+    if (aGap < 0 && bGap < 0 && aGap !== bGap) {
+      return aGap - bGap;
+    }
+    if (bPlanQty !== aPlanQty) {
+      return bPlanQty - aPlanQty;
+    }
+    return aTieNum - bTieNum;
+  }
+
+  function compareAssemblyPriorityRows(a, b) {
+    const aGap = a.cumGapQty !== undefined ? Number(a.cumGapQty || 0) : Number((a.it && a.it.cumGapQty) || 0);
+    const bGap = b.cumGapQty !== undefined ? Number(b.cumGapQty || 0) : Number((b.it && b.it.cumGapQty) || 0);
+    const aMeta = a._prePlanMeta || a.planMeta;
+    const bMeta = b._prePlanMeta || b.planMeta;
+    const aPlan = a.cumPlanQty !== undefined ? Number(a.cumPlanQty || 0) : Number((a.it && a.it.cumPlanQty) || 0);
+    const bPlan = b.cumPlanQty !== undefined ? Number(b.cumPlanQty || 0) : Number((b.it && b.it.cumPlanQty) || 0);
+    const aTie = a._preSortIdx !== undefined ? a._preSortIdx : (a.idx || 0);
+    const bTie = b._preSortIdx !== undefined ? b._preSortIdx : (b.idx || 0);
+    return comparePlanningEntries(aGap, aMeta, aPlan, aTie, bGap, bMeta, bPlan, bTie);
+  }
+
+  function compareHardtestPriorityRows(a, b) {
+    const cmp = comparePlanningEntries(
+      Number(a.gapQty || 0),
+      a.planMeta,
+      Number(a.planQty || 0),
+      a.idx || 0,
+      Number(b.gapQty || 0),
+      b.planMeta,
+      Number(b.planQty || 0),
+      b.idx || 0
+    );
+    if (cmp !== 0) return cmp;
+    return (a.group || '').localeCompare(b.group || '');
+  }
+
+  function hasLiveManualPlanOverride(rowKey, moduleType) {
+    if (!window.AppStore) return false;
+    if (moduleType === 'TOTAL_HARDTEST') {
+      const pDay = window.AppStore.hardtestManualPlanDay && window.AppStore.hardtestManualPlanDay[rowKey];
+      const pNight = window.AppStore.hardtestManualPlanNight && window.AppStore.hardtestManualPlanNight[rowKey];
+      return (Number(pDay) || 0) > 0 || (Number(pNight) || 0) > 0;
+    }
+    const pDay = window.AppStore.simManualPlanDay && window.AppStore.simManualPlanDay[rowKey];
+    const pNight = window.AppStore.simManualPlanNight && window.AppStore.simManualPlanNight[rowKey];
+    return (Number(pDay) || 0) > 0 || (Number(pNight) || 0) > 0;
+  }
+
+  /**
+   * Kiểm tra toàn bộ Model Âm luỹ kế đã được lập kế hoạch (>0) HOẶC có lý do ở cột Ghi Chú chưa.
+   * Nếu còn bất kỳ Model Âm luỹ kế nào chưa xử lý -> khóa nhập kế hoạch cho các Model ngày hiện tại.
+   */
+  function evaluateCumNegativeGate(moduleType, visibleEntries, snapshotKey, isUnfiltered, extraFullCumNegItems) {
+    if (!window.AppStore) {
+      return { moduleType, totalCumNeg: 0, resolvedCumNeg: 0, pendingRows: [], pendingCount: 0, isBlocked: false, cumNegKeySet: new Set() };
+    }
+    if (!window.AppStore._cumNegSnapshots) window.AppStore._cumNegSnapshots = {};
+    if (!window.AppStore._cumNegSnapshots[moduleType]) window.AppStore._cumNegSnapshots[moduleType] = {};
+    if (!window.AppStore._cumNegGateState) window.AppStore._cumNegGateState = {};
+
+    const storeSnapMap = window.AppStore._cumNegSnapshots[moduleType];
+    const visibleByKey = new Map();
+    const visibleCumNeg = [];
+
+    (visibleEntries || []).forEach(entry => {
+      visibleByKey.set(entry.rowKey, entry);
+      if (entry.isCumNeg && entry.gapQty < 0) {
+        visibleCumNeg.push(entry);
+      }
+    });
+
+    if (isUnfiltered) {
+      storeSnapMap[snapshotKey] = visibleCumNeg.map(e => ({
+        rowKey: e.rowKey,
+        modelName: e.modelName,
+        group: e.group,
+        gapQty: e.gapQty,
+        isCumNeg: true,
+        plannedOutput: e.plannedOutput || 0
+      }));
+    }
+
+    const prevSnapList = storeSnapMap[snapshotKey] || [];
+    const prevSnapByKey = new Map(prevSnapList.map(s => [s.rowKey, s]));
+    const effectiveCumNegMap = new Map();
+
+    if (isUnfiltered) {
+      visibleCumNeg.forEach(e => effectiveCumNegMap.set(e.rowKey, e));
+    } else if (Array.isArray(extraFullCumNegItems) && extraFullCumNegItems.length > 0) {
+      extraFullCumNegItems.forEach(item => {
+        const vis = visibleByKey.get(item.rowKey);
+        if (vis) {
+          effectiveCumNegMap.set(item.rowKey, vis);
+        } else {
+          const prevSnap = prevSnapByKey.get(item.rowKey);
+          const manualOut = hasLiveManualPlanOverride(item.rowKey, moduleType) ? 1 : 0;
+          effectiveCumNegMap.set(item.rowKey, {
+            rowKey: item.rowKey,
+            modelName: item.modelName,
+            group: item.group,
+            gapQty: item.gapQty,
+            isCumNeg: true,
+            plannedOutput: Math.max(manualOut, prevSnap ? (prevSnap.plannedOutput || 0) : 0),
+            hasNote: hasSimRowPlanningNote(item.rowKey, item.modelName, item.group)
+          });
+        }
+      });
+    } else {
+      prevSnapList.forEach(s => {
+        const vis = visibleByKey.get(s.rowKey);
+        if (vis) {
+          effectiveCumNegMap.set(s.rowKey, vis);
+        } else {
+          const manualOut = hasLiveManualPlanOverride(s.rowKey, moduleType) ? 1 : 0;
+          effectiveCumNegMap.set(s.rowKey, {
+            rowKey: s.rowKey,
+            modelName: s.modelName,
+            group: s.group,
+            gapQty: s.gapQty,
+            isCumNeg: true,
+            plannedOutput: Math.max(manualOut, s.plannedOutput || 0),
+            hasNote: hasSimRowPlanningNote(s.rowKey, s.modelName, s.group)
+          });
+        }
+      });
+      visibleCumNeg.forEach(e => {
+        if (!effectiveCumNegMap.has(e.rowKey)) {
+          effectiveCumNegMap.set(e.rowKey, e);
+        }
+      });
+    }
+
+    const allCumNegRows = Array.from(effectiveCumNegMap.values());
+    const cumNegKeySet = new Set(allCumNegRows.map(r => r.rowKey));
+    const pendingRows = [];
+
+    allCumNegRows.forEach(r => {
+      const hasPlan = (Number(r.plannedOutput) || 0) > 0;
+      const hasReason = !!r.hasNote;
+      if (!hasPlan && !hasReason) {
+        pendingRows.push(r);
+      }
+    });
+
+    pendingRows.sort((a, b) => (a.gapQty || 0) - (b.gapQty || 0));
+
+    const gateState = {
+      moduleType,
+      totalCumNeg: allCumNegRows.length,
+      resolvedCumNeg: allCumNegRows.length - pendingRows.length,
+      pendingRows,
+      pendingCount: pendingRows.length,
+      isBlocked: pendingRows.length > 0,
+      cumNegKeySet
+    };
+    window.AppStore._cumNegGateState[moduleType] = gateState;
+    return gateState;
+  }
+
+  function renderCumNegPriorityBannerHtml(gateState, moduleType) {
+    if (!gateState || gateState.totalCumNeg === 0) return '';
+
+    if (gateState.isBlocked) {
+      const samplePills = gateState.pendingRows.slice(0, 4).map(r => {
+        const shortName = String(r.modelName || r.group || '--').replace(/[\r\n]+/g, ' ');
+        return `<span class="sim-cumneg-pending-pill">${shortName} (${Number(r.gapQty || 0).toLocaleString('vi-VN')})</span>`;
+      }).join('');
+      const moreCount = gateState.pendingCount - 4;
+
+      return `
+        <div class="sim-cumneg-gate-banner is-blocked" data-gate-module="${moduleType}">
+          <div style="display: flex; align-items: flex-start; gap: 0.65rem; flex: 1; min-width: 280px;">
+            <span style="font-size: 1.25rem; line-height: 1.1;">🔒</span>
+            <div>
+              <div style="font-weight: 800; font-size: 0.82rem; display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
+                <span>ƯU TIÊN ÂM LUỸ KẾ: Đang khóa lập kế hoạch ngày hiện tại</span>
+                <span class="badge badge-amber font-mono" style="font-size: 0.7rem; font-weight: 800;">Đã xử lý ${gateState.resolvedCumNeg}/${gateState.totalCumNeg} • Còn ${gateState.pendingCount} mã</span>
+              </div>
+              <div style="font-size: 0.74rem; opacity: 0.92; margin-top: 0.2rem;">
+                Phải nhập <strong>Plan (&gt; 0)</strong> hoặc nhập <strong>Lý do ở cột Ghi Chú</strong> cho tất cả Model <strong>Âm luỹ kế</strong> trước khi lập kế hoạch cho ngày hiện tại.
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.35rem; align-items: center;">
+                ${samplePills}
+                ${moreCount > 0 ? `<span style="font-size: 0.7rem; font-weight: 700; opacity: 0.9;">+${moreCount} mã khác</span>` : ''}
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.4rem;">
+            <button type="button" class="btn btn-secondary" onclick="handleFocusCumNegRows('${moduleType}')" style="padding: 0.25rem 0.6rem; font-size: 0.725rem; font-weight: 800; color: #fbbf24; border-color: rgba(251, 191, 36, 0.55); background: rgba(15, 23, 42, 0.75); border-radius: 6px; cursor: pointer;">
+              🎯 Hiện tất cả Âm luỹ kế
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="sim-cumneg-gate-banner is-unlocked" data-gate-module="${moduleType}">
+        <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 0.76rem;">
+          <span>✅</span>
+          <span>Đã xử lý xong <strong>${gateState.totalCumNeg}/${gateState.totalCumNeg} Model Âm luỹ kế</strong> (đều đã có Kế hoạch hoặc Lý do ở cột Ghi Chú) — Đã mở khóa lập kế hoạch ngày hiện tại.</span>
+        </div>
+      </div>
+    `;
+  }
+
+  function assertCumNegPriorityUnlocked(rowKey, moduleType) {
+    const stateMap = window.AppStore && window.AppStore._cumNegGateState;
+    const gate = stateMap && stateMap[moduleType];
+    if (!gate || !gate.isBlocked) return true;
+    if (gate.cumNegKeySet && gate.cumNegKeySet.has(rowKey)) return true;
+
+    const sampleNames = (gate.pendingRows || [])
+      .slice(0, 2)
+      .map(p => String(p.modelName || p.group || '').replace(/[\r\n]+/g, ' '))
+      .filter(Boolean)
+      .join(', ');
+    const extra = gate.pendingCount > 2 ? ` (+${gate.pendingCount - 2} mã khác)` : '';
+    if (window.showToast) {
+      window.showToast(
+        'warning',
+        `🔒 Chưa thể lập kế hoạch ngày hiện tại! Còn ${gate.pendingCount} Model Âm luỹ kế (${sampleNames}${extra}) chưa có Plan (>0) hoặc Lý do ở cột Ghi Chú.`
+      );
+    }
+    renderCapacityViewPreservingScroll();
+    return false;
+  }
+
+  function renderCapacityViewPreservingScroll() {
+    if (!window.renderCapacityView) return;
+    const hasDom = typeof document !== 'undefined' && typeof document.getElementById === 'function';
+    const asmWrap = hasDom ? document.getElementById('simTableScrollWrapper') : null;
+    const htWrap = hasDom ? document.getElementById('hardtestSimTableScrollWrapper') : null;
+    const asmScroll = asmWrap ? { top: asmWrap.scrollTop || 0, left: asmWrap.scrollLeft || 0 } : null;
+    const htScroll = htWrap ? { top: htWrap.scrollTop || 0, left: htWrap.scrollLeft || 0 } : null;
+    const winScrollY = (typeof window !== 'undefined' && typeof window.scrollY === 'number') ? window.scrollY : null;
+
+    window.renderCapacityView();
+
+    if (hasDom) {
+      const asmAfter = document.getElementById('simTableScrollWrapper');
+      if (asmAfter && asmScroll) {
+        asmAfter.scrollTop = asmScroll.top;
+        asmAfter.scrollLeft = asmScroll.left;
+      }
+      const htAfter = document.getElementById('hardtestSimTableScrollWrapper');
+      if (htAfter && htScroll) {
+        htAfter.scrollTop = htScroll.top;
+        htAfter.scrollLeft = htScroll.left;
+      }
+    }
+    if (winScrollY !== null && typeof window.scrollTo === 'function') {
+      try {
+        window.scrollTo(window.scrollX || 0, winScrollY);
+      } catch (e) {}
+    }
+  }
+
+  window.handleFocusCumNegRows = function(moduleType) {
+    if (!window.AppStore) return;
+    if (moduleType === 'TOTAL_HARDTEST') {
+      window.AppStore.hardtestSimStatusFilter = 'GAP_NEGATIVE';
+      window.AppStore.hardtestSimStageFilter = 'ALL';
+      window.AppStore.hardtestSimGroupFilter = 'ALL';
+      window.AppStore.hardtestSimSearchVal = '';
+    } else {
+      window.AppStore.simPlanStatusFilter = 'GAP_NEGATIVE';
+      window.AppStore.simGroupFilter = 'ALL';
+      window.AppStore.simSearchVal = '';
+      window.AppStore.simPageIndex = 0;
+    }
+    if (window.renderCapacityView) window.renderCapacityView();
+  };
+
+  /**
    * Chuyển từ bảng Capacity Planning sang tab WIP Control và lọc đúng Model + Công đoạn tương ứng
    */
   window.handleCheckModelWip = function(stageEnc, modelGroupEnc, product1CEnc, gapQty, fromDateStr, toDateStr) {
@@ -1131,107 +1437,422 @@
     }
   };
 
+  function getSimPlannerName() {
+    if (!window.AppStore) return 'Bùi Anh Tuấn';
+    return (window.AppStore.simPlannerName !== undefined && window.AppStore.simPlannerName !== null)
+      ? window.AppStore.simPlannerName
+      : (localStorage.getItem('AJAX_SIM_PLANNER_NAME') || 'Bùi Anh Tuấn');
+  }
+
+  function getSimHistoryCount() {
+    try {
+      const hList = JSON.parse(localStorage.getItem('AJAX_SIM_PLAN_HISTORY') || '[]');
+      return Array.isArray(hList) ? hList.length : 0;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  function buildHardtestDraftState() {
+    if (!window.AppStore) return {};
+    return {
+      hardtestSimFromDate: window.AppStore.hardtestSimFromDate || window.AppStore.simFromDate || window.AppStore.fromDate || '2026-11-05',
+      hardtestSimToDate: window.AppStore.hardtestSimToDate || window.AppStore.simToDate || window.AppStore.toDate || '2026-11-05',
+      hardtestSimShiftType: window.AppStore.hardtestSimShiftType || 'FULL_DAY',
+      hardtestSimStageFilter: window.AppStore.hardtestSimStageFilter || 'ALL',
+      hardtestSimGroupFilter: window.AppStore.hardtestSimGroupFilter || 'ALL',
+      hardtestSimStatusFilter: window.AppStore.hardtestSimStatusFilter || 'GAP_NEGATIVE',
+      hardtestSimSearchVal: window.AppStore.hardtestSimSearchVal || '',
+      hardtestWorkingKipsDay: getHardtestSelectedKips('DAY'),
+      hardtestWorkingKipsNight: getHardtestSelectedKips('NIGHT'),
+      _htKipsManualConfigured: Boolean(window.AppStore._htKipsManualConfigured),
+      hardtestManpowerOverrideDay: window.AppStore.hardtestManpowerOverrideDay ?? null,
+      hardtestManpowerOverrideNight: window.AppStore.hardtestManpowerOverrideNight ?? null,
+      hardtestPlanOverrides: { ...(window.AppStore.hardtestPlanOverrides || {}) },
+      hardtestManualTbDay: { ...(window.AppStore.hardtestManualTbDay || {}) },
+      hardtestManualManDay: { ...(window.AppStore.hardtestManualManDay || {}) },
+      hardtestManualPlanDay: { ...(window.AppStore.hardtestManualPlanDay || {}) },
+      hardtestManualTbNight: { ...(window.AppStore.hardtestManualTbNight || {}) },
+      hardtestManualManNight: { ...(window.AppStore.hardtestManualManNight || {}) },
+      hardtestManualPlanNight: { ...(window.AppStore.hardtestManualPlanNight || {}) },
+      hardtestManualTb: { ...(window.AppStore.hardtestManualTb || {}) },
+      hardtestManualMan: { ...(window.AppStore.hardtestManualMan || {}) }
+    };
+  }
+
+  function applyHardtestDraftFields(hs, forceOverwrite = false) {
+    if (!window.AppStore || !hs || typeof hs !== 'object') return;
+    if (hs.hardtestSimFromDate && (forceOverwrite || !window.AppStore.hardtestSimFromDate)) window.AppStore.hardtestSimFromDate = hs.hardtestSimFromDate;
+    if (hs.hardtestSimToDate && (forceOverwrite || !window.AppStore.hardtestSimToDate)) window.AppStore.hardtestSimToDate = hs.hardtestSimToDate;
+    if (hs.hardtestSimShiftType && (forceOverwrite || !window.AppStore.hardtestSimShiftType)) window.AppStore.hardtestSimShiftType = hs.hardtestSimShiftType;
+    if (hs.hardtestSimStageFilter && (forceOverwrite || !window.AppStore.hardtestSimStageFilter)) window.AppStore.hardtestSimStageFilter = hs.hardtestSimStageFilter;
+    if (hs.hardtestSimGroupFilter && (forceOverwrite || !window.AppStore.hardtestSimGroupFilter)) window.AppStore.hardtestSimGroupFilter = hs.hardtestSimGroupFilter;
+    if (hs.hardtestSimStatusFilter && (forceOverwrite || !window.AppStore.hardtestSimStatusFilter)) window.AppStore.hardtestSimStatusFilter = hs.hardtestSimStatusFilter;
+    if (hs.hardtestSimSearchVal !== undefined && (forceOverwrite || !window.AppStore.hardtestSimSearchVal)) window.AppStore.hardtestSimSearchVal = hs.hardtestSimSearchVal;
+    if (Array.isArray(hs.hardtestWorkingKipsDay) && (forceOverwrite || !window.AppStore._htKipsManualConfigured)) {
+      window.AppStore.hardtestWorkingKipsDay = [...hs.hardtestWorkingKipsDay];
+    }
+    if (Array.isArray(hs.hardtestWorkingKipsNight) && (forceOverwrite || !window.AppStore._htKipsManualConfigured)) {
+      window.AppStore.hardtestWorkingKipsNight = [...hs.hardtestWorkingKipsNight];
+    }
+    if (hs._htKipsManualConfigured && (forceOverwrite || !window.AppStore._htKipsManualConfigured)) {
+      window.AppStore._htKipsManualConfigured = true;
+    }
+    if (hs.hardtestManpowerOverrideDay !== undefined && (forceOverwrite || window.AppStore.hardtestManpowerOverrideDay === undefined)) {
+      window.AppStore.hardtestManpowerOverrideDay = hs.hardtestManpowerOverrideDay;
+    }
+    if (hs.hardtestManpowerOverrideNight !== undefined && (forceOverwrite || window.AppStore.hardtestManpowerOverrideNight === undefined)) {
+      window.AppStore.hardtestManpowerOverrideNight = hs.hardtestManpowerOverrideNight;
+    }
+
+    const dictKeys = [
+      'hardtestPlanOverrides',
+      'hardtestManualTbDay',
+      'hardtestManualManDay',
+      'hardtestManualPlanDay',
+      'hardtestManualTbNight',
+      'hardtestManualManNight',
+      'hardtestManualPlanNight',
+      'hardtestManualTb',
+      'hardtestManualMan'
+    ];
+    dictKeys.forEach(k => {
+      if (hs[k] && (forceOverwrite || !window.AppStore[k] || Object.keys(window.AppStore[k]).length === 0)) {
+        window.AppStore[k] = { ...hs[k] };
+      }
+    });
+  }
+
+  const HARDTEST_KIP_OPTIONS = ['HT A', 'HT B', 'HT C', 'HT D'];
+  const DEFAULT_HT_KIP_HEADCOUNT = { A: 24, B: 23, C: 25, D: 24 };
+
+  function getHardtestKipCode(kipLabel) {
+    return String(kipLabel || '').replace(/^HT\s+/i, '').trim().toUpperCase();
+  }
+
+  function getHardtestKipHeadcount(kipLabelOrCode) {
+    const code = getHardtestKipCode(kipLabelOrCode);
+    const mp = window.MANPOWER_MASTER_DATA || {};
+    const liveMp = (window.AppStore && window.AppStore.dataMass && window.AppStore.dataMass.manpowerSheet)
+      ? window.AppStore.dataMass.manpowerSheet : {};
+    const entry = mp[code] || liveMp[code];
+    if (entry && typeof entry.htDirect === 'number') return entry.htDirect;
+    if (liveMp[code] && typeof liveMp[code].htDirect === 'number') return liveMp[code].htDirect;
+    return DEFAULT_HT_KIP_HEADCOUNT[code] !== undefined ? DEFAULT_HT_KIP_HEADCOUNT[code] : 0;
+  }
+
+  function getHardtestSelectedKips(shift) {
+    if (!window.AppStore) return shift === 'DAY' ? ['HT A'] : ['HT B'];
+    if (!window.AppStore._htKipsManualConfigured) {
+      if (!Array.isArray(window.AppStore.hardtestWorkingKipsDay)) {
+        window.AppStore.hardtestWorkingKipsDay = ['HT A'];
+      }
+      if (!Array.isArray(window.AppStore.hardtestWorkingKipsNight)) {
+        window.AppStore.hardtestWorkingKipsNight = ['HT B'];
+      }
+    }
+    const raw = shift === 'DAY'
+      ? (window.AppStore.hardtestWorkingKipsDay || [])
+      : (window.AppStore.hardtestWorkingKipsNight || []);
+    const allowed = new Set(HARDTEST_KIP_OPTIONS);
+    return HARDTEST_KIP_OPTIONS.filter(k => raw.includes(k) && allowed.has(k));
+  }
+
+  function sumHardtestKipsHeadcount(kips) {
+    return (kips || []).reduce((sum, k) => sum + getHardtestKipHeadcount(k), 0);
+  }
+
+  function getHardtestTodaySheetKey() {
+    const ref = getTodayPlanReference();
+    if (ref && ref.sheetKey) return ref.sheetKey;
+    const now = new Date();
+    return `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}`;
+  }
+
+  function isSameCalendarDateKey(dateA, dateB) {
+    if (!dateA || !dateB) return false;
+    if (String(dateA).trim() === String(dateB).trim()) return true;
+    if (window.AppStore && typeof window.AppStore.toISODate === 'function') {
+      return window.AppStore.toISODate(dateA) === window.AppStore.toISODate(dateB);
+    }
+    return false;
+  }
+
+  function syncHardtestKipsToManpowerTab1(changedShift) {
+    if (!window.AppStore || typeof window.AppStore.saveActualAttendance !== 'function') return;
+    const todayKey = getHardtestTodaySheetKey();
+    const dayKips = getHardtestSelectedKips('DAY');
+    const nightKips = getHardtestSelectedKips('NIGHT');
+    const dayPeople = sumHardtestKipsHeadcount(dayKips);
+    const nightPeople = sumHardtestKipsHeadcount(nightKips);
+
+    window.AppStore._syncingHtKipManpower = true;
+    try {
+      if (!window.AppStore.actualAttendance) window.AppStore.actualAttendance = {};
+      // Seed opposite shift so internal _ALL calculation inside saveActualAttendance remains exact
+      const oppShiftKey = changedShift === 'DAY' ? 'Night' : 'Day';
+      const oppStorageKey = `${todayKey}_${oppShiftKey}`;
+      const oppPeople = changedShift === 'DAY' ? nightPeople : dayPeople;
+      if (!window.AppStore.actualAttendance[oppStorageKey] || window.AppStore.actualAttendance[oppStorageKey].hardtest_total === undefined) {
+        window.AppStore.actualAttendance[oppStorageKey] = Object.assign({}, window.AppStore.actualAttendance[oppStorageKey] || {}, {
+          hardtest_total: oppPeople
+        });
+      }
+
+      const targetShiftKey = changedShift === 'DAY' ? 'Day' : 'Night';
+      const targetKips = changedShift === 'DAY' ? dayKips : nightKips;
+      const targetPeople = changedShift === 'DAY' ? dayPeople : nightPeople;
+      const kipText = targetKips.length > 0 ? targetKips.join(' + ') : 'Nghỉ / Không chọn Kíp';
+      const note = `Đồng bộ từ Total Hardtest (${changedShift === 'DAY' ? 'Ca Ngày' : 'Ca Đêm'}: ${kipText} = ${targetPeople} ng)`;
+      window.AppStore.saveActualAttendance(todayKey, targetShiftKey, 'HARDTEST_TOTAL', targetPeople, note);
+    } finally {
+      window.AppStore._syncingHtKipManpower = false;
+    }
+
+    if (typeof window.renderDataMassView === 'function') {
+      window.renderDataMassView();
+    }
+    if (typeof window.updateAttendanceHistoryBadge === 'function') {
+      window.updateAttendanceHistoryBadge();
+    }
+  }
+
+  function matchHardtestKipsByHeadcount(targetNum) {
+    if (targetNum === 0) return [];
+    const singles = HARDTEST_KIP_OPTIONS.filter(k => getHardtestKipHeadcount(k) === targetNum);
+    if (singles.length > 0) return [singles[0]];
+    for (let i = 0; i < HARDTEST_KIP_OPTIONS.length; i++) {
+      for (let j = i + 1; j < HARDTEST_KIP_OPTIONS.length; j++) {
+        const pair = [HARDTEST_KIP_OPTIONS[i], HARDTEST_KIP_OPTIONS[j]];
+        if (sumHardtestKipsHeadcount(pair) === targetNum) return pair;
+      }
+    }
+    for (let i = 0; i < HARDTEST_KIP_OPTIONS.length; i++) {
+      for (let j = i + 1; j < HARDTEST_KIP_OPTIONS.length; j++) {
+        for (let m = j + 1; m < HARDTEST_KIP_OPTIONS.length; m++) {
+          const tri = [HARDTEST_KIP_OPTIONS[i], HARDTEST_KIP_OPTIONS[j], HARDTEST_KIP_OPTIONS[m]];
+          if (sumHardtestKipsHeadcount(tri) === targetNum) return tri;
+        }
+      }
+    }
+    if (sumHardtestKipsHeadcount(HARDTEST_KIP_OPTIONS) === targetNum) return [...HARDTEST_KIP_OPTIONS];
+    return null;
+  }
+
+  window.syncManpowerTab1ToHardtestKips = function(dateStr, shift, stage, value) {
+    if (!window.AppStore || window.AppStore._syncingHtKipManpower) return;
+    const normStage = typeof window.AppStore._normalizeStageKey === 'function'
+      ? window.AppStore._normalizeStageKey(stage)
+      : String(stage || '').toLowerCase();
+    if (normStage !== 'hardtest_total') return;
+
+    const todayKey = getHardtestTodaySheetKey();
+    if (!isSameCalendarDateKey(dateStr, todayKey)) return;
+
+    const num = Math.max(0, Math.round((parseFloat(value) || 0) * 10) / 10);
+    const applyShiftValue = (sKey, val) => {
+      const curKips = getHardtestSelectedKips(sKey);
+      const curSum = sumHardtestKipsHeadcount(curKips);
+      if (val === curSum) {
+        if (sKey === 'DAY') window.AppStore.hardtestManpowerOverrideDay = null;
+        else window.AppStore.hardtestManpowerOverrideNight = null;
+      } else {
+        const matched = matchHardtestKipsByHeadcount(val);
+        if (matched !== null) {
+          if (sKey === 'DAY') {
+            window.AppStore.hardtestWorkingKipsDay = matched;
+            window.AppStore.hardtestManpowerOverrideDay = null;
+          } else {
+            window.AppStore.hardtestWorkingKipsNight = matched;
+            window.AppStore.hardtestManpowerOverrideNight = null;
+          }
+          window.AppStore._htKipsManualConfigured = true;
+        } else {
+          if (sKey === 'DAY') window.AppStore.hardtestManpowerOverrideDay = val;
+          else window.AppStore.hardtestManpowerOverrideNight = val;
+        }
+      }
+    };
+
+    if (shift === 'Day' || shift === 'DAY') {
+      applyShiftValue('DAY', num);
+    } else if (shift === 'Night' || shift === 'NIGHT') {
+      applyShiftValue('NIGHT', num);
+    } else if (shift === 'ALL') {
+      const recDay = window.AppStore.actualAttendance && window.AppStore.actualAttendance[`${dateStr}_Day`];
+      const recNight = window.AppStore.actualAttendance && window.AppStore.actualAttendance[`${dateStr}_Night`];
+      if (recDay && recDay.hardtest_total !== undefined) applyShiftValue('DAY', recDay.hardtest_total);
+      if (recNight && recNight.hardtest_total !== undefined) applyShiftValue('NIGHT', recNight.hardtest_total);
+    }
+
+    if (window.handleSaveSimPlanDraft) window.handleSaveSimPlanDraft(true);
+    if (window.AppStore.selectedCapacityStage === 'TOTAL_HARDTEST' && window.AppStore.capacityViewMode === 'SIMULATOR' && window.renderCapacityView) {
+      window.renderCapacityView();
+    }
+  };
+
+  window.syncHardtestKipsOnMasterConfigChange = function() {
+    if (!window.AppStore) return;
+    if (window.AppStore._htKipsManualConfigured) {
+      syncHardtestKipsToManpowerTab1('DAY');
+      syncHardtestKipsToManpowerTab1('NIGHT');
+    }
+    if (window.AppStore.selectedCapacityStage === 'TOTAL_HARDTEST' && window.AppStore.capacityViewMode === 'SIMULATOR' && window.renderCapacityView) {
+      window.renderCapacityView();
+    }
+  };
+
+  window.handleToggleHardtestWorkingKip = function(shift, kipLabel) {
+    if (!window.AppStore) return;
+    if (window.UserAuth && !window.UserAuth.canEdit()) {
+      window.showToast('warning', '⚠️ Tài khoản Viewer (Chỉ xem). Không thể thay đổi Kíp trực Total Hardtest!');
+      return;
+    }
+    const isDay = (shift === 'DAY');
+    const cur = getHardtestSelectedKips(shift);
+    const set = new Set(cur);
+    if (set.has(kipLabel)) set.delete(kipLabel);
+    else set.add(kipLabel);
+    const updated = HARDTEST_KIP_OPTIONS.filter(k => set.has(k));
+
+    if (isDay) {
+      window.AppStore.hardtestWorkingKipsDay = updated;
+      window.AppStore.hardtestManpowerOverrideDay = null;
+    } else {
+      window.AppStore.hardtestWorkingKipsNight = updated;
+      window.AppStore.hardtestManpowerOverrideNight = null;
+    }
+    window.AppStore._htKipsManualConfigured = true;
+
+    syncHardtestKipsToManpowerTab1(shift);
+    if (window.handleSaveSimPlanDraft) window.handleSaveSimPlanDraft(true);
+    window.renderCapacityView();
+
+    const totalPeople = sumHardtestKipsHeadcount(updated);
+    const shiftTitle = isDay ? 'Ca Ngày (10.83h)' : 'Ca Đêm (10.58h)';
+    if (window.showToast) {
+      const todayKey = getHardtestTodaySheetKey();
+      const kipDesc = updated.length > 0 ? updated.join(' + ') : 'Không chọn Kíp';
+      window.showToast('success', `✅ ${shiftTitle}: ${kipDesc} (${totalPeople} ng) ➜ Đã đồng bộ Phần 1 Nhân Lực (${todayKey})`);
+    }
+  };
+
+  function ensureSimPlanDraftRestored() {
+    if (!window.AppStore || window.AppStore._simDraftRestored) return;
+    try {
+      const savedDraftStr = localStorage.getItem('AJAX_SIM_PLAN_DRAFT');
+      if (savedDraftStr) {
+        const draft = JSON.parse(savedDraftStr);
+        if (draft && typeof draft === 'object') {
+          if (draft.plannerName && !window.AppStore.simPlannerName) window.AppStore.simPlannerName = draft.plannerName;
+          if (draft.stageFilter && !window.AppStore.simStageFilter) window.AppStore.simStageFilter = draft.stageFilter;
+          if (draft.simFromDate && !window.AppStore.simFromDate) {
+            window.AppStore.simFromDate = draft.simFromDate;
+            window.AppStore.fromDate = draft.simFromDate;
+          }
+          if (draft.simToDate && !window.AppStore.simToDate) {
+            window.AppStore.simToDate = draft.simToDate;
+            window.AppStore.toDate = draft.simToDate;
+          }
+          if (draft.simTargetDate && !window.AppStore.simTargetDate) window.AppStore.simTargetDate = draft.simTargetDate;
+          if (draft.simScope && !window.AppStore.simScope) window.AppStore.simScope = draft.simScope;
+          if (draft.simPlanStatusFilter && !window.AppStore.simPlanStatusFilter) window.AppStore.simPlanStatusFilter = draft.simPlanStatusFilter;
+          if (draft.simGroupFilter && !window.AppStore.simGroupFilter) window.AppStore.simGroupFilter = draft.simGroupFilter;
+          if (draft.simSearchVal !== undefined && !window.AppStore.simSearchVal) window.AppStore.simSearchVal = draft.simSearchVal;
+          if (Array.isArray(draft.simWorkingLinesDay) && draft.simWorkingLinesDay.length > 0 && (!window.AppStore.simWorkingLinesDay || window.AppStore.simWorkingLinesDay.length === 0)) {
+            window.AppStore.simWorkingLinesDay = [...draft.simWorkingLinesDay];
+            window.AppStore._simLinesManualConfigured = true;
+          }
+          if (Array.isArray(draft.simWorkingLinesNight) && draft.simWorkingLinesNight.length > 0 && (!window.AppStore.simWorkingLinesNight || window.AppStore.simWorkingLinesNight.length === 0)) {
+            window.AppStore.simWorkingLinesNight = [...draft.simWorkingLinesNight];
+            window.AppStore._simLinesManualConfigured = true;
+          }
+          const asmDicts = [
+            'simManualLinesDay', 'simManualLinesNight', 'simLineOverridesDay', 'simLineOverridesNight',
+            'simLineOverrides', 'simManualSeqsDay', 'simManualSeqsNight', 'simManualPfDay', 'simManualPfNight',
+            'simManualPlanDay', 'simManualPlanNight', 'simManualShifts', 'simManualNotes'
+          ];
+          asmDicts.forEach(k => {
+            if (draft[k] && (!window.AppStore[k] || Object.keys(window.AppStore[k]).length === 0)) {
+              window.AppStore[k] = { ...draft[k] };
+            }
+          });
+          if (draft.hardtestState) applyHardtestDraftFields(draft.hardtestState, false);
+        }
+      }
+    } catch (e) {
+      console.warn('Error restoring sim draft:', e);
+    }
+    window.AppStore._simDraftRestored = true;
+    if (window.initPlanSyncWatcher) window.initPlanSyncWatcher();
+    if (!window.AppStore._checkedServerLatestOnOpen && window.handleAutoCheckLatestCompletedPlanOnLoad) {
+      window.AppStore._checkedServerLatestOnOpen = true;
+      window.handleAutoCheckLatestCompletedPlanOnLoad();
+    }
+  }
+
+  function renderSimPlanActionButtonsHtml(plannerName, simHistoryCount) {
+    return `
+      <button type="button" class="btn btn-secondary sim-btn-planner" onclick="handleEditPlannerName()" style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 6px; background: rgba(15, 23, 42, 0.8); cursor: pointer;" title="Bấm để cập nhật tên Người lập Plan">
+        <span>👤 Người lập Plan: <strong id="simPlannerBadgeName" style="color: #fbbf24;">${plannerName}</strong></span>
+        <span style="font-size: 0.65rem; opacity: 0.8;">✏️</span>
+      </button>
+      <button type="button" class="btn btn-secondary sim-btn-draft" onclick="handleSaveSimPlanDraft()" style="padding: 0.2rem 0.6rem; font-size: 0.725rem; font-weight: 700; color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; background: rgba(56, 189, 248, 0.12);" title="Lưu tạm tiến độ lập kế hoạch để không bị mất dữ liệu khi refresh">
+        <span>💾 Lưu Tạm</span>
+      </button>
+      <button type="button" class="btn btn-secondary sim-btn-reset" onclick="handleResetSimPlan()" style="padding: 0.2rem 0.6rem; font-size: 0.725rem; font-weight: 700; color: #f87171; border-color: rgba(248, 113, 113, 0.45); display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; background: rgba(248, 113, 113, 0.12); cursor: pointer;" title="Đặt lại (Reset) toàn bộ kế hoạch và phân bổ về mặc định">
+        <span>🔄 Reset</span>
+      </button>
+      <button type="button" class="btn btn-primary sim-btn-complete" onclick="handleCompleteSimPlan()" style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #fff; background: linear-gradient(135deg, #059669 0%, #10b981 100%); border-color: #10b981; display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);" title="Hoàn thành kế hoạch và lưu vào Lịch sử">
+        <span>✅ Hoàn Thành</span>
+      </button>
+      <button type="button" class="btn btn-secondary sim-btn-history" onclick="handleOpenSimPlanHistoryModal()" style="padding: 0.2rem 0.6rem; font-size: 0.725rem; font-weight: 700; color: #fbbf24; border-color: rgba(251, 191, 36, 0.45); display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; background: rgba(251, 191, 36, 0.1);" title="Xem lại lịch sử các lần lập kế hoạch và khôi phục khi cần">
+        <span>📜 Lịch Sử Plan</span>
+        <span id="simHistoryBadge" style="background: rgba(251, 191, 36, 0.3); color: #fbbf24; padding: 0.05rem 0.35rem; border-radius: 9999px; font-size: 0.65rem; font-weight: 800;">${simHistoryCount}</span>
+      </button>
+      <button type="button" class="btn btn-secondary sim-btn-cloud-sync" onclick="handleForceSyncLatestPlan()" style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #34d399; border-color: rgba(52, 211, 153, 0.45); display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 6px; background: rgba(52, 211, 153, 0.1); cursor: pointer;" title="Nạp ngay lập tức bản kế hoạch sản xuất mới nhất từ máy chủ / Cloud">
+        <span>🔄 Đồng Bộ Plan</span>
+      </button>
+      <button type="button" class="btn btn-secondary sim-btn-cloud-setup" onclick="handleOpenCloudSyncModal()" style="padding: 0.2rem 0.6rem; font-size: 0.725rem; font-weight: 700; color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; background: rgba(56, 189, 248, 0.1); cursor: pointer;" title="Cấu hình đồng bộ Cloud (GitHub Pages / Google Apps Script), xem link LAN và Xuất/Nhập file Plan (.json)">
+        <span>☁️ Cloud / File</span>
+      </button>
+    `;
+  }
+
+  function renderSimNewPlanBannerHtml() {
+    return `
+      <div id="simNewPlanBanner" class="sim-new-plan-banner" style="margin: 0.6rem 0.75rem 0 0.75rem; display: ${window.AppStore._hasPendingRemotePlan ? 'flex' : 'none'};">
+        <div class="banner-info">
+          <span style="font-size: 1.35rem;">🔔</span>
+          <div>
+            <div style="font-weight: 800; color: #ffffff; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem;">
+              <span>Có Kế Hoạch Sản Xuất Mới Vừa Hoàn Thành!</span>
+              <span class="badge" style="background: rgba(255,255,255,0.25); color: #fff; font-size: 0.65rem; padding: 0.1rem 0.35rem; border-radius: 4px;">Live Update</span>
+            </div>
+            <div id="simBannerDesc" style="color: #d1fae5; font-size: 0.75rem; margin-top: 0.15rem;">
+              ${window.AppStore._pendingRemotePlanDesc || 'Đã có bản kế hoạch sản xuất mới từ thành viên khác.'}
+            </div>
+          </div>
+        </div>
+        <div class="banner-actions">
+          <button type="button" class="sim-btn-apply-plan" onclick="handleApplyLatestCompletedPlan()">
+            <span>⚡ Cập Nhật &amp; Xem Ngay</span>
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="handleDismissNewPlanAlert()" style="padding: 0.25rem 0.55rem; font-size: 0.725rem; color: #d1fae5; border-color: rgba(209, 250, 229, 0.4); background: rgba(0,0,0,0.2); cursor: pointer;" title="Tạm ẩn thông báo này">
+            <span>✕ Đóng</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
   /**
    * RENDER INTERACTIVE CAPACITY SIMULATOR (GIẢ LẬP TẢI CHUYỀN THEO BẢNG 2)
    */
   function renderCapacitySimulator(allGroups, items, shiftHours, allLines) {
     if (!window.AppStore) return '';
 
-    // Auto-restore draft from localStorage if not yet restored in this session
-    if (!window.AppStore._simDraftRestored) {
-      try {
-        const savedDraftStr = localStorage.getItem('AJAX_SIM_PLAN_DRAFT');
-        if (savedDraftStr) {
-          const draft = JSON.parse(savedDraftStr);
-          if (draft && typeof draft === 'object') {
-            if (draft.plannerName && !window.AppStore.simPlannerName) {
-              window.AppStore.simPlannerName = draft.plannerName;
-            }
-            if (draft.stageFilter && !window.AppStore.simStageFilter) {
-              window.AppStore.simStageFilter = draft.stageFilter;
-            }
-            if (draft.simFromDate && !window.AppStore.simFromDate) {
-              window.AppStore.simFromDate = draft.simFromDate;
-              window.AppStore.fromDate = draft.simFromDate;
-            }
-            if (draft.simToDate && !window.AppStore.simToDate) {
-              window.AppStore.simToDate = draft.simToDate;
-              window.AppStore.toDate = draft.simToDate;
-            }
-            if (draft.simTargetDate && !window.AppStore.simTargetDate) {
-              window.AppStore.simTargetDate = draft.simTargetDate;
-            }
-            if (draft.simScope && !window.AppStore.simScope) {
-              window.AppStore.simScope = draft.simScope;
-            }
-            if (draft.simPlanStatusFilter && !window.AppStore.simPlanStatusFilter) {
-              window.AppStore.simPlanStatusFilter = draft.simPlanStatusFilter;
-            }
-            if (draft.simGroupFilter && !window.AppStore.simGroupFilter) {
-              window.AppStore.simGroupFilter = draft.simGroupFilter;
-            }
-            if (draft.simSearchVal !== undefined && !window.AppStore.simSearchVal) {
-              window.AppStore.simSearchVal = draft.simSearchVal;
-            }
-            if (Array.isArray(draft.simWorkingLinesDay) && draft.simWorkingLinesDay.length > 0 && (!window.AppStore.simWorkingLinesDay || window.AppStore.simWorkingLinesDay.length === 0)) {
-              window.AppStore.simWorkingLinesDay = [...draft.simWorkingLinesDay];
-              window.AppStore._simLinesManualConfigured = true;
-            }
-            if (Array.isArray(draft.simWorkingLinesNight) && draft.simWorkingLinesNight.length > 0 && (!window.AppStore.simWorkingLinesNight || window.AppStore.simWorkingLinesNight.length === 0)) {
-              window.AppStore.simWorkingLinesNight = [...draft.simWorkingLinesNight];
-              window.AppStore._simLinesManualConfigured = true;
-            }
-            if (draft.simManualLinesDay && (!window.AppStore.simManualLinesDay || Object.keys(window.AppStore.simManualLinesDay).length === 0)) {
-              window.AppStore.simManualLinesDay = { ...draft.simManualLinesDay };
-            }
-            if (draft.simManualLinesNight && (!window.AppStore.simManualLinesNight || Object.keys(window.AppStore.simManualLinesNight).length === 0)) {
-              window.AppStore.simManualLinesNight = { ...draft.simManualLinesNight };
-            }
-            if (draft.simLineOverridesDay && (!window.AppStore.simLineOverridesDay || Object.keys(window.AppStore.simLineOverridesDay).length === 0)) {
-              window.AppStore.simLineOverridesDay = { ...draft.simLineOverridesDay };
-            }
-            if (draft.simLineOverridesNight && (!window.AppStore.simLineOverridesNight || Object.keys(window.AppStore.simLineOverridesNight).length === 0)) {
-              window.AppStore.simLineOverridesNight = { ...draft.simLineOverridesNight };
-            }
-            if (draft.simLineOverrides && (!window.AppStore.simLineOverrides || Object.keys(window.AppStore.simLineOverrides).length === 0)) {
-              window.AppStore.simLineOverrides = { ...draft.simLineOverrides };
-            }
-            if (draft.simManualSeqsDay && (!window.AppStore.simManualSeqsDay || Object.keys(window.AppStore.simManualSeqsDay).length === 0)) {
-              window.AppStore.simManualSeqsDay = { ...draft.simManualSeqsDay };
-            }
-            if (draft.simManualSeqsNight && (!window.AppStore.simManualSeqsNight || Object.keys(window.AppStore.simManualSeqsNight).length === 0)) {
-              window.AppStore.simManualSeqsNight = { ...draft.simManualSeqsNight };
-            }
-            if (draft.simManualPfDay && (!window.AppStore.simManualPfDay || Object.keys(window.AppStore.simManualPfDay).length === 0)) {
-              window.AppStore.simManualPfDay = { ...draft.simManualPfDay };
-            }
-            if (draft.simManualPfNight && (!window.AppStore.simManualPfNight || Object.keys(window.AppStore.simManualPfNight).length === 0)) {
-              window.AppStore.simManualPfNight = { ...draft.simManualPfNight };
-            }
-            if (draft.simManualPlanDay && (!window.AppStore.simManualPlanDay || Object.keys(window.AppStore.simManualPlanDay).length === 0)) {
-              window.AppStore.simManualPlanDay = { ...draft.simManualPlanDay };
-            }
-            if (draft.simManualPlanNight && (!window.AppStore.simManualPlanNight || Object.keys(window.AppStore.simManualPlanNight).length === 0)) {
-              window.AppStore.simManualPlanNight = { ...draft.simManualPlanNight };
-            }
-            if (draft.simManualShifts && (!window.AppStore.simManualShifts || Object.keys(window.AppStore.simManualShifts).length === 0)) {
-              window.AppStore.simManualShifts = { ...draft.simManualShifts };
-            }
-            if (draft.simManualNotes && (!window.AppStore.simManualNotes || Object.keys(window.AppStore.simManualNotes).length === 0)) {
-              window.AppStore.simManualNotes = { ...draft.simManualNotes };
-            }
-          }
-        }
-      } catch (e) {
-        console.warn('Error restoring sim draft:', e);
-      }
-      window.AppStore._simDraftRestored = true;
-      if (window.initPlanSyncWatcher) window.initPlanSyncWatcher();
-      if (!window.AppStore._checkedServerLatestOnOpen && window.handleAutoCheckLatestCompletedPlanOnLoad) {
-        window.AppStore._checkedServerLatestOnOpen = true;
-        window.handleAutoCheckLatestCompletedPlanOnLoad();
-      }
-    }
+    ensureSimPlanDraftRestored();
 
     const capData = window.AppStore.getAssemblyCapacityData();
     const _defCapWeek = (window.AppStore && window.AppStore.getFactoryWeekRange) ? window.AppStore.getFactoryWeekRange() : null;
@@ -1283,6 +1904,13 @@
       }
     });
     const scheduleItems = Array.from(uniqueScheduleMap.values());
+    const todayPlanRefPreSort = getTodayPlanReference();
+    scheduleItems.forEach((it, idx) => {
+      const gapQty = Number(it.cumGapQty || 0);
+      it._preSortIdx = idx;
+      it._prePlanMeta = resolvePlanDateAndShiftMeta(it, gapQty, todayPlanRefPreSort, shiftFilter);
+    });
+    scheduleItems.sort(compareAssemblyPriorityRows);
     const selCount = schedule.kpis.selectedDaysCount || 5;
     const totCount = schedule.kpis.totalDaysCount || 5;
 
@@ -1540,7 +2168,8 @@
 
       // Thông tin Chuyền và Thứ tự cho bảng 25 cột
       const manualDayLine = (window.AppStore.simManualLinesDay && window.AppStore.simManualLinesDay[rowKey]) ||
-                            (window.AppStore.simLineOverridesDay && window.AppStore.simLineOverridesDay[rowKey]);
+                            (window.AppStore.simLineOverridesDay && window.AppStore.simLineOverridesDay[rowKey]) ||
+                            (window.AppStore.simLineOverrides && window.AppStore.simLineOverrides[rowKey]);
       let assignedDayLineId = '';
       if (manualDayLine && manualDayLine !== 'NONE') {
         assignedDayLineId = manualDayLine;
@@ -1811,6 +2440,56 @@
 
     // Cache processed rows for Google Sheets export and Sequence modal
     window.AppStore.lastProcessedSimRows = processedRows;
+
+    // Evaluate Âm luỹ kế priority gatekeeper across current Assembly scope (even if filtered)
+    const isUnfilteredAsmStage = groupFilter === 'ALL' && !searchVal && (planStatusFilter === 'GAP_NEGATIVE' || planStatusFilter === 'ALL');
+    let extraFullAsmCumNegItems = null;
+    if (!isUnfilteredAsmStage && window.AppStore.getDetailedSchedule) {
+      const fullSched = window.AppStore.getDetailedSchedule({
+        fromDate: queryFromDate,
+        toDate: queryToDate,
+        shiftFilter: 'ALL',
+        stageFilter: stageFilter === 'ALL' ? 'ALL' : stageFilter,
+        modelFilter: 'ALL',
+        planStatusFilter: 'GAP_NEGATIVE',
+        search1C: '',
+        selectedDates: window.AppStore.getActiveSelectedDates ? window.AppStore.getActiveSelectedDates(queryFromDate, queryToDate) : null
+      });
+      const fullUnique = new Map();
+      (fullSched.items || []).forEach(it => {
+        const uKey = `${(it.stage || '').trim().toUpperCase()}___${(it.productName1C || it.model || '').trim().toLowerCase()}`;
+        if (!fullUnique.has(uKey)) fullUnique.set(uKey, it);
+      });
+      extraFullAsmCumNegItems = [];
+      fullUnique.forEach(it => {
+        const gap = Number(it.cumGapQty || 0);
+        const mName = it.productName1C || it.model || '';
+        const pm = resolvePlanDateAndShiftMeta(it, gap, todayPlanRef, 'ALL');
+        if (pm.isCumNegative && gap < 0) {
+          extraFullAsmCumNegItems.push({
+            rowKey: `${it.stage}___${it.model}___${it.productName1C}`.replace(/"/g, '&quot;'),
+            modelName: mName,
+            group: it.model || '',
+            gapQty: gap
+          });
+        }
+      });
+    }
+    const asmGate = evaluateCumNegativeGate(
+      'ASSEMBLY',
+      processedRows.map(r => ({
+        rowKey: r.rowKey,
+        modelName: (r.it && (r.it.productName1C || r.it.model)) || '',
+        group: (r.it && r.it.model) || '',
+        gapQty: Number((r.it && r.it.cumGapQty) || 0),
+        isCumNeg: !!(r.planMeta && r.planMeta.isCumNegative && r.it && r.it.cumGapQty < 0),
+        plannedOutput: (r.planDay || 0) + (r.planNight || 0),
+        hasNote: hasSimRowPlanningNote(r.rowKey, r.it && r.it.productName1C, r.it && r.it.model)
+      })),
+      `${stageFilter}_${queryFromDate}_${queryToDate}_${simScope}`,
+      isUnfilteredAsmStage,
+      extraFullAsmCumNegItems
+    );
 
     // Mini summary table per line for Day and Night shifts (matching Image 2)
     const dayLineHoursMap = {};
@@ -2235,6 +2914,14 @@
       } = r;
 
       const gapColor = it.cumGapQty < 0 ? 'color: var(--danger);' : it.cumGapQty > 0 ? 'color: var(--success);' : 'color: var(--text-muted);';
+      const encodedRowKey = encodeSimRowKey(rowKey);
+      const isAsmRowCumNeg = !!(planMeta && planMeta.isCumNegative && (it.cumGapQty || 0) < 0);
+      const isAsmRowLocked = !!(asmGate && asmGate.isBlocked && !isAsmRowCumNeg);
+      const asmLockAttr = isAsmRowLocked ? 'disabled' : '';
+      const asmLockClass = isAsmRowLocked ? ' sim-input-locked' : '';
+      const asmLockTitleSuffix = isAsmRowLocked
+        ? ' [Đang khóa: Cần nhập Kế hoạch (>0) hoặc Lý do ở cột Ghi Chú cho các Model Âm luỹ kế trước]'
+        : '';
 
       // Dropdown options for Line SX (chỉ để tên Line)
       const allSelectableLines = [
@@ -2245,7 +2932,7 @@
 
       // Line dropdown for Day Shift
       const lineSelectDayHtml = `
-        <select class="sim-table-line-select font-mono" onchange="handleTableLineDayChange('${rowKey}', this.value)" style="padding: 0.15rem 0.25rem; font-size: 0.775rem; font-weight: 800; color: ${assignedDayLineId ? '#38bdf8' : '#64748b'}; background: rgba(15, 23, 42, 0.9); border: 1px solid ${assignedDayLineId ? 'rgba(56, 189, 248, 0.5)' : 'rgba(255, 255, 255, 0.15)'}; border-radius: 6px; outline: none; cursor: pointer; text-align: center; min-width: 58px;">
+        <select class="sim-table-line-select${asmLockClass} font-mono" ${asmLockAttr} onchange="handleTableLineDayChange(decodeURIComponent('${encodedRowKey}'), this.value)" style="padding: 0.15rem 0.25rem; font-size: 0.775rem; font-weight: 800; color: ${assignedDayLineId ? '#38bdf8' : '#64748b'}; background: rgba(15, 23, 42, 0.9); border: 1px solid ${assignedDayLineId ? 'rgba(56, 189, 248, 0.5)' : 'rgba(255, 255, 255, 0.15)'}; border-radius: 6px; outline: none; cursor: pointer; text-align: center; min-width: 58px;" title="${isAsmRowLocked ? '🔒' + asmLockTitleSuffix : 'Chọn Line SX Ca Ngày'}">
           <option value="" ${!assignedDayLineId ? 'selected' : ''}>--</option>
           ${uniqueLineOptions.map(lid => {
             return `<option value="${lid}" ${assignedDayLineId === lid ? 'selected' : ''}>${lid}</option>`;
@@ -2255,7 +2942,7 @@
 
       // Line dropdown for Night Shift
       const lineSelectNightHtml = `
-        <select class="sim-table-line-select font-mono" onchange="handleTableLineNightChange('${rowKey}', this.value)" style="padding: 0.15rem 0.25rem; font-size: 0.775rem; font-weight: 800; color: ${assignedNightLineId ? '#c084fc' : '#64748b'}; background: rgba(15, 23, 42, 0.9); border: 1px solid ${assignedNightLineId ? 'rgba(192, 132, 252, 0.5)' : 'rgba(255, 255, 255, 0.15)'}; border-radius: 6px; outline: none; cursor: pointer; text-align: center; min-width: 58px;">
+        <select class="sim-table-line-select${asmLockClass} font-mono" ${asmLockAttr} onchange="handleTableLineNightChange(decodeURIComponent('${encodedRowKey}'), this.value)" style="padding: 0.15rem 0.25rem; font-size: 0.775rem; font-weight: 800; color: ${assignedNightLineId ? '#c084fc' : '#64748b'}; background: rgba(15, 23, 42, 0.9); border: 1px solid ${assignedNightLineId ? 'rgba(192, 132, 252, 0.5)' : 'rgba(255, 255, 255, 0.15)'}; border-radius: 6px; outline: none; cursor: pointer; text-align: center; min-width: 58px;" title="${isAsmRowLocked ? '🔒' + asmLockTitleSuffix : 'Chọn Line SX Ca Đêm'}">
           <option value="" ${!assignedNightLineId ? 'selected' : ''}>--</option>
           ${uniqueLineOptions.map(lid => {
             return `<option value="${lid}" ${assignedNightLineId === lid ? 'selected' : ''}>${lid}</option>`;
@@ -2267,7 +2954,7 @@
       const shiftNightText = 'Ca Đêm';
 
       return `
-        <tr class="hover-row">
+        <tr class="hover-row${isAsmRowCumNeg ? ' sim-row-cumneg-priority' : ''}${isAsmRowLocked ? ' sim-row-locked-current-day' : ''}" data-row-key="${encodedRowKey}" data-is-cumneg="${isAsmRowCumNeg ? '1' : '0'}" data-row-locked="${isAsmRowLocked ? '1' : '0'}">
           <td class="sticky-sim-stt" style="color: var(--text-muted); font-size: 0.8rem; text-align: center;">${idx + 1}</td>
           <td class="sticky-sim-stage" style="text-align: center; white-space: nowrap; font-size: 0.8rem; font-weight: 700; color: #f8fafc;">
             ${it.stage || 'ASSEMBLY'}
@@ -2304,11 +2991,11 @@
             ${lineSelectDayHtml}
           </td>
           <td style="text-align: center; white-space: nowrap; padding: 0.25rem 0.25rem;">
-            <input type="text" class="sim-table-seq-input font-mono" value="${seqDay || ''}" placeholder="--" onchange="handleTableSeqDayChange('${rowKey}', this.value)" style="width: 44px; padding: 0.15rem 0.2rem; font-size: 0.775rem; font-weight: 800; color: #38bdf8; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 6px; outline: none; text-align: center;" title="Nhập thứ tự sản xuất trên Line ca Ngày">
+            <input type="text" class="sim-table-seq-input${asmLockClass} font-mono" ${asmLockAttr} value="${seqDay || ''}" placeholder="--" onchange="handleTableSeqDayChange(decodeURIComponent('${encodedRowKey}'), this.value)" style="width: 44px; padding: 0.15rem 0.2rem; font-size: 0.775rem; font-weight: 800; color: #38bdf8; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 6px; outline: none; text-align: center;" title="Nhập thứ tự sản xuất trên Line ca Ngày${asmLockTitleSuffix}">
           </td>
           <td class="font-mono" style="text-align: center; white-space: nowrap; padding: 0.25rem 0.25rem;">
             <div style="display: inline-flex; align-items: center; justify-content: center; gap: 2px;">
-              <input type="text" class="sim-table-pf-input font-mono" value="${perfPctDay !== null && perfPctDay !== undefined && (assignedDayLineId || (window.AppStore.simManualPfDay && window.AppStore.simManualPfDay[rowKey])) ? perfPctDay : ''}" placeholder="${assignedDayLineId ? '100' : '--'}" onchange="handleTablePfDayChange('${rowKey}', this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 44px; padding: 0.15rem 0.15rem; font-size: 0.775rem; font-weight: 800; color: #38bdf8; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 6px; outline: none; text-align: center;" title="Nhập PF% Ca Ngày (mặc định 100%)">%
+              <input type="text" class="sim-table-pf-input${asmLockClass} font-mono" ${asmLockAttr} value="${perfPctDay !== null && perfPctDay !== undefined && (assignedDayLineId || (window.AppStore.simManualPfDay && window.AppStore.simManualPfDay[rowKey])) ? perfPctDay : ''}" placeholder="${assignedDayLineId ? '100' : '--'}" onchange="handleTablePfDayChange(decodeURIComponent('${encodedRowKey}'), this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 44px; padding: 0.15rem 0.15rem; font-size: 0.775rem; font-weight: 800; color: #38bdf8; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 6px; outline: none; text-align: center;" title="Nhập PF% Ca Ngày (mặc định 100%)${asmLockTitleSuffix}">%
             </div>
           </td>
           <td class="font-mono" style="text-align: right; font-weight: 700; color: #38bdf8; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
@@ -2318,7 +3005,7 @@
             ${dayAvailHours !== null && dayAvailHours > 0 ? dayAvailHours.toFixed(2) : (assignedDayLineId && shortage > 0 ? '0.00' : '')}
           </td>
           <td class="font-mono" style="text-align: right; white-space: nowrap; padding: 0.25rem 0.25rem;">
-            <input type="text" class="sim-table-plan-input font-mono" value="${planDay > 0 ? planDay.toLocaleString('vi-VN') : (shortage > 0 && assignedDayLineId ? '0' : '')}" placeholder="0" onchange="handleTablePlanDayChange('${rowKey}', this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 68px; padding: 0.15rem 0.3rem; font-size: 0.8rem; font-weight: 800; color: #38bdf8; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 6px; outline: none; text-align: right;" title="Nhập Plan sản xuất Ca Ngày">
+            <input type="text" class="sim-table-plan-input${asmLockClass} font-mono" ${asmLockAttr} value="${planDay > 0 ? planDay.toLocaleString('vi-VN') : (shortage > 0 && assignedDayLineId ? '0' : '')}" placeholder="0" onchange="handleTablePlanDayChange(decodeURIComponent('${encodedRowKey}'), this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 68px; padding: 0.15rem 0.3rem; font-size: 0.8rem; font-weight: 800; color: #38bdf8; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 6px; outline: none; text-align: right;" title="Nhập Plan sản xuất Ca Ngày${asmLockTitleSuffix}">
           </td>
           <td class="font-mono" style="text-align: right; font-weight: 800; color: #f87171; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
             ${nightShortage > 0 ? '-' + nightShortage.toLocaleString('vi-VN') : ''}
@@ -2331,11 +3018,11 @@
             ${lineSelectNightHtml}
           </td>
           <td style="text-align: center; white-space: nowrap; padding: 0.25rem 0.25rem;">
-            <input type="text" class="sim-table-seq-input font-mono" value="${seqNight || ''}" placeholder="--" onchange="handleTableSeqNightChange('${rowKey}', this.value)" style="width: 44px; padding: 0.15rem 0.2rem; font-size: 0.775rem; font-weight: 800; color: #c084fc; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(192, 132, 252, 0.35); border-radius: 6px; outline: none; text-align: center;" title="Nhập thứ tự sản xuất trên Line ca Đêm">
+            <input type="text" class="sim-table-seq-input${asmLockClass} font-mono" ${asmLockAttr} value="${seqNight || ''}" placeholder="--" onchange="handleTableSeqNightChange(decodeURIComponent('${encodedRowKey}'), this.value)" style="width: 44px; padding: 0.15rem 0.2rem; font-size: 0.775rem; font-weight: 800; color: #c084fc; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(192, 132, 252, 0.35); border-radius: 6px; outline: none; text-align: center;" title="Nhập thứ tự sản xuất trên Line ca Đêm${asmLockTitleSuffix}">
           </td>
           <td class="font-mono" style="text-align: center; white-space: nowrap; padding: 0.25rem 0.25rem;">
             <div style="display: inline-flex; align-items: center; justify-content: center; gap: 2px;">
-              <input type="text" class="sim-table-pf-input font-mono" value="${perfPctNight !== null && perfPctNight !== undefined && (assignedNightLineId || (window.AppStore.simManualPfNight && window.AppStore.simManualPfNight[rowKey])) ? perfPctNight : ''}" placeholder="${assignedNightLineId ? '100' : '--'}" onchange="handleTablePfNightChange('${rowKey}', this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 44px; padding: 0.15rem 0.15rem; font-size: 0.775rem; font-weight: 800; color: #c084fc; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(192, 132, 252, 0.35); border-radius: 6px; outline: none; text-align: center;" title="Nhập PF% Ca Đêm (mặc định 100%)">%
+              <input type="text" class="sim-table-pf-input${asmLockClass} font-mono" ${asmLockAttr} value="${perfPctNight !== null && perfPctNight !== undefined && (assignedNightLineId || (window.AppStore.simManualPfNight && window.AppStore.simManualPfNight[rowKey])) ? perfPctNight : ''}" placeholder="${assignedNightLineId ? '100' : '--'}" onchange="handleTablePfNightChange(decodeURIComponent('${encodedRowKey}'), this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 44px; padding: 0.15rem 0.15rem; font-size: 0.775rem; font-weight: 800; color: #c084fc; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(192, 132, 252, 0.35); border-radius: 6px; outline: none; text-align: center;" title="Nhập PF% Ca Đêm (mặc định 100%)${asmLockTitleSuffix}">%
             </div>
           </td>
           <td class="font-mono" style="text-align: right; font-weight: 700; color: #c084fc; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
@@ -2345,21 +3032,21 @@
             ${nightAvailHours !== null && nightAvailHours > 0 ? nightAvailHours.toFixed(2) : (assignedNightLineId && nightShortage > 0 ? '0.00' : '')}
           </td>
           <td class="font-mono" style="text-align: right; white-space: nowrap; padding: 0.25rem 0.25rem;">
-            <input type="text" class="sim-table-plan-input font-mono" value="${planNight > 0 ? planNight.toLocaleString('vi-VN') : (nightShortage > 0 && assignedNightLineId ? '0' : '')}" placeholder="0" onchange="handleTablePlanNightChange('${rowKey}', this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 68px; padding: 0.15rem 0.3rem; font-size: 0.8rem; font-weight: 800; color: #c084fc; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(192, 132, 252, 0.35); border-radius: 6px; outline: none; text-align: right;" title="Nhập Plan sản xuất Ca Đêm">
+            <input type="text" class="sim-table-plan-input${asmLockClass} font-mono" ${asmLockAttr} value="${planNight > 0 ? planNight.toLocaleString('vi-VN') : (nightShortage > 0 && assignedNightLineId ? '0' : '')}" placeholder="0" onchange="handleTablePlanNightChange(decodeURIComponent('${encodedRowKey}'), this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 68px; padding: 0.15rem 0.3rem; font-size: 0.8rem; font-weight: 800; color: #c084fc; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(192, 132, 252, 0.35); border-radius: 6px; outline: none; text-align: right;" title="Nhập Plan sản xuất Ca Đêm${asmLockTitleSuffix}">
           </td>
           <td class="font-mono" style="text-align: right; font-weight: 800; color: #f87171; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
             ${finalShortage > 0 ? '-' + finalShortage.toLocaleString('vi-VN') : ''}
           </td>
           <td style="text-align: left; padding: 0.2rem 0.35rem; min-width: 140px;">
-            <input type="text" class="sim-table-note-input" data-row-key="${encodeURIComponent(rowKey)}" value="${(window.AppStore.simManualNotes && window.AppStore.simManualNotes[rowKey]) ? String(window.AppStore.simManualNotes[rowKey]).replace(/"/g, '&quot;') : ''}" placeholder="Nhập ghi chú..." onchange="handleTableNoteChange('${rowKey}', this.value)" onkeydown="if(event.key==='Enter') this.blur();" title="Ghi chú cho Model ${(it.productName1C || it.model || '').replace(/"/g, '&quot;')}">
+            <input type="text" class="sim-table-note-input" data-row-key="${encodedRowKey}" value="${(window.AppStore.simManualNotes && window.AppStore.simManualNotes[rowKey]) ? String(window.AppStore.simManualNotes[rowKey]).replace(/"/g, '&quot;') : ''}" placeholder="${isAsmRowCumNeg ? 'Nhập lý do / ghi chú...' : 'Nhập ghi chú...'}" onchange="handleTableNoteChange(decodeURIComponent('${encodedRowKey}'), this.value)" onkeydown="if(event.key==='Enter') this.blur();" title="Ghi chú cho Model ${(it.productName1C || it.model || '').replace(/"/g, '&quot;').replace(/[\r\n]+/g, ' ')}">
           </td>
           ${renderAccumulatedNegativeOriginCellHtml(cumNegOriginMeta)}
           <td style="text-align: center; white-space: nowrap; padding: 0.25rem 0.35rem;">
             <button type="button"
               class="btn btn-xs"
-              onclick="handleCheckModelWip('${encodeURIComponent(it.stage || 'ASSEMBLY')}', '${encodeURIComponent(it.model || '')}', '${encodeURIComponent(it.productName1C || it.model || '')}', ${Number(it.cumGapQty || 0)}, '${queryFromDate}', '${queryToDate}')"
+              onclick="handleCheckModelWip('${encodeSimRowKey(it.stage || 'ASSEMBLY')}', '${encodeSimRowKey(it.model || '')}', '${encodeSimRowKey(it.productName1C || it.model || '')}', ${Number(it.cumGapQty || 0)}, '${queryFromDate}', '${queryToDate}')"
               style="padding: 0.2rem 0.55rem; font-size: 0.725rem; font-weight: 800; color: #34d399; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.25rem;"
-              title="Mở WIP Control và lọc đúng Model ${(it.productName1C || it.model || '').replace(/"/g, '&quot;')} (${it.stage || 'ASSEMBLY'})">
+              title="Mở WIP Control và lọc đúng Model ${(it.productName1C || it.model || '').replace(/"/g, '&quot;').replace(/[\r\n]+/g, ' ')} (${it.stage || 'ASSEMBLY'})">
               <span>📦 Check WIP</span>
             </button>
           </td>
@@ -2711,29 +3398,7 @@
               <span style="font-weight: 800; color: #38bdf8; font-size: 0.85rem;">
                 📋 TIẾN ĐỘ SẢN LƯỢNG &amp; ĐỀ XUẤT LINE TẢI CHUYỀN (THEO BẢNG 2)
               </span>
-              <button type="button" class="btn btn-secondary sim-btn-planner" onclick="handleEditPlannerName()" style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 6px; background: rgba(15, 23, 42, 0.8); cursor: pointer;" title="Bấm để cập nhật tên Người lập Plan">
-                <span>👤 Người lập Plan: <strong id="simPlannerBadgeName" style="color: #fbbf24;">${plannerName}</strong></span>
-                <span style="font-size: 0.65rem; opacity: 0.8;">✏️</span>
-              </button>
-              <button type="button" class="btn btn-secondary sim-btn-draft" onclick="handleSaveSimPlanDraft()" style="padding: 0.2rem 0.6rem; font-size: 0.725rem; font-weight: 700; color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; background: rgba(56, 189, 248, 0.12);" title="Lưu tạm tiến độ lập kế hoạch để không bị mất dữ liệu khi refresh">
-                <span>💾 Lưu Tạm</span>
-              </button>
-              <button type="button" class="btn btn-secondary sim-btn-reset" onclick="handleResetSimPlan()" style="padding: 0.2rem 0.6rem; font-size: 0.725rem; font-weight: 700; color: #f87171; border-color: rgba(248, 113, 113, 0.45); display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; background: rgba(248, 113, 113, 0.12); cursor: pointer;" title="Đặt lại (Reset) toàn bộ kế hoạch và phân bổ về mặc định">
-                <span>🔄 Reset</span>
-              </button>
-              <button type="button" class="btn btn-primary sim-btn-complete" onclick="handleCompleteSimPlan()" style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #fff; background: linear-gradient(135deg, #059669 0%, #10b981 100%); border-color: #10b981; display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);" title="Hoàn thành kế hoạch và lưu vào Lịch sử">
-                <span>✅ Hoàn Thành</span>
-              </button>
-              <button type="button" class="btn btn-secondary sim-btn-history" onclick="handleOpenSimPlanHistoryModal()" style="padding: 0.2rem 0.6rem; font-size: 0.725rem; font-weight: 700; color: #fbbf24; border-color: rgba(251, 191, 36, 0.45); display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; background: rgba(251, 191, 36, 0.1);" title="Xem lại lịch sử các lần lập kế hoạch và khôi phục khi cần">
-                <span>📜 Lịch Sử Plan</span>
-                <span id="simHistoryBadge" style="background: rgba(251, 191, 36, 0.3); color: #fbbf24; padding: 0.05rem 0.35rem; border-radius: 9999px; font-size: 0.65rem; font-weight: 800;">${simHistoryCount}</span>
-              </button>
-              <button type="button" class="btn btn-secondary sim-btn-cloud-sync" onclick="handleForceSyncLatestPlan()" style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #34d399; border-color: rgba(52, 211, 153, 0.45); display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 6px; background: rgba(52, 211, 153, 0.1); cursor: pointer;" title="Nạp ngay lập tức bản kế hoạch sản xuất mới nhất từ máy chủ / Cloud">
-                <span>🔄 Đồng Bộ Plan</span>
-              </button>
-              <button type="button" class="btn btn-secondary sim-btn-cloud-setup" onclick="handleOpenCloudSyncModal()" style="padding: 0.2rem 0.6rem; font-size: 0.725rem; font-weight: 700; color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; background: rgba(56, 189, 248, 0.1); cursor: pointer;" title="Cấu hình đồng bộ Cloud (GitHub Pages / Google Apps Script), xem link LAN và Xuất/Nhập file Plan (.json)">
-                <span>☁️ Cloud / File</span>
-              </button>
+              ${renderSimPlanActionButtonsHtml(plannerName, simHistoryCount)}
             </div>
             <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
               <button type="button" class="sim-btn-export-sheet" onclick="handleExportCapacityScheduleGoogleSheet()" title="Xuất file CSV chuẩn UTF-8 tương thích Google Sheets &amp; Excel theo định dạng 29 cột kèm Date Plan, Shift Plan, Ghi Chú &amp; Âm Từ Ngày / Ca">
@@ -2752,28 +3417,8 @@
           </div>
 
           <!-- BANNER THÔNG BÁO KẾ HOẠCH MỚI VỪA HOÀN THÀNH TỪ USER KHÁC (REAL-TIME SYNC) -->
-          <div id="simNewPlanBanner" class="sim-new-plan-banner" style="margin: 0.6rem 0.75rem 0 0.75rem; display: ${window.AppStore._hasPendingRemotePlan ? 'flex' : 'none'};">
-            <div class="banner-info">
-              <span style="font-size: 1.35rem;">🔔</span>
-              <div>
-                <div style="font-weight: 800; color: #ffffff; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem;">
-                  <span>Có Kế Hoạch Sản Xuất Mới Vừa Hoàn Thành!</span>
-                  <span class="badge" style="background: rgba(255,255,255,0.25); color: #fff; font-size: 0.65rem; padding: 0.1rem 0.35rem; border-radius: 4px;">Live Update</span>
-                </div>
-                <div id="simBannerDesc" style="color: #d1fae5; font-size: 0.75rem; margin-top: 0.15rem;">
-                  ${window.AppStore._pendingRemotePlanDesc || 'Đã có bản kế hoạch sản xuất mới từ thành viên khác.'}
-                </div>
-              </div>
-            </div>
-            <div class="banner-actions">
-              <button type="button" class="sim-btn-apply-plan" onclick="handleApplyLatestCompletedPlan()">
-                <span>⚡ Cập Nhật &amp; Xem Ngay</span>
-              </button>
-              <button type="button" class="btn btn-secondary" onclick="handleDismissNewPlanAlert()" style="padding: 0.25rem 0.55rem; font-size: 0.725rem; color: #d1fae5; border-color: rgba(209, 250, 229, 0.4); background: rgba(0,0,0,0.2); cursor: pointer;" title="Tạm ẩn thông báo này">
-                <span>✕ Đóng</span>
-              </button>
-            </div>
-          </div>
+          ${renderSimNewPlanBannerHtml()}
+          ${renderCumNegPriorityBannerHtml(asmGate, 'ASSEMBLY')}
 
           <div id="simTableScrollWrapper" style="overflow-x: auto; max-height: calc(100vh - 270px);">
             <table class="sim-table" style="width: 100%; border-collapse: separate; border-spacing: 0;">
@@ -2926,47 +3571,63 @@
     const p1c = (it.productName1C || '').toLowerCase().trim();
     const model = (it.model || '').toLowerCase().trim();
     const stage = (it.stage || '').toUpperCase().trim();
+    const cleanModel = model.replace(/\(.*?\)/g, '').replace(/white|black/gi, '').replace(/\s+/g, ' ').trim();
+    const regionStr = p1c + ' ' + model;
+    const is9xx = /\b9xx\b|9au|9sa|915|_9xx|9na|ula\b/.test(regionStr);
+    const is8xx = /\b8xx\b|8eu|868|_8xx|ueu\b/.test(regionStr);
+    const mv = model.match(/\bv(\d+)\b/i);
+
+    function bandBonus(c) {
+      const cb = (c.board || '').toLowerCase();
+      const cHas9 = /9xx|9[a-z]{2}|ula/.test(cb);
+      const cHas8 = /8xx|8[хx]{2}|868|ueu/.test(cb);
+      if (is9xx && cHas9) return 20;
+      if (is8xx && cHas8) return 20;
+      if (is9xx && cHas8) return -5;
+      if (is8xx && cHas9) return -5;
+      return 0;
+    }
 
     let match = null;
+    let bestScore = -Infinity;
 
-    // 1. Khớp theo mã bo mạch (Board / P1C code)
-    if (p1c) {
-      for (const c of htItems) {
-        const bCode = (c.board || '').toLowerCase().trim();
-        const bClean = bCode.replace(/\[.*?\]/g, '').replace(/[()]/g, '').trim();
-        if (bClean && bClean.length > 5 && p1c.includes(bClean)) {
-          match = c;
-          break;
+    for (const c of htItems) {
+      const cStage = (c.stage || '').toUpperCase().trim();
+      const stageScore = (cStage === stage) ? 10000 : 0;
+      const bCode = (c.board || '').toLowerCase().trim();
+      const bNoBr = bCode.replace(/\[.*?\]/g, '').replace(/\(.*?\)/g, '').trim();
+      const bCore = bNoBr.replace(/_*dip\d*$/i, '').replace(/_+$/, '').trim();
+      let matchScore = 0;
+
+      // 1. Ưu tiên khớp chính xác theo Công Đoạn + Mã Bo Mạch
+      if (p1c && bCode && p1c.includes(bCode)) {
+        matchScore = 5000 + bCode.length;
+      } else if (p1c && bNoBr.length > 5 && p1c.includes(bNoBr)) {
+        matchScore = 4500 + bNoBr.length;
+      } else if (p1c && bCore.length >= 8 && p1c.includes(bCore)) {
+        matchScore = 4000 + bCore.length;
+      } else if (cleanModel) {
+        // 2. Khớp theo Group / AltGroup ưu tiên đúng tuyệt đối hoặc tên dài cụ thể hơn (vd DoorProtect Plus > DoorProtect)
+        const grps = [c.group, c.altGroup].map(x => (x || '').toLowerCase().trim()).filter(Boolean);
+        for (const cg of grps) {
+          if (cg === cleanModel) {
+            matchScore = Math.max(matchScore, 3000 + cg.length * 10);
+          } else if (cleanModel.startsWith(cg + ' ') || cleanModel === cg) {
+            matchScore = Math.max(matchScore, 2200 + cg.length * 10);
+          } else if (cg.startsWith(cleanModel + ' ')) {
+            matchScore = Math.max(matchScore, 1800 + cleanModel.length * 10);
+          } else if (cleanModel.includes(cg) || cg.includes(cleanModel)) {
+            matchScore = Math.max(matchScore, 1000 + Math.min(cg.length, cleanModel.length) * 10);
+          }
         }
-        if (bCode && p1c.includes(bCode)) {
-          match = c;
-          break;
-        }
+        if (mv && bCode.includes('v' + mv[1])) matchScore += 30;
       }
-    }
 
-    // 2. Khớp theo Model Group và đúng Công Đoạn con (HARD TEST, OPTICS ASM, FOCUS)
-    if (!match && model) {
-      const cleanModel = model.replace(/\(.*?\)/g, '').replace(/white|black/gi, '').trim();
-      for (const c of htItems) {
-        const cGrp = (c.group || '').toLowerCase().trim();
-        const cStage = (c.stage || '').toUpperCase().trim();
-        if (cStage === stage && (cGrp === cleanModel || cGrp.includes(cleanModel) || cleanModel.includes(cGrp))) {
-          match = c;
-          break;
-        }
-      }
-    }
-
-    // 3. Khớp theo Model Group (nới lỏng công đoạn)
-    if (!match && model) {
-      const cleanModel = model.replace(/\(.*?\)/g, '').replace(/white|black/gi, '').trim();
-      for (const c of htItems) {
-        const cGrp = (c.group || '').toLowerCase().trim();
-        if (cGrp === cleanModel || cGrp.includes(cleanModel) || cleanModel.includes(cGrp)) {
-          match = c;
-          break;
-        }
+      if (matchScore <= 0) continue;
+      const totalScore = stageScore + matchScore + bandBonus(c);
+      if (totalScore > bestScore) {
+        bestScore = totalScore;
+        match = c;
       }
     }
 
@@ -2977,6 +3638,11 @@
     const normGroup = (match && match.group) ? match.group : it.model;
     const fttPct = (match && match.fttPct != null) ? match.fttPct : 95.0;
     const dtTotalPct = (match && match.dtTotalPct != null) ? match.dtTotalPct : 5.0;
+    const isShared = Boolean(match && match.isShared);
+    const note = (match && match.note) ? match.note : (isShared ? 'Dùng Chung' : 'Riêng');
+    const poolId = match
+      ? (match.poolId || `ht_pool_solo_${match.id || match.rowIdx || board}`)
+      : `ht_pool_fallback_${stage}_${(normGroup || board).toLowerCase().trim()}`;
 
     return {
       ctNorm,
@@ -2986,8 +3652,149 @@
       normGroup,
       fttPct,
       dtTotalPct,
+      isShared,
+      note,
+      poolId,
       match
     };
+  }
+
+  /**
+   * PHÂN BỔ TEST BLOCK & CÔNG SUẤT THEO CA (10.83h NGÀY / 10.58h ĐÊM) CÓ KHỐNG CHẾ NHÓM "DÙNG CHUNG"
+   * Đảm bảo tổng Số Test Block Dùng trong 1 ca của các Model cùng pool <= TB Sẵn Có.
+   */
+  function allocateHardtestShiftPool(priorityRows, shiftCfg) {
+    const {
+      shiftSide,
+      shiftHours,
+      shiftSeconds,
+      manualTbMap,
+      legacyManualTbMap,
+      manualManMap,
+      legacyManualManMap,
+      manualPlanMap,
+      getTargetQty
+    } = shiftCfg;
+
+    const poolUsage = {};
+    const metaByRow = new Map();
+
+    priorityRows.forEach(r => {
+      const targetQty = getTargetQty(r);
+      const capa1TB = (r.ctMachineWithFttDt > 0 && shiftSeconds > 0) ? (shiftSeconds / r.ctMachineWithFttDt) : 0;
+      const tbOverrideRaw = manualTbMap[r.rowId] !== undefined
+        ? manualTbMap[r.rowId]
+        : (legacyManualTbMap ? legacyManualTbMap[r.rowId] : undefined);
+      const hasTbOverride = tbOverrideRaw !== undefined;
+      const planOverrideRaw = manualPlanMap ? manualPlanMap[r.rowId] : undefined;
+      const hasPlanOverride = planOverrideRaw !== undefined && !isNaN(planOverrideRaw) && Number(planOverrideRaw) >= 0;
+      const manOverrideRaw = manualManMap[r.rowId] !== undefined
+        ? manualManMap[r.rowId]
+        : (legacyManualManMap ? legacyManualManMap[r.rowId] : undefined);
+      const hasManOverride = manOverrideRaw !== undefined;
+
+      if (!poolUsage[r.poolId]) {
+        poolUsage[r.poolId] = { usedTb: 0, availTb: r.availTb, peerCount: 0 };
+      }
+      if (targetQty > 0 || hasTbOverride || hasPlanOverride) {
+        poolUsage[r.poolId].peerCount += 1;
+      }
+
+      metaByRow.set(r.rowId, {
+        targetQty,
+        capa1TB,
+        tbOverrideRaw,
+        hasTbOverride,
+        planOverrideRaw,
+        hasPlanOverride,
+        manOverrideRaw,
+        hasManOverride,
+        tbUsed: 0
+      });
+    });
+
+    // Pass 1: Ưu tiên giữ các dòng đã nhập tay Số TB hoặc Output Plan
+    priorityRows.forEach(r => {
+      const m = metaByRow.get(r.rowId);
+      const pool = poolUsage[r.poolId];
+      if (m.hasTbOverride) {
+        m.tbUsed = Math.max(0, parseInt(m.tbOverrideRaw, 10) || 0);
+        pool.usedTb += m.tbUsed;
+      } else if (m.hasPlanOverride) {
+        const planVal = Math.max(0, Number(m.planOverrideRaw) || 0);
+        const remPool = Math.max(0, r.availTb - pool.usedTb);
+        const reqForPlan = (planVal > 0 && m.capa1TB > 0) ? Math.ceil(planVal / m.capa1TB) : 0;
+        m.tbUsed = Math.min(remPool, reqForPlan);
+        pool.usedTb += m.tbUsed;
+      }
+    });
+
+    // Pass 2: Tự động chia phần TB còn lại của pool cho các Model theo thứ tự ưu tiên
+    priorityRows.forEach(r => {
+      const m = metaByRow.get(r.rowId);
+      if (m.hasTbOverride || m.hasPlanOverride) return;
+      const pool = poolUsage[r.poolId];
+      const remPool = Math.max(0, r.availTb - pool.usedTb);
+      const idealTb = (m.targetQty > 0 && m.capa1TB > 0) ? Math.ceil(m.targetQty / m.capa1TB) : 0;
+      m.tbUsed = Math.min(remPool, idealTb);
+      pool.usedTb += m.tbUsed;
+    });
+
+    priorityRows.forEach(r => {
+      const m = metaByRow.get(r.rowId);
+      const pool = poolUsage[r.poolId];
+      const output = m.hasPlanOverride
+        ? Math.max(0, Number(m.planOverrideRaw) || 0)
+        : ((m.targetQty > 0 && m.tbUsed > 0 && m.capa1TB > 0)
+            ? Math.min(m.targetQty, Math.floor(m.tbUsed * m.capa1TB))
+            : 0);
+      const actualHours = (output > 0 && r.ctMachineWithFttDt > 0)
+        ? (output * r.ctMachineWithFttDt) / 3600
+        : 0;
+      const manUsed = m.hasManOverride
+        ? Math.max(0, parseInt(m.manOverrideRaw, 10) || 0)
+        : (m.tbUsed > 0 ? Math.ceil(m.tbUsed / 2.0) : 0);
+      const maxOutputAtTb = (m.tbUsed > 0 && m.capa1TB > 0) ? Math.floor(m.tbUsed * m.capa1TB) : 0;
+      const isShiftCapOver = m.hasPlanOverride && (
+        actualHours > (m.tbUsed * shiftHours) + 0.02 ||
+        (m.tbUsed === 0 && output > 0) ||
+        output > maxOutputAtTb
+      );
+      const isPoolTbOver = pool.usedTb > r.availTb;
+      const isRowTbOver = (m.tbUsed > r.availTb) || (m.tbUsed > 0 && isPoolTbOver);
+
+      if (shiftSide === 'DAY') {
+        r.manualTbDay = m.tbUsed;
+        r.manualManDay = manUsed;
+        r.hasDayTbOverride = m.hasTbOverride;
+        r.hasDayManOverride = m.hasManOverride;
+        r.hasDayPlanOverride = m.hasPlanOverride;
+        r.dayOutput = output;
+        r.dayActualHours = actualHours;
+        r.nightShortage = Math.max(0, m.targetQty - output);
+        r.poolDayUsedTb = pool.usedTb;
+        r.poolDayPeerCount = pool.peerCount;
+        r.isPoolDayTbOver = isPoolTbOver;
+        r.isDayTbOver = isRowTbOver;
+        r.isDayShiftCapOver = isShiftCapOver;
+        r.uphDay = (r.ctMachineWithFttDt > 0 && m.tbUsed > 0) ? ((3600.0 * m.tbUsed) / r.ctMachineWithFttDt) : 0;
+      } else {
+        r.manualTbNight = m.tbUsed;
+        r.manualManNight = manUsed;
+        r.hasNightTbOverride = m.hasTbOverride;
+        r.hasNightManOverride = m.hasManOverride;
+        r.hasNightPlanOverride = m.hasPlanOverride;
+        r.nightOutput = output;
+        r.nightActualHours = actualHours;
+        r.finalShortage = Math.max(0, m.targetQty - output);
+        r.poolNightUsedTb = pool.usedTb;
+        r.poolNightPeerCount = pool.peerCount;
+        r.isPoolNightTbOver = isPoolTbOver;
+        r.isNightTbOver = isRowTbOver;
+        r.isNightShiftCapOver = isShiftCapOver;
+        r.uphNight = (r.ctMachineWithFttDt > 0 && m.tbUsed > 0) ? ((3600.0 * m.tbUsed) / r.ctMachineWithFttDt) : 0;
+      }
+    });
   }
 
   /**
@@ -2997,14 +3804,20 @@
   function renderHardtestCapacitySimulator(htData, items, shiftHours) {
     if (!window.AppStore) return '';
 
+    ensureSimPlanDraftRestored();
+
     const _defHtWeek = (window.AppStore && window.AppStore.getFactoryWeekRange) ? window.AppStore.getFactoryWeekRange() : null;
     const simFromDate = window.AppStore.hardtestSimFromDate || window.AppStore.simFromDate || window.AppStore.fromDate || (_defHtWeek ? _defHtWeek.fromDate : '2026-11-05');
     const simToDate = window.AppStore.hardtestSimToDate || window.AppStore.simToDate || window.AppStore.toDate || (_defHtWeek ? _defHtWeek.toDate : '2026-11-05');
-    const simShiftType = window.AppStore.hardtestSimShiftType || 'FULL_DAY'; // 'DAY' | 'NIGHT' | 'FULL_DAY' | 'RANGE'
+    const simShiftType = 'FULL_DAY'; // Mặc định Ca Ngày (10.83h) + Ca Đêm (10.58h) song song
     const statusFilter = window.AppStore.hardtestSimStatusFilter || 'GAP_NEGATIVE'; // 'GAP_NEGATIVE' | 'GAP_POSITIVE' | 'HAS_PLAN' | 'ALL' | 'SHORTAGE'
     const groupFilter = window.AppStore.hardtestSimGroupFilter || 'ALL';
     const stageSubFilter = window.AppStore.hardtestSimStageFilter || 'ALL';
     const searchVal = (window.AppStore.hardtestSimSearchVal || '').trim().toLowerCase();
+
+    const plannerName = getSimPlannerName();
+    const simHistoryCount = getSimHistoryCount();
+    const todayPlanRef = getTodayPlanReference();
 
     // 2. Query Master Schedule from Bảng 2 data source (Total Hardtest cluster)
     const targetStageFilter = (stageSubFilter === 'ALL') ? 'TOTAL_HARDTEST' : stageSubFilter;
@@ -3020,36 +3833,45 @@
     });
     const scheduleItems = schedule.items || [];
 
-    // 3. Determine shift duration & seconds
+    // 3. Determine shift duration & seconds (Tổng thể cho Đề xuất TB Cần + tách Ca Ngày / Ca Đêm song song)
+    let daysCount = 5;
+    if (window.AppStore.getDatesInRange) {
+      const dArr = window.AppStore.getDatesInRange(simFromDate, simToDate);
+      if (dArr && dArr.length > 0) daysCount = dArr.length;
+    }
+
     let shiftDurationHours = 21.41;
     let shiftDurationSeconds = 77076;
-    let shiftTitle = 'Cả Ngày (21.41 Giờ: Ngày 10.83h + Đêm 10.58h)';
     if (simShiftType === 'DAY') {
       shiftDurationHours = 10.83;
       shiftDurationSeconds = 38988;
-      shiftTitle = 'Ca Ngày (10.83 Giờ = 38,988s)';
     } else if (simShiftType === 'NIGHT') {
       shiftDurationHours = 10.58;
       shiftDurationSeconds = 38088;
-      shiftTitle = 'Ca Đêm (10.58 Giờ = 38,088s)';
     } else if (simShiftType === 'RANGE') {
-      let daysCount = 5;
-      if (window.AppStore.getDatesInRange) {
-        const dArr = window.AppStore.getDatesInRange(simFromDate, simToDate);
-        if (dArr && dArr.length > 0) daysCount = dArr.length;
-      }
       shiftDurationHours = 21.41 * daysCount;
       shiftDurationSeconds = 77076 * daysCount;
-      shiftTitle = `Cả Giai Đoạn (${daysCount} ngày × 21.41h = ${shiftDurationHours.toFixed(1)}h)`;
     }
 
+    const daysMultiplier = (simShiftType === 'RANGE') ? daysCount : 1;
+    const dayShiftHours = (simShiftType === 'NIGHT') ? 0 : (10.83 * daysMultiplier);
+    const dayShiftSeconds = (simShiftType === 'NIGHT') ? 0 : (38988 * daysMultiplier);
+    const nightShiftHours = (simShiftType === 'DAY') ? 0 : (10.58 * daysMultiplier);
+    const nightShiftSeconds = (simShiftType === 'DAY') ? 0 : (38088 * daysMultiplier);
+
     if (!window.AppStore.hardtestPlanOverrides) window.AppStore.hardtestPlanOverrides = {};
+    if (!window.AppStore.hardtestManualTbDay) window.AppStore.hardtestManualTbDay = {};
+    if (!window.AppStore.hardtestManualManDay) window.AppStore.hardtestManualManDay = {};
+    if (!window.AppStore.hardtestManualPlanDay) window.AppStore.hardtestManualPlanDay = {};
+    if (!window.AppStore.hardtestManualTbNight) window.AppStore.hardtestManualTbNight = {};
+    if (!window.AppStore.hardtestManualManNight) window.AppStore.hardtestManualManNight = {};
+    if (!window.AppStore.hardtestManualPlanNight) window.AppStore.hardtestManualPlanNight = {};
     if (!window.AppStore.hardtestManualTb) window.AppStore.hardtestManualTb = {};
     if (!window.AppStore.hardtestManualMan) window.AppStore.hardtestManualMan = {};
 
     let grandAvailTb = 0;
 
-    // 4. Map each 1C schedule item from Bảng 2 to its capacity norm (No cross-board duplication)
+    // 4. Map each 1C schedule item from Bảng 2 to its capacity norm & shared TB pool metadata
     let processedRows = scheduleItems.map((it, idx) => {
       const rowId = it.id || `${it.stage}___${it.model}___${it.productName1C}`;
       const stage = it.stage;
@@ -3061,6 +3883,8 @@
       const normGroup = cap.normGroup;
       const ctNorm = cap.ctNorm;
       const ctActual = cap.ctActual;
+      const fttPct = (cap.fttPct != null) ? cap.fttPct : 100.0;
+      const dtTotalPct = (cap.dtTotalPct != null) ? cap.dtTotalPct : 0.0;
       const availTb = cap.availTb;
       grandAvailTb += availTb;
 
@@ -3068,38 +3892,34 @@
       const defaultFact = it.cumFactQty || 0;
       const defaultGap = it.cumGapQty || 0;
 
-      const hasPlanOverride = window.AppStore.hardtestPlanOverrides[rowId] !== undefined;
-      const planQty = hasPlanOverride ? window.AppStore.hardtestPlanOverrides[rowId] : defaultPlan;
+      // Kế Hoạch (Plan) giữ số mặc định, không cho phép sửa trực tiếp
+      const hasPlanOverride = false;
+      const planQty = defaultPlan;
       const factQty = defaultFact;
-      const gapQty = hasPlanOverride ? (factQty - planQty) : defaultGap;
+      const gapQty = defaultGap;
+
+      const planMeta = resolvePlanDateAndShiftMeta(it, gapQty, todayPlanRef, 'ALL');
+      const cumNegOriginMeta = planMeta.isCumNegative
+        ? resolveAccumulatedNegativeOrigin(it, 'ALL')
+        : { originDate: '', originShift: '', label: '--', tooltip: '' };
 
       // Khối lượng cần giải quyết: nếu thiếu hụt thì tính theo lượng thiếu, ngược lại tính theo plan
       const targetQty = (gapQty < 0) ? Math.abs(gapQty) : planQty;
 
-      // Năng lực 1 TB trong ca đã chọn
-      const capaPer1TB = (ctActual > 0 && shiftDurationSeconds > 0) ? (shiftDurationSeconds / ctActual) : 0;
+      // Giờ máy cần tiêu chuẩn: KHÔNG tính FTT & Downtime, lấy trực tiếp theo CT Norm gốc trên sheet
+      const baseCtNorm = ctNorm > 0 ? ctNorm : ctActual;
+      const stdHours = (targetQty > 0 && baseCtNorm > 0) ? (targetQty * baseCtNorm) / 3600 : 0;
 
-      // Đề xuất số Test Block (N_req tính theo targetQty)
+      // Cycle Time máy thực tế (có FTT & Downtime) dùng cho Giờ máy cần thực tế & công suất 10.83h / 10.58h:
+      // ctMachineWithFttDt = CT_Norm * (1 + (1 - FTT) + TotalDownTime)
+      const fttRatio = Math.max(0, Math.min(1, fttPct / 100));
+      const dtRatio = Math.max(0, dtTotalPct / 100);
+      const ctMachineWithFttDt = baseCtNorm > 0 ? baseCtNorm * (1 + (1 - fttRatio) + dtRatio) : ctActual;
+
+      // Đề xuất số Test Block Cần tổng thể trong cấu hình thời gian ca đã chọn
+      const capaPer1TB = (ctMachineWithFttDt > 0 && shiftDurationSeconds > 0) ? (shiftDurationSeconds / ctMachineWithFttDt) : 0;
       const reqTb = (targetQty > 0 && capaPer1TB > 0) ? Math.ceil(targetQty / capaPer1TB) : 0;
-
-      // Đề xuất Nhân Lực (TIÊU CHUẨN 1 NGƯỜI DÙNG 2 TEST BLOCK)
       const reqMan = reqTb > 0 ? Math.ceil(reqTb / 2.0) : 0;
-
-      // Bố trí thủ công (Manual Input Overrides)
-      const hasTbOverride = window.AppStore.hardtestManualTb[rowId] !== undefined;
-      const manualTb = hasTbOverride ? window.AppStore.hardtestManualTb[rowId] : (reqTb > 0 ? reqTb : availTb);
-
-      const hasManOverride = window.AppStore.hardtestManualMan[rowId] !== undefined;
-      const manualMan = hasManOverride ? window.AppStore.hardtestManualMan[rowId] : (manualTb > 0 ? Math.ceil(manualTb / 2.0) : 0);
-
-      // Số liệu dựa trên bố trí thực tế
-      const effectiveTb = manualTb;
-      const effectiveMan = manualMan;
-
-      const effectiveUph = (ctActual > 0 && effectiveTb > 0) ? Math.round(((3600.0 * effectiveTb) / ctActual) * 10) / 10 : 0;
-      const hoursNeeded = effectiveUph > 0 ? (targetQty / effectiveUph) : 0;
-      const shiftOutput = Math.min(targetQty, Math.round(effectiveUph * shiftDurationHours));
-      const remainingShortage = Math.max(0, targetQty - shiftOutput);
 
       return {
         it,
@@ -3112,28 +3932,120 @@
         model1c,
         board,
         availTb,
-        ctNorm,
+        poolId: cap.poolId,
+        isSharedPool: cap.isShared,
+        poolNote: cap.note,
+        ctNorm: baseCtNorm,
         ctActual,
+        ctMachineWithFttDt,
+        fttPct,
+        dtTotalPct,
         planQty,
         factQty,
         gapQty,
+        planMeta,
+        datePlanLabel: planMeta.datePlanLabel,
+        shiftPlanLabel: planMeta.shiftPlanLabel,
+        cumNegOriginMeta,
+        cumNegOriginLabel: cumNegOriginMeta.label,
         targetQty,
+        stdHours,
         hasPlanOverride,
         capaPer1TB,
         reqTb,
         reqMan,
-        manualTb,
-        hasTbOverride,
-        manualMan,
-        hasManOverride,
-        effectiveTb,
-        effectiveMan,
-        effectiveUph,
-        hoursNeeded,
-        shiftOutput,
-        remainingShortage
+        manualTbDay: 0,
+        manualManDay: 0,
+        hasDayTbOverride: false,
+        hasDayManOverride: false,
+        hasDayPlanOverride: false,
+        dayOutput: 0,
+        dayActualHours: 0,
+        nightShortage: targetQty,
+        poolDayUsedTb: 0,
+        poolDayPeerCount: 0,
+        isPoolDayTbOver: false,
+        isDayTbOver: false,
+        isDayShiftCapOver: false,
+        uphDay: 0,
+        manualTbNight: 0,
+        manualManNight: 0,
+        hasNightTbOverride: false,
+        hasNightManOverride: false,
+        hasNightPlanOverride: false,
+        nightOutput: 0,
+        nightActualHours: 0,
+        finalShortage: targetQty,
+        poolNightUsedTb: 0,
+        poolNightPeerCount: 0,
+        isPoolNightTbOver: false,
+        isNightTbOver: false,
+        isNightShiftCapOver: false,
+        uphNight: 0,
+        hoursNeeded: stdHours
       };
     });
+
+    // 4b. Phân bổ Test Block theo Ca Ngày (10.83h) & Ca Đêm (10.58h) có khống chế nhóm "Dùng Chung"
+    const priorityRows = processedRows
+      .filter(r => {
+        if (statusFilter === 'GAP_NEGATIVE') return r.gapQty < 0;
+        if (statusFilter === 'GAP_POSITIVE') return r.gapQty >= 0 && (r.planQty > 0 || r.factQty > 0);
+        return r.gapQty < 0 || r.planQty > 0;
+      })
+      .sort(compareHardtestPriorityRows);
+
+    allocateHardtestShiftPool(priorityRows, {
+      shiftSide: 'DAY',
+      shiftHours: dayShiftHours,
+      shiftSeconds: dayShiftSeconds,
+      manualTbMap: window.AppStore.hardtestManualTbDay,
+      legacyManualTbMap: window.AppStore.hardtestManualTb,
+      manualManMap: window.AppStore.hardtestManualManDay,
+      legacyManualManMap: window.AppStore.hardtestManualMan,
+      manualPlanMap: window.AppStore.hardtestManualPlanDay,
+      getTargetQty: r => r.targetQty
+    });
+
+    allocateHardtestShiftPool(priorityRows, {
+      shiftSide: 'NIGHT',
+      shiftHours: nightShiftHours,
+      shiftSeconds: nightShiftSeconds,
+      manualTbMap: window.AppStore.hardtestManualTbNight,
+      legacyManualTbMap: null,
+      manualManMap: window.AppStore.hardtestManualManNight,
+      legacyManualManMap: null,
+      manualPlanMap: window.AppStore.hardtestManualPlanNight,
+      getTargetQty: r => r.nightShortage
+    });
+
+    processedRows.forEach(r => {
+      r.manualTb = r.manualTbDay + r.manualTbNight;
+      r.manualMan = r.manualManDay + r.manualManNight;
+      r.hasTbOverride = r.hasDayTbOverride || r.hasNightTbOverride;
+      r.hasManOverride = r.hasDayManOverride || r.hasNightManOverride;
+      r.effectiveTb = r.manualTb;
+      r.effectiveMan = r.manualMan;
+      r.effectiveUph = Math.round(((r.uphDay || 0) + (r.uphNight || 0)) * 10) / 10;
+      r.shiftOutput = (r.dayOutput || 0) + (r.nightOutput || 0);
+      r.remainingShortage = r.finalShortage;
+    });
+
+    const isUnfilteredHardtestStage = stageSubFilter === 'ALL' && groupFilter === 'ALL' && !searchVal && (statusFilter === 'GAP_NEGATIVE' || statusFilter === 'ALL' || statusFilter === 'SHORTAGE');
+    const htGate = evaluateCumNegativeGate(
+      'TOTAL_HARDTEST',
+      processedRows.map(r => ({
+        rowKey: r.rowId,
+        modelName: r.model1c || r.group || '',
+        group: r.normGroup || r.group || '',
+        gapQty: r.gapQty,
+        isCumNeg: !!(r.planMeta && r.planMeta.isCumNegative && r.gapQty < 0),
+        plannedOutput: (r.dayOutput || 0) + (r.nightOutput || 0),
+        hasNote: hasSimRowPlanningNote(r.rowId, r.model1c, r.group)
+      })),
+      `${simFromDate}_${simToDate}`,
+      isUnfilteredHardtestStage
+    );
 
     // 5. Filtering logic
     let filteredRows = processedRows;
@@ -3158,36 +4070,17 @@
       }
     }
     if (searchVal) {
-      filteredRows = filteredRows.filter(r => 
-        (r.group || '').toLowerCase().includes(searchVal) || 
-        (r.normGroup || '').toLowerCase().includes(searchVal) || 
-        (r.model1c || '').toLowerCase().includes(searchVal) || 
+      filteredRows = filteredRows.filter(r =>
+        (r.group || '').toLowerCase().includes(searchVal) ||
+        (r.normGroup || '').toLowerCase().includes(searchVal) ||
+        (r.model1c || '').toLowerCase().includes(searchVal) ||
         (r.board || '').toLowerCase().includes(searchVal) ||
         (r.stage || '').toLowerCase().includes(searchVal)
       );
     }
 
-    // 6. Sorting: Sắp xếp các Model có Gap < 0 (thiếu hụt) lên đầu, âm nhiều nhất lên trước nhất (giống Assembly)
-    filteredRows.sort((a, b) => {
-      const aNeg = a.gapQty < 0;
-      const bNeg = b.gapQty < 0;
-
-      // 1. Mã âm lên đầu
-      if (aNeg && !bNeg) return -1;
-      if (!aNeg && bNeg) return 1;
-
-      // 2. Cùng là mã âm: Sắp xếp theo âm nhiều nhất lên đầu (tăng dần: ví dụ -2080 < -92 < -60)
-      if (aNeg && bNeg) {
-        if (a.gapQty !== b.gapQty) return a.gapQty - b.gapQty;
-        return b.planQty - a.planQty;
-      }
-
-      // 3. Cùng là không âm (Gap >= 0): Ưu tiên Kế hoạch lớn nhất (descending)
-      if (b.planQty !== a.planQty) {
-        return b.planQty - a.planQty;
-      }
-      return (a.group || '').localeCompare(b.group || '');
-    });
+    // 6. Sorting: Ưu tiên Model Âm luỹ kế lên đầu, tiếp theo đến các Model thiếu hụt ngày hiện tại (âm nhiều nhất lên trước)
+    filteredRows.sort(compareHardtestPriorityRows);
 
     // 7. Re-index STT & accumulate grand totals for filtered rows
     let grandPlan = 0;
@@ -3196,11 +4089,21 @@
     let shortageCount = 0;
     let grandReqTb = 0;
     let grandReqMan = 0;
-    let grandManualTb = 0;
-    let grandManualMan = 0;
-    let grandHours = 0;
-    let grandOutput = 0;
-    let grandShortage = 0;
+    let grandStdHours = 0;
+    let grandDayTb = 0;
+    let grandDayMan = 0;
+    let grandDayOutput = 0;
+    let grandDayActualHours = 0;
+    let grandNightShortage = 0;
+    let grandNightTb = 0;
+    let grandNightMan = 0;
+    let grandNightOutput = 0;
+    let grandNightActualHours = 0;
+    let grandFinalShortage = 0;
+    let grandDayTbHours = 0;
+    let grandNightTbHours = 0;
+    let grandDayManHours = 0;
+    let grandNightManHours = 0;
 
     filteredRows.forEach((r, idx) => {
       r.displayIdx = idx + 1;
@@ -3209,178 +4112,451 @@
       grandGap += r.gapQty;
       grandReqTb += r.reqTb;
       grandReqMan += r.reqMan;
-      grandManualTb += r.effectiveTb;
-      grandManualMan += r.effectiveMan;
-      grandHours += r.hoursNeeded;
-      grandOutput += r.shiftOutput;
-      grandShortage += r.remainingShortage;
+      grandStdHours += r.stdHours;
+      grandDayTb += r.manualTbDay;
+      grandDayMan += r.manualManDay;
+      grandDayOutput += r.dayOutput;
+      grandDayActualHours += (r.dayActualHours || 0);
+      grandNightShortage += r.nightShortage;
+      grandNightTb += r.manualTbNight;
+      grandNightMan += r.manualManNight;
+      grandNightOutput += r.nightOutput;
+      grandNightActualHours += (r.nightActualHours || 0);
+      grandFinalShortage += r.finalShortage;
+
+      const rowDayTbH = r.dayActualHours || 0;
+      const rowNightTbH = r.nightActualHours || 0;
+      const rowDayManH = (r.manualTbDay > 0 && r.manualManDay > 0) ? (rowDayTbH / r.manualTbDay) * r.manualManDay : 0;
+      const rowNightManH = (r.manualTbNight > 0 && r.manualManNight > 0) ? (rowNightTbH / r.manualTbNight) * r.manualManNight : 0;
+      grandDayTbHours += rowDayTbH;
+      grandNightTbHours += rowNightTbH;
+      grandDayManHours += rowDayManH;
+      grandNightManHours += rowNightManH;
+
       if (r.gapQty < 0) shortageCount++;
     });
 
     window.AppStore.lastProcessedHardtestSimRows = filteredRows;
 
-    // 8. Build Table Rows HTML
+    // 8. Build Table Rows HTML (30 columns: Concept + FTT/Downtime + Giờ máy tiêu chuẩn/thực tế + Editable Output Plan + Pool Dùng Chung)
     const rowsHtml = filteredRows.map(r => {
       const isTbOverloaded = r.reqTb > r.availTb;
-      const isManualChanged = r.hasTbOverride || r.hasManOverride || r.hasPlanOverride;
-      const encodedRowId = encodeURIComponent(r.rowId);
+      const isDayTbOver = r.isDayTbOver || r.manualTbDay > r.availTb || r.isPoolDayTbOver;
+      const isNightTbOver = r.isNightTbOver || r.manualTbNight > r.availTb || r.isPoolNightTbOver;
+      const isDayManOver = r.manualTbDay > 0 && r.manualManDay * 2 < r.manualTbDay;
+      const isNightManOver = r.manualTbNight > 0 && r.manualManNight * 2 < r.manualTbNight;
+      const encodedRowId = encodeSimRowKey(r.rowId);
+      const isHtRowCumNeg = !!(r.planMeta && r.planMeta.isCumNegative && r.gapQty < 0);
+      const isHtRowLocked = !!(htGate && htGate.isBlocked && !isHtRowCumNeg);
+      const htLockAttr = isHtRowLocked ? 'disabled' : '';
+      const htLockClass = isHtRowLocked ? ' sim-input-locked' : '';
+      const htLockTitleSuffix = isHtRowLocked
+        ? ' [Đang khóa: Cần nhập Kế hoạch (>0) hoặc Lý do ở cột Ghi Chú cho các Model Âm luỹ kế trước]'
+        : '';
+      const gapColor = r.gapQty < 0 ? '#f87171' : r.gapQty > 0 ? '#34d399' : 'var(--text-muted)';
+      const showPoolHint = r.isSharedPool || r.poolDayPeerCount > 1 || r.poolNightPeerCount > 1;
+      const dayTbTitle = r.isPoolDayTbOver
+        ? `⚠️ Nhóm ${r.poolNote || 'Dùng Chung'} đang dùng ${r.poolDayUsedTb}/${r.availTb} TB (vượt TB sẵn có!)`
+        : (r.manualTbDay > r.availTb
+            ? `⚠️ Đang dùng ${r.manualTbDay} TB vượt TB sẵn có (${r.availTb} TB)`
+            : `Số Test Block Ca Ngày (Nhóm đang dùng ${r.poolDayUsedTb}/${r.availTb} TB • Tối đa 10.83h/TB)`);
+      const nightTbTitle = r.isPoolNightTbOver
+        ? `⚠️ Nhóm ${r.poolNote || 'Dùng Chung'} Ca Đêm đang dùng ${r.poolNightUsedTb}/${r.availTb} TB (vượt TB sẵn có!)`
+        : (r.manualTbNight > r.availTb
+            ? `⚠️ Đang dùng ${r.manualTbNight} TB vượt TB sẵn có (${r.availTb} TB)`
+            : `Số Test Block Ca Đêm (Nhóm đang dùng ${r.poolNightUsedTb}/${r.availTb} TB • Tối đa 10.58h/TB)`);
 
       return `
-        <tr class="hover-row">
-          <td class="sticky-cap-stt" style="text-align: center; color: var(--text-muted); font-size: 0.75rem;">${r.displayIdx}</td>
-          <td style="text-align: center; white-space: nowrap;">
+        <tr class="hover-row${isHtRowCumNeg ? ' sim-row-cumneg-priority' : ''}${isHtRowLocked ? ' sim-row-locked-current-day' : ''}" data-row-key="${encodedRowId}" data-is-cumneg="${isHtRowCumNeg ? '1' : '0'}" data-row-locked="${isHtRowLocked ? '1' : '0'}">
+          <td class="sticky-sim-stt" style="text-align: center; color: var(--text-muted); font-size: 0.78rem;">${r.displayIdx}</td>
+          <td class="sticky-sim-stage" style="text-align: center; white-space: nowrap;">
             <span class="badge ${r.stage === 'HARD TEST' ? 'badge-stage-hardtest' : r.stage === 'OPTICS ASM' ? 'badge-stage-optics' : 'badge-stage-focus'}">${r.stage}</span>
           </td>
-          <td class="sticky-ht-group">
-            <span style="font-weight: 800; color: #f8fafc; font-size: 0.825rem;">${r.normGroup || r.group}</span>
+          <td class="sticky-sim-group" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.825rem; font-weight: 700; color: var(--text-primary);" title="${r.normGroup || r.group || '--'}">
+            ${r.normGroup || r.group || '--'}
           </td>
-          <td class="sticky-ht-board">
-            <div style="display: flex; flex-direction: column; gap: 0.15rem;">
-              <span class="font-mono" style="font-size: 0.775rem; font-weight: 700; color: #f1f5f9; word-break: break-all;" title="${r.model1c}">${r.model1c}</span>
-              ${r.board && r.board !== r.model1c ? `<span class="font-mono" style="font-size: 0.68rem; color: #94a3b8;" title="Định mức Test Block theo bo mạch: ${r.board}">⚙️ ${r.board}</span>` : ''}
+          <td class="sticky-sim-model">
+            <div style="display: flex; flex-direction: column; gap: 0.12rem;">
+              <span class="font-mono" style="font-size: 0.8rem; font-weight: 700; color: var(--text-primary); word-break: break-word; line-height: 1.35;" title="${r.model1c}">${r.model1c}</span>
+              ${r.board && r.board !== r.model1c ? `<span class="font-mono" style="font-size: 0.67rem; color: var(--text-muted);" title="Định mức Test Block theo bo mạch: ${r.board}">⚙️ ${r.board}</span>` : ''}
             </div>
           </td>
-          <!-- Kế Hoạch (Plan Qty): Input cho phép sửa -->
-          <td style="text-align: right; min-width: 105px;">
-            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 0.25rem;">
-              <input type="number" min="0" step="50" class="sim-manual-input sim-manual-input-plan font-mono" value="${r.planQty}" onchange="handleHardtestPlanQtyChange('${encodedRowId}', this.value)" title="Kế hoạch sản lượng (Pcs) trong giai đoạn đã chọn. Bấm để sửa nhanh.">
-            </div>
-            ${r.hasPlanOverride ? '<span style="color:#fbbf24; font-size:0.65rem; display:block; text-align:right;">✍️ Sửa</span>' : ''}
+          <!-- Kế Hoạch (Plan): Số mặc định không chỉnh sửa -->
+          <td class="font-mono" style="text-align: right; font-weight: 700; color: #60a5fa; font-size: 0.825rem; padding: 0.35rem 0.45rem;" title="Kế hoạch sản lượng (Pcs) mặc định theo dữ liệu Bảng 2">
+            ${r.planQty.toLocaleString('vi-VN')}
           </td>
-          <!-- Thực Tế (Fact Qty) -->
-          <td class="font-mono" style="text-align: right; font-size: 0.825rem; font-weight: 700; color: #34d399; min-width: 95px;" title="Sản lượng thực tế đã sản xuất trong giai đoạn">
+          <!-- Thực Tế (Fact) -->
+          <td class="font-mono" style="text-align: right; font-size: 0.825rem; font-weight: 700; color: #34d399; padding: 0.35rem 0.45rem;" title="Sản lượng thực tế đã sản xuất trong giai đoạn">
             ${r.factQty.toLocaleString('vi-VN')}
           </td>
-          <!-- Chênh Lệch (Gap Qty) -->
-          <td class="font-mono" style="text-align: right; font-size: 0.825rem; font-weight: 800; min-width: 105px; color: ${r.gapQty < 0 ? '#f87171' : r.gapQty > 0 ? '#34d399' : 'var(--text-muted)'};" title="Chênh lệch Thực tế - Kế hoạch (Âm là thiếu hụt)">
+          <!-- Chênh Lệch (Gap) -->
+          <td class="font-mono" style="text-align: right; font-size: 0.825rem; font-weight: 800; padding: 0.35rem 0.45rem; color: ${gapColor};" title="Chênh lệch Thực tế - Kế hoạch (Âm là thiếu hụt)">
             ${r.gapQty !== 0 ? (r.gapQty > 0 ? '+' : '') + r.gapQty.toLocaleString('vi-VN') : '0'}
           </td>
-          <!-- CT Thực Tế -->
-          <td style="text-align: right;" class="font-mono" title="CT Thực Tế: ${r.ctActual}s (Norm: ${r.ctNorm}s • FTT: ${r.it.fttPct || 95}% • DT: ${r.it.dtTotalPct || 5}%)">
-            <span style="font-weight: 800; color: #38bdf8; font-size: 0.8rem;">${r.ctActual}s</span>
+          <!-- Date Plan & Shift Plan -->
+          ${renderPlanDateAndShiftCellsHtml(r.planMeta)}
+          <!-- Cycle Time Norm (CT Norm gốc trên sheet Hardtest Data, chưa gồm FTT/Downtime) -->
+          <td style="text-align: right; padding: 0.35rem 0.45rem;" class="font-mono" title="Cycle Time Norm gốc trên sheet: ${r.ctNorm}s (CT Thực tế FTT+DT: ${r.ctMachineWithFttDt.toFixed(2)}s)">
+            <span style="font-weight: 700; color: var(--text-primary); font-size: 0.825rem;">${r.ctNorm}</span>
           </td>
-          <!-- TB Sẵn Có -->
-          <td style="text-align: center;">
-            <span class="badge badge-ht-tb font-mono" title="Số lượng Test Block hiện có sẵn trong xưởng">${r.availTb} TB</span>
+          <!-- FTT % (từ sheet Hardtest Data cột FTT %) -->
+          <td style="text-align: right; padding: 0.35rem 0.45rem;" class="font-mono" title="Tỉ lệ Pass FTT % từ sheet Hardtest Data: ${r.fttPct}%">
+            <span style="font-weight: 700; color: #34d399; font-size: 0.8rem;">${r.fttPct}%</span>
           </td>
-          <!-- Đề Xuất: Số Block Cần -->
-          <td style="text-align: center; min-width: 125px;">
-            ${r.planQty > 0 || r.gapQty < 0 ? `
-              <span class="badge ${!isTbOverloaded ? 'badge-green' : 'badge-red'} font-mono" style="font-weight: 800;" title="Năng lực 1 TB trong ca: ${Math.round(r.capaPer1TB).toLocaleString('vi-VN')} pcs ➔ Cần Math.ceil(${r.targetQty} ÷ ${Math.round(r.capaPer1TB)}) = ${r.reqTb} TB">
-                ${r.reqTb} TB ${!isTbOverloaded ? '✅ (Đủ)' : `⚠️ (Thiếu +${r.reqTb - r.availTb})`}
-              </span>
-            ` : `<span style="color: var(--text-muted); font-size: 0.75rem;">0 TB</span>`}
+          <!-- Downtime % (từ sheet Hardtest Data cột Total DownTime) -->
+          <td style="text-align: right; padding: 0.35rem 0.45rem;" class="font-mono" title="Tổng Downtime (Total DownTime) từ sheet Hardtest Data: ${r.dtTotalPct}%">
+            <span style="font-weight: 700; color: #f59e0b; font-size: 0.8rem;">${r.dtTotalPct}%</span>
           </td>
-          <!-- Đề Xuất: Nhân Lực Cần (Tiêu chuẩn 1 người dùng 2 test block) -->
-          <td style="text-align: center; min-width: 120px;">
+          <!-- TB Sẵn Có (Test Block) + Nhóm Dùng Chung -->
+          <td style="text-align: center; padding: 0.3rem 0.35rem;" class="font-mono" title="Số lượng Test Block hiện có sẵn trong xưởng (${r.poolNote || 'Riêng'} • Ngày dùng ${r.poolDayUsedTb}/${r.availTb} • Đêm dùng ${r.poolNightUsedTb}/${r.availTb})">
+            <span class="badge badge-ht-tb font-mono" style="font-weight: 800; ${r.isPoolDayTbOver || r.isPoolNightTbOver ? 'border-color: #f87171; color: #f87171;' : ''}">${r.availTb}</span>
+            ${showPoolHint ? `<div style="font-size: 0.62rem; margin-top: 2px; font-weight: 700; color: ${r.isPoolDayTbOver || r.isPoolNightTbOver ? '#f87171' : '#38bdf8'}; white-space: nowrap;">Chung ${r.poolDayUsedTb}/${r.availTb}N</div>` : ''}
+          </td>
+          <!-- Số Test Block Cần -->
+          <td style="text-align: center; padding: 0.35rem 0.35rem;" class="font-mono" title="Đề xuất Số Test Block cần = Math.ceil(${r.targetQty} ÷ ${Math.round(r.capaPer1TB)}) = ${r.reqTb} TB">
             ${r.reqTb > 0 ? `
-              <span class="badge badge-purple font-mono" style="font-weight: 800;" title="Tiêu chuẩn: 1 người dùng 2 test block ➔ Math.ceil(${r.reqTb} ÷ 2) = ${r.reqMan} người">
-                👥 ${r.reqMan} Người
-              </span>
-            ` : `<span style="color: var(--text-muted); font-size: 0.75rem;">0 Người</span>`}
+              <span class="badge ${!isTbOverloaded ? 'badge-green' : 'badge-red'} font-mono" style="font-weight: 800;">${r.reqTb}</span>
+            ` : `<span style="color: var(--text-muted); font-size: 0.78rem;">0</span>`}
           </td>
-          <!-- Sắp Xếp Thủ Công: Số Block (Input) -->
-          <td style="text-align: center; min-width: 95px;">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
-              <input type="number" min="0" max="50" class="sim-manual-input font-mono" value="${r.manualTb}" onchange="handleHardtestManualTbChange('${encodedRowId}', this.value)" title="Tự nhập số Test Block muốn bố trí cho mã này">
-            </div>
+          <!-- Giờ máy cần tiêu chuẩn (KHÔNG tính FTT & Downtime): |Chênh Lệch| * CT_Norm / 3600 -->
+          <td style="text-align: right; color: #fbbf24; font-weight: 800; font-size: 0.825rem; padding: 0.35rem 0.45rem;" class="font-mono" title="Giờ máy cần tiêu chuẩn (chưa tính FTT &amp; Downtime) = ${r.targetQty.toLocaleString('vi-VN')} × ${r.ctNorm}s ÷ 3600 = ${r.stdHours.toFixed(2)}h">
+            ${r.stdHours > 0 ? r.stdHours.toFixed(1) : '0.0'}
           </td>
-          <!-- Sắp Xếp Thủ Công: Số Người (Input) -->
-          <td style="text-align: center; min-width: 95px;">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
-              <input type="number" min="0" max="50" class="sim-manual-input sim-manual-input-man font-mono" value="${r.manualMan}" onchange="handleHardtestManualManChange('${encodedRowId}', this.value)" title="Tự nhập số người muốn bố trí (Tiêu chuẩn là 1 người / 2 TB)">
-            </div>
+
+          <!-- CỤM CA NGÀY (10.83h) -->
+          <td style="text-align: center; font-size: 0.8rem; font-weight: 600; color: ${dayShiftHours > 0 ? 'var(--text-secondary)' : '#64748b'}; white-space: nowrap; padding: 0.35rem 0.35rem;">
+            Ca Ngày
           </td>
-          <!-- UPH theo TB bố trí -->
-          <td style="text-align: right; color: #22d3ee; font-weight: 800;" class="font-mono" title="UPH = (3600 × ${r.effectiveTb} TB) ÷ ${r.ctActual}s">
-            ${r.effectiveUph.toLocaleString('vi-VN')}
+          <td style="text-align: center; padding: 0.25rem 0.3rem;">
+            <input type="number" min="0" max="50" class="sim-manual-input${htLockClass} font-mono" ${htLockAttr} style="width: 58px; ${isDayTbOver ? 'border-color: #f87171; color: #f87171;' : ''}" value="${r.manualTbDay}" onchange="handleHardtestManualTbDayChange('${encodedRowId}', this.value)" title="${dayTbTitle}${htLockTitleSuffix}">
           </td>
-          <!-- Giờ Máy Cần Chạy -->
-          <td style="text-align: right; color: #fbbf24; font-weight: 700;" class="font-mono" title="Tổng giờ máy cần để chạy hết ${r.targetQty} pcs với ${r.effectiveTb} TB">
-            ${r.hoursNeeded > 0 ? r.hoursNeeded.toFixed(1) + 'h' : '0h'}
+          <td style="text-align: center; padding: 0.25rem 0.3rem;">
+            <input type="number" min="0" max="50" class="sim-manual-input sim-manual-input-man${htLockClass} font-mono" ${htLockAttr} style="width: 58px; ${isDayManOver ? 'border-color: #fbbf24;' : ''}" value="${r.manualManDay}" onchange="handleHardtestManualManDayChange('${encodedRowId}', this.value)" title="${isDayManOver ? `⚠️ Quá tải: ${r.manualManDay} người vận hành ${r.manualTbDay} TB (chuẩn 1 người / 2 TB)` : 'Số người sử dụng Ca Ngày (Chuẩn 1 người / 2 TB)'}${htLockTitleSuffix}">
           </td>
-          <!-- Output & Còn Thiếu -->
-          <td style="text-align: right; min-width: 125px; font-family: var(--font-mono);">
-            ${r.targetQty > 0 ? `
-              <div style="color: #34d399; font-weight: 800; font-size: 0.8rem;">
-                +${r.shiftOutput.toLocaleString('vi-VN')} <span style="font-size: 0.68rem; color: #94a3b8;">pcs</span>
-              </div>
-              <div style="font-size: 0.72rem; font-weight: 800; margin-top: 0.15rem; color: ${r.remainingShortage > 0 ? '#f87171' : '#34d399'};">
-                ${r.remainingShortage > 0 ? 'Thiếu: -' + r.remainingShortage.toLocaleString('vi-VN') : '✅ Đủ 100%'}
-              </div>
-            ` : `<span class="badge badge-green" style="font-size: 0.7rem;">0 pcs</span>`}
+          <td class="font-mono" style="text-align: right; white-space: nowrap; padding: 0.25rem 0.25rem;">
+            <input type="text" class="sim-table-plan-input${htLockClass} font-mono" ${htLockAttr} value="${r.dayOutput > 0 ? r.dayOutput.toLocaleString('vi-VN') : (r.targetQty > 0 ? '0' : '')}" placeholder="0" onchange="handleHardtestManualPlanDayChange('${encodedRowId}', this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 72px; padding: 0.16rem 0.32rem; font-size: 0.8rem; font-weight: 800; color: #38bdf8; background: rgba(15, 23, 42, 0.9); border: 1px solid ${r.isDayShiftCapOver ? '#f87171' : (r.hasDayPlanOverride ? '#22d3ee' : 'rgba(56, 189, 248, 0.35)')}; border-radius: 6px; outline: none; text-align: right;" title="${r.isDayShiftCapOver ? `⚠️ Output ${r.dayOutput.toLocaleString('vi-VN')} cần ${r.dayActualHours.toFixed(1)}h vượt công suất ${r.manualTbDay} TB × 10.83h (${(r.manualTbDay * dayShiftHours).toFixed(1)}h)` : `Sửa OUTPUT PLAN DAY (Tối đa ${dayShiftHours.toFixed(2)}h/TB × ${r.manualTbDay} TB • Để trống để tự động tính)`}${htLockTitleSuffix}">
           </td>
-          <!-- Đánh Giá Tiến Độ & Nhân Lực -->
-          <td style="text-align: left; min-width: 195px;">
-            <div style="display: flex; flex-direction: column; gap: 0.2rem;">
-              <div>
-                ${r.targetQty > 0 ? (
-                  r.remainingShortage === 0 
-                    ? `<span class="badge badge-green" style="font-size: 0.68rem;">✅ Đạt Mục Tiêu (${shiftDurationHours.toFixed(1)}h)</span>`
-                    : `<span class="badge badge-red" style="font-size: 0.68rem;">⚠️ Thiếu CS (-${r.remainingShortage})</span>`
-                ) : `<span style="color: var(--text-muted); font-size: 0.72rem;">--</span>`}
-              </div>
-              <div>
-                ${r.effectiveTb > 0 ? (
-                  r.effectiveMan * 2 < r.effectiveTb
-                    ? `<span class="badge-manpower-warn" title="Quá tải: ${r.effectiveMan} người vận hành ${r.effectiveTb} TB (vượt chuẩn 1 người / 2 TB)">⚠️ 1 người / ${(r.effectiveTb/r.effectiveMan).toFixed(1)} TB</span>`
-                    : r.effectiveMan > r.effectiveTb
-                    ? `<span class="badge badge-amber" title="Thừa nhân lực: ${r.effectiveMan} người cho ${r.effectiveTb} TB">ℹ️ Thừa người</span>`
-                    : `<span class="badge-manpower-ok" title="Đạt chuẩn: 1 người dùng 2 test block">✅ Chuẩn 1 người / 2 TB</span>`
-                ) : `<span style="color: var(--text-muted); font-size: 0.72rem;">--</span>`}
-              </div>
-              ${isManualChanged ? `
-                <div style="margin-top: 0.1rem;">
-                  <a href="javascript:void(0)" onclick="handleResetHardtestRowManual('${encodedRowId}')" style="font-size: 0.62rem; color: #94a3b8; text-decoration: underline;">[↺ Đặt lại đề xuất]</a>
-                </div>
-              ` : ''}
-            </div>
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: ${r.isDayShiftCapOver ? '#f87171' : '#38bdf8'}; font-size: 0.825rem; padding: 0.35rem 0.45rem;" title="Giờ máy cần thực tế Ca Ngày (đã tính FTT ${r.fttPct}% &amp; Downtime ${r.dtTotalPct}%) = ${r.dayOutput.toLocaleString('vi-VN')} × ${r.ctMachineWithFttDt.toFixed(2)}s ÷ 3600 = ${r.dayActualHours.toFixed(2)}h${r.manualTbDay > 0 ? ` (${(r.dayActualHours / r.manualTbDay).toFixed(2)}h/TB)` : ''}">
+            ${r.dayActualHours > 0 ? r.dayActualHours.toFixed(1) : '0.0'}
+          </td>
+          <td class="font-mono" style="text-align: right; font-weight: 800; font-size: 0.825rem; padding: 0.35rem 0.45rem; color: ${r.nightShortage > 0 ? '#f87171' : '#34d399'};" title="Số lượng còn thiếu sau Ca Ngày (chuyển tiếp sang Ca Đêm)">
+            ${r.nightShortage > 0 ? '-' + r.nightShortage.toLocaleString('vi-VN') : '0'}
+          </td>
+
+          <!-- CỤM CA ĐÊM (10.58h) -->
+          <td style="text-align: center; font-size: 0.8rem; font-weight: 600; color: ${nightShiftHours > 0 ? '#c084fc' : '#64748b'}; white-space: nowrap; padding: 0.35rem 0.35rem;">
+            Ca Đêm
+          </td>
+          <td style="text-align: center; padding: 0.25rem 0.3rem;">
+            <input type="number" min="0" max="50" class="sim-manual-input sim-manual-input-night${htLockClass} font-mono" ${htLockAttr} style="width: 58px; ${isNightTbOver ? 'border-color: #f87171; color: #f87171;' : ''}" value="${r.manualTbNight}" onchange="handleHardtestManualTbNightChange('${encodedRowId}', this.value)" title="${nightTbTitle}${htLockTitleSuffix}">
+          </td>
+          <td style="text-align: center; padding: 0.25rem 0.3rem;">
+            <input type="number" min="0" max="50" class="sim-manual-input sim-manual-input-man${htLockClass} font-mono" ${htLockAttr} style="width: 58px; ${isNightManOver ? 'border-color: #fbbf24;' : ''}" value="${r.manualManNight}" onchange="handleHardtestManualManNightChange('${encodedRowId}', this.value)" title="${isNightManOver ? `⚠️ Quá tải: ${r.manualManNight} người vận hành ${r.manualTbNight} TB (chuẩn 1 người / 2 TB)` : 'Số người sử dụng Ca Đêm (Chuẩn 1 người / 2 TB)'}${htLockTitleSuffix}">
+          </td>
+          <td class="font-mono" style="text-align: right; white-space: nowrap; padding: 0.25rem 0.25rem;">
+            <input type="text" class="sim-table-plan-input${htLockClass} font-mono" ${htLockAttr} value="${r.nightOutput > 0 ? r.nightOutput.toLocaleString('vi-VN') : (r.nightShortage > 0 ? '0' : '')}" placeholder="0" onchange="handleHardtestManualPlanNightChange('${encodedRowId}', this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 72px; padding: 0.16rem 0.32rem; font-size: 0.8rem; font-weight: 800; color: #c084fc; background: rgba(15, 23, 42, 0.9); border: 1px solid ${r.isNightShiftCapOver ? '#f87171' : (r.hasNightPlanOverride ? '#e879f9' : 'rgba(192, 132, 252, 0.35)')}; border-radius: 6px; outline: none; text-align: right;" title="${r.isNightShiftCapOver ? `⚠️ Output ${r.nightOutput.toLocaleString('vi-VN')} cần ${r.nightActualHours.toFixed(1)}h vượt công suất ${r.manualTbNight} TB × 10.58h (${(r.manualTbNight * nightShiftHours).toFixed(1)}h)` : `Output Plan Ca Đêm (${nightShiftHours.toFixed(2)}h/TB × ${r.manualTbNight} TB • Có thể nhập tay hoặc để trống để tự động tính)`}${htLockTitleSuffix}">
+          </td>
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: ${r.isNightShiftCapOver ? '#f87171' : '#c084fc'}; font-size: 0.825rem; padding: 0.35rem 0.45rem;" title="Giờ máy cần thực tế Ca Đêm (đã tính FTT ${r.fttPct}% &amp; Downtime ${r.dtTotalPct}%) = ${r.nightOutput.toLocaleString('vi-VN')} × ${r.ctMachineWithFttDt.toFixed(2)}s ÷ 3600 = ${r.nightActualHours.toFixed(2)}h${r.manualTbNight > 0 ? ` (${(r.nightActualHours / r.manualTbNight).toFixed(2)}h/TB)` : ''}">
+            ${r.nightActualHours > 0 ? r.nightActualHours.toFixed(1) : '0.0'}
+          </td>
+          <td class="font-mono" style="text-align: right; font-weight: 800; font-size: 0.825rem; padding: 0.35rem 0.45rem; color: ${r.finalShortage > 0 ? '#f87171' : '#34d399'};" title="Số lượng còn thiếu tổng sau cả Ca Ngày & Ca Đêm">
+            ${r.finalShortage > 0 ? '-' + r.finalShortage.toLocaleString('vi-VN') : '0'}
+          </td>
+          <!-- Ghi Chú -->
+          <td style="text-align: left; padding: 0.2rem 0.35rem; min-width: 140px;">
+            <input type="text" class="sim-table-note-input" data-row-key="${encodedRowId}" value="${(window.AppStore.simManualNotes && window.AppStore.simManualNotes[r.rowId]) ? String(window.AppStore.simManualNotes[r.rowId]).replace(/"/g, '&quot;') : ''}" placeholder="${isHtRowCumNeg ? 'Nhập lý do / ghi chú...' : 'Nhập ghi chú...'}" onchange="handleTableNoteChange(decodeURIComponent('${encodedRowId}'), this.value)" onkeydown="if(event.key==='Enter') this.blur();" title="Ghi chú cho Model ${(r.model1c || r.group || '').replace(/"/g, '&quot;').replace(/[\r\n]+/g, ' ')}">
+          </td>
+          <!-- Âm Từ Ngày / Ca -->
+          ${renderAccumulatedNegativeOriginCellHtml(r.cumNegOriginMeta)}
+          <!-- Check WIP -->
+          <td style="text-align: center; white-space: nowrap; padding: 0.25rem 0.35rem;">
+            <button type="button"
+              class="btn btn-xs"
+              onclick="handleCheckModelWip('${encodeSimRowKey(r.stage || 'HARD TEST')}', '${encodeSimRowKey(r.group || '')}', '${encodeSimRowKey(r.model1c || r.group || '')}', ${Number(r.gapQty || 0)}, '${simFromDate}', '${simToDate}')"
+              style="padding: 0.2rem 0.55rem; font-size: 0.725rem; font-weight: 800; color: #34d399; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.25rem;"
+              title="Mở WIP Control và lọc đúng Model ${(r.model1c || r.group || '').replace(/"/g, '&quot;')} (${r.stage || 'HARD TEST'})">
+              <span>📦 Check WIP</span>
+            </button>
           </td>
         </tr>
       `;
     }).join('');
 
+    // 8b. Compute Kíp Selection & Mini Summary Tables (Ảnh số 2 & Ảnh số 3 — đồng bộ 2 chiều Phần 1 Nhân Lực)
+    const activeDayKips = getHardtestSelectedKips('DAY');
+    const activeNightKips = getHardtestSelectedKips('NIGHT');
+    const rawDayPeople = sumHardtestKipsHeadcount(activeDayKips);
+    const rawNightPeople = sumHardtestKipsHeadcount(activeNightKips);
+    const hasCustomDayPeople = window.AppStore.hardtestManpowerOverrideDay !== undefined && window.AppStore.hardtestManpowerOverrideDay !== null;
+    const hasCustomNightPeople = window.AppStore.hardtestManpowerOverrideNight !== undefined && window.AppStore.hardtestManpowerOverrideNight !== null;
+    const effectiveDayPeople = hasCustomDayPeople ? window.AppStore.hardtestManpowerOverrideDay : rawDayPeople;
+    const effectiveNightPeople = hasCustomNightPeople ? window.AppStore.hardtestManpowerOverrideNight : rawNightPeople;
+    const todaySheetKey = getHardtestTodaySheetKey();
+
+    const totalShortageQtyAbs = Math.abs(grandGap) || 1;
+    const dayCoverPct = grandDayOutput > 0 ? ((grandDayOutput / totalShortageQtyAbs) * 100).toFixed(1) : '0.0';
+    const nightCoverPct = grandNightOutput > 0 ? ((grandNightOutput / totalShortageQtyAbs) * 100).toFixed(1) : '0.0';
+    const remainShortagePct = grandFinalShortage > 0 ? ((grandFinalShortage / totalShortageQtyAbs) * 100).toFixed(1) : '0.0';
+    const totalCoverPct = (grandDayOutput + grandNightOutput) > 0
+      ? (((grandDayOutput + grandNightOutput) / totalShortageQtyAbs) * 100).toFixed(1)
+      : '0.0';
+
+    const htMiniSummaryPlanHtml = `
+      <div class="sim-mini-kpi-card sim-mini-plan-summary">
+        <table class="sim-mini-kpi-table">
+          <thead>
+            <tr>
+              <th class="mini-kpi-th-title" style="color: #38bdf8; font-weight: 800; padding: 0.2rem 0.4rem;" title="Bảng tổng hợp tiến độ bù thiếu và phân bổ kế hoạch Total Hardtest">
+                📊 Tổng Hợp KH
+              </th>
+              <th class="mini-kpi-th-line" style="color: #f87171; min-width: 66px; text-align: center;" title="Tổng sản lượng chênh lệch cần bù">Chênh Lệch</th>
+              <th class="mini-kpi-th-line" style="color: #38bdf8; min-width: 68px; text-align: center;" title="Tổng Output Plan Ca Ngày">Plan Ca Ngày</th>
+              <th class="mini-kpi-th-line" style="color: #c084fc; min-width: 68px; text-align: center;" title="Tổng Output Plan Ca Đêm">Plan Ca Đêm</th>
+              <th class="mini-kpi-th-line" style="color: #f87171; min-width: 78px; text-align: center;" title="Tổng số lượng còn thiếu sau 2 ca">KH còn Thiếu</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mini-kpi-label">Sản Lượng (pcs)</td>
+              <td class="mini-kpi-val font-mono" style="color: #f87171; font-weight: 800;">
+                ${grandGap !== 0 ? (grandGap > 0 ? '+' : '') + grandGap.toLocaleString('vi-VN') : '0'}
+              </td>
+              <td class="mini-kpi-val font-mono" style="color: #38bdf8; font-weight: 800;">
+                ${grandDayOutput > 0 ? '+' + grandDayOutput.toLocaleString('vi-VN') : '0'}
+              </td>
+              <td class="mini-kpi-val font-mono" style="color: #c084fc; font-weight: 800;">
+                ${grandNightOutput > 0 ? '+' + grandNightOutput.toLocaleString('vi-VN') : '0'}
+              </td>
+              <td class="mini-kpi-val font-mono" style="color: #f87171; font-weight: 800;">
+                ${grandFinalShortage > 0 ? '-' + grandFinalShortage.toLocaleString('vi-VN') : '0'}
+              </td>
+            </tr>
+            <tr>
+              <td class="mini-kpi-label">Tổng TG Máy (h)</td>
+              <td class="mini-kpi-val font-mono" style="color: #d97706; font-weight: 800;">
+                ${grandStdHours > 0 ? grandStdHours.toFixed(1) + 'h' : '0.0h'}
+              </td>
+              <td class="mini-kpi-val font-mono" style="color: #38bdf8; font-weight: 700;">
+                ${grandDayTbHours > 0 ? grandDayTbHours.toFixed(1) + 'h' : '0.0h'}
+              </td>
+              <td class="mini-kpi-val font-mono" style="color: #c084fc; font-weight: 700;">
+                ${grandNightTbHours > 0 ? grandNightTbHours.toFixed(1) + 'h' : '0.0h'}
+              </td>
+              <td class="mini-kpi-val font-mono" style="color: var(--text-muted);">
+                ${(grandDayOutput + grandNightOutput) > 0 ? totalCoverPct + '%' : '0%'}
+              </td>
+            </tr>
+            <tr>
+              <td class="mini-kpi-label">Hiệu Quả Bù</td>
+              <td class="mini-kpi-val font-mono" style="color: var(--text-muted);">100%</td>
+              <td class="mini-kpi-val font-mono" style="color: #38bdf8; font-weight: 800;">
+                ${dayCoverPct}%
+              </td>
+              <td class="mini-kpi-val font-mono" style="color: #c084fc; font-weight: 800;">
+                ${nightCoverPct}%
+              </td>
+              <td class="mini-kpi-val font-mono" style="${grandFinalShortage === 0 ? 'color: #10b981; font-weight: 800;' : 'color: #f87171; font-weight: 800;'}">
+                ${grandFinalShortage === 0 ? '✅ Hết thiếu' : '⚠️ Thiếu ' + remainShortagePct + '%'}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    `;
+
+    // Tổng TG có KH / Hiệu Suất tính theo đơn vị ca chuẩn (10.83h ngày / 10.58h đêm)
+    const dayAvgShiftHours = (effectiveDayPeople > 0 && grandDayManHours > 0)
+      ? Math.round((grandDayManHours / effectiveDayPeople) * 100) / 100
+      : 0;
+    const nightAvgShiftHours = (effectiveNightPeople > 0 && grandNightManHours > 0)
+      ? Math.round((grandNightManHours / effectiveNightPeople) * 100) / 100
+      : 0;
+
+    let htMiniSummaryDayHtml = '';
+    if (activeDayKips.length === 0) {
+      htMiniSummaryDayHtml = `
+        <div class="sim-mini-kpi-card sim-mini-day">
+          <table class="sim-mini-kpi-table">
+            <thead>
+              <tr>
+                <th class="mini-kpi-th-title">Ca ngày</th>
+                <th style="color: #64748b; font-size: 0.68rem; font-weight: normal; padding: 0.18rem 0.45rem;">(Chưa chọn Kíp)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="mini-kpi-label">Tổng TG có</td><td class="mini-kpi-val">-</td></tr>
+              <tr><td class="mini-kpi-label">Tổng TG có KH</td><td class="mini-kpi-val">-</td></tr>
+              <tr><td class="mini-kpi-label">Hiệu Suất</td><td class="mini-kpi-val">-</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+    } else {
+      const dayEffPct = dayAvgShiftHours > 0 ? ((dayAvgShiftHours / 10.83) * 100).toFixed(2) : null;
+      const dayEffNum = dayEffPct ? parseFloat(dayEffPct) : 0;
+      htMiniSummaryDayHtml = `
+        <div class="sim-mini-kpi-card sim-mini-day">
+          <table class="sim-mini-kpi-table">
+            <thead>
+              <tr>
+                <th class="mini-kpi-th-title">Ca ngày</th>
+                ${activeDayKips.map(kip => {
+                  const hc = getHardtestKipHeadcount(kip);
+                  return `<th class="mini-kpi-th-line">${kip} <span style="display: inline-block; margin-left: 0.2rem; padding: 0.05rem 0.3rem; font-size: 0.64rem; border-radius: 4px; background: rgba(245, 158, 11, 0.18); border: 1px solid rgba(245, 158, 11, 0.45); font-weight: 800;">${hc} ng</span></th>`;
+                }).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mini-kpi-label">Tổng TG có</td>
+                ${activeDayKips.map(() => `<td class="mini-kpi-val font-mono">10.83</td>`).join('')}
+              </tr>
+              <tr>
+                <td class="mini-kpi-label">Tổng TG có KH</td>
+                ${activeDayKips.map(() => `<td class="mini-kpi-val font-mono" style="${dayAvgShiftHours > 0 ? 'color: #38bdf8; font-weight: 700;' : 'color: #64748b;'}" title="Tổng giờ công nhân lực Ca Ngày: ${grandDayManHours.toFixed(1)}h ÷ ${effectiveDayPeople} người">${dayAvgShiftHours > 0 ? dayAvgShiftHours.toFixed(2) : ''}</td>`).join('')}
+              </tr>
+              <tr>
+                <td class="mini-kpi-label">Hiệu Suất</td>
+                ${activeDayKips.map(() => `<td class="mini-kpi-val font-mono" style="${dayEffPct ? (dayEffNum > 100 ? 'color: #f87171; font-weight: 800;' : 'color: #34d399; font-weight: 800;') : 'color: #64748b;'}">${dayEffPct ? dayEffPct + '%' : ''}</td>`).join('')}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    let htMiniSummaryNightHtml = '';
+    if (activeNightKips.length === 0) {
+      htMiniSummaryNightHtml = `
+        <div class="sim-mini-kpi-card sim-mini-night">
+          <table class="sim-mini-kpi-table">
+            <thead>
+              <tr>
+                <th class="mini-kpi-th-title">Ca đêm</th>
+                <th style="color: #64748b; font-size: 0.68rem; font-weight: normal; padding: 0.18rem 0.45rem;">(Chưa chọn Kíp)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="mini-kpi-label">Tổng TG có</td><td class="mini-kpi-val">-</td></tr>
+              <tr><td class="mini-kpi-label">Tổng TG có KH</td><td class="mini-kpi-val">-</td></tr>
+              <tr><td class="mini-kpi-label">Hiệu Suất</td><td class="mini-kpi-val">-</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+    } else {
+      const nightEffPct = nightAvgShiftHours > 0 ? ((nightAvgShiftHours / 10.58) * 100).toFixed(2) : null;
+      const nightEffNum = nightEffPct ? parseFloat(nightEffPct) : 0;
+      htMiniSummaryNightHtml = `
+        <div class="sim-mini-kpi-card sim-mini-night">
+          <table class="sim-mini-kpi-table">
+            <thead>
+              <tr>
+                <th class="mini-kpi-th-title">Ca đêm</th>
+                ${activeNightKips.map(kip => {
+                  const hc = getHardtestKipHeadcount(kip);
+                  return `<th class="mini-kpi-th-line">${kip} <span style="display: inline-block; margin-left: 0.2rem; padding: 0.05rem 0.3rem; font-size: 0.64rem; border-radius: 4px; background: rgba(192, 132, 252, 0.18); border: 1px solid rgba(192, 132, 252, 0.45); font-weight: 800;">${hc} ng</span></th>`;
+                }).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mini-kpi-label">Tổng TG có</td>
+                ${activeNightKips.map(() => `<td class="mini-kpi-val font-mono">10.58</td>`).join('')}
+              </tr>
+              <tr>
+                <td class="mini-kpi-label">Tổng TG có KH</td>
+                ${activeNightKips.map(() => `<td class="mini-kpi-val font-mono" style="${nightAvgShiftHours > 0 ? 'color: #c084fc; font-weight: 700;' : 'color: #64748b;'}" title="Tổng giờ công nhân lực Ca Đêm: ${grandNightManHours.toFixed(1)}h ÷ ${effectiveNightPeople} người">${nightAvgShiftHours > 0 ? nightAvgShiftHours.toFixed(2) : ''}</td>`).join('')}
+              </tr>
+              <tr>
+                <td class="mini-kpi-label">Hiệu Suất</td>
+                ${activeNightKips.map(() => `<td class="mini-kpi-val font-mono" style="${nightEffPct ? (nightEffNum > 100 ? 'color: #f87171; font-weight: 800;' : 'color: #34d399; font-weight: 800;') : 'color: #64748b;'}">${nightEffPct ? nightEffPct + '%' : ''}</td>`).join('')}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    const activeDayKipSet = new Set(activeDayKips);
+    const activeNightKipSet = new Set(activeNightKips);
+
     return `
-      <!-- 1. HARDTEST SIMULATOR CONTROL & DISPATCH PANEL -->
-      <div class="card" style="margin-bottom: 1.25rem; padding: 1.15rem; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-glass);">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.15rem;">
-          <div>
-            <h3 style="margin: 0; font-size: 1.1rem; font-weight: 800; color: #22d3ee; display: flex; align-items: center; gap: 0.5rem;">
-              <span>🧮</span> BẢNG GIẢ LẬP TẢI TEST BLOCK &amp; NHÂN LỰC (TOTAL HARDTEST)
-            </h3>
-            <p style="margin: 0.25rem 0 0; font-size: 0.775rem; color: #94a3b8;">
-              Mô phỏng cân bằng Test Block và định mức <strong>1 người dùng 2 test block</strong> theo dữ liệu sản xuất thực tế Bảng 2.
-            </p>
+      <!-- 1. CHỌN KÍP HARDTEST CA NGÀY / CA ĐÊM (ẢNH SỐ 2) & TỔNG HỢP KH (ẢNH SỐ 3) -->
+      <div class="sim-dispatch-card" id="hardtestDispatchPanel" style="padding: 0.45rem 0.65rem; margin-bottom: 0.55rem; display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 0.55rem; flex-wrap: wrap;">
+        <div style="display: flex; flex-direction: column; gap: 0.35rem; flex: 0 0 auto;">
+          <!-- Ca Ngày (10.83h) -->
+          <div class="sim-shift-row" style="margin-bottom: 0; padding: 0.25rem 0.5rem; flex-wrap: nowrap; gap: 0.4rem;">
+            <span class="sim-shift-badge-day" style="font-weight: 800; min-width: 118px; justify-content: center; padding: 0.2rem 0.4rem; font-size: 0.72rem;">
+              <span>☀️</span>
+              <span>CA NGÀY (10.83h)</span>
+            </span>
+            <div class="sim-line-toggle-chips" style="display: inline-flex; align-items: center; gap: 0.35rem; flex-wrap: nowrap;">
+              ${HARDTEST_KIP_OPTIONS.map(kip => {
+                const isActive = activeDayKipSet.has(kip);
+                const hc = getHardtestKipHeadcount(kip);
+                return `
+                  <span class="sim-line-toggle-chip ${isActive ? 'is-day-active' : ''}" data-ht-shift="DAY" data-ht-kip="${kip}" onclick="handleToggleHardtestWorkingKip('DAY', '${kip}')" title="Bấm để bật/tắt ${kip} (${hc} người) Ca Ngày • Tự đồng bộ Phần 1 (${todaySheetKey})">
+                    ${isActive ? '✓ ' : ''}${kip}
+                  </span>
+                `;
+              }).join('')}
+            </div>
+            ${hasCustomDayPeople ? `<span class="badge" style="margin-left: 0.25rem; font-size: 0.7rem; font-weight: 800; background: rgba(245, 158, 11, 0.14); color: #d97706; border: 1px solid rgba(245, 158, 11, 0.35); padding: 0.18rem 0.45rem;" title="Nhân lực nhập trực tiếp tại Phần 1 (${todaySheetKey})">👥 ${effectiveDayPeople} ng (Tab 1)</span>` : ''}
           </div>
+
+          <!-- Ca Đêm (10.58h) -->
+          <div class="sim-shift-row" style="margin-bottom: 0; padding: 0.25rem 0.5rem; flex-wrap: nowrap; gap: 0.4rem;">
+            <span class="sim-shift-badge-night" style="font-weight: 800; min-width: 118px; justify-content: center; padding: 0.2rem 0.4rem; font-size: 0.72rem;">
+              <span>🌙</span>
+              <span>CA ĐÊM (10.58h)</span>
+            </span>
+            <div class="sim-line-toggle-chips" style="display: inline-flex; align-items: center; gap: 0.35rem; flex-wrap: nowrap;">
+              ${HARDTEST_KIP_OPTIONS.map(kip => {
+                const isActive = activeNightKipSet.has(kip);
+                const hc = getHardtestKipHeadcount(kip);
+                return `
+                  <span class="sim-line-toggle-chip ${isActive ? 'is-night-active' : ''}" data-ht-shift="NIGHT" data-ht-kip="${kip}" onclick="handleToggleHardtestWorkingKip('NIGHT', '${kip}')" title="Bấm để bật/tắt ${kip} (${hc} người) Ca Đêm • Tự đồng bộ Phần 1 (${todaySheetKey})">
+                    ${isActive ? '✓ ' : ''}${kip}
+                  </span>
+                `;
+              }).join('')}
+            </div>
+            ${hasCustomNightPeople ? `<span class="badge" style="margin-left: 0.25rem; font-size: 0.7rem; font-weight: 800; background: rgba(168, 85, 247, 0.14); color: #9333ea; border: 1px solid rgba(168, 85, 247, 0.35); padding: 0.18rem 0.45rem;" title="Nhân lực nhập trực tiếp tại Phần 1 (${todaySheetKey})">👥 ${effectiveNightPeople} ng (Tab 1)</span>` : ''}
+          </div>
+        </div>
+
+        <div class="sim-mini-kpis-wrapper" style="display: flex; gap: 0.4rem; align-items: stretch; justify-content: flex-end; flex-shrink: 0; margin-left: auto; flex-wrap: wrap;">
+          ${htMiniSummaryPlanHtml}
+          ${htMiniSummaryDayHtml}
+          ${htMiniSummaryNightHtml}
+        </div>
+      </div>
+
+      <!-- 2. HARDTEST SIMULATOR FILTER TOOLBAR -->
+      <div class="card" style="margin-bottom: 0.65rem; padding: 0.65rem 0.9rem; border: 1px solid var(--border-glass);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.5rem;">
+          <h3 style="margin: 0; font-size: 1rem; font-weight: 800; color: #22d3ee; display: flex; align-items: center; gap: 0.5rem;">
+            <span>🧮</span> BẢNG GIẢ LẬP TẢI TEST BLOCK &amp; NHÂN LỰC (TOTAL HARDTEST)
+          </h3>
 
           <!-- Date Range Picker (Từ Ngày Đến Ngày) -->
           <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
             <span style="font-size: 0.775rem; font-weight: 700; color: #38bdf8;">📅 Giai đoạn kế hoạch:</span>
-            <div style="display: inline-flex; align-items: center; gap: 0.35rem; background: rgba(15,23,42,0.85); padding: 0.25rem 0.5rem; border-radius: 6px; border: 1px solid rgba(56,189,248,0.35);">
-              <span style="font-size: 0.72rem; color: #94a3b8;">Từ:</span>
-              <input type="date" id="hardtest-sim-from-date" class="font-mono select-filter" style="padding: 0.2rem 0.4rem; font-size: 0.775rem; color: #f8fafc; background: rgba(15,23,42,0.9); border: 1px solid rgba(56,189,248,0.4); border-radius: 4px;" value="${simFromDate}" onchange="handleHardtestSimFromDateChange(this.value)">
-              <span style="font-size: 0.72rem; color: #94a3b8;">Đến:</span>
-              <input type="date" id="hardtest-sim-to-date" class="font-mono select-filter" style="padding: 0.2rem 0.4rem; font-size: 0.775rem; color: #f8fafc; background: rgba(15,23,42,0.9); border: 1px solid rgba(56,189,248,0.4); border-radius: 4px;" value="${simToDate}" onchange="handleHardtestSimToDateChange(this.value)">
+            <div style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.5rem; border-radius: 6px; border: 1px solid rgba(56,189,248,0.35);">
+              <span style="font-size: 0.72rem; color: var(--text-muted);">Từ:</span>
+              <input type="date" id="hardtest-sim-from-date" class="font-mono select-filter" style="padding: 0.2rem 0.4rem; font-size: 0.775rem; color: var(--text-primary); background: var(--bg-input); border: 1px solid rgba(56,189,248,0.4); border-radius: 4px;" value="${simFromDate}" onchange="handleHardtestSimFromDateChange(this.value)">
+              <span style="font-size: 0.72rem; color: var(--text-muted);">Đến:</span>
+              <input type="date" id="hardtest-sim-to-date" class="font-mono select-filter" style="padding: 0.2rem 0.4rem; font-size: 0.775rem; color: var(--text-primary); background: var(--bg-input); border: 1px solid rgba(56,189,248,0.4); border-radius: 4px;" value="${simToDate}" onchange="handleHardtestSimToDateChange(this.value)">
             </div>
           </div>
         </div>
 
-        <!-- Toolbar & Shift Duration Filters -->
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.08);">
-          <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
-            <!-- Shift Duration Selector -->
-            <div style="display: flex; align-items: center; gap: 0.35rem;">
-              <span style="font-size: 0.75rem; font-weight: 700; color: #fbbf24;">⏱️ Thời Gian Ca:</span>
-              <select class="select-filter font-mono" style="font-size: 0.775rem; min-width: 175px;" onchange="handleHardtestSimShiftTypeChange(this.value)">
-                <option value="FULL_DAY" ${simShiftType === 'FULL_DAY' ? 'selected' : ''}>⭐ Cả Ngày (21.41h: Ngày 10.83h + Đêm 10.58h)</option>
-                <option value="DAY" ${simShiftType === 'DAY' ? 'selected' : ''}>☀️ Ca Ngày (10.83 Giờ)</option>
-                <option value="NIGHT" ${simShiftType === 'NIGHT' ? 'selected' : ''}>🌙 Ca Đêm (10.58 Giờ)</option>
-                <option value="RANGE" ${simShiftType === 'RANGE' ? 'selected' : ''}>📅 Cả Giai Đoạn Chọn</option>
-              </select>
-            </div>
-
+        <!-- Toolbar & Filters -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.65rem; padding-top: 0.5rem; border-top: 1px solid var(--border-glass);">
+          <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
             <!-- Sub Stage Filter -->
-            <div style="display: flex; align-items: center; gap: 0.35rem;">
+            <div style="display: flex; align-items: center; gap: 0.3rem;">
               <span style="font-size: 0.75rem; font-weight: 700; color: #22d3ee;">🔬 Công Đoạn:</span>
               <select class="select-filter font-mono" style="font-size: 0.775rem; min-width: 140px;" onchange="handleHardtestSimStageFilterChange(this.value)">
                 <option value="ALL" ${stageSubFilter === 'ALL' ? 'selected' : ''}>Tất cả Total Hardtest</option>
@@ -3391,7 +4567,7 @@
             </div>
 
             <!-- Group Model Filter -->
-            <div style="display: flex; align-items: center; gap: 0.35rem;">
+            <div style="display: flex; align-items: center; gap: 0.3rem;">
               <span style="font-size: 0.75rem; font-weight: 700; color: #60a5fa;">🏷️ Group:</span>
               <select class="select-filter font-mono" style="font-size: 0.775rem; min-width: 155px;" onchange="handleHardtestSimGroupFilterChange(this.value)">
                 <option value="ALL" ${groupFilter === 'ALL' ? 'selected' : ''}>Tất cả Group Model</option>
@@ -3399,8 +4575,8 @@
               </select>
             </div>
 
-            <!-- Plan Status Filter (Hỗ trợ lọc Gap < 0 như Assembly) -->
-            <div style="display: flex; align-items: center; gap: 0.35rem;">
+            <!-- Plan Status Filter -->
+            <div style="display: flex; align-items: center; gap: 0.3rem;">
               <span style="font-size: 0.75rem; font-weight: 700; color: #f87171;">📊 Lọc Kế Hoạch:</span>
               <select id="hardtest-sim-status-filter" class="select-filter font-mono" style="font-size: 0.775rem; min-width: 175px;" onchange="handleHardtestSimStatusFilterChange(this.value)">
                 <option value="GAP_NEGATIVE" ${statusFilter === 'GAP_NEGATIVE' ? 'selected' : ''}>⚠️ Đang Thiếu Hụt (Gap &lt; 0)</option>
@@ -3418,170 +4594,155 @@
           </div>
 
           <!-- Quick Action Buttons -->
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <button type="button" class="sim-btn-export-sheet" onclick="handleExportHardtestSimCSV()" title="Xuất toàn bộ bảng giả lập Total Hardtest ra file CSV">
-              <span>📥 Xuất Sheet CSV</span>
-            </button>
-            <button type="button" class="sim-btn-copy-sheet" onclick="handleCopyHardtestSimClipboard()" title="Sao chép bảng giả lập Total Hardtest vào Clipboard">
-              <span>📋 Copy Cho Google Sheet</span>
-            </button>
-            <button type="button" class="btn btn-secondary" onclick="handleResetAllHardtestManual()" style="padding: 0.35rem 0.65rem; font-size: 0.75rem; color: #34d399; border-color: rgba(16, 185, 129, 0.4);" title="Đặt lại tất cả số TB &amp; Người về đề xuất chuẩn">
+          <div style="display: flex; align-items: center; gap: 0.45rem;">
+            <button type="button" class="btn btn-secondary" onclick="handleResetAllHardtestManual()" style="padding: 0.3rem 0.6rem; font-size: 0.725rem; color: #34d399; border-color: rgba(16, 185, 129, 0.4);" title="Đặt lại tất cả số TB &amp; Người về đề xuất chuẩn">
               <span>↺ Đặt lại đề xuất</span>
             </button>
           </div>
         </div>
       </div>
 
-      <!-- 2. SIMULATOR RESULT KPI CARDS -->
-      <div class="capacity-kpi-grid" style="margin-bottom: 1.25rem;">
-        <div class="capacity-kpi-card" style="--kpi-accent: linear-gradient(90deg, #3b82f6, #60a5fa);">
-          <div class="capacity-kpi-label"><span>📦 Kế Hoạch (Plan)</span></div>
-          <div class="capacity-kpi-val" style="color: #60a5fa;">
-            ${grandPlan.toLocaleString('vi-VN')} <span style="font-size: 0.8rem; color: #94a3b8;">pcs</span>
+      <!-- 3. MAIN HARDTEST PLAN & SIMULATION TABLE (THEO CONCEPT ẢNH SỐ 2 + CA NGÀY / CA ĐÊM SONG SONG) -->
+      <div class="sim-table-wrap">
+        <div class="sim-table-header" style="padding: 0.4rem 0.75rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            ${renderSimPlanActionButtonsHtml(plannerName, simHistoryCount)}
           </div>
-          <div class="capacity-kpi-sub">Kỳ: <strong>${simFromDate} ➜ ${simToDate}</strong></div>
-        </div>
-
-        <div class="capacity-kpi-card" style="--kpi-accent: linear-gradient(90deg, #10b981, #34d399);">
-          <div class="capacity-kpi-label"><span>📊 Thực Tế (Fact)</span></div>
-          <div class="capacity-kpi-val" style="color: #34d399;">
-            ${grandFact.toLocaleString('vi-VN')} <span style="font-size: 0.8rem; color: #94a3b8;">pcs</span>
-          </div>
-          <div class="capacity-kpi-sub">Đạt <strong>${grandPlan > 0 ? Math.round(grandFact/grandPlan*100) : (grandFact > 0 ? 100 : 0)}%</strong> kế hoạch</div>
-        </div>
-
-        <div class="capacity-kpi-card" style="--kpi-accent: ${grandGap < 0 ? 'linear-gradient(90deg, #ef4444, #f87171)' : 'linear-gradient(90deg, #10b981, #34d399)'};">
-          <div class="capacity-kpi-label"><span>⚖️ Chênh Lệch (Gap)</span></div>
-          <div class="capacity-kpi-val" style="color: ${grandGap < 0 ? '#f87171' : grandGap > 0 ? '#34d399' : '#cbd5e1'};">
-            ${grandGap !== 0 ? (grandGap > 0 ? '+' : '') + grandGap.toLocaleString('vi-VN') : '0'} <span style="font-size: 0.8rem; color: #94a3b8;">pcs</span>
-          </div>
-          <div class="capacity-kpi-sub">${grandGap < 0 ? `⚠️ Thiếu hụt ${shortageCount} mã cần bù` : '✅ Đạt 100% kế hoạch'}</div>
-        </div>
-
-        <div class="capacity-kpi-card" style="--kpi-accent: linear-gradient(90deg, #06b6d4, #22d3ee);">
-          <div class="capacity-kpi-label"><span>💡 Đề Xuất Test Block</span></div>
-          <div class="capacity-kpi-val" style="color: #22d3ee;">
-            ${grandReqTb} TB <span style="font-size: 0.8rem; color: #94a3b8;">cần dùng</span>
-          </div>
-          <div class="capacity-kpi-sub">Tổng công suất Test Block cần vận hành</div>
-        </div>
-
-        <div class="capacity-kpi-card" style="--kpi-accent: linear-gradient(90deg, #8b5cf6, #c084fc);">
-          <div class="capacity-kpi-label"><span>👥 Đề Xuất Nhân Lực</span></div>
-          <div class="capacity-kpi-val" style="color: #c084fc;">
-            ${grandReqMan} <span style="font-size: 0.8rem; color: #94a3b8;">Người</span>
-          </div>
-          <div class="capacity-kpi-sub">Chuẩn định mức: <strong>1 Người / 2 Test Block</strong></div>
-        </div>
-      </div>
-
-      <!-- 3. MAIN SIMULATION TABLE -->
-      <div class="capacity-table-wrap">
-        <div style="padding: 0.65rem 1rem; background: rgba(11, 19, 41, 0.9); border-bottom: 1px solid var(--border-glass); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <span style="font-weight: 800; color: #22d3ee; font-size: 0.875rem;">📋 BẢNG ĐIỀU ĐỘ TEST BLOCK &amp; NHÂN LỰC THEO GIAI ĐOẠN (${simFromDate} ➜ ${simToDate})</span>
-            <span class="badge badge-blue" style="font-size: 0.72rem;">Đang hiển thị: ${filteredRows.length} Mã</span>
-          </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.75rem;">
-            <span>Tiêu chuẩn: <strong style="color: #c084fc;">1 Người = 2 Test Block</strong> • Đề xuất: <strong style="color: #10b981;">N_req = Math.ceil(Target ÷ Capa 1 TB)</strong></span>
+          <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
+            <button type="button" class="sim-btn-export-sheet" onclick="handleExportHardtestSimCSV()" title="Xuất toàn bộ bảng điều độ Total Hardtest ra file CSV (29 cột kèm FTT, Downtime, Giờ máy tiêu chuẩn/thực tế, Ghi Chú &amp; Âm Từ Ngày / Ca)">
+              <span>📥 Xuất Sheet CSV</span>
+            </button>
+            <button type="button" class="sim-btn-copy-sheet" onclick="handleCopyHardtestSimClipboard()" title="Sao chép bảng điều độ Total Hardtest (29 cột) vào Clipboard để dán vào Google Sheets">
+              <span>📋 Copy Cho Google Sheet</span>
+            </button>
+            <span style="font-size: 0.725rem; color: var(--text-muted); margin-left: 0.2rem;">
+              Đang hiển thị: <strong>${filteredRows.length}</strong> Mã
+            </span>
           </div>
         </div>
 
-        <div style="overflow-x: auto; max-height: calc(100vh - 400px);">
-          <table class="capacity-matrix-table" id="hardtest-sim-table">
+        <!-- BANNER THÔNG BÁO KẾ HOẠCH MỚI VỪA HOÀN THÀNH TỪ USER KHÁC -->
+        ${renderSimNewPlanBannerHtml()}
+        ${renderCumNegPriorityBannerHtml(htGate, 'TOTAL_HARDTEST')}
+
+        <div id="hardtestSimTableScrollWrapper" style="overflow-x: auto; max-height: calc(100vh - 290px);">
+          <table class="sim-table" id="hardtest-sim-table" style="width: 100%; border-collapse: separate; border-spacing: 0;">
             <thead>
-              <tr>
-                <th class="sticky-cap-stt">STT</th>
-                <th style="min-width: 95px; text-align: center;">CÔNG ĐOẠN</th>
-                <th class="sticky-ht-group" style="text-align: left;">NORMING GROUP</th>
-                <th class="sticky-ht-board" style="text-align: left;">MÃ 1C &amp; BO MẠCH</th>
-                <th style="min-width: 105px; text-align: right; color: #60a5fa;" title="Kế hoạch sản lượng (Pcs) trong giai đoạn đã chọn">
-                  KẾ HOẠCH (PLAN)<br>
-                  <span style="font-size: 0.65rem; font-weight: normal; color: #cbd5e1;">(Bấm để sửa)</span>
+              <!-- HÀNG 0: TỔNG CHI TIẾT THEO TỪNG CỘT (STICKY TOP: 0) -->
+              <tr class="sim-sticky-totals-row">
+                <th class="sticky-sim-stt"></th>
+                <th class="sticky-sim-stage"></th>
+                <th class="sticky-sim-group" style="text-align: center; color: #fbbf24; font-size: 0.725rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0.35rem 0.25rem;" title="Người lập Plan: ${plannerName}">
+                  👤 ${plannerName}
                 </th>
-                <th style="min-width: 95px; text-align: right; color: #34d399;" title="Sản lượng thực tế đã sản xuất trong giai đoạn">
-                  THỰC TẾ (FACT)
+                <th class="sticky-sim-model" style="text-align: right; color: var(--text-primary); font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.65rem;">
+                  Tổng Cộng :
                 </th>
-                <th style="min-width: 105px; text-align: right; color: #f87171;" title="Chênh lệch Thực tế - Kế hoạch (Âm là thiếu hụt)">
-                  CHÊNH LỆCH (GAP)
+                <th class="font-mono" style="text-align: right; color: #60a5fa; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                  ${grandPlan.toLocaleString('vi-VN')}
                 </th>
-                <th style="min-width: 85px; text-align: right; color: #38bdf8;" title="Cycle Time Thực Tế sau bù FTT &amp; Downtime">CT THỰC TẾ</th>
-                <th style="min-width: 85px; text-align: center; color: #38bdf8;" title="Số lượng khối thiết bị Test Block hiện có sẵn trong xưởng">TB SẴN CÓ</th>
-                <th style="min-width: 125px; text-align: center; color: #10b981;" title="Số khối Test Block cần thiết để hoàn thành Kế hoạch / Thiếu hụt trong thời gian ca">
-                  💡 ĐỀ XUẤT: SỐ BLOCK<br>
-                  <span style="font-size: 0.65rem; font-weight: normal; color: #cbd5e1;">(Cần để bù/đạt plan)</span>
+                <th class="font-mono" style="text-align: right; color: #34d399; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                  ${grandFact.toLocaleString('vi-VN')}
                 </th>
-                <th style="min-width: 125px; text-align: center; color: #c084fc;" title="Số lượng nhân lực cần thiết theo quy chuẩn: 1 người dùng 2 test block (Math.ceil(TB / 2))">
-                  👥 ĐỀ XUẤT: NHÂN LỰC<br>
-                  <span style="font-size: 0.65rem; font-weight: normal; color: #cbd5e1;">(Chuẩn 1 người / 2 TB)</span>
+                <th class="font-mono" style="text-align: right; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem; ${grandGap < 0 ? 'color: #f87171;' : grandGap > 0 ? 'color: #34d399;' : 'color: var(--text-muted);'}">
+                  ${grandGap !== 0 ? (grandGap > 0 ? '+' : '') + grandGap.toLocaleString('vi-VN') : '0'}
                 </th>
-                <th style="min-width: 95px; text-align: center; color: #38bdf8;" title="Tự nhập số Test Block muốn bố trí cho bo mạch này">
-                  ✍️ THỦ CÔNG: SỐ TB<br>
-                  <span style="font-size: 0.65rem; font-weight: normal; color: #cbd5e1;">(Input số block)</span>
+                <th style="padding: 0.35rem 0.35rem;"></th>
+                <th style="padding: 0.35rem 0.35rem;"></th>
+                <th style="padding: 0.35rem 0.35rem;"></th>
+                <th style="padding: 0.35rem 0.35rem;"></th>
+                <th style="padding: 0.35rem 0.35rem;"></th>
+                <th style="padding: 0.35rem 0.35rem;"></th>
+                <th style="padding: 0.35rem 0.35rem;"></th>
+                <th class="font-mono" style="text-align: right; color: #fbbf24; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;" title="Tổng Giờ máy cần tiêu chuẩn (chưa tính FTT &amp; Downtime)">
+                  ${grandStdHours.toFixed(1)}
                 </th>
-                <th style="min-width: 95px; text-align: center; color: #c084fc;" title="Tự nhập số người muốn bố trí (Tiêu chuẩn 1 người / 2 TB)">
-                  ✍️ THỦ CÔNG: SỐ NGƯỜI<br>
-                  <span style="font-size: 0.65rem; font-weight: normal; color: #cbd5e1;">(Input số người)</span>
+                <!-- Cụm Ca Ngày -->
+                <th style="padding: 0.35rem 0.25rem;"></th>
+                <th class="font-mono" style="text-align: center; color: #38bdf8; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.3rem;">
+                  ${grandDayTb > 0 ? grandDayTb.toLocaleString('vi-VN') : ''}
                 </th>
-                <th style="min-width: 95px; text-align: right; color: #22d3ee;" title="Tốc độ UPH tính theo số Test Block đã bố trí">UPH (PCS/H)</th>
-                <th style="min-width: 95px; text-align: right; color: #fbbf24;" title="Tổng thời gian cần để chạy hết Kế hoạch với số TB đã bố trí">GIỜ MÁY CẦN</th>
-                <th style="min-width: 125px; text-align: right; color: #34d399;" title="Sản lượng làm được trong ca và số lượng còn thiếu">OUTPUT &amp; CÒN THIẾU</th>
-                <th style="min-width: 195px; text-align: left;" title="Đánh giá khả năng đáp ứng Kế hoạch và cân bằng nhân lực">ĐÁNH GIÁ TIẾN ĐỘ &amp; NHÂN LỰC</th>
+                <th class="font-mono" style="text-align: center; color: #c084fc; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.3rem;">
+                  ${grandDayMan > 0 ? grandDayMan.toLocaleString('vi-VN') : ''}
+                </th>
+                <th class="font-mono" style="text-align: right; color: #38bdf8; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                  ${grandDayOutput > 0 ? grandDayOutput.toLocaleString('vi-VN') : ''}
+                </th>
+                <th class="font-mono" style="text-align: right; color: #38bdf8; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;" title="Tổng Giờ máy cần thực tế Ca Ngày (đã tính FTT &amp; Downtime)">
+                  ${grandDayActualHours > 0 ? grandDayActualHours.toFixed(1) : ''}
+                </th>
+                <th class="font-mono" style="text-align: right; color: #f87171; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                  ${grandNightShortage > 0 ? '-' + grandNightShortage.toLocaleString('vi-VN') : ''}
+                </th>
+                <!-- Cụm Ca Đêm -->
+                <th style="padding: 0.35rem 0.25rem;"></th>
+                <th class="font-mono" style="text-align: center; color: #c084fc; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.3rem;">
+                  ${grandNightTb > 0 ? grandNightTb.toLocaleString('vi-VN') : ''}
+                </th>
+                <th class="font-mono" style="text-align: center; color: #c084fc; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.3rem;">
+                  ${grandNightMan > 0 ? grandNightMan.toLocaleString('vi-VN') : ''}
+                </th>
+                <th class="font-mono" style="text-align: right; color: #c084fc; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                  ${grandNightOutput > 0 ? grandNightOutput.toLocaleString('vi-VN') : ''}
+                </th>
+                <th class="font-mono" style="text-align: right; color: #c084fc; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;" title="Tổng Giờ máy cần thực tế Ca Đêm (đã tính FTT &amp; Downtime)">
+                  ${grandNightActualHours > 0 ? grandNightActualHours.toFixed(1) : ''}
+                </th>
+                <th class="font-mono" style="text-align: right; color: #f87171; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                  ${grandFinalShortage > 0 ? '-' + grandFinalShortage.toLocaleString('vi-VN') : ''}
+                </th>
+                <th style="padding: 0.35rem 0.25rem;"></th>
+                <th style="padding: 0.35rem 0.25rem;"></th>
+                <th style="padding: 0.35rem 0.25rem;"></th>
+              </tr>
+
+              <!-- HÀNG 1: TIÊU ĐỀ 30 CỘT CHUẨN CONCEPT + FTT/DOWNTIME + GIỜ MÁY TIÊU CHUẨN/THỰC TẾ + CA NGÀY / CA ĐÊM + GHI CHÚ / ÂM TỪ NGÀY CA / CHECK WIP -->
+              <tr class="sim-header-titles">
+                <th class="sticky-sim-stt" style="text-align: center;">STT</th>
+                <th class="sticky-sim-stage" style="text-align: center;">Công Đoạn</th>
+                <th class="sticky-sim-group" style="text-align: left;">Group Model</th>
+                <th class="sticky-sim-model" style="text-align: left;">Mã 1C</th>
+                <th style="text-align: right; min-width: 88px; color: #60a5fa; padding: 0.35rem 0.35rem;">Kế Hoạch<br>(Plan)</th>
+                <th style="text-align: right; min-width: 80px; color: #34d399; padding: 0.35rem 0.35rem;">Thực Tế<br>(Fact)</th>
+                <th style="text-align: right; min-width: 82px; color: #f87171; padding: 0.35rem 0.35rem;">Chênh Lệch<br>(Gap)</th>
+                <th style="text-align: center; min-width: 90px; color: #38bdf8; padding: 0.35rem 0.35rem;">Date Plan</th>
+                <th style="text-align: center; min-width: 78px; color: #a78bfa; padding: 0.35rem 0.35rem;">Shift Plan</th>
+                <th style="text-align: right; min-width: 78px; color: #38bdf8; padding: 0.35rem 0.35rem;" title="Cycle Time Norm gốc trên sheet Hardtest Data (chưa gồm FTT &amp; Downtime)">Cycle Time<br>Norm</th>
+                <th style="text-align: right; min-width: 68px; color: #34d399; padding: 0.35rem 0.35rem;" title="Tỉ lệ Pass FTT % lấy từ sheet Hardtest Data (cột FTT %)">FTT</th>
+                <th style="text-align: right; min-width: 78px; color: #f59e0b; padding: 0.35rem 0.35rem;" title="Tổng Downtime lấy từ sheet Hardtest Data (cột Total DownTime)">Downtime</th>
+                <th style="text-align: center; min-width: 96px; color: #38bdf8; padding: 0.35rem 0.3rem;" title="Số Test Block sẵn có trên sheet Hardtest Data (nhóm Dùng Chung giới hạn tổng TB/ca)">TB Sẵn Có<br>(Test Block)</th>
+                <th style="text-align: center; min-width: 90px; color: #10b981; padding: 0.35rem 0.3rem;">Số Test Block<br>Cần</th>
+                <th style="text-align: right; min-width: 96px; color: #fbbf24; padding: 0.35rem 0.35rem;" title="Giờ máy cần tiêu chuẩn (KHÔNG tính FTT &amp; Downtime) = |Chênh lệch| × CT Norm ÷ 3600">Giờ máy cần<br>tiêu chuẩn</th>
+                <!-- Cụm Ca Ngày -->
+                <th style="text-align: center; min-width: 72px; color: #cbd5e1; padding: 0.35rem 0.25rem;">Ca Làm<br>Việc</th>
+                <th style="text-align: center; min-width: 82px; color: #38bdf8; padding: 0.35rem 0.25rem;">Số Test Block<br>Dùng</th>
+                <th style="text-align: center; min-width: 82px; color: #c084fc; padding: 0.35rem 0.25rem;">Số Người<br>Sử Dụng</th>
+                <th style="text-align: right; min-width: 92px; color: #38bdf8; padding: 0.35rem 0.35rem;" title="Output Plan Ca Ngày (có thể chỉnh sửa trực tiếp, tự tính lại thiếu ca đêm &amp; giờ máy thực tế)">OUTPUT PLAN<br>DAY</th>
+                <th style="text-align: right; min-width: 96px; color: #38bdf8; padding: 0.35rem 0.35rem;" title="Giờ máy cần thực tế Ca Ngày (ĐÃ tính FTT &amp; Downtime) = OUTPUT PLAN DAY × CT_Thực_Tế ÷ 3600">Giờ máy cần<br>thực tế</th>
+                <th style="text-align: right; min-width: 98px; color: #f87171; padding: 0.35rem 0.35rem;">Số lượng còn<br>thiếu ca đêm</th>
+                <!-- Cụm Ca Đêm -->
+                <th style="text-align: center; min-width: 72px; color: #c084fc; padding: 0.35rem 0.25rem;">Ca Làm<br>Việc</th>
+                <th style="text-align: center; min-width: 82px; color: #c084fc; padding: 0.35rem 0.25rem;">Số Test Block<br>Dùng</th>
+                <th style="text-align: center; min-width: 82px; color: #c084fc; padding: 0.35rem 0.25rem;">Số Người<br>Sử Dụng</th>
+                <th style="text-align: right; min-width: 92px; color: #c084fc; padding: 0.35rem 0.35rem;" title="Output Plan Ca Đêm (tự động theo TB Ca Đêm hoặc chỉnh sửa trực tiếp)">Output Plan<br>ca đêm</th>
+                <th style="text-align: right; min-width: 96px; color: #c084fc; padding: 0.35rem 0.35rem;" title="Giờ máy cần thực tế Ca Đêm (ĐÃ tính FTT &amp; Downtime) = Output Plan ca đêm × CT_Thực_Tế ÷ 3600">Giờ máy cần<br>thực tế</th>
+                <th style="text-align: right; min-width: 98px; color: #f87171; padding: 0.35rem 0.35rem;">Số lượng còn<br>thiếu tổng</th>
+                <!-- Cụm Trailing tương tự Assembly -->
+                <th style="text-align: left; min-width: 140px; color: #e2e8f0; padding: 0.35rem 0.35rem;">Ghi Chú</th>
+                <th style="text-align: center; min-width: 132px; color: #fbbf24; padding: 0.35rem 0.35rem;" title="Truy xuất ngày và ca sản xuất (Ngày / Đêm) bắt đầu bị âm cho các Model Âm luỹ kế">Âm Từ<br>Ngày / Ca</th>
+                <th style="text-align: center; min-width: 102px; color: #34d399; padding: 0.35rem 0.35rem;" title="Bấm để mở ngay tab WIP Control và lọc đúng Model này theo công đoạn">Check WIP</th>
               </tr>
             </thead>
             <tbody>
               ${rowsHtml.length > 0 ? rowsHtml : `
                 <tr>
-                  <td colspan="17" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                  <td colspan="30" style="text-align: center; padding: 3rem; color: var(--text-muted);">
                     <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔍</div>
                     <div style="font-weight: 700; color: #f8fafc;">Không tìm thấy mã nào phù hợp với bộ lọc</div>
                   </td>
                 </tr>
               `}
             </tbody>
-            <tfoot>
-              <tr style="background: rgba(15, 23, 42, 0.95); font-weight: 800; border-top: 2px solid var(--border-glass);">
-                <td colspan="4" style="text-align: right; padding: 0.75rem 1rem; color: #f8fafc; font-size: 0.85rem;">
-                  TỔNG CỘNG (${filteredRows.length} MÃ):
-                </td>
-                <td style="text-align: right; color: #60a5fa; font-family: var(--font-mono); font-size: 0.85rem; font-weight: 800;">
-                  ${grandPlan.toLocaleString('vi-VN')} pcs
-                </td>
-                <td style="text-align: right; color: #34d399; font-family: var(--font-mono); font-size: 0.85rem; font-weight: 800;">
-                  ${grandFact.toLocaleString('vi-VN')} pcs
-                </td>
-                <td style="text-align: right; font-family: var(--font-mono); font-size: 0.85rem; font-weight: 800; color: ${grandGap < 0 ? '#f87171' : grandGap > 0 ? '#34d399' : 'var(--text-muted)'};">
-                  ${grandGap !== 0 ? (grandGap > 0 ? '+' : '') + grandGap.toLocaleString('vi-VN') : '0'} pcs
-                </td>
-                <td style="text-align: right; color: var(--text-muted); font-size: 0.75rem;">--</td>
-                <td style="text-align: center; color: #38bdf8; font-family: var(--font-mono); font-size: 0.85rem;">
-                  ${grandAvailTb} TB
-                </td>
-                <td style="text-align: center; color: #10b981; font-family: var(--font-mono); font-size: 0.85rem;">
-                  ${grandReqTb} TB
-                </td>
-                <td style="text-align: center; color: #c084fc; font-family: var(--font-mono); font-size: 0.85rem;">
-                  ${grandReqMan} Người
-                </td>
-                <td style="text-align: center; color: #38bdf8; font-family: var(--font-mono); font-size: 0.85rem;">
-                  ${grandManualTb} TB
-                </td>
-                <td style="text-align: center; color: #c084fc; font-family: var(--font-mono); font-size: 0.85rem;">
-                  ${grandManualMan} Người
-                </td>
-                <td style="text-align: right; color: #22d3ee; font-family: var(--font-mono); font-size: 0.8rem;">--</td>
-                <td style="text-align: right; color: #fbbf24; font-family: var(--font-mono); font-size: 0.85rem;">
-                  ${grandHours.toFixed(1)}h
-                </td>
-                <td style="text-align: right; color: #34d399; font-family: var(--font-mono); font-size: 0.85rem;">
-                  +${grandOutput.toLocaleString('vi-VN')} pcs
-                  ${grandShortage > 0 ? `<div style="color: #f87171; font-size: 0.75rem;">Thiếu: -${grandShortage.toLocaleString('vi-VN')}</div>` : ''}
-                </td>
-                <td style="text-align: left; color: ${grandShortage > 0 ? '#f87171' : '#34d399'}; font-size: 0.75rem;">
-                  ${grandShortage > 0 ? `⚠️ Tổng còn thiếu -${grandShortage.toLocaleString('vi-VN')} pcs` : `✅ Đã đủ công suất 100%`}
-                </td>
-              </tr>
-            </tfoot>
           </table>
         </div>
       </div>
@@ -3814,39 +4975,113 @@
     const num = Math.max(0, parseInt(val, 10) || 0);
     if (!window.AppStore.hardtestPlanOverrides) window.AppStore.hardtestPlanOverrides = {};
     window.AppStore.hardtestPlanOverrides[rowId] = num;
+    if (window.handleSaveSimPlanDraft) window.handleSaveSimPlanDraft(true);
     window.renderCapacityView();
     window.showToast('info', `Đã cập nhật Kế hoạch: ${num.toLocaleString('vi-VN')} pcs`);
   };
 
-  window.handleHardtestManualTbChange = function(rawRowId, val) {
+  function updateHardtestShiftManualTb(rawRowId, val, shiftSide) {
     if (window.UserAuth && !window.UserAuth.canEdit()) {
       window.showToast('warning', '⚠️ Tài khoản của bạn là Viewer (Chỉ xem). Hãy đăng nhập để sửa Test Block!');
       return;
     }
     const rowId = decodeURIComponent(rawRowId);
+    if (!assertCumNegPriorityUnlocked(rowId, 'TOTAL_HARDTEST')) return;
     const num = Math.max(0, parseInt(val, 10) || 0);
-    if (!window.AppStore.hardtestManualTb) window.AppStore.hardtestManualTb = {};
-    if (!window.AppStore.hardtestManualMan) window.AppStore.hardtestManualMan = {};
-    window.AppStore.hardtestManualTb[rowId] = num;
-    // Auto-update manpower according to standard 1 worker for 2 test blocks if user hasn't explicitly customized manpower
-    if (window.AppStore.hardtestManualMan[rowId] === undefined) {
-      window.AppStore.hardtestManualMan[rowId] = Math.ceil(num / 2.0);
+    const tbKey = shiftSide === 'NIGHT' ? 'hardtestManualTbNight' : 'hardtestManualTbDay';
+    const manKey = shiftSide === 'NIGHT' ? 'hardtestManualManNight' : 'hardtestManualManDay';
+    const planKey = shiftSide === 'NIGHT' ? 'hardtestManualPlanNight' : 'hardtestManualPlanDay';
+    if (!window.AppStore[tbKey]) window.AppStore[tbKey] = {};
+    if (!window.AppStore[manKey]) window.AppStore[manKey] = {};
+    window.AppStore[tbKey][rowId] = num;
+    // Khi sửa tay số TB, xóa override Output Plan ca tương ứng để tính lại theo số TB mới
+    if (window.AppStore[planKey]) delete window.AppStore[planKey][rowId];
+    if (window.AppStore[manKey][rowId] === undefined) {
+      window.AppStore[manKey][rowId] = Math.ceil(num / 2.0);
     }
+    if (shiftSide === 'DAY') {
+      if (!window.AppStore.hardtestManualTb) window.AppStore.hardtestManualTb = {};
+      window.AppStore.hardtestManualTb[rowId] = num;
+    }
+    if (window.handleSaveSimPlanDraft) window.handleSaveSimPlanDraft(true);
     window.renderCapacityView();
-    window.showToast('info', `Đã bố trí thủ công: ${num} Test Block`);
-  };
+    window.showToast('info', `Đã bố trí ${shiftSide === 'NIGHT' ? 'Ca Đêm' : 'Ca Ngày'}: ${num} Test Block`);
+  }
 
-  window.handleHardtestManualManChange = function(rawRowId, val) {
+  function updateHardtestShiftManualMan(rawRowId, val, shiftSide) {
     if (window.UserAuth && !window.UserAuth.canEdit()) {
       window.showToast('warning', '⚠️ Tài khoản của bạn là Viewer (Chỉ xem). Hãy đăng nhập để sửa Nhân lực!');
       return;
     }
     const rowId = decodeURIComponent(rawRowId);
+    if (!assertCumNegPriorityUnlocked(rowId, 'TOTAL_HARDTEST')) return;
     const num = Math.max(0, parseInt(val, 10) || 0);
-    if (!window.AppStore.hardtestManualMan) window.AppStore.hardtestManualMan = {};
-    window.AppStore.hardtestManualMan[rowId] = num;
+    const manKey = shiftSide === 'NIGHT' ? 'hardtestManualManNight' : 'hardtestManualManDay';
+    if (!window.AppStore[manKey]) window.AppStore[manKey] = {};
+    window.AppStore[manKey][rowId] = num;
+    if (shiftSide === 'DAY') {
+      if (!window.AppStore.hardtestManualMan) window.AppStore.hardtestManualMan = {};
+      window.AppStore.hardtestManualMan[rowId] = num;
+    }
+    if (window.handleSaveSimPlanDraft) window.handleSaveSimPlanDraft(true);
     window.renderCapacityView();
-    window.showToast('info', `Đã bố trí thủ công: ${num} Người vận hành`);
+    window.showToast('info', `Đã bố trí ${shiftSide === 'NIGHT' ? 'Ca Đêm' : 'Ca Ngày'}: ${num} Người sử dụng`);
+  }
+
+  function updateHardtestShiftManualPlan(rawRowId, val, shiftSide) {
+    if (window.UserAuth && !window.UserAuth.canEdit()) {
+      window.showToast('warning', '⚠️ Tài khoản của bạn là Viewer (Chỉ xem). Hãy đăng nhập để sửa Output Plan!');
+      return;
+    }
+    const rowId = decodeURIComponent(rawRowId);
+    if (!assertCumNegPriorityUnlocked(rowId, 'TOTAL_HARDTEST')) return;
+    const planKey = shiftSide === 'NIGHT' ? 'hardtestManualPlanNight' : 'hardtestManualPlanDay';
+    if (!window.AppStore[planKey]) window.AppStore[planKey] = {};
+    const raw = (val || '').toString().replace(/\./g, '').replace(/,/g, '').trim();
+    const num = parseInt(raw, 10);
+    if (isNaN(num) || num < 0 || raw === '') {
+      delete window.AppStore[planKey][rowId];
+    } else {
+      window.AppStore[planKey][rowId] = num;
+    }
+    if (window.handleSaveSimPlanDraft) window.handleSaveSimPlanDraft(true);
+    window.renderCapacityView();
+    if (window.showToast) {
+      const label = shiftSide === 'NIGHT' ? 'Output Plan ca đêm' : 'OUTPUT PLAN DAY';
+      window.showToast('info', !isNaN(num) && num >= 0 && raw !== '' ? `Đã cập nhật ${label}: ${num.toLocaleString('vi-VN')}` : `Đã khôi phục ${label} tự động`);
+    }
+  }
+
+  window.handleHardtestManualTbDayChange = function(rawRowId, val) {
+    updateHardtestShiftManualTb(rawRowId, val, 'DAY');
+  };
+
+  window.handleHardtestManualManDayChange = function(rawRowId, val) {
+    updateHardtestShiftManualMan(rawRowId, val, 'DAY');
+  };
+
+  window.handleHardtestManualPlanDayChange = function(rawRowId, val) {
+    updateHardtestShiftManualPlan(rawRowId, val, 'DAY');
+  };
+
+  window.handleHardtestManualTbNightChange = function(rawRowId, val) {
+    updateHardtestShiftManualTb(rawRowId, val, 'NIGHT');
+  };
+
+  window.handleHardtestManualManNightChange = function(rawRowId, val) {
+    updateHardtestShiftManualMan(rawRowId, val, 'NIGHT');
+  };
+
+  window.handleHardtestManualPlanNightChange = function(rawRowId, val) {
+    updateHardtestShiftManualPlan(rawRowId, val, 'NIGHT');
+  };
+
+  window.handleHardtestManualTbChange = function(rawRowId, val) {
+    updateHardtestShiftManualTb(rawRowId, val, 'DAY');
+  };
+
+  window.handleHardtestManualManChange = function(rawRowId, val) {
+    updateHardtestShiftManualMan(rawRowId, val, 'DAY');
   };
 
   window.handleResetHardtestRowManual = function(rawRowId) {
@@ -3855,9 +5090,15 @@
       return;
     }
     const rowId = decodeURIComponent(rawRowId);
-    if (window.AppStore.hardtestManualTb) delete window.AppStore.hardtestManualTb[rowId];
-    if (window.AppStore.hardtestManualMan) delete window.AppStore.hardtestManualMan[rowId];
-    if (window.AppStore.hardtestPlanOverrides) delete window.AppStore.hardtestPlanOverrides[rowId];
+    if (!assertCumNegPriorityUnlocked(rowId, 'TOTAL_HARDTEST')) return;
+    [
+      'hardtestManualTbDay', 'hardtestManualManDay', 'hardtestManualPlanDay',
+      'hardtestManualTbNight', 'hardtestManualManNight', 'hardtestManualPlanNight',
+      'hardtestManualTb', 'hardtestManualMan', 'hardtestPlanOverrides'
+    ].forEach(k => {
+      if (window.AppStore[k]) delete window.AppStore[k][rowId];
+    });
+    if (window.handleSaveSimPlanDraft) window.handleSaveSimPlanDraft(true);
     window.renderCapacityView();
     window.showToast('success', 'Đã đặt lại mã này về đề xuất chuẩn');
   };
@@ -3867,12 +5108,63 @@
       window.showToast('warning', '⚠️ Tài khoản Viewer không có quyền đặt lại!');
       return;
     }
+    window.AppStore.hardtestManualTbDay = {};
+    window.AppStore.hardtestManualManDay = {};
+    window.AppStore.hardtestManualPlanDay = {};
+    window.AppStore.hardtestManualTbNight = {};
+    window.AppStore.hardtestManualManNight = {};
+    window.AppStore.hardtestManualPlanNight = {};
     window.AppStore.hardtestManualTb = {};
     window.AppStore.hardtestManualMan = {};
     window.AppStore.hardtestPlanOverrides = {};
+    if (window.handleSaveSimPlanDraft) window.handleSaveSimPlanDraft(true);
     window.renderCapacityView();
-    window.showToast('success', 'Đã đặt lại toàn bộ TB &amp; Nhân lực về đề xuất chuẩn!');
+    window.showToast('success', 'Đã đặt lại toàn bộ TB, Output Plan &amp; Nhân lực về đề xuất chuẩn!');
   };
+
+  function getHardtestExportSpec(rows) {
+    const headers = [
+      'STT', 'Công Đoạn', 'Group Model', 'Mã 1C',
+      'Kế Hoạch (Plan)', 'Thực Tế (Fact)', 'Chênh Lệch (Gap)',
+      'Date Plan', 'Shift Plan', 'Cycle Time Norm', 'FTT (%)', 'Downtime (%)', 'TB Sẵn Có (Test Block)',
+      'Số Test Block Cần', 'Giờ máy cần tiêu chuẩn',
+      'Ca Làm Việc (Ngày)', 'Số Test Block Dùng (Ngày)', 'Số Người Sử Dụng (Ngày)', 'OUTPUT PLAN DAY', 'Giờ máy cần thực tế (Ngày)', 'Số lượng còn thiếu ca đêm',
+      'Ca Làm Việc (Đêm)', 'Số Test Block Dùng (Đêm)', 'Số Người Sử Dụng (Đêm)', 'Output Plan ca đêm', 'Giờ máy cần thực tế (Đêm)', 'Số lượng còn thiếu tổng',
+      'Ghi Chú', 'Âm Từ Ngày / Ca'
+    ];
+    const mapped = rows.map((r, idx) => ([
+      r.displayIdx || (idx + 1),
+      r.stage || '',
+      r.normGroup || r.group || '',
+      r.model1c || '',
+      r.planQty != null ? r.planQty : 0,
+      r.factQty != null ? r.factQty : 0,
+      r.gapQty != null ? r.gapQty : 0,
+      r.datePlanLabel || '--',
+      r.shiftPlanLabel || '--',
+      r.ctNorm != null ? r.ctNorm : (r.ctActual || 0),
+      r.fttPct != null ? r.fttPct : 0,
+      r.dtTotalPct != null ? r.dtTotalPct : 0,
+      r.availTb || 0,
+      r.reqTb || 0,
+      Number((r.stdHours || 0).toFixed(1)),
+      'Ca Ngày',
+      r.manualTbDay || 0,
+      r.manualManDay || 0,
+      r.dayOutput || 0,
+      Number((r.dayActualHours || 0).toFixed(1)),
+      r.nightShortage > 0 ? -r.nightShortage : 0,
+      'Ca Đêm',
+      r.manualTbNight || 0,
+      r.manualManNight || 0,
+      r.nightOutput || 0,
+      Number((r.nightActualHours || 0).toFixed(1)),
+      r.finalShortage > 0 ? -r.finalShortage : 0,
+      (window.AppStore && window.AppStore.simManualNotes && window.AppStore.simManualNotes[r.rowId]) ? window.AppStore.simManualNotes[r.rowId] : '',
+      r.cumNegOriginLabel || '--'
+    ]));
+    return { headers, rows: mapped };
+  }
 
   window.handleExportHardtestSimCSV = function() {
     const rows = window.AppStore.lastProcessedHardtestSimRows || [];
@@ -3887,51 +5179,15 @@
     const now = new Date();
     const dateStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
 
-    const headers = [
-      'STT', 'Công Đoạn', 'Group Model', 'Mã 1C', 'Bo Mạch Định Mức',
-      'Kế Hoạch (Plan)', 'Thực Tế (Fact)', 'Chênh Lệch (Gap)',
-      'CT Thực Tế (s)', 'TB Sẵn Có (Test Block)',
-      'Đề Xuất Số TB', 'Đề Xuất Nhân Lực (1 Người / 2 TB)',
-      'Thủ Công: Số TB', 'Thủ Công: Số Người',
-      'UPH Bố Trí (pcs/h)', 'Giờ Máy Cần (h)', 'Sản Lượng Đạt (pcs)', 'Còn Thiếu (pcs)',
-      'Đánh Giá Định Mức Ca', 'Đánh Giá Nhân Lực'
-    ];
-
+    const spec = getHardtestExportSpec(rows);
     let csv = '\uFEFF';
-    csv += `# AJAX PROPLAN MES - GIẢ LẬP ĐIỀU ĐỘ TOTAL HARDTEST & TEST BLOCK & NHÂN LỰC\n`;
-    csv += `# Giai đoạn: ${fromDate} ➜ ${toDate} | Xuất ngày: ${now.toLocaleString('vi-VN')}\n`;
+    csv += `# AJAX PROPLAN MES - GIẢ LẬP ĐIỀU ĐỘ TOTAL HARDTEST & TEST BLOCK & NHÂN LỰC (29 CỘT)\n`;
+    csv += `# Giai đoạn: ${fromDate} ➜ ${toDate} | Người lập: ${getSimPlannerName()} | Xuất ngày: ${now.toLocaleString('vi-VN')}\n`;
     csv += `# Quy chuẩn: 1 Người phụ trách 2 Test Block | Ca Ngày 10.83h | Ca Đêm 10.58h\n\n`;
-    csv += headers.map(h => `"${h}"`).join(',') + '\n';
+    csv += spec.headers.map(h => `"${h}"`).join(',') + '\n';
 
-    rows.forEach((r, idx) => {
-      const evalCap = r.targetQty > 0 ? (r.remainingShortage === 0 ? 'Đạt 100%' : `Thiếu -${r.remainingShortage}`) : '--';
-      const evalMan = r.effectiveTb > 0 
-        ? (r.effectiveMan * 2 < r.effectiveTb ? `Quá tải (1 người / ${(r.effectiveTb/r.effectiveMan).toFixed(1)} TB)` : 'Đạt chuẩn 1 người / 2 TB')
-        : '--';
-
-      const row = [
-        r.displayIdx || (idx + 1),
-        `"${r.stage}"`,
-        `"${(r.normGroup || r.group || '').replace(/"/g, '""')}"`,
-        `"${(r.model1c || '').replace(/"/g, '""')}"`,
-        `"${(r.board || '').replace(/"/g, '""')}"`,
-        r.planQty != null ? r.planQty : 0,
-        r.factQty != null ? r.factQty : 0,
-        r.gapQty != null ? r.gapQty : 0,
-        r.ctActual,
-        r.availTb,
-        r.reqTb,
-        r.reqMan,
-        r.effectiveTb,
-        r.effectiveMan,
-        r.effectiveUph,
-        r.hoursNeeded.toFixed(2),
-        r.shiftOutput,
-        r.remainingShortage,
-        `"${evalCap}"`,
-        `"${evalMan}"`
-      ];
-      csv += row.join(',') + '\n';
+    spec.rows.forEach(vals => {
+      csv += vals.map(v => typeof v === 'number' ? v : `"${String(v).replace(/"/g, '""')}"`).join(',') + '\n';
     });
 
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -3953,46 +5209,10 @@
       return;
     }
 
-    const headers = [
-      'STT', 'Công Đoạn', 'Group Model', 'Mã 1C', 'Bo Mạch Định Mức',
-      'Kế Hoạch (Plan)', 'Thực Tế (Fact)', 'Chênh Lệch (Gap)',
-      'CT Thực Tế (s)', 'TB Sẵn Có (Test Block)',
-      'Đề Xuất Số TB', 'Đề Xuất Nhân Lực (1 Người / 2 TB)',
-      'Thủ Công: Số TB', 'Thủ Công: Số Người',
-      'UPH Bố Trí (pcs/h)', 'Giờ Máy Cần (h)', 'Sản Lượng Đạt (pcs)', 'Còn Thiếu (pcs)',
-      'Đánh Giá Định Mức Ca', 'Đánh Giá Nhân Lực'
-    ];
-
-    let tsv = headers.join('\t') + '\n';
-    rows.forEach((r, idx) => {
-      const evalCap = r.targetQty > 0 ? (r.remainingShortage === 0 ? 'Đạt 100%' : `Thiếu -${r.remainingShortage}`) : '--';
-      const evalMan = r.effectiveTb > 0 
-        ? (r.effectiveMan * 2 < r.effectiveTb ? `Quá tải (1 người / ${(r.effectiveTb/r.effectiveMan).toFixed(1)} TB)` : 'Đạt chuẩn 1 người / 2 TB')
-        : '--';
-
-      const row = [
-        r.displayIdx || (idx + 1),
-        r.stage,
-        r.normGroup || r.group,
-        r.model1c,
-        r.board,
-        r.planQty != null ? r.planQty : 0,
-        r.factQty != null ? r.factQty : 0,
-        r.gapQty != null ? r.gapQty : 0,
-        r.ctActual,
-        r.availTb,
-        r.reqTb,
-        r.reqMan,
-        r.effectiveTb,
-        r.effectiveMan,
-        r.effectiveUph,
-        r.hoursNeeded.toFixed(2),
-        r.shiftOutput,
-        r.remainingShortage,
-        evalCap,
-        evalMan
-      ];
-      tsv += row.join('\t') + '\n';
+    const spec = getHardtestExportSpec(rows);
+    let tsv = spec.headers.map(sanitizeTsvCell).join('\t') + '\n';
+    spec.rows.forEach(vals => {
+      tsv += vals.map(sanitizeTsvCell).join('\t') + '\n';
     });
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -4233,6 +5453,7 @@
 
   // Assembly 21-Column Table Line Assignment Handlers
   window.handleTableLineDayChange = function(rowKey, lineId) {
+    if (!assertCumNegPriorityUnlocked(rowKey, 'ASSEMBLY')) return;
     if (!window.AppStore.simManualLinesDay) window.AppStore.simManualLinesDay = {};
     if (!window.AppStore.simLineOverridesDay) window.AppStore.simLineOverridesDay = {};
     if (!window.AppStore.simLineOverrides) window.AppStore.simLineOverrides = {};
@@ -4255,6 +5476,7 @@
   };
 
   window.handleTableLineNightChange = function(rowKey, lineId) {
+    if (!assertCumNegPriorityUnlocked(rowKey, 'ASSEMBLY')) return;
     if (!window.AppStore.simManualLinesNight) window.AppStore.simManualLinesNight = {};
     if (!window.AppStore.simLineOverridesNight) window.AppStore.simLineOverridesNight = {};
 
@@ -4274,6 +5496,7 @@
   };
 
   window.handleTableSeqDayChange = function(rowKey, val) {
+    if (!assertCumNegPriorityUnlocked(rowKey, 'ASSEMBLY')) return;
     if (!window.AppStore.simManualSeqsDay) window.AppStore.simManualSeqsDay = {};
     const cleanVal = (val || '').trim();
     if (!cleanVal) {
@@ -4289,6 +5512,7 @@
   };
 
   window.handleTableSeqNightChange = function(rowKey, val) {
+    if (!assertCumNegPriorityUnlocked(rowKey, 'ASSEMBLY')) return;
     if (!window.AppStore.simManualSeqsNight) window.AppStore.simManualSeqsNight = {};
     const cleanVal = (val || '').trim();
     if (!cleanVal) {
@@ -4304,6 +5528,7 @@
   };
 
   window.handleTablePfDayChange = function(rowKey, val) {
+    if (!assertCumNegPriorityUnlocked(rowKey, 'ASSEMBLY')) return;
     if (!window.AppStore.simManualPfDay) window.AppStore.simManualPfDay = {};
     const raw = (val || '').toString().replace(/%/g, '').replace(/,/g, '.').trim();
     const num = parseFloat(raw);
@@ -4320,6 +5545,7 @@
   };
 
   window.handleTablePfNightChange = function(rowKey, val) {
+    if (!assertCumNegPriorityUnlocked(rowKey, 'ASSEMBLY')) return;
     if (!window.AppStore.simManualPfNight) window.AppStore.simManualPfNight = {};
     const raw = (val || '').toString().replace(/%/g, '').replace(/,/g, '.').trim();
     const num = parseFloat(raw);
@@ -4336,6 +5562,7 @@
   };
 
   window.handleTablePlanDayChange = function(rowKey, val) {
+    if (!assertCumNegPriorityUnlocked(rowKey, 'ASSEMBLY')) return;
     if (!window.AppStore.simManualPlanDay) window.AppStore.simManualPlanDay = {};
     const raw = (val || '').toString().replace(/\./g, '').replace(/,/g, '').trim();
     const num = parseInt(raw, 10);
@@ -4352,6 +5579,7 @@
   };
 
   window.handleTablePlanNightChange = function(rowKey, val) {
+    if (!assertCumNegPriorityUnlocked(rowKey, 'ASSEMBLY')) return;
     if (!window.AppStore.simManualPlanNight) window.AppStore.simManualPlanNight = {};
     const raw = (val || '').toString().replace(/\./g, '').replace(/,/g, '').trim();
     const num = parseInt(raw, 10);
@@ -4394,6 +5622,7 @@
   window.handleTableLineChange = window.handleTableLineDayChange;
 
   window.handleTableShiftChange = function(rowKey, shift) {
+    if (!assertCumNegPriorityUnlocked(rowKey, 'ASSEMBLY')) return;
     if (!window.AppStore.simManualShifts) window.AppStore.simManualShifts = {};
     window.AppStore.simManualShifts[rowKey] = shift;
     window.renderCapacityView();
@@ -4409,6 +5638,7 @@
       window.showToast('warning', '⚠️ Tài khoản của bạn là Viewer (Chỉ xem). Hãy đăng nhập để sắp xếp thủ công Line!');
       return;
     }
+    if (!assertCumNegPriorityUnlocked(rowKey, 'ASSEMBLY')) return;
     const cleanVal = (val || '').trim();
     if (!window.AppStore.simManualLinesDay) window.AppStore.simManualLinesDay = {};
     if (!window.AppStore.simLineOverridesDay) window.AppStore.simLineOverridesDay = {};
@@ -4437,6 +5667,7 @@
       window.showToast('warning', '⚠️ Tài khoản của bạn là Viewer (Chỉ xem). Hãy đăng nhập để sắp xếp thủ công Line!');
       return;
     }
+    if (!assertCumNegPriorityUnlocked(rowKey, 'ASSEMBLY')) return;
     const cleanVal = (val || '').trim();
     if (!window.AppStore.simManualLinesNight) window.AppStore.simManualLinesNight = {};
     if (!window.AppStore.simLineOverridesNight) window.AppStore.simLineOverridesNight = {};
@@ -4462,6 +5693,7 @@
       window.showToast('warning', '⚠️ Tài khoản của bạn là Viewer (Chỉ xem). Không thể đặt lại dữ liệu!');
       return;
     }
+    if (!assertCumNegPriorityUnlocked(rowKey, 'ASSEMBLY')) return;
     if (window.AppStore.simManualLinesDay) delete window.AppStore.simManualLinesDay[rowKey];
     if (window.AppStore.simManualLinesNight) delete window.AppStore.simManualLinesNight[rowKey];
     if (window.AppStore.simLineOverridesDay) delete window.AppStore.simLineOverridesDay[rowKey];
@@ -4684,6 +5916,7 @@
       assignedNightHours[lid] = 0;
     });
 
+    const todayPlanRefAuto = getTodayPlanReference();
     const shortageItems = [];
     scheduleItems.forEach(it => {
       if (it.cumGapQty < 0) {
@@ -4691,12 +5924,14 @@
         const rowKey = `${it.stage}___${it.model}___${it.productName1C}`.replace(/"/g, '&quot;');
         const shortage = Math.abs(it.cumGapQty);
         const estHours = (shortage * capInfo.optimalLine.actualCt) / 3600;
-        shortageItems.push({ it, capInfo, rowKey, shortage, estHours });
+        const meta = resolvePlanDateAndShiftMeta(it, Number(it.cumGapQty || 0), todayPlanRefAuto, shiftFilter || 'ALL');
+        shortageItems.push({ it, capInfo, rowKey, shortage, estHours, isCumNeg: !!(meta && meta.isCumNegative) });
       }
     });
 
-    // Sort DoorProtect jobs first to utilize dedicated Line Support, then sort heavy jobs for packing
+    // Prioritize Âm luỹ kế first, then DoorProtect jobs for Line Support, then heavy jobs for packing
     shortageItems.sort((a, b) => {
+      if (a.isCumNeg !== b.isCumNeg) return a.isCumNeg ? -1 : 1;
       const aIsDp = isDoorProtectModel(a.it);
       const bIsDp = isDoorProtectModel(b.it);
       if (aIsDp !== bIsDp) return aIsDp ? -1 : 1;
@@ -5314,7 +6549,7 @@
         cleanNote,
         r.cumNegOriginLabel || '--'
       ];
-      tsv += row.join('\t') + '\n';
+      tsv += row.map(sanitizeTsvCell).join('\t') + '\n';
     });
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -6181,6 +7416,7 @@
       window.AppStore.simManualNotes[rowKey] = val.trim();
     }
     if (window.handleSaveSimPlanDraft) window.handleSaveSimPlanDraft(true);
+    renderCapacityViewPreservingScroll();
   };
 
   window.handleSaveSimPlanDraft = function(isSilent = false) {
@@ -6218,7 +7454,8 @@
         simManualPlanDay: { ...(window.AppStore.simManualPlanDay || {}) },
         simManualPlanNight: { ...(window.AppStore.simManualPlanNight || {}) },
         simManualShifts: { ...(window.AppStore.simManualShifts || {}) },
-        simManualNotes: { ...(window.AppStore.simManualNotes || {}) }
+        simManualNotes: { ...(window.AppStore.simManualNotes || {}) },
+        hardtestState: buildHardtestDraftState()
       };
 
       localStorage.setItem('AJAX_SIM_PLAN_DRAFT', JSON.stringify(draft));
@@ -6236,6 +7473,31 @@
 
   window.handleResetSimPlan = function() {
     if (!window.AppStore) return;
+    if (window.AppStore.selectedCapacityStage === 'TOTAL_HARDTEST') {
+      const confirmHtMsg = 'BẠN CÓ CHẮC CHẮN MUỐN ĐẶT LẠI (RESET) KẾ HOẠCH TOTAL HARDTEST?\n\n' +
+        '• Toàn bộ Kíp trực (về HT A Ngày / HT B Đêm), Số Test Block dùng và Số Người sử dụng Ca Ngày/Ca Đêm của Total Hardtest sẽ được đặt lại về đề xuất chuẩn.\n\n' +
+        'Bấm OK để xác nhận Reset.';
+      if (!window.confirm(confirmHtMsg)) return;
+      window.AppStore.hardtestManualTbDay = {};
+      window.AppStore.hardtestManualManDay = {};
+      window.AppStore.hardtestManualTbNight = {};
+      window.AppStore.hardtestManualManNight = {};
+      window.AppStore.hardtestManualTb = {};
+      window.AppStore.hardtestManualMan = {};
+      window.AppStore.hardtestPlanOverrides = {};
+      window.AppStore.hardtestWorkingKipsDay = ['HT A'];
+      window.AppStore.hardtestWorkingKipsNight = ['HT B'];
+      window.AppStore._htKipsManualConfigured = false;
+      window.AppStore.hardtestManpowerOverrideDay = null;
+      window.AppStore.hardtestManpowerOverrideNight = null;
+      if (window.handleSaveSimPlanDraft) window.handleSaveSimPlanDraft(true);
+      if (window.renderCapacityView) window.renderCapacityView();
+      if (window.showToast) {
+        window.showToast('info', '🔄 Đã đặt lại (Reset) kế hoạch Total Hardtest về đề xuất chuẩn!');
+      }
+      return;
+    }
+
     const confirmMsg = 'BẠN CÓ CHẮC CHẮN MUỐN ĐẶT LẠI (RESET) KẾ HOẠCH SẢN XUẤT?\n\n' +
       '• Toàn bộ Line phân bổ thủ công, số lượng Plan Ca Ngày/Ca Đêm, Thứ tự sản xuất và Ghi chú sẽ được xóa bỏ để tính toán lại.\n' +
       '• Bản lưu tạm (Draft) hiện tại cũng sẽ được làm mới về ban đầu.\n\n' +
@@ -6741,8 +8003,11 @@
     window.AppStore.simManualPfNight = { ...(s.simManualPfNight || {}) };
     window.AppStore.simManualPlanDay = { ...(s.simManualPlanDay || {}) };
     window.AppStore.simManualPlanNight = { ...(s.simManualPlanNight || {}) };
-    window.AppStore.simManualShifts = { ...(s.simManualShifts || {}) };
-    window.AppStore.simManualNotes = { ...(s.simManualNotes || {}) };
+    if (s.simManualShifts) window.AppStore.simManualShifts = { ...(s.simManualShifts || {}) };
+    if (s.simManualNotes) window.AppStore.simManualNotes = { ...(s.simManualNotes || {}) };
+    if (s.hardtestState) {
+      applyHardtestDraftFields(s.hardtestState, true);
+    }
 
     window.AppStore._appliedPlanIdInitialized = true;
     window.AppStore._currentAppliedPlanId = plan.id;
@@ -6803,32 +8068,43 @@
 
   window.handleCompleteSimPlan = function() {
     if (!window.AppStore) return;
-    const plannerName = (window.AppStore.simPlannerName !== undefined && window.AppStore.simPlannerName !== null)
-      ? window.AppStore.simPlannerName
-      : (localStorage.getItem('AJAX_SIM_PLANNER_NAME') || 'Bùi Anh Tuấn');
+    const plannerName = getSimPlannerName();
+    const isHardtestStage = window.AppStore.selectedCapacityStage === 'TOTAL_HARDTEST';
 
-    const processedRows = window.AppStore.lastProcessedSimRows || [];
+    const processedRows = isHardtestStage
+      ? (window.AppStore.lastProcessedHardtestSimRows || [])
+      : (window.AppStore.lastProcessedSimRows || []);
     const modelsCount = processedRows.length;
     let grandPlan = 0;
     let grandFact = 0;
     let grandPlanDay = 0;
     let grandPlanNight = 0;
-    processedRows.forEach(r => {
-      grandPlan += (r.it.cumPlanQty || 0);
-      grandFact += (r.it.cumFactQty || 0);
-      grandPlanDay += (r.planDay || 0);
-      grandPlanNight += (r.planNight || 0);
-    });
+    if (isHardtestStage) {
+      processedRows.forEach(r => {
+        grandPlan += (r.planQty || 0);
+        grandFact += (r.factQty || 0);
+        grandPlanDay += (r.dayOutput || 0);
+        grandPlanNight += (r.nightOutput || 0);
+      });
+    } else {
+      processedRows.forEach(r => {
+        grandPlan += (r.it.cumPlanQty || 0);
+        grandFact += (r.it.cumFactQty || 0);
+        grandPlanDay += (r.planDay || 0);
+        grandPlanNight += (r.planNight || 0);
+      });
+    }
 
     const now = new Date();
     const dateStr = now.toLocaleDateString('vi-VN');
     const timeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const stageDisplay = isHardtestStage ? 'TOTAL HARDTEST' : (window.AppStore.simStageFilter || 'ASSEMBLY');
 
     const confirmMsg = `XÁC NHẬN HOÀN THÀNH KẾ HOẠCH SẢN XUẤT:\n\n` +
       `• Người lập Plan: ${plannerName}\n` +
       `• Ngày / Giờ lập: ${dateStr} ${timeStr}\n` +
-      `• Công đoạn: ${window.AppStore.simStageFilter || 'ASSEMBLY'}\n` +
-      `• Tổng số Model: ${modelsCount} Model\n` +
+      `• Công đoạn: ${stageDisplay}\n` +
+      `• Tổng số Model: ${modelsCount} ${isHardtestStage ? 'Mã' : 'Model'}\n` +
       `• Tổng sản lượng Kế hoạch: ${grandPlan.toLocaleString('vi-VN')} pcs\n` +
       `• Đã xếp Ca Ngày: ${grandPlanDay.toLocaleString('vi-VN')} pcs | Ca Đêm: ${grandPlanNight.toLocaleString('vi-VN')} pcs\n\n` +
       `Kế hoạch sẽ được lưu vào mục LỊCH SỬ và đồng bộ ngay cho TẤT CẢ các User khác trên hệ thống!`;
@@ -6842,7 +8118,7 @@
       dateStr: dateStr,
       timeStr: timeStr,
       planner: plannerName,
-      stage: window.AppStore.simStageFilter || 'ASSEMBLY',
+      stage: isHardtestStage ? 'TOTAL_HARDTEST' : (window.AppStore.simStageFilter || 'ASSEMBLY'),
       modelsCount,
       grandPlan,
       grandFact,
@@ -6852,6 +8128,7 @@
       workingLinesNight: [...(window.AppStore.simWorkingLinesNight || [])],
       snapshot: {
         plannerName,
+        selectedCapacityStage: isHardtestStage ? 'TOTAL_HARDTEST' : 'ASSEMBLY',
         stageFilter: window.AppStore.simStageFilter || 'ASSEMBLY',
         simFromDate: window.AppStore.simFromDate || window.AppStore.fromDate,
         simToDate: window.AppStore.simToDate || window.AppStore.toDate,
@@ -6874,7 +8151,8 @@
         simManualPlanDay: { ...(window.AppStore.simManualPlanDay || {}) },
         simManualPlanNight: { ...(window.AppStore.simManualPlanNight || {}) },
         simManualShifts: { ...(window.AppStore.simManualShifts || {}) },
-        simManualNotes: { ...(window.AppStore.simManualNotes || {}) }
+        simManualNotes: { ...(window.AppStore.simManualNotes || {}) },
+        hardtestState: buildHardtestDraftState()
       }
     };
 
@@ -7231,8 +8509,16 @@
     window.AppStore.simManualPfNight = { ...(s.simManualPfNight || {}) };
     window.AppStore.simManualPlanDay = { ...(s.simManualPlanDay || {}) };
     window.AppStore.simManualPlanNight = { ...(s.simManualPlanNight || {}) };
-    window.AppStore.simManualShifts = { ...(s.simManualShifts || {}) };
-    window.AppStore.simManualNotes = { ...(s.simManualNotes || {}) };
+    if (s.simManualShifts) window.AppStore.simManualShifts = { ...(s.simManualShifts || {}) };
+    if (s.simManualNotes) window.AppStore.simManualNotes = { ...(s.simManualNotes || {}) };
+    if (s.hardtestState) {
+      applyHardtestDraftFields(s.hardtestState, true);
+    }
+    if (s.selectedCapacityStage === 'TOTAL_HARDTEST' || item.stage === 'TOTAL_HARDTEST') {
+      window.AppStore.selectedCapacityStage = 'TOTAL_HARDTEST';
+    } else if (s.selectedCapacityStage === 'ASSEMBLY' || item.stage === 'ASSEMBLY') {
+      window.AppStore.selectedCapacityStage = 'ASSEMBLY';
+    }
 
     window.AppStore._appliedPlanIdInitialized = true;
     window.AppStore._currentAppliedPlanId = item.id;

@@ -675,13 +675,32 @@ def fetch_and_parse_hardtest_capacity(ctx):
     DAY_SHIFT_SECONDS = 38988.0      # 10.83 * 3600
     NIGHT_SHIFT_SECONDS = 38088.0    # 10.58 * 3600
 
+    # Định vị động các cột FTT % và Total DownTime theo tên tiêu đề sheet 'Hardtest Data' (có fallback đúng vị trí cũ)
+    header_norm = [str(c).strip().lower() for c in reader[0]]
+    def find_ht_col(candidates, default_idx):
+        for cand in candidates:
+            for c_idx, h_val in enumerate(header_norm):
+                if h_val == cand:
+                    return c_idx
+        return default_idx
+
+    ftt_col_idx = find_ht_col(['ftt %', 'ftt%'], 10)
+    dt_mch_col_idx = find_ht_col(['downtimemachine', 'downtime machine'], 11)
+    dt_mat_col_idx = find_ht_col(['downtimematerial', 'downtime material'], 12)
+    dt_total_col_idx = find_ht_col(['total downtime', 'total_downtime'], 13)
+    note_col_idx = find_ht_col(['ghi chú', 'ghi chu'], 16)
+    stage_col_idx = note_col_idx + 1
+
     items = []
     groups_map = {}
     current_shared_tb_qty = 0
+    current_shared_pool_id = None
+    current_shared_pool_note = ''
     last_norming_group = ''
 
     for r_idx in range(1, len(reader)):
         r = reader[r_idx]
+        alt_group = r[3].strip() if len(r) > 3 else ''
         norming = r[4].strip() if len(r) > 4 else ''
         board = r[5].strip() if len(r) > 5 else ''
         
@@ -695,28 +714,47 @@ def fetch_and_parse_hardtest_capacity(ctx):
 
         col6_str = r[6].strip() if len(r) > 6 else ''
         col7_str = r[7].strip() if len(r) > 7 else ''
-        
-        # Merged cell handling cho Số lượng thiết bị Test Block
-        if col6_str:
-            current_shared_tb_qty = parse_num(col6_str)
-        
-        tb_qty = parse_num(col7_str) if col7_str else current_shared_tb_qty
-        if tb_qty == 0 and current_shared_tb_qty > 0:
+        note_cell = r[note_col_idx].strip() if len(r) > note_col_idx else ''
+        col_stage = r[stage_col_idx].strip().upper() if len(r) > stage_col_idx else ''
+
+        # Merged cell handling cho Số lượng thiết bị Test Block & Nhóm Dùng Chung (cột G & cột Q)
+        if 'dùng chung' in note_cell.lower():
+            current_shared_pool_id = f'ht_pool_shared_{r_idx}'
+            current_shared_pool_note = note_cell
+            current_shared_tb_qty = parse_num(col7_str) if col7_str else parse_num(col6_str)
+            is_shared = True
+            pool_id = current_shared_pool_id
+            note = current_shared_pool_note
             tb_qty = current_shared_tb_qty
+        elif col6_str == '' and current_shared_pool_id is not None:
+            tb_qty = parse_num(col7_str) if col7_str else current_shared_tb_qty
+            if tb_qty == 0 and current_shared_tb_qty > 0:
+                tb_qty = current_shared_tb_qty
+            is_shared = True
+            pool_id = current_shared_pool_id
+            note = current_shared_pool_note or 'Dùng Chung'
+        else:
+            current_shared_pool_id = None
+            current_shared_pool_note = ''
+            if col6_str:
+                current_shared_tb_qty = parse_num(col7_str) if col7_str else parse_num(col6_str)
+            tb_qty = parse_num(col7_str) if col7_str else parse_num(col6_str)
+            is_shared = False
+            pool_id = f'ht_pool_solo_{r_idx}'
+            note = note_cell or 'Riêng'
 
         ct_norm = parse_num(r[8]) if len(r) > 8 else 0.0
         sheet_ct_act = parse_num(r[9]) if len(r) > 9 else 0.0
-        ftt = parse_pct(r[10]) if len(r) > 10 else 1.0
-        dt_mch = parse_pct(r[11]) if len(r) > 11 else 0.0
-        dt_mat = parse_pct(r[12]) if len(r) > 12 else 0.0
-        dt_total = dt_mch + dt_mat
-        note = r[15].strip() if len(r) > 15 else ''
-        col16 = r[16].strip().upper() if len(r) > 16 else ''
-        
+        ftt = parse_pct(r[ftt_col_idx]) if (len(r) > ftt_col_idx and r[ftt_col_idx].strip()) else 1.0
+        dt_mch = parse_pct(r[dt_mch_col_idx]) if len(r) > dt_mch_col_idx else 0.0
+        dt_mat = parse_pct(r[dt_mat_col_idx]) if len(r) > dt_mat_col_idx else 0.0
+        has_total_dt_cell = (len(r) > dt_total_col_idx and bool(r[dt_total_col_idx].strip()))
+        dt_total = parse_pct(r[dt_total_col_idx]) if has_total_dt_cell else (dt_mch + dt_mat)
+
         sub_stage = 'HARD TEST'
-        if 'FOCUS' in col16:
+        if 'FOCUS' in col_stage:
             sub_stage = 'FOCUS'
-        elif 'OPTICS' in col16:
+        elif 'OPTICS' in col_stage:
             sub_stage = 'OPTICS ASM'
 
         # Cycle Time Thực tế theo công thức chuẩn: CT_nor * (1 + (1 - FTT) + dt_mch + dt_mat)
@@ -739,18 +777,18 @@ def fetch_and_parse_hardtest_capacity(ctx):
         total_day_std = day_shift_std + night_shift_std
         total_day_act = day_shift_act + night_shift_act
 
-        is_shared = (note == 'Dùng Chung' or (col6_str == '' and tb_qty > 0))
-
         item = {
             'id': f'ht_{r_idx}',
             'rowIdx': r_idx,
+            'poolId': pool_id,
             'stage': sub_stage,
             'group': norming,
+            'altGroup': alt_group,
             'board': board,
             'tbQty': int(tb_qty),
             'tbQtyOriginal': parse_num(col6_str) if col6_str else None,
             'isShared': is_shared,
-            'note': note or ('Dùng Chung' if is_shared else 'Riêng'),
+            'note': note,
             'ctNorm': ct_norm,
             'ctActual': effective_ct_act,
             'calcCtActual': calc_ct_act,

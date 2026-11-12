@@ -4793,6 +4793,16 @@ body.macbook-mode .btn-mode {
   box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.25);
 }
 
+.sim-manual-input-night {
+  border-color: rgba(192, 132, 252, 0.45);
+  color: #c084fc;
+}
+
+.sim-manual-input-night:focus {
+  border-color: #c084fc;
+  box-shadow: 0 0 0 2px rgba(192, 132, 252, 0.25);
+}
+
 .sim-manual-input-plan {
   border-color: rgba(96, 165, 250, 0.45);
   color: #60a5fa;
@@ -5042,6 +5052,8 @@ body.macbook-mode .btn-mode {
   width: 135px !important;
   min-width: 135px !important;
   max-width: 135px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
   box-sizing: border-box;
 }
 
@@ -5081,6 +5093,7 @@ body.macbook-mode .btn-mode {
   position: sticky !important;
   top: 0px !important;
   z-index: 28 !important;
+  height: 36px;
   background: #0b1329 !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   border-bottom: 2px solid #38bdf8 !important;
@@ -5207,10 +5220,24 @@ body.macbook-mode .btn-mode {
   border-right: 2px solid #38bdf8 !important;
 }
 
-/* Light Theme Support for Simulator Table Frozen Panes */
-[data-theme="light"] .sim-table thead th {
+/* Light Theme Support for Simulator Table Frozen Panes & Scrollable Grid */
+[data-theme="light"] .sim-table-wrap {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .sim-table-header {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+  border-bottom-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .sim-table thead th,
+[data-theme="light"] .sim-table thead tr.sim-header-titles th {
   background: #f1f5f9 !important;
   color: #334155 !important;
+  border-color: #cbd5e1 !important;
+  border-bottom: 2px solid #2563eb !important;
 }
 
 [data-theme="light"] .sim-table .sticky-sim-stt,
@@ -5224,11 +5251,34 @@ body.macbook-mode .btn-mode {
 [data-theme="light"] .sim-table thead th.sticky-sim-stt,
 [data-theme="light"] .sim-table thead th.sticky-sim-stage,
 [data-theme="light"] .sim-table thead th.sticky-sim-group,
-[data-theme="light"] .sim-table thead th.sticky-sim-model {
+[data-theme="light"] .sim-table thead th.sticky-sim-model,
+[data-theme="light"] .sim-table thead tr.sim-header-titles th.sticky-sim-stt,
+[data-theme="light"] .sim-table thead tr.sim-header-titles th.sticky-sim-stage,
+[data-theme="light"] .sim-table thead tr.sim-header-titles th.sticky-sim-group,
+[data-theme="light"] .sim-table thead tr.sim-header-titles th.sticky-sim-model {
   background: #e2e8f0 !important;
   color: #0f172a !important;
 }
 
+[data-theme="light"] .sim-table thead tr.sim-header-titles th.sticky-sim-model {
+  border-right: 2px solid #2563eb !important;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme="light"] .sim-table tbody td {
+  color: #0f172a;
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .sim-table tbody tr:nth-child(even) td {
+  background: #f8fafc;
+}
+
+[data-theme="light"] .sim-table tbody tr:hover td {
+  background: #f1f5f9 !important;
+}
+
+[data-theme="light"] .sim-table thead tr.sim-sticky-totals-row th,
 [data-theme="light"] .sim-table thead tr.sim-sticky-totals-row td {
   background: #f8fafc !important;
   color: #0f172a !important;
@@ -5237,11 +5287,39 @@ body.macbook-mode .btn-mode {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
 }
 
+[data-theme="light"] .sim-table thead tr.sim-sticky-totals-row th.sticky-sim-totals-label,
 [data-theme="light"] .sim-table thead tr.sim-sticky-totals-row td.sticky-sim-totals-label {
   background: #e2e8f0 !important;
   color: #0f172a !important;
   border-right: 2px solid #2563eb !important;
   box-shadow: 4px 0 10px rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme="light"] .sim-manual-input {
+  background: #ffffff !important;
+  border-color: #94a3b8;
+  color: #0369a1;
+}
+
+[data-theme="light"] .sim-manual-input:focus {
+  background: #ffffff !important;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+[data-theme="light"] .sim-manual-input-man {
+  border-color: rgba(147, 51, 234, 0.45);
+  color: #7e22ce;
+}
+
+[data-theme="light"] .sim-manual-input-night {
+  border-color: rgba(147, 51, 234, 0.45);
+  color: #7e22ce;
+}
+
+[data-theme="light"] .sim-manual-input-plan {
+  border-color: rgba(37, 99, 235, 0.45);
+  color: #1d4ed8;
 }
 
 [data-theme="light"] .sim-table thead tr.sim-sticky-highlight-row td {
@@ -8890,6 +8968,75 @@ body[data-user-role="viewer"] .sim-line-input {
   min-width: 46px;
 }
 
+/* Light Theme Support for Dispatch Card & Mini Summary Tables */
+[data-theme="light"] .sim-dispatch-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .sim-shift-row {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .sim-line-toggle-chip {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+[data-theme="light"] .sim-line-toggle-chip:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+[data-theme="light"] .sim-line-toggle-chip.is-day-active {
+  background: rgba(245, 158, 11, 0.14);
+  border-color: #d97706;
+  color: #b45309;
+}
+
+[data-theme="light"] .sim-line-toggle-chip.is-night-active {
+  background: rgba(139, 92, 246, 0.14);
+  border-color: #7c3aed;
+  color: #6d28d9;
+}
+
+[data-theme="light"] .sim-mini-kpi-card {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .sim-mini-kpi-table th,
+[data-theme="light"] .sim-mini-kpi-table td {
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .sim-mini-kpi-table .mini-kpi-th-title {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+[data-theme="light"] .sim-mini-kpi-table .mini-kpi-th-line {
+  background: #f1f5f9;
+  color: #b45309;
+}
+
+[data-theme="light"] .sim-mini-night .mini-kpi-th-line {
+  color: #6d28d9;
+}
+
+[data-theme="light"] .sim-mini-kpi-table .mini-kpi-label {
+  background: #f8fafc;
+  color: #334155;
+}
+
+[data-theme="light"] .sim-mini-kpi-table .mini-kpi-val {
+  color: #0f172a;
+}
+
 /* History buttons */
 .sim-btn-draft:hover {
   background: rgba(56, 189, 248, 0.25) !important;
@@ -9781,4 +9928,89 @@ body[data-user-role="viewer"] .sim-line-input {
     min-width: 72px !important;
     padding: 0.25rem 0.35rem !important;
   }
+}
+
+/* ============================================================================
+   ÂM LUỸ KẾ PRIORITY GATEKEEPER & LOCKED CURRENT-DAY PLANNING INPUTS
+   ============================================================================ */
+.sim-cumneg-gate-banner {
+  margin: 0.5rem 0.75rem 0.35rem 0.75rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.sim-cumneg-gate-banner.is-blocked {
+  background: linear-gradient(135deg, rgba(180, 83, 9, 0.24) 0%, rgba(153, 27, 27, 0.24) 100%);
+  border: 1px solid rgba(251, 191, 36, 0.55);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.14);
+  color: #fef3c7;
+}
+
+.sim-cumneg-gate-banner.is-unlocked {
+  background: rgba(6, 95, 70, 0.18);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  color: #a7f3d0;
+}
+
+.sim-cumneg-pending-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.12rem 0.45rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  background: rgba(248, 113, 113, 0.18);
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  color: #fecaca;
+}
+
+.sim-row-cumneg-priority {
+  background: rgba(245, 158, 11, 0.05) !important;
+}
+
+.sim-row-cumneg-priority td.sticky-sim-stt {
+  box-shadow: inset 3px 0 0 #f59e0b;
+}
+
+.sim-row-locked-current-day {
+  opacity: 0.82;
+}
+
+.sim-input-locked,
+.sim-table-line-select:disabled,
+.sim-table-seq-input:disabled,
+.sim-table-pf-input:disabled,
+.sim-table-plan-input:disabled,
+.sim-manual-input:disabled {
+  opacity: 0.38 !important;
+  cursor: not-allowed !important;
+  filter: grayscale(40%);
+  border-style: dashed !important;
+}
+
+[data-theme="light"] .sim-cumneg-gate-banner.is-blocked {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef2f2 100%);
+  border-color: #f59e0b;
+  color: #78350f;
+}
+
+[data-theme="light"] .sim-cumneg-gate-banner.is-unlocked {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #065f46;
+}
+
+[data-theme="light"] .sim-cumneg-pending-pill {
+  background: #fee2e2;
+  border-color: #f87171;
+  color: #991b1b;
 }

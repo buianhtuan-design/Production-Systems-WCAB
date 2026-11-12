@@ -5702,6 +5702,9 @@ window.handleActualAttendanceEdit = function(dateStr, shift, stage, value, input
     inputEl.style.outline = '2px solid #10b981';
     setTimeout(() => { if (inputEl) inputEl.style.outline = 'none'; }, 800);
   }
+  if (window.syncManpowerTab1ToHardtestKips) {
+    window.syncManpowerTab1ToHardtestKips(dateStr, shift, stage, value);
+  }
   renderDataMassView();
 
   const shiftLabel = shift === 'Day' ? 'Ca Ngày' : shift === 'Night' ? 'Ca Đêm' : 'Cả 2 Ca';
@@ -5715,9 +5718,18 @@ window.applyStandardManpowerToAll = function() {
     localStorage.removeItem('AJAX_PROPLAN_ACTUAL_ATTENDANCE');
     if (window.AppStore) {
       window.AppStore.actualAttendance = {};
+      window.AppStore._htKipsManualConfigured = false;
+      window.AppStore.hardtestWorkingKipsDay = ['HT A'];
+      window.AppStore.hardtestWorkingKipsNight = ['HT B'];
+      window.AppStore.hardtestManpowerOverrideDay = null;
+      window.AppStore.hardtestManpowerOverrideNight = null;
     }
+    if (window.handleSaveSimPlanDraft) window.handleSaveSimPlanDraft(true);
     window.showToast('success', '✅ Đã khôi phục toàn bộ nhân lực theo đúng Sheet Manpower & lịch xoay ca!');
     renderDataMassView();
+    if (window.AppStore && window.AppStore.selectedCapacityStage === 'TOTAL_HARDTEST' && window.AppStore.capacityViewMode === 'SIMULATOR' && window.renderCapacityView) {
+      window.renderCapacityView();
+    }
   }
 };
 
@@ -8035,6 +8047,9 @@ window.saveKipLineConfig = function() {
   if (typeof renderAsTable === 'function') {
     renderAsTable();
   }
+  if (typeof window.syncHardtestKipsOnMasterConfigChange === 'function') {
+    window.syncHardtestKipsOnMasterConfigChange();
+  }
 
   window.closeKipLineConfigModal();
   window.showToast('success', '💾 Đã lưu và áp dụng cấu hình Line theo Kíp thành công! Toàn bộ bảng tính và biểu đồ đã được cập nhật.');
@@ -8055,6 +8070,9 @@ window.resetKipConfigToDefault = function() {
   }
   if (typeof renderAsTable === 'function') {
     renderAsTable();
+  }
+  if (typeof window.syncHardtestKipsOnMasterConfigChange === 'function') {
+    window.syncHardtestKipsOnMasterConfigChange();
   }
 
   window.renderKipConfigTab(window.activeKipConfigTab || 'A');
