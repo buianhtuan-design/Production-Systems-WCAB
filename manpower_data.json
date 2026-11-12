@@ -26,15 +26,15 @@
   "B": {
     "shift": "B",
     "name": "Shift B",
-    "assyDirect": 25.0,
-    "assyTotal": 35.0,
+    "assyDirect": 28.0,
+    "assyTotal": 38.0,
     "assyLinesDirect": {
       "1B": 14.0,
-      "2B": 11.0
+      "2B": 14.0
     },
     "assyLinesTotal": {
       "1B": 19.0,
-      "2B": 16.0
+      "2B": 19.0
     },
     "htDirect": 23.0,
     "htTotal": 25.0,
@@ -97,13 +97,13 @@
     "lines": [
       "3D"
     ],
-    "assyDirect": 15.0,
-    "assyTotal": 20.0,
+    "assyDirect": 13.0,
+    "assyTotal": 18.0,
     "assyLinesDirect": {
-      "3D": 15.0
+      "3D": 13.0
     },
     "assyLinesTotal": {
-      "3D": 20.0
+      "3D": 18.0
     },
     "htDirect": 0.0,
     "htTotal": 0.0,
