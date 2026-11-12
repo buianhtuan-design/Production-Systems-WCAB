@@ -196,7 +196,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat) (8EU) ASP white датчик температури",
       "plan": 0.0,
-      "sheetFact": 15.0,
+      "sheetFact": 16.0,
       "done": 1,
       "isDone": true
     },
@@ -936,7 +936,7 @@
       "agg": "",
       "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
       "plan": 9569.0,
-      "sheetFact": 3445.0,
+      "sheetFact": 3536.0,
       "done": 0,
       "isDone": false
     },
@@ -2798,7 +2798,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat) (8EU) ASP white датчик температури",
       "plan": 0.0,
-      "sheetFact": 15.0,
+      "sheetFact": 16.0,
       "done": 1,
       "isDone": true
     },
@@ -3538,7 +3538,7 @@
       "agg": "",
       "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
       "plan": 9569.0,
-      "sheetFact": 3445.0,
+      "sheetFact": 3536.0,
       "done": 0,
       "isDone": false
     },
@@ -5210,7 +5210,7 @@
   "clipAllPlant": "43.5%",
   "clipAllPlantPct": 43.5,
   "totalPlan": 485822.0,
-  "totalSheetFact": 173796.0,
+  "totalSheetFact": 173888.0,
   "hasPlanCount": 219,
   "gt90Count": 113,
   "lt90Count": 147,
@@ -9507,10 +9507,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-13 05:16:08",
+        "archivedAt": "2026-11-13 06:10:33",
         "totalItems": 260,
         "totalPlan": 485822.0,
-        "totalSheetFact": 173796.0,
+        "totalSheetFact": 173888.0,
         "qtyAllDevice": 260,
         "qtyDoneDevice": 113,
         "qtyNotDoneDevice": 147,
@@ -9712,7 +9712,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat) (8EU) ASP white датчик температури",
             "plan": 0.0,
-            "sheetFact": 15.0,
+            "sheetFact": 16.0,
             "done": 1,
             "isDone": true
           },
@@ -10452,7 +10452,7 @@
             "agg": "",
             "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
             "plan": 9569.0,
-            "sheetFact": 3445.0,
+            "sheetFact": 3536.0,
             "done": 0,
             "isDone": false
           },
@@ -12314,7 +12314,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat) (8EU) ASP white датчик температури",
             "plan": 0.0,
-            "sheetFact": 15.0,
+            "sheetFact": 16.0,
             "done": 1,
             "isDone": true
           },
@@ -13054,7 +13054,7 @@
             "agg": "",
             "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
             "plan": 9569.0,
-            "sheetFact": 3445.0,
+            "sheetFact": 3536.0,
             "done": 0,
             "isDone": false
           },
