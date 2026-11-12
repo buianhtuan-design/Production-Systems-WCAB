@@ -18,8 +18,8 @@
     "htTotal": 26.0,
     "htBreakdown": {
       "cleanroom": 3.0,
-      "operator": 21.0,
-      "feeder": 1.0,
+      "operator": 20.0,
+      "feeder": 2.0,
       "leader": 1.0
     }
   },
@@ -97,13 +97,13 @@
     "lines": [
       "3D"
     ],
-    "assyDirect": 18.0,
-    "assyTotal": 23.0,
+    "assyDirect": 15.0,
+    "assyTotal": 20.0,
     "assyLinesDirect": {
-      "3D": 18.0
+      "3D": 15.0
     },
     "assyLinesTotal": {
-      "3D": 23.0
+      "3D": 20.0
     },
     "htDirect": 0.0,
     "htTotal": 0.0,
