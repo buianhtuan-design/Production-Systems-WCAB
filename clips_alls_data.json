@@ -936,7 +936,7 @@
       "agg": "",
       "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
       "plan": 9569.0,
-      "sheetFact": 3076.0,
+      "sheetFact": 3445.0,
       "done": 0,
       "isDone": false
     },
@@ -1726,7 +1726,7 @@
       "agg": "",
       "device": "Ajax MotionProtect (8EU) ASP white датчик руху",
       "plan": 44114.0,
-      "sheetFact": 24675.0,
+      "sheetFact": 27333.0,
       "done": 0,
       "isDone": false
     },
@@ -3538,7 +3538,7 @@
       "agg": "",
       "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
       "plan": 9569.0,
-      "sheetFact": 3076.0,
+      "sheetFact": 3445.0,
       "done": 0,
       "isDone": false
     },
@@ -4328,7 +4328,7 @@
       "agg": "",
       "device": "Ajax MotionProtect (8EU) ASP white датчик руху",
       "plan": 44114.0,
-      "sheetFact": 24675.0,
+      "sheetFact": 27333.0,
       "done": 0,
       "isDone": false
     },
@@ -5210,7 +5210,7 @@
   "clipAllPlant": "42.7%",
   "clipAllPlantPct": 42.7,
   "totalPlan": 485822.0,
-  "totalSheetFact": 163799.0,
+  "totalSheetFact": 166826.0,
   "hasPlanCount": 219,
   "gt90Count": 111,
   "lt90Count": 149,
@@ -9507,10 +9507,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-12 21:53:50",
+        "archivedAt": "2026-11-13 02:10:10",
         "totalItems": 260,
         "totalPlan": 485822.0,
-        "totalSheetFact": 163799.0,
+        "totalSheetFact": 166826.0,
         "qtyAllDevice": 260,
         "qtyDoneDevice": 111,
         "qtyNotDoneDevice": 149,
@@ -10452,7 +10452,7 @@
             "agg": "",
             "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
             "plan": 9569.0,
-            "sheetFact": 3076.0,
+            "sheetFact": 3445.0,
             "done": 0,
             "isDone": false
           },
@@ -11242,7 +11242,7 @@
             "agg": "",
             "device": "Ajax MotionProtect (8EU) ASP white датчик руху",
             "plan": 44114.0,
-            "sheetFact": 24675.0,
+            "sheetFact": 27333.0,
             "done": 0,
             "isDone": false
           },
@@ -13054,7 +13054,7 @@
             "agg": "",
             "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
             "plan": 9569.0,
-            "sheetFact": 3076.0,
+            "sheetFact": 3445.0,
             "done": 0,
             "isDone": false
           },
@@ -13844,7 +13844,7 @@
             "agg": "",
             "device": "Ajax MotionProtect (8EU) ASP white датчик руху",
             "plan": 44114.0,
-            "sheetFact": 24675.0,
+            "sheetFact": 27333.0,
             "done": 0,
             "isDone": false
           },
