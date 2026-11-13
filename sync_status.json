@@ -1,14 +1,14 @@
 {
   "success": true,
-  "timestamp": "2026-11-13 20:32:52",
-  "version": 202611132032,
-  "download_seconds": 23.31,
-  "total_seconds": 24.32,
+  "timestamp": "2026-11-13 20:36:36",
+  "version": 202611132036,
+  "download_seconds": 101.58,
+  "total_seconds": 102.77,
   "items_count": 2135,
   "dates_count": 439,
   "weeks_count": 62,
   "inventory_items_count": 4722,
   "inventory_total_stock": 239807855.16,
-  "mass_history_count": 4386,
+  "mass_history_count": 4426,
   "hardtest_items_count": 89
 }
