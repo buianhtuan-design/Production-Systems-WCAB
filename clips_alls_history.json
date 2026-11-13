@@ -4291,10 +4291,10 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-13 18:01:12",
+      "archivedAt": "2026-11-13 20:19:36",
       "totalItems": 260,
       "totalPlan": 485822.0,
-      "totalSheetFact": 182673.0,
+      "totalSheetFact": 182677.0,
       "qtyAllDevice": 260,
       "qtyDoneDevice": 113,
       "qtyNotDoneDevice": 147,
@@ -6506,7 +6506,7 @@
           "agg": "HomeSiren",
           "device": "Ajax HomeSiren (8EU) ASP black сирена",
           "plan": 3720.0,
-          "sheetFact": 131.0,
+          "sheetFact": 135.0,
           "done": 0,
           "isDone": false
         },
@@ -9108,7 +9108,7 @@
           "agg": "HomeSiren",
           "device": "Ajax HomeSiren (8EU) ASP black сирена",
           "plan": 3720.0,
-          "sheetFact": 131.0,
+          "sheetFact": 135.0,
           "done": 0,
           "isDone": false
         },
