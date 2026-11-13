@@ -1896,7 +1896,7 @@
       "agg": "",
       "device": "Ajax MotionProtect Plus (8EU) ASP white датчик руху",
       "plan": 9755.0,
-      "sheetFact": 292.0,
+      "sheetFact": 515.0,
       "done": 0,
       "isDone": false
     },
@@ -2396,7 +2396,7 @@
       "agg": "",
       "device": "Ajax BulletCam (5 Mp/2.8 mm) ASP white відеокамера спостереження",
       "plan": 2590.0,
-      "sheetFact": 288.0,
+      "sheetFact": 302.0,
       "done": 0,
       "isDone": false
     },
@@ -2406,7 +2406,7 @@
       "agg": "",
       "device": "Ajax BulletCam (5 Mp/4 mm) ASP black відеокамера спостереження",
       "plan": 260.0,
-      "sheetFact": 35.0,
+      "sheetFact": 36.0,
       "done": 0,
       "isDone": false
     },
@@ -2456,7 +2456,7 @@
       "agg": "",
       "device": "Ajax BulletCam (8 Mp/4 mm) ASP white відеокамера спостереження",
       "plan": 260.0,
-      "sheetFact": 42.0,
+      "sheetFact": 43.0,
       "done": 0,
       "isDone": false
     },
@@ -2476,7 +2476,7 @@
       "agg": "",
       "device": "Ajax TurretCam (5 Mp/2.8 mm) ASP white відеокамера спостереження",
       "plan": 1675.0,
-      "sheetFact": 142.0,
+      "sheetFact": 301.0,
       "done": 0,
       "isDone": false
     },
@@ -2516,7 +2516,7 @@
       "agg": "",
       "device": "Ajax TurretCam (8 Mp/2.8 mm) ASP white відеокамера спостереження",
       "plan": 528.0,
-      "sheetFact": 444.0,
+      "sheetFact": 448.0,
       "done": 0,
       "isDone": false
     },
@@ -2536,7 +2536,7 @@
       "agg": "",
       "device": "Ajax TurretCam (8 Mp/4 mm) ASP white відеокамера спостереження",
       "plan": 252.0,
-      "sheetFact": 220.0,
+      "sheetFact": 221.0,
       "done": 0,
       "isDone": false
     },
@@ -4498,7 +4498,7 @@
       "agg": "",
       "device": "Ajax MotionProtect Plus (8EU) ASP white датчик руху",
       "plan": 9755.0,
-      "sheetFact": 292.0,
+      "sheetFact": 515.0,
       "done": 0,
       "isDone": false
     },
@@ -4998,7 +4998,7 @@
       "agg": "",
       "device": "Ajax BulletCam (5 Mp/2.8 mm) ASP white відеокамера спостереження",
       "plan": 2590.0,
-      "sheetFact": 288.0,
+      "sheetFact": 302.0,
       "done": 0,
       "isDone": false
     },
@@ -5008,7 +5008,7 @@
       "agg": "",
       "device": "Ajax BulletCam (5 Mp/4 mm) ASP black відеокамера спостереження",
       "plan": 260.0,
-      "sheetFact": 35.0,
+      "sheetFact": 36.0,
       "done": 0,
       "isDone": false
     },
@@ -5058,7 +5058,7 @@
       "agg": "",
       "device": "Ajax BulletCam (8 Mp/4 mm) ASP white відеокамера спостереження",
       "plan": 260.0,
-      "sheetFact": 42.0,
+      "sheetFact": 43.0,
       "done": 0,
       "isDone": false
     },
@@ -5078,7 +5078,7 @@
       "agg": "",
       "device": "Ajax TurretCam (5 Mp/2.8 mm) ASP white відеокамера спостереження",
       "plan": 1675.0,
-      "sheetFact": 142.0,
+      "sheetFact": 301.0,
       "done": 0,
       "isDone": false
     },
@@ -5118,7 +5118,7 @@
       "agg": "",
       "device": "Ajax TurretCam (8 Mp/2.8 mm) ASP white відеокамера спостереження",
       "plan": 528.0,
-      "sheetFact": 444.0,
+      "sheetFact": 448.0,
       "done": 0,
       "isDone": false
     },
@@ -5138,7 +5138,7 @@
       "agg": "",
       "device": "Ajax TurretCam (8 Mp/4 mm) ASP white відеокамера спостереження",
       "plan": 252.0,
-      "sheetFact": 220.0,
+      "sheetFact": 221.0,
       "done": 0,
       "isDone": false
     },
@@ -5210,7 +5210,7 @@
   "clipAllPlant": "44.6%",
   "clipAllPlantPct": 44.6,
   "totalPlan": 485822.0,
-  "totalSheetFact": 194164.0,
+  "totalSheetFact": 194567.0,
   "hasPlanCount": 219,
   "gt90Count": 116,
   "lt90Count": 144,
@@ -9507,10 +9507,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-14 05:25:39",
+        "archivedAt": "2026-11-14 06:08:40",
         "totalItems": 260,
         "totalPlan": 485822.0,
-        "totalSheetFact": 194164.0,
+        "totalSheetFact": 194567.0,
         "qtyAllDevice": 260,
         "qtyDoneDevice": 116,
         "qtyNotDoneDevice": 144,
@@ -11412,7 +11412,7 @@
             "agg": "",
             "device": "Ajax MotionProtect Plus (8EU) ASP white датчик руху",
             "plan": 9755.0,
-            "sheetFact": 292.0,
+            "sheetFact": 515.0,
             "done": 0,
             "isDone": false
           },
@@ -11912,7 +11912,7 @@
             "agg": "",
             "device": "Ajax BulletCam (5 Mp/2.8 mm) ASP white відеокамера спостереження",
             "plan": 2590.0,
-            "sheetFact": 288.0,
+            "sheetFact": 302.0,
             "done": 0,
             "isDone": false
           },
@@ -11922,7 +11922,7 @@
             "agg": "",
             "device": "Ajax BulletCam (5 Mp/4 mm) ASP black відеокамера спостереження",
             "plan": 260.0,
-            "sheetFact": 35.0,
+            "sheetFact": 36.0,
             "done": 0,
             "isDone": false
           },
@@ -11972,7 +11972,7 @@
             "agg": "",
             "device": "Ajax BulletCam (8 Mp/4 mm) ASP white відеокамера спостереження",
             "plan": 260.0,
-            "sheetFact": 42.0,
+            "sheetFact": 43.0,
             "done": 0,
             "isDone": false
           },
@@ -11992,7 +11992,7 @@
             "agg": "",
             "device": "Ajax TurretCam (5 Mp/2.8 mm) ASP white відеокамера спостереження",
             "plan": 1675.0,
-            "sheetFact": 142.0,
+            "sheetFact": 301.0,
             "done": 0,
             "isDone": false
           },
@@ -12032,7 +12032,7 @@
             "agg": "",
             "device": "Ajax TurretCam (8 Mp/2.8 mm) ASP white відеокамера спостереження",
             "plan": 528.0,
-            "sheetFact": 444.0,
+            "sheetFact": 448.0,
             "done": 0,
             "isDone": false
           },
@@ -12052,7 +12052,7 @@
             "agg": "",
             "device": "Ajax TurretCam (8 Mp/4 mm) ASP white відеокамера спостереження",
             "plan": 252.0,
-            "sheetFact": 220.0,
+            "sheetFact": 221.0,
             "done": 0,
             "isDone": false
           },
@@ -14014,7 +14014,7 @@
             "agg": "",
             "device": "Ajax MotionProtect Plus (8EU) ASP white датчик руху",
             "plan": 9755.0,
-            "sheetFact": 292.0,
+            "sheetFact": 515.0,
             "done": 0,
             "isDone": false
           },
@@ -14514,7 +14514,7 @@
             "agg": "",
             "device": "Ajax BulletCam (5 Mp/2.8 mm) ASP white відеокамера спостереження",
             "plan": 2590.0,
-            "sheetFact": 288.0,
+            "sheetFact": 302.0,
             "done": 0,
             "isDone": false
           },
@@ -14524,7 +14524,7 @@
             "agg": "",
             "device": "Ajax BulletCam (5 Mp/4 mm) ASP black відеокамера спостереження",
             "plan": 260.0,
-            "sheetFact": 35.0,
+            "sheetFact": 36.0,
             "done": 0,
             "isDone": false
           },
@@ -14574,7 +14574,7 @@
             "agg": "",
             "device": "Ajax BulletCam (8 Mp/4 mm) ASP white відеокамера спостереження",
             "plan": 260.0,
-            "sheetFact": 42.0,
+            "sheetFact": 43.0,
             "done": 0,
             "isDone": false
           },
@@ -14594,7 +14594,7 @@
             "agg": "",
             "device": "Ajax TurretCam (5 Mp/2.8 mm) ASP white відеокамера спостереження",
             "plan": 1675.0,
-            "sheetFact": 142.0,
+            "sheetFact": 301.0,
             "done": 0,
             "isDone": false
           },
@@ -14634,7 +14634,7 @@
             "agg": "",
             "device": "Ajax TurretCam (8 Mp/2.8 mm) ASP white відеокамера спостереження",
             "plan": 528.0,
-            "sheetFact": 444.0,
+            "sheetFact": 448.0,
             "done": 0,
             "isDone": false
           },
@@ -14654,7 +14654,7 @@
             "agg": "",
             "device": "Ajax TurretCam (8 Mp/4 mm) ASP white відеокамера спостереження",
             "plan": 252.0,
-            "sheetFact": 220.0,
+            "sheetFact": 221.0,
             "done": 0,
             "isDone": false
           },
