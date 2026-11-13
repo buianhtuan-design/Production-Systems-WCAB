@@ -4291,14 +4291,14 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-13 23:23:31",
+      "archivedAt": "2026-11-14 00:22:06",
       "totalItems": 260,
       "totalPlan": 485822.0,
-      "totalSheetFact": 183701.0,
+      "totalSheetFact": 192493.0,
       "qtyAllDevice": 260,
-      "qtyDoneDevice": 113,
-      "qtyNotDoneDevice": 147,
-      "clipAllPlant": "43.5%",
+      "qtyDoneDevice": 115,
+      "qtyNotDoneDevice": 145,
+      "clipAllPlant": "44.2%",
       "items": [
         {
           "category": "Comfort and productivity",
@@ -5236,7 +5236,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
           "plan": 9569.0,
-          "sheetFact": 4033.0,
+          "sheetFact": 4436.0,
           "done": 0,
           "isDone": false
         },
@@ -5366,7 +5366,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (8EU/ECG) ASP white охоронна централь",
           "plan": 3680.0,
-          "sheetFact": 2414.0,
+          "sheetFact": 2430.0,
           "done": 0,
           "isDone": false
         },
@@ -5616,7 +5616,7 @@
           "agg": "",
           "device": "Ajax CombiProtect (9NA) UPC white датчик руху та розбиття",
           "plan": 107.0,
-          "sheetFact": 106.0,
+          "sheetFact": 107.0,
           "done": 1,
           "isDone": true
         },
@@ -5736,9 +5736,9 @@
           "agg": "",
           "device": "Ajax Keypad (9NA) white клавіатура",
           "plan": 154.0,
-          "sheetFact": 0.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 205.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -5746,7 +5746,7 @@
           "agg": "KeyPad TouchScreen",
           "device": "Ajax KeyPad TouchScreen (8EU) ASP black клавіатура",
           "plan": 1623.0,
-          "sheetFact": 6.0,
+          "sheetFact": 28.0,
           "done": 0,
           "isDone": false
         },
@@ -5776,7 +5776,7 @@
           "agg": "",
           "device": "Ajax KeyPad TouchScreen (9NA) black клавіатура",
           "plan": 15.0,
-          "sheetFact": 0.0,
+          "sheetFact": 1.0,
           "done": 0,
           "isDone": false
         },
@@ -6016,7 +6016,7 @@
           "agg": "MotionProtect",
           "device": "Ajax MotionProtect (8EU) ASP black датчик руху",
           "plan": 0.0,
-          "sheetFact": 12.0,
+          "sheetFact": 14.0,
           "done": 1,
           "isDone": true
         },
@@ -6026,7 +6026,7 @@
           "agg": "",
           "device": "Ajax MotionProtect (8EU) ASP white датчик руху",
           "plan": 44114.0,
-          "sheetFact": 28395.0,
+          "sheetFact": 31274.0,
           "done": 0,
           "isDone": false
         },
@@ -6196,7 +6196,7 @@
           "agg": "",
           "device": "Ajax MotionProtect Plus (8EU) ASP white датчик руху",
           "plan": 9755.0,
-          "sheetFact": 42.0,
+          "sheetFact": 292.0,
           "done": 0,
           "isDone": false
         },
@@ -6236,7 +6236,7 @@
           "agg": "",
           "device": "Ajax DoorProtect (8EU) ASP white датчик відкриття",
           "plan": 48485.0,
-          "sheetFact": 4927.0,
+          "sheetFact": 4942.0,
           "done": 0,
           "isDone": false
         },
@@ -6386,9 +6386,9 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) WL Standard ASP white датчик відкриття",
           "plan": 15455.0,
-          "sheetFact": 11502.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 14967.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -6426,7 +6426,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8MA) white датчик відкриття",
           "plan": 353.0,
-          "sheetFact": 351.0,
+          "sheetFact": 352.0,
           "done": 1,
           "isDone": true
         },
@@ -6436,7 +6436,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (9AU) black датчик відкриття",
           "plan": 1170.0,
-          "sheetFact": 1179.0,
+          "sheetFact": 1180.0,
           "done": 1,
           "isDone": true
         },
@@ -6446,7 +6446,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (9AU) white датчик відкриття",
           "plan": 4581.0,
-          "sheetFact": 4505.0,
+          "sheetFact": 4518.0,
           "done": 1,
           "isDone": true
         },
@@ -6456,7 +6456,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (9NA) black датчик відкриття",
           "plan": 360.0,
-          "sheetFact": 369.0,
+          "sheetFact": 370.0,
           "done": 1,
           "isDone": true
         },
@@ -6596,7 +6596,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 6713.0,
+          "sheetFact": 8228.0,
           "done": 0,
           "isDone": false
         },
@@ -6606,7 +6606,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8IN) white вулична сирена",
           "plan": 563.0,
-          "sheetFact": 0.0,
+          "sheetFact": 2.0,
           "done": 0,
           "isDone": false
         },
@@ -7838,7 +7838,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
           "plan": 9569.0,
-          "sheetFact": 4033.0,
+          "sheetFact": 4436.0,
           "done": 0,
           "isDone": false
         },
@@ -7968,7 +7968,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (8EU/ECG) ASP white охоронна централь",
           "plan": 3680.0,
-          "sheetFact": 2414.0,
+          "sheetFact": 2430.0,
           "done": 0,
           "isDone": false
         },
@@ -8218,7 +8218,7 @@
           "agg": "",
           "device": "Ajax CombiProtect (9NA) UPC white датчик руху та розбиття",
           "plan": 107.0,
-          "sheetFact": 106.0,
+          "sheetFact": 107.0,
           "done": 1,
           "isDone": true
         },
@@ -8338,9 +8338,9 @@
           "agg": "",
           "device": "Ajax Keypad (9NA) white клавіатура",
           "plan": 154.0,
-          "sheetFact": 0.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 205.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax KeyPad TouchScreen (8EU) ASP black клавіатура": {
           "category": "",
@@ -8348,7 +8348,7 @@
           "agg": "KeyPad TouchScreen",
           "device": "Ajax KeyPad TouchScreen (8EU) ASP black клавіатура",
           "plan": 1623.0,
-          "sheetFact": 6.0,
+          "sheetFact": 28.0,
           "done": 0,
           "isDone": false
         },
@@ -8378,7 +8378,7 @@
           "agg": "",
           "device": "Ajax KeyPad TouchScreen (9NA) black клавіатура",
           "plan": 15.0,
-          "sheetFact": 0.0,
+          "sheetFact": 1.0,
           "done": 0,
           "isDone": false
         },
@@ -8618,7 +8618,7 @@
           "agg": "MotionProtect",
           "device": "Ajax MotionProtect (8EU) ASP black датчик руху",
           "plan": 0.0,
-          "sheetFact": 12.0,
+          "sheetFact": 14.0,
           "done": 1,
           "isDone": true
         },
@@ -8628,7 +8628,7 @@
           "agg": "",
           "device": "Ajax MotionProtect (8EU) ASP white датчик руху",
           "plan": 44114.0,
-          "sheetFact": 28395.0,
+          "sheetFact": 31274.0,
           "done": 0,
           "isDone": false
         },
@@ -8798,7 +8798,7 @@
           "agg": "",
           "device": "Ajax MotionProtect Plus (8EU) ASP white датчик руху",
           "plan": 9755.0,
-          "sheetFact": 42.0,
+          "sheetFact": 292.0,
           "done": 0,
           "isDone": false
         },
@@ -8838,7 +8838,7 @@
           "agg": "",
           "device": "Ajax DoorProtect (8EU) ASP white датчик відкриття",
           "plan": 48485.0,
-          "sheetFact": 4927.0,
+          "sheetFact": 4942.0,
           "done": 0,
           "isDone": false
         },
@@ -8988,9 +8988,9 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) WL Standard ASP white датчик відкриття",
           "plan": 15455.0,
-          "sheetFact": 11502.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 14967.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax DoorProtect Plus (8IN) black датчик відкриття": {
           "category": "",
@@ -9028,7 +9028,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8MA) white датчик відкриття",
           "plan": 353.0,
-          "sheetFact": 351.0,
+          "sheetFact": 352.0,
           "done": 1,
           "isDone": true
         },
@@ -9038,7 +9038,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (9AU) black датчик відкриття",
           "plan": 1170.0,
-          "sheetFact": 1179.0,
+          "sheetFact": 1180.0,
           "done": 1,
           "isDone": true
         },
@@ -9048,7 +9048,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (9AU) white датчик відкриття",
           "plan": 4581.0,
-          "sheetFact": 4505.0,
+          "sheetFact": 4518.0,
           "done": 1,
           "isDone": true
         },
@@ -9058,7 +9058,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (9NA) black датчик відкриття",
           "plan": 360.0,
-          "sheetFact": 369.0,
+          "sheetFact": 370.0,
           "done": 1,
           "isDone": true
         },
@@ -9198,7 +9198,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 6713.0,
+          "sheetFact": 8228.0,
           "done": 0,
           "isDone": false
         },
@@ -9208,7 +9208,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8IN) white вулична сирена",
           "plan": 563.0,
-          "sheetFact": 0.0,
+          "sheetFact": 2.0,
           "done": 0,
           "isDone": false
         },
