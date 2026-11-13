@@ -256,7 +256,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
       "plan": 14284.0,
-      "sheetFact": 4104.0,
+      "sheetFact": 4251.0,
       "done": 0,
       "isDone": false
     },
@@ -1726,7 +1726,7 @@
       "agg": "",
       "device": "Ajax MotionProtect (8EU) ASP white датчик руху",
       "plan": 44114.0,
-      "sheetFact": 28059.0,
+      "sheetFact": 28395.0,
       "done": 0,
       "isDone": false
     },
@@ -2858,7 +2858,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
       "plan": 14284.0,
-      "sheetFact": 4104.0,
+      "sheetFact": 4251.0,
       "done": 0,
       "isDone": false
     },
@@ -4328,7 +4328,7 @@
       "agg": "",
       "device": "Ajax MotionProtect (8EU) ASP white датчик руху",
       "plan": 44114.0,
-      "sheetFact": 28059.0,
+      "sheetFact": 28395.0,
       "done": 0,
       "isDone": false
     },
@@ -5210,7 +5210,7 @@
   "clipAllPlant": "43.5%",
   "clipAllPlantPct": 43.5,
   "totalPlan": 485822.0,
-  "totalSheetFact": 182190.0,
+  "totalSheetFact": 182673.0,
   "hasPlanCount": 219,
   "gt90Count": 113,
   "lt90Count": 147,
@@ -9507,10 +9507,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-13 17:45:40",
+        "archivedAt": "2026-11-13 17:48:04",
         "totalItems": 260,
         "totalPlan": 485822.0,
-        "totalSheetFact": 182190.0,
+        "totalSheetFact": 182673.0,
         "qtyAllDevice": 260,
         "qtyDoneDevice": 113,
         "qtyNotDoneDevice": 147,
@@ -9772,7 +9772,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
             "plan": 14284.0,
-            "sheetFact": 4104.0,
+            "sheetFact": 4251.0,
             "done": 0,
             "isDone": false
           },
@@ -11242,7 +11242,7 @@
             "agg": "",
             "device": "Ajax MotionProtect (8EU) ASP white датчик руху",
             "plan": 44114.0,
-            "sheetFact": 28059.0,
+            "sheetFact": 28395.0,
             "done": 0,
             "isDone": false
           },
@@ -12374,7 +12374,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
             "plan": 14284.0,
-            "sheetFact": 4104.0,
+            "sheetFact": 4251.0,
             "done": 0,
             "isDone": false
           },
@@ -13844,7 +13844,7 @@
             "agg": "",
             "device": "Ajax MotionProtect (8EU) ASP white датчик руху",
             "plan": 44114.0,
-            "sheetFact": 28059.0,
+            "sheetFact": 28395.0,
             "done": 0,
             "isDone": false
           },
