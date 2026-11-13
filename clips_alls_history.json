@@ -4291,10 +4291,10 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-13 21:43:28",
+      "archivedAt": "2026-11-13 22:29:41",
       "totalItems": 260,
       "totalPlan": 485822.0,
-      "totalSheetFact": 182677.0,
+      "totalSheetFact": 183701.0,
       "qtyAllDevice": 260,
       "qtyDoneDevice": 113,
       "qtyNotDoneDevice": 147,
@@ -6386,7 +6386,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) WL Standard ASP white датчик відкриття",
           "plan": 15455.0,
-          "sheetFact": 10478.0,
+          "sheetFact": 11502.0,
           "done": 0,
           "isDone": false
         },
@@ -8988,7 +8988,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) WL Standard ASP white датчик відкриття",
           "plan": 15455.0,
-          "sheetFact": 10478.0,
+          "sheetFact": 11502.0,
           "done": 0,
           "isDone": false
         },
