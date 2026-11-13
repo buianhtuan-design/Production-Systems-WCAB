@@ -4291,10 +4291,10 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-13 15:46:18",
+      "archivedAt": "2026-11-13 15:48:41",
       "totalItems": 260,
       "totalPlan": 485822.0,
-      "totalSheetFact": 173888.0,
+      "totalSheetFact": 182190.0,
       "qtyAllDevice": 260,
       "qtyDoneDevice": 113,
       "qtyNotDoneDevice": 147,
@@ -4556,7 +4556,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
           "plan": 14284.0,
-          "sheetFact": 2991.0,
+          "sheetFact": 4104.0,
           "done": 0,
           "isDone": false
         },
@@ -4696,7 +4696,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke/CO) UL (9NA) white датчик диму, температури та чадного газу",
           "plan": 229.0,
-          "sheetFact": 199.0,
+          "sheetFact": 198.0,
           "done": 0,
           "isDone": false
         },
@@ -4896,7 +4896,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8EU) ASP white сповіщувач пожежний димовий зі звуковим оповіщувачем",
           "plan": 10769.0,
-          "sheetFact": 2279.0,
+          "sheetFact": 2841.0,
           "done": 0,
           "isDone": false
         },
@@ -4976,7 +4976,7 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Red) (8EU) ASP ручний пожежний сповіщувач",
           "plan": 11170.0,
-          "sheetFact": 9472.0,
+          "sheetFact": 9722.0,
           "done": 0,
           "isDone": false
         },
@@ -5126,7 +5126,7 @@
           "agg": "",
           "device": "Ajax SpaceControl (8EU) ASP white брелок",
           "plan": 20100.0,
-          "sheetFact": 16078.0,
+          "sheetFact": 16079.0,
           "done": 0,
           "isDone": false
         },
@@ -5236,7 +5236,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
           "plan": 9569.0,
-          "sheetFact": 3536.0,
+          "sheetFact": 4033.0,
           "done": 0,
           "isDone": false
         },
@@ -5876,7 +5876,7 @@
           "agg": "",
           "device": "Ajax MotionCam HDR (8EU) ASP white датчик руху з камерою",
           "plan": 15498.0,
-          "sheetFact": 13998.0,
+          "sheetFact": 14018.0,
           "done": 1,
           "isDone": true
         },
@@ -5906,7 +5906,7 @@
           "agg": "",
           "device": "Ajax MotionCam HDR (PhOD) Jeweller (8EU) ASP white датчик руху з камерою",
           "plan": 12585.0,
-          "sheetFact": 1692.0,
+          "sheetFact": 2191.0,
           "done": 0,
           "isDone": false
         },
@@ -6026,7 +6026,7 @@
           "agg": "",
           "device": "Ajax MotionProtect (8EU) ASP white датчик руху",
           "plan": 44114.0,
-          "sheetFact": 27333.0,
+          "sheetFact": 28059.0,
           "done": 0,
           "isDone": false
         },
@@ -6386,7 +6386,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) WL Standard ASP white датчик відкриття",
           "plan": 15455.0,
-          "sheetFact": 6867.0,
+          "sheetFact": 10478.0,
           "done": 0,
           "isDone": false
         },
@@ -6506,7 +6506,7 @@
           "agg": "HomeSiren",
           "device": "Ajax HomeSiren (8EU) ASP black сирена",
           "plan": 3720.0,
-          "sheetFact": 4.0,
+          "sheetFact": 131.0,
           "done": 0,
           "isDone": false
         },
@@ -6546,7 +6546,7 @@
           "agg": "",
           "device": "Ajax HomeSiren (9AU) white сирена",
           "plan": 5498.0,
-          "sheetFact": 3007.0,
+          "sheetFact": 3014.0,
           "done": 0,
           "isDone": false
         },
@@ -6596,7 +6596,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 5825.0,
+          "sheetFact": 6713.0,
           "done": 0,
           "isDone": false
         },
@@ -6866,7 +6866,7 @@
           "agg": "",
           "device": "Ajax NVR (8ch) (8EU) ASP black мережевий відеореєстратор",
           "plan": 0.0,
-          "sheetFact": 5.0,
+          "sheetFact": 7.0,
           "done": 1,
           "isDone": true
         },
@@ -7158,7 +7158,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
           "plan": 14284.0,
-          "sheetFact": 2991.0,
+          "sheetFact": 4104.0,
           "done": 0,
           "isDone": false
         },
@@ -7298,7 +7298,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke/CO) UL (9NA) white датчик диму, температури та чадного газу",
           "plan": 229.0,
-          "sheetFact": 199.0,
+          "sheetFact": 198.0,
           "done": 0,
           "isDone": false
         },
@@ -7498,7 +7498,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8EU) ASP white сповіщувач пожежний димовий зі звуковим оповіщувачем",
           "plan": 10769.0,
-          "sheetFact": 2279.0,
+          "sheetFact": 2841.0,
           "done": 0,
           "isDone": false
         },
@@ -7578,7 +7578,7 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Red) (8EU) ASP ручний пожежний сповіщувач",
           "plan": 11170.0,
-          "sheetFact": 9472.0,
+          "sheetFact": 9722.0,
           "done": 0,
           "isDone": false
         },
@@ -7728,7 +7728,7 @@
           "agg": "",
           "device": "Ajax SpaceControl (8EU) ASP white брелок",
           "plan": 20100.0,
-          "sheetFact": 16078.0,
+          "sheetFact": 16079.0,
           "done": 0,
           "isDone": false
         },
@@ -7838,7 +7838,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
           "plan": 9569.0,
-          "sheetFact": 3536.0,
+          "sheetFact": 4033.0,
           "done": 0,
           "isDone": false
         },
@@ -8478,7 +8478,7 @@
           "agg": "",
           "device": "Ajax MotionCam HDR (8EU) ASP white датчик руху з камерою",
           "plan": 15498.0,
-          "sheetFact": 13998.0,
+          "sheetFact": 14018.0,
           "done": 1,
           "isDone": true
         },
@@ -8508,7 +8508,7 @@
           "agg": "",
           "device": "Ajax MotionCam HDR (PhOD) Jeweller (8EU) ASP white датчик руху з камерою",
           "plan": 12585.0,
-          "sheetFact": 1692.0,
+          "sheetFact": 2191.0,
           "done": 0,
           "isDone": false
         },
@@ -8628,7 +8628,7 @@
           "agg": "",
           "device": "Ajax MotionProtect (8EU) ASP white датчик руху",
           "plan": 44114.0,
-          "sheetFact": 27333.0,
+          "sheetFact": 28059.0,
           "done": 0,
           "isDone": false
         },
@@ -8988,7 +8988,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) WL Standard ASP white датчик відкриття",
           "plan": 15455.0,
-          "sheetFact": 6867.0,
+          "sheetFact": 10478.0,
           "done": 0,
           "isDone": false
         },
@@ -9108,7 +9108,7 @@
           "agg": "HomeSiren",
           "device": "Ajax HomeSiren (8EU) ASP black сирена",
           "plan": 3720.0,
-          "sheetFact": 4.0,
+          "sheetFact": 131.0,
           "done": 0,
           "isDone": false
         },
@@ -9148,7 +9148,7 @@
           "agg": "",
           "device": "Ajax HomeSiren (9AU) white сирена",
           "plan": 5498.0,
-          "sheetFact": 3007.0,
+          "sheetFact": 3014.0,
           "done": 0,
           "isDone": false
         },
@@ -9198,7 +9198,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 5825.0,
+          "sheetFact": 6713.0,
           "done": 0,
           "isDone": false
         },
@@ -9468,7 +9468,7 @@
           "agg": "",
           "device": "Ajax NVR (8ch) (8EU) ASP black мережевий відеореєстратор",
           "plan": 0.0,
-          "sheetFact": 5.0,
+          "sheetFact": 7.0,
           "done": 1,
           "isDone": true
         },
