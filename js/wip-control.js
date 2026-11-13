@@ -102,29 +102,77 @@
     return ['all', 'whAssembly', 'whPkg', 'whRepairSemi', 'whRepairBoard'];
   }
 
-  // Khởi tạo State lưu trữ bộ lọc của WIP Control (Mặc định công đoạn Assembly và chỉ lấy các mã có GAP)
-  window.WipStore = {
-    activeSubView: 'TABLE', // 'TABLE' | 'SFG_LOOKUP'
-    showSfgColumns: true,   // Hiển thị nhóm cột Tra cứu SFG (Công đoạn trước, Kế hoạch, Thực tế, Gap) cạnh cột Catagory
-    stageFilter: 'ASSEMBLY', // Mặc định lọc trước với công đoạn Assembly
-    modelFilter: 'ALL',
-    lastStepFilter: 'ALL',
-    statusFilter: 'ALL',
-    gapFilter: 'HAS_GAP', // Mặc định chỉ lấy các mã có GAP (≠ 0)
-    sortBy: 'GAP_ASC', // Mặc định âm nhiều nhất lên đầu
-    warehouseFilter: 'ALL', // Bộ lọc kho 1C: ALL, WH ASSEMBLY_VTP, PKG_VTP, WH of Hard Test_VTP...
-    activeStockWarehouses: getInitialActiveStockWarehouses(), // Danh sách cột kho đang mở rộng hiển thị
-    search: '',
-    sfgSearch: '',          // Từ khóa tìm kiếm trong phần Tra cứu SFG
-    sfgStageFilter: 'ALL',  // Công đoạn nguồn trong phần Tra cứu SFG
-    sfgGapFilter: 'HAS_GAP',// Bộ lọc GAP trong phần Tra cứu SFG
-    sfgSortBy: 'GAP_ASC',   // Sắp xếp trong phần Tra cứu SFG
-    pageIndex: 0,
-    pageSize: 50,
-    fromDate: defaultWipRange.fromDate, // Mặc định từ ngày đầu tuần (ví dụ 2026-10-29)
-    toDate: defaultWipRange.toDate,     // Mặc định đến ngày hiện tại (ví dụ 2026-11-03)
-    date: defaultWipRange.toDate        // Mặc định là mốc kết thúc kế hoạch & tồn kho
-  };
+  const WIP_STORAGE_KEY = 'AJAX_WIP_STORE_STATE';
+
+  function saveWipStoreState() {
+    try {
+      if (!window.WipStore) return;
+      const s = {
+        activeSubView: window.WipStore.activeSubView,
+        showSfgColumns: window.WipStore.showSfgColumns,
+        stageFilter: window.WipStore.stageFilter,
+        modelFilter: window.WipStore.modelFilter,
+        lastStepFilter: window.WipStore.lastStepFilter,
+        statusFilter: window.WipStore.statusFilter,
+        gapFilter: window.WipStore.gapFilter,
+        sortBy: window.WipStore.sortBy,
+        warehouseFilter: window.WipStore.warehouseFilter,
+        search: window.WipStore.search,
+        sfgSearch: window.WipStore.sfgSearch,
+        sfgStageFilter: window.WipStore.sfgStageFilter,
+        sfgGapFilter: window.WipStore.sfgGapFilter,
+        sfgSortBy: window.WipStore.sfgSortBy,
+        pageIndex: window.WipStore.pageIndex,
+        pageSize: window.WipStore.pageSize,
+        fromDate: window.WipStore.fromDate,
+        toDate: window.WipStore.toDate,
+        date: window.WipStore.date
+      };
+      localStorage.setItem(WIP_STORAGE_KEY, JSON.stringify(s));
+    } catch (e) {}
+  }
+
+  function getInitialWipStoreState() {
+    const defaultState = {
+      activeSubView: 'TABLE', // 'TABLE' | 'SFG_LOOKUP'
+      showSfgColumns: true,   // Hiển thị nhóm cột Tra cứu SFG (Công đoạn trước, Kế hoạch, Thực tế, Gap) cạnh cột Catagory
+      stageFilter: 'ASSEMBLY', // Mặc định lọc trước với công đoạn Assembly
+      modelFilter: 'ALL',
+      lastStepFilter: 'ALL',
+      statusFilter: 'ALL',
+      gapFilter: 'HAS_GAP', // Mặc định chỉ lấy các mã có GAP (≠ 0)
+      sortBy: 'GAP_ASC', // Mặc định âm nhiều nhất lên đầu
+      warehouseFilter: 'ALL', // Bộ lọc kho 1C: ALL, WH ASSEMBLY_VTP, PKG_VTP, WH of Hard Test_VTP...
+      activeStockWarehouses: getInitialActiveStockWarehouses(), // Danh sách cột kho đang mở rộng hiển thị
+      search: '',
+      sfgSearch: '',          // Từ khóa tìm kiếm trong phần Tra cứu SFG
+      sfgStageFilter: 'ALL',  // Công đoạn nguồn trong phần Tra cứu SFG
+      sfgGapFilter: 'HAS_GAP',// Bộ lọc GAP trong phần Tra cứu SFG
+      sfgSortBy: 'GAP_ASC',   // Sắp xếp trong phần Tra cứu SFG
+      pageIndex: 0,
+      pageSize: 50,
+      fromDate: defaultWipRange.fromDate, // Mặc định từ ngày đầu tuần
+      toDate: defaultWipRange.toDate,     // Mặc định đến ngày hiện tại
+      date: defaultWipRange.toDate        // Mặc định là mốc kết thúc kế hoạch & tồn kho
+    };
+    try {
+      const saved = localStorage.getItem(WIP_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object') {
+          return {
+            ...defaultState,
+            ...parsed,
+            activeStockWarehouses: getInitialActiveStockWarehouses()
+          };
+        }
+      }
+    } catch (e) {}
+    return defaultState;
+  }
+
+  // Khởi tạo State lưu trữ bộ lọc của WIP Control (Phục hồi từ localStorage nếu có để bảo toàn bộ lọc khi auto-refresh)
+  window.WipStore = getInitialWipStoreState();
 
   /**
    * Sinh màu sắc đặc trưng cho từng công đoạn
@@ -835,6 +883,11 @@
    * Render giao diện phần mới "Tra cứu SFG" trong Tab WIP Control
    */
   function renderSfgLookupView(container, curFromDate, curToDate, curDate) {
+    saveWipStoreState();
+    const existingTableWrap = container.querySelector('.table-container');
+    const savedTableScrollTop = existingTableWrap ? existingTableWrap.scrollTop : 0;
+    const savedTableScrollLeft = existingTableWrap ? existingTableWrap.scrollLeft : 0;
+    const savedWindowScrollY = (typeof window !== 'undefined') ? window.scrollY : 0;
     const focusState = captureWipSearchFocus();
     const { results, datesCount } = collectSfgLookupChains(curFromDate, curToDate, curDate);
     const distinctStages = window.AppStore.getWipDistinctStages();
@@ -1094,6 +1147,14 @@
         </div>
       </div>
     `;
+    const newTableWrap = container.querySelector('.table-container');
+    if (newTableWrap && (savedTableScrollTop > 0 || savedTableScrollLeft > 0)) {
+      newTableWrap.scrollTop = savedTableScrollTop;
+      newTableWrap.scrollLeft = savedTableScrollLeft;
+    }
+    if (savedWindowScrollY > 0) {
+      window.scrollTo({ top: savedWindowScrollY, behavior: 'instant' });
+    }
     restoreWipSearchFocus(focusState);
   }
 
@@ -1126,6 +1187,11 @@
       return;
     }
 
+    saveWipStoreState();
+    const existingTableWrap = container.querySelector('.table-container');
+    const savedTableScrollTop = existingTableWrap ? existingTableWrap.scrollTop : 0;
+    const savedTableScrollLeft = existingTableWrap ? existingTableWrap.scrollLeft : 0;
+    const savedWindowScrollY = (typeof window !== 'undefined') ? window.scrollY : 0;
     const focusState = captureWipSearchFocus();
     const showSfgCols = window.WipStore.showSfgColumns !== false;
     const activeDateSet = getWipActiveDateSet(curFromDate, curToDate, curDate);
@@ -2023,6 +2089,14 @@
     `;
 
     container.innerHTML = html;
+    const newTableWrap = container.querySelector('.table-container');
+    if (newTableWrap && (savedTableScrollTop > 0 || savedTableScrollLeft > 0)) {
+      newTableWrap.scrollTop = savedTableScrollTop;
+      newTableWrap.scrollLeft = savedTableScrollLeft;
+    }
+    if (savedWindowScrollY > 0) {
+      window.scrollTo({ top: savedWindowScrollY, behavior: 'instant' });
+    }
     if (typeof focusState !== 'undefined') restoreWipSearchFocus(focusState);
 
     // Đảm bảo vị trí sticky top của Tầng 2 (tên các kho & cột Tra cứu SFG) luôn khớp chuẩn xác tuyệt đối với Tầng 1
@@ -2431,10 +2505,15 @@
     window.renderWipControlView();
   };
 
+  let wipSearchDebounceTimer = null;
   window.handleWipSearch = function(val) {
-    window.WipStore.search = (val || '').trim();
+    window.WipStore.search = val || '';
     window.WipStore.pageIndex = 0;
-    window.renderWipControlView();
+    saveWipStoreState();
+    clearTimeout(wipSearchDebounceTimer);
+    wipSearchDebounceTimer = setTimeout(() => {
+      window.renderWipControlView();
+    }, 220);
   };
 
   function reloadWipScriptTag(basePath) {
@@ -2563,6 +2642,7 @@
   };
 
   window.handleResetWipFilters = function() {
+    try { localStorage.removeItem(WIP_STORAGE_KEY); } catch (e) {}
     const defaultRange = getDefaultWipDateRange();
     window.WipStore.stageFilter = 'ASSEMBLY';
     window.WipStore.modelFilter = 'ALL';
@@ -2577,6 +2657,7 @@
     window.WipStore.toDate = defaultRange.toDate;
     window.WipStore.date = defaultRange.toDate;
     window.WipStore.pageIndex = 0;
+    saveWipStoreState();
     window.renderWipControlView();
     if (window.showToast) window.showToast('info', 'Đã đặt lại bộ lọc WIP Control về mặc định (Công đoạn Assembly, chỉ lấy mã có GAP)!');
   };
@@ -3088,9 +3169,14 @@
     window.renderWipControlView();
   };
 
+  let wipSfgSearchDebounceTimer = null;
   window.handleWipSfgSearch = function(val) {
     window.WipStore.sfgSearch = val || '';
-    window.renderWipControlView();
+    saveWipStoreState();
+    clearTimeout(wipSfgSearchDebounceTimer);
+    wipSfgSearchDebounceTimer = setTimeout(() => {
+      window.renderWipControlView();
+    }, 220);
   };
 
   window.handleWipSfgReset = function() {
@@ -3102,6 +3188,7 @@
     window.WipStore.fromDate = defaultRange.fromDate;
     window.WipStore.toDate = defaultRange.toDate;
     window.WipStore.date = defaultRange.toDate;
+    saveWipStoreState();
     window.renderWipControlView();
     if (window.showToast) window.showToast('info', 'Đã đặt lại bộ lọc Tra cứu SFG về mặc định!');
   };

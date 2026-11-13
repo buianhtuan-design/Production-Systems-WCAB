@@ -1081,6 +1081,8 @@ function updateHeaderViewTitle(tabKey, linkElem) {
     titleElem.innerHTML = 'Báo Cáo KPI Kết Quả (KPI Result) <span class="badge-status-inuse" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35);">📊 8 CHỈ SỐ VẬN HÀNH</span>';
   } else if (tabKey === 'prod-history') {
     titleElem.innerHTML = 'Tra Cứu Lịch Sử Sản Xuất <span class="badge-status-inuse" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);">⚖️ SO SÁNH CÔNG ĐOẠN</span>';
+  } else if (tabKey === 'plan-fact-check') {
+    titleElem.innerHTML = 'Check Tổng Thể Plan / Fact <span class="badge-status-inuse" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);">🔍 TRUY VẾT NGÀY &amp; CA</span>';
   } else {
     const rawText = linkElem ? (linkElem.getAttribute('data-title') || linkElem.querySelector('span')?.textContent || 'Phân Hệ') : 'Phân Hệ';
     titleElem.innerHTML = `${rawText} <span class="badge-status-dev">🚧 Đang phát triển</span>`;
@@ -1128,16 +1130,33 @@ function initNavigation() {
         window.renderKpiResultView('kpiResultContainer');
       } else if (targetTab === 'prod-history' && window.renderProdHistoryView) {
         window.renderProdHistoryView('prodHistoryContainer');
+      } else if (targetTab === 'plan-fact-check' && window.renderPlanFactCheckView) {
+        window.renderPlanFactCheckView('planFactCheckContainer');
       } else if (targetTab === 'settings' && typeof window.handleFetchUsersList === 'function') {
         window.handleFetchUsersList();
       }
+
+      // Lưu lại tab đang xem vào URL hash và localStorage để khi auto-refresh / F5 không bị nhảy về Data_Mass
+      try {
+        if (typeof history !== 'undefined' && typeof history.replaceState === 'function') {
+          history.replaceState(null, '', '#' + targetTab);
+        } else if (typeof window !== 'undefined') {
+          window.location.hash = targetTab;
+        }
+        localStorage.setItem('AJAX_ACTIVE_TAB', targetTab);
+      } catch (e) {}
 
       updateHeaderViewTitle(targetTab, link);
     });
   });
 
-  // Activate tab based on URL hash if provided (defaulting to datamass)
-  const initialHash = (window.location.hash || '').replace('#', '') || 'datamass';
+  // Activate tab based on URL hash if provided or localStorage (defaulting to datamass)
+  let initialHash = (window.location.hash || '').replace('#', '');
+  if (!initialHash) {
+    try { initialHash = localStorage.getItem('AJAX_ACTIVE_TAB') || ''; } catch(e) {}
+  }
+  if (!initialHash) initialHash = 'datamass';
+
   const matchingLink = document.querySelector(`.nav-link[data-tab="${initialHash}"]`);
   if (matchingLink) {
     if (matchingLink.classList.contains('nav-link-dev')) {
@@ -1192,7 +1211,9 @@ function renderAllViews() {
   renderSettingsForm();
   if (window.updateAttendanceHistoryBadge) window.updateAttendanceHistoryBadge();
   if (document.getElementById('tab-wip')?.classList.contains('active') && window.renderWipControlView) {
-    window.renderWipControlView('wipContainer');
+    const activeEl = document.activeElement;
+    const isUserTyping = activeEl && (activeEl.id === 'wipSearchInput' || activeEl.id === 'wipSfgSearchInput');
+    if (!isUserTyping) window.renderWipControlView('wipContainer');
   }
   if (document.getElementById('tab-clips-all-plan')?.classList.contains('active') && window.renderClipsAllPlanView) {
     window.renderClipsAllPlanView('clipsAllPlanContainer');
@@ -1202,6 +1223,9 @@ function renderAllViews() {
   }
   if (document.getElementById('tab-prod-history')?.classList.contains('active') && window.renderProdHistoryView) {
     window.renderProdHistoryView('prodHistoryContainer');
+  }
+  if (document.getElementById('tab-plan-fact-check')?.classList.contains('active') && window.renderPlanFactCheckView) {
+    window.renderPlanFactCheckView('planFactCheckContainer');
   }
 }
 

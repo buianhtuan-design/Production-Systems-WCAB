@@ -16,7 +16,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Core Stylesheet -->
-  <link rel="stylesheet" href="css/app.css?v=20261112_wip_sfg_v2">
+  <link rel="stylesheet" href="css/app.css?v=20261113_timeline_v2">
 </head>
 <body>
 
@@ -170,6 +170,14 @@
             <div class="nav-label-wrap">
               <span class="nav-label-main">Lịch Sử Sản Xuất</span>
               <span class="nav-label-sub">So Sánh Công Đoạn</span>
+            </div>
+            <span class="nav-badge-pill" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);">Mới</span>
+          </a>
+          <a href="#plan-fact-check" class="nav-link nav-link-primary" data-tab="plan-fact-check" data-title="Check Tổng Thể Plan / Fact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+            <div class="nav-label-wrap">
+              <span class="nav-label-main">Check Plan / Fact</span>
+              <span class="nav-label-sub">Truy Vết Ngày &amp; Ca (Âm/Dương)</span>
             </div>
             <span class="nav-badge-pill" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);">Mới</span>
           </a>
@@ -1040,6 +1048,15 @@
         <section id="tab-prod-history" class="tab-content">
           <div id="prodHistoryContainer">
             <!-- Dynamically rendered by renderProdHistoryView() -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW: CHECK TỔNG THỂ PLAN / FACT (TRUY VẾT ÂM/DƯƠNG THEO CA & NGÀY) -->
+        <!-- ========================================== -->
+        <section id="tab-plan-fact-check" class="tab-content">
+          <div id="planFactCheckContainer">
+            <!-- Dynamically rendered by renderPlanFactCheckView() -->
           </div>
         </section>
 
@@ -1933,14 +1950,15 @@
   <script src="js/bom-data.js?v=20261104_bom_plan_v5"></script>
   <script src="js/mass-history-data.js?v=20261102_wip_v4"></script>
   <script src="js/clips-alls-data.js?v=20261103_clips_nov_v1"></script>
-  <script src="js/sync.js?v=20261111_sync_v5"></script>
+  <script src="js/sync.js?v=20261113_persist_v1"></script>
   <script src="js/data.js?v=20261111_data_v7"></script>
-  <script src="js/app.js?v=20261111_app_v5"></script>
-  <script src="js/capacity.js?v=20261112_cumneg_v1"></script>
-  <script src="js/wip-control.js?v=20261112_wip_sfg_v2"></script>
+  <script src="js/app.js?v=20261113_persist_v1"></script>
+  <script src="js/capacity.js?v=20261113_persist_v1"></script>
+  <script src="js/wip-control.js?v=20261113_persist_v1"></script>
   <script src="js/clips-all-plan.js?v=20261103_clips_nov_v1"></script>
   <script src="js/kpi-data.js?v=20261110_kpi_v3"></script>
   <script src="js/kpi-result.js?v=20261110_kpi_v3"></script>
   <script src="js/prod-history.js?v=20261107_prod_hist_v1"></script>
+  <script src="js/plan-fact-check.js?v=20261113_persist_v1"></script>
 </body>
 </html>

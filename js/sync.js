@@ -209,7 +209,11 @@ window.SyncService = {
       }
       if (typeof window.renderWipControlView === 'function') {
         const wipTab = document.getElementById('tab-wip');
-        if (wipTab && wipTab.classList.contains('active')) window.renderWipControlView('wipContainer');
+        if (wipTab && wipTab.classList.contains('active')) {
+          const activeEl = document.activeElement;
+          const isUserTyping = activeEl && (activeEl.id === 'wipSearchInput' || activeEl.id === 'wipSfgSearchInput');
+          if (!isUserTyping) window.renderWipControlView('wipContainer');
+        }
       }
       if (typeof window.renderClipsAllPlanView === 'function') {
         const clipsTab = document.getElementById('tab-clips-all-plan');
@@ -222,6 +226,10 @@ window.SyncService = {
       if (typeof window.renderProdHistoryView === 'function') {
         const histTab = document.getElementById('tab-prod-history');
         if (histTab && histTab.classList.contains('active')) window.renderProdHistoryView('prodHistoryContainer');
+      }
+      if (typeof window.renderPlanFactCheckView === 'function') {
+        const pfcTab = document.getElementById('tab-plan-fact-check');
+        if (pfcTab && pfcTab.classList.contains('active')) window.renderPlanFactCheckView('planFactCheckContainer');
       }
     } catch (e) {}
   },

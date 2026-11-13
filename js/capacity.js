@@ -1415,6 +1415,9 @@
       window.WipStore.toDate = toDateStr;
       window.WipStore.date = toDateStr;
     }
+    try {
+      localStorage.setItem('AJAX_WIP_STORE_STATE', JSON.stringify(window.WipStore));
+    } catch (e) {}
 
     const wipNavLink = document.querySelector('.nav-link[data-tab="wip"]');
     if (wipNavLink && typeof wipNavLink.click === 'function') {

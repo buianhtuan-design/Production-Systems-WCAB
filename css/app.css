@@ -10245,3 +10245,190 @@ body[data-user-role="viewer"] .sim-line-input {
   border-color: #f59e0b;
   color: #92400e;
 }
+
+/* ==================================================================== */
+/* PHÂN HỆ MỚI: CHECK TỔNG THỂ PLAN / FACT (TRUY VẾT ÂM / DƯƠNG THEO CA & NGÀY) */
+/* ==================================================================== */
+
+.pfc-subtab-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(15, 23, 42, 0.45);
+  padding: 0.25rem 0.35rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.pfc-subtab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.pfc-subtab-btn:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.pfc-subtab-btn.active {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+  color: #34d399;
+}
+
+.pfc-shift-card {
+  transition: transform 0.12s ease, box-shadow 0.15s ease;
+}
+
+.pfc-shift-card:hover {
+  transform: translateX(2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Modal Popup cho Chi tiết Ca của Model */
+.pfc-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+  animation: pfcFadeIn 0.2s ease;
+}
+
+.pfc-modal-card {
+  background: #0b1329;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: 12px;
+  width: 95%;
+  max-width: 980px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+  animation: pfcScaleIn 0.2s ease;
+}
+
+.pfc-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  background: rgba(15, 23, 42, 0.8);
+  border-bottom: 1px solid var(--border-glass, #334155);
+}
+
+.pfc-modal-body {
+  padding: 1rem 1.25rem;
+  overflow-y: auto;
+}
+
+@keyframes pfcFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pfcScaleIn {
+  from { transform: scale(0.96); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Light Theme support */
+[data-theme="light"] .pfc-subtab-bar {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+[data-theme="light"] .pfc-subtab-btn {
+  color: #475569;
+}
+
+[data-theme="light"] .pfc-subtab-btn:hover {
+  color: #0f172a;
+  background: rgba(15, 23, 42, 0.05);
+}
+
+[data-theme="light"] .pfc-subtab-btn.active {
+  background: #d1fae5;
+  border-color: #10b981;
+  color: #065f46;
+}
+
+[data-theme="light"] .pfc-shift-card {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .pfc-modal-card {
+  background: #ffffff;
+  border-color: #93c5fd;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.25);
+}
+
+[data-theme="light"] .pfc-modal-header {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+/* Tiến trình Lũy Kế theo Ngày (Daily Cumulative Gap Timeline Drawer) */
+.pfc-timeline-drawer-row {
+  animation: pfcFadeIn 0.18s ease;
+}
+
+.pfc-timeline-drawer-content {
+  background: rgba(11, 19, 41, 0.95);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+}
+
+[data-theme="light"] .pfc-timeline-drawer-row td {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  border-top: 1px solid #93c5fd !important;
+  border-bottom: 2px solid #3b82f6 !important;
+}
+
+[data-theme="light"] .pfc-timeline-drawer-content {
+  background: #ffffff !important;
+  border-color: #93c5fd !important;
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .pfc-timeline-drawer-content table thead tr {
+  background: #e2e8f0 !important;
+}
+
+[data-theme="light"] .pfc-timeline-drawer-content table thead th {
+  color: #1e293b !important;
+}
+
+[data-theme="light"] .pfc-timeline-drawer-content table tfoot tr {
+  background: #f1f5f9 !important;
+}
+
+[data-theme="light"] .pfc-timeline-drawer-content table tbody tr td {
+  color: #1e293b !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="light"] .pfc-timeline-drawer-content table tfoot td {
+  color: #0f172a !important;
+  border-top: 2px solid #cbd5e1 !important;
+}
