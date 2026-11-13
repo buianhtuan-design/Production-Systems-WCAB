@@ -104,6 +104,8 @@
 
   // Khởi tạo State lưu trữ bộ lọc của WIP Control (Mặc định công đoạn Assembly và chỉ lấy các mã có GAP)
   window.WipStore = {
+    activeSubView: 'TABLE', // 'TABLE' | 'SFG_LOOKUP'
+    showSfgColumns: true,   // Hiển thị nhóm cột Tra cứu SFG (Công đoạn trước, Kế hoạch, Thực tế, Gap) cạnh cột Catagory
     stageFilter: 'ASSEMBLY', // Mặc định lọc trước với công đoạn Assembly
     modelFilter: 'ALL',
     lastStepFilter: 'ALL',
@@ -113,6 +115,10 @@
     warehouseFilter: 'ALL', // Bộ lọc kho 1C: ALL, WH ASSEMBLY_VTP, PKG_VTP, WH of Hard Test_VTP...
     activeStockWarehouses: getInitialActiveStockWarehouses(), // Danh sách cột kho đang mở rộng hiển thị
     search: '',
+    sfgSearch: '',          // Từ khóa tìm kiếm trong phần Tra cứu SFG
+    sfgStageFilter: 'ALL',  // Công đoạn nguồn trong phần Tra cứu SFG
+    sfgGapFilter: 'HAS_GAP',// Bộ lọc GAP trong phần Tra cứu SFG
+    sfgSortBy: 'GAP_ASC',   // Sắp xếp trong phần Tra cứu SFG
     pageIndex: 0,
     pageSize: 50,
     fromDate: defaultWipRange.fromDate, // Mặc định từ ngày đầu tuần (ví dụ 2026-10-29)
@@ -344,6 +350,300 @@
   }
 
   /**
+   * =========================================================================
+   * SFG UPSTREAM LOOKUP ENGINE (TRA CỨU KẾ HOẠCH - THỰC TẾ - GAP CÔNG ĐOẠN TRƯỚC)
+   * =========================================================================
+   */
+  const STAGE_FLOW_ORDER = {
+    'CUTTING': 5,
+    'UF PRINT': 8,
+    'SMD': 10,
+    'LACQUERING': 20,
+    'LAQ.LINE': 22,
+    'DIP. SELECTIV.PRE': 30,
+    'DIP. SELECTIV': 32,
+    'DIP. SELECTIV.POST': 34,
+    'DIP': 36,
+    'A IMP ASM': 42,
+    'OPTICS ASM': 44,
+    'FOCUS': 46,
+    'CALIBRATION': 48,
+    'CALIB CO': 49,
+    'HARD TEST': 50,
+    'GRAVING ASM': 58,
+    'ASSEMBLY': 60,
+    'LONG TEST': 70,
+    'TEST ROOM': 80,
+    'GRAVING QC': 88,
+    'QC': 90,
+    'COM PKG': 95,
+    'COM PKG AUTO': 96,
+    'PKG': 100,
+    'MB': 110
+  };
+
+  function getStageFlowRank(stage) {
+    const u = String(stage || '').trim().toUpperCase();
+    if (!u) return 999;
+    if (STAGE_FLOW_ORDER[u] !== undefined) return STAGE_FLOW_ORDER[u];
+    if (u.includes('SMD')) return 10;
+    if (u.includes('LAQ')) return 22;
+    if (u.includes('SELECTIV.PRE')) return 30;
+    if (u.includes('SELECTIV.POST')) return 34;
+    if (u.includes('SELECTIV')) return 32;
+    if (u.includes('DIP')) return 36;
+    if (u.includes('HARD TEST')) return 50;
+    if (u.includes('ASSEMBLY')) return 60;
+    if (u.includes('LONG TEST')) return 70;
+    if (u.includes('TEST ROOM')) return 80;
+    if (u.includes('QC')) return 90;
+    if (u.includes('COM PKG')) return 95;
+    if (u.includes('PKG')) return 100;
+    if (u === 'MB') return 110;
+    return 999;
+  }
+
+  function normalizeSfgName(str) {
+    return String(str || '').replace(/\s+/g, ' ').trim().toLowerCase();
+  }
+
+  function escapeWipHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function extractBomMaterialsForWipItem(rawSpecCode, fallbackMaterials) {
+    let materials = fallbackMaterials;
+    const rawCode = String(rawSpecCode || '').trim();
+    let displaySpec = rawCode;
+    if (rawCode && /^\d+$/.test(rawCode)) {
+      displaySpec = rawCode.replace(/^0+/, '') || '0';
+    }
+    if ((!materials || materials.length === 0) && window.BOM_MASTER_DATA && (rawCode || displaySpec)) {
+      const padCode = rawCode.padStart(9, '0');
+      const b = window.BOM_MASTER_DATA[displaySpec] || window.BOM_MASTER_DATA[rawCode] || window.BOM_MASTER_DATA[padCode];
+      if (b && b.materials) materials = b.materials;
+    }
+    return sortMaterialsSfgFirst(materials);
+  }
+
+  function getWipActiveDateSet(fromDate, toDate, curDate) {
+    if (!window.AppStore || typeof window.AppStore.getDatesInRange !== 'function') return new Set();
+    let dates = [];
+    if (fromDate && toDate) {
+      dates = window.AppStore.getDatesInRange(fromDate, toDate) || [];
+      if (dates.length === 0 && fromDate === toDate && typeof window.AppStore.parseDate === 'function') {
+        const t = window.AppStore.parseDate(fromDate).getTime();
+        dates = (window.AppStore.getAllDates() || []).filter(d => window.AppStore.parseDate(d).getTime() === t);
+      }
+    } else if (curDate) {
+      dates = window.AppStore.getDatesInRange(curDate, curDate) || [];
+      if (dates.length === 0 && typeof window.AppStore.parseDate === 'function') {
+        const t = window.AppStore.parseDate(curDate).getTime();
+        dates = (window.AppStore.getAllDates() || []).filter(d => window.AppStore.parseDate(d).getTime() === t);
+      }
+    }
+    return new Set(dates);
+  }
+
+  /**
+   * Lập chỉ mục Plan / Fact / Gap theo (productName1C chuẩn hoá -> danh sách bucket từng Công Đoạn)
+   * dùng chung cho cả cột Tra cứu SFG cạnh Catagory và tab Tra cứu SFG đa cấp.
+   */
+  function buildSfgDataMassLookup(dateSet) {
+    const rawItems = (window.AppStore && window.AppStore.dataMass && Array.isArray(window.AppStore.dataMass.items))
+      ? window.AppStore.dataMass.items
+      : [];
+    const bucketMap = new Map();
+
+    rawItems.forEach(it => {
+      const normName = normalizeSfgName(it.productName1C);
+      const stage = String(it.stage || '').trim();
+      if (!normName || !stage) return;
+
+      let pQty = 0;
+      let fQty = 0;
+      if (it.plan) {
+        for (const [d, v] of Object.entries(it.plan)) {
+          if (!dateSet || dateSet.size === 0 || dateSet.has(d)) pQty += (Number(v) || 0);
+        }
+      }
+      if (it.fact) {
+        for (const [d, v] of Object.entries(it.fact)) {
+          if (!dateSet || dateSet.size === 0 || dateSet.has(d)) fQty += (Number(v) || 0);
+        }
+      }
+
+      const key = `${normName}|||${stage.toUpperCase()}`;
+      let bucket = bucketMap.get(key);
+      if (!bucket) {
+        bucket = {
+          stage,
+          rank: getStageFlowRank(stage),
+          normName,
+          productName1C: String(it.productName1C || '').trim(),
+          model: String(it.model || '').trim(),
+          specCode: String(it.specCode || '').trim(),
+          lastStep: String(it.lastStep || '').trim(),
+          planQty: 0,
+          factQty: 0,
+          gapQty: 0,
+          bomMaterials: []
+        };
+        bucketMap.set(key, bucket);
+      }
+
+      bucket.planQty += pQty;
+      bucket.factQty += fQty;
+      bucket.gapQty = bucket.factQty - bucket.planQty;
+
+      // Ưu tiên giữ Spec Code & LastStep của dòng có kế hoạch/thực tế hoặc chưa có Spec Code
+      const curSpec = String(it.specCode || '').trim();
+      const mats = extractBomMaterialsForWipItem(curSpec, null);
+      if ((pQty > 0 || fQty > 0 || bucket.bomMaterials.length === 0) && mats.length > 0) {
+        bucket.specCode = curSpec || bucket.specCode;
+        bucket.bomMaterials = mats;
+      } else if (!bucket.specCode && curSpec) {
+        bucket.specCode = curSpec;
+      }
+      if (!bucket.lastStep && it.lastStep) {
+        bucket.lastStep = String(it.lastStep).trim();
+      }
+    });
+
+    const byNormName = new Map();
+    bucketMap.forEach(bucket => {
+      if (bucket.bomMaterials.length === 0 && bucket.specCode) {
+        bucket.bomMaterials = extractBomMaterialsForWipItem(bucket.specCode, null);
+      }
+      let arr = byNormName.get(bucket.normName);
+      if (!arr) {
+        arr = [];
+        byNormName.set(bucket.normName, arr);
+      }
+      arr.push(bucket);
+    });
+
+    return byNormName;
+  }
+
+  function lastStepMatchesStage(lastStep, parentStage) {
+    const ls = String(lastStep || '').trim().toUpperCase();
+    const ps = String(parentStage || '').trim().toUpperCase();
+    if (!ls || !ps) return false;
+    if (ls === ps) return true;
+    if ((ls === 'ASM' || ls === 'ASSEMBLY') && ps.includes('ASSEMBLY')) return true;
+    if ((ls === 'HT' || ls === 'HRD' || ls.includes('HARD TEST')) && ps.includes('HARD TEST')) return true;
+    if (ls === 'DIP' && ps === 'DIP') return true;
+    if (ls === 'PKG' && ps === 'PKG') return true;
+    return false;
+  }
+
+  /**
+   * Truy xuất công đoạn ngay trước đó của 1 mã SFG (Ví dụ: Assembly -> Hardtest, Hardtest -> DIP)
+   */
+  function resolveUpstreamSfgEntry(sfgNomenclature, parentStage, sfgLookupIndex, parentProductName1C = '') {
+    if (!sfgLookupIndex || !sfgNomenclature) return null;
+    const targetNorm = normalizeSfgName(sfgNomenclature);
+    if (!targetNorm) return null;
+
+    const candidates = sfgLookupIndex.get(targetNorm);
+    if (!candidates || candidates.length === 0) return null;
+
+    const parentRank = getStageFlowRank(parentStage);
+    const parentStageUp = String(parentStage || '').trim().toUpperCase();
+    const parentNameNorm = normalizeSfgName(parentProductName1C);
+
+    const nonSelf = candidates.filter(c => !(c.stage.toUpperCase() === parentStageUp && c.normName === parentNameNorm));
+    if (nonSelf.length === 0) return null;
+
+    const strictlyUpstream = nonSelf.filter(c => c.rank < parentRank);
+    const pool = strictlyUpstream.length > 0
+      ? strictlyUpstream
+      : nonSelf.filter(c => c.rank <= parentRank);
+    const activePool = pool.length > 0 ? pool : nonSelf;
+
+    const sorted = [...activePool].sort((a, b) => {
+      // Ưu tiên công đoạn gần nhất ngay trước công đoạn cha (VD: trước Hardtest -> chọn DIP trước DIP. Selectiv)
+      if (b.rank !== a.rank) return b.rank - a.rank;
+      const activeA = (a.planQty > 0 || a.factQty > 0) ? 1 : 0;
+      const activeB = (b.planQty > 0 || b.factQty > 0) ? 1 : 0;
+      if (activeB !== activeA) return activeB - activeA;
+      const hintA = lastStepMatchesStage(a.lastStep, parentStage) ? 1 : 0;
+      const hintB = lastStepMatchesStage(b.lastStep, parentStage) ? 1 : 0;
+      return hintB - hintA;
+    });
+
+    const best = sorted[0];
+    const otherStages = nonSelf.filter(c => c !== best);
+
+    return {
+      found: true,
+      stage: best.stage,
+      rank: best.rank,
+      model: best.model,
+      productName1C: best.productName1C,
+      specCode: best.specCode,
+      lastStep: best.lastStep,
+      bomMaterials: best.bomMaterials || [],
+      planQty: best.planQty,
+      factQty: best.factQty,
+      gapQty: best.gapQty,
+      otherStages
+    };
+  }
+
+  /**
+   * Truy vết đa cấp toàn bộ chuỗi SFG phía trước cho 1 sản phẩm gốc (Cấp 0 -> Cấp 1 -> Cấp 2 -> ...)
+   */
+  function traceSfgUpstreamChain(rootItem, sfgLookupIndex, maxDepth = 6) {
+    const chainRows = [];
+    const rootMaterials = extractBomMaterialsForWipItem(rootItem.specCode || rootItem.rawSpecCode, rootItem.bomMaterials);
+    const rootSfgMats = rootMaterials.filter(m => String(m.nomenclature || m.specSub || m.spec || '').trim().toLowerCase().startsWith('ajax'));
+
+    const visited = new Set();
+    const rootKey = `${String(rootItem.stage || '').toUpperCase()}|||${normalizeSfgName(rootItem.productName1C)}`;
+    visited.add(rootKey);
+
+    const walk = (materials, parentStage, parentName, depth, branchVisited) => {
+      if (depth > maxDepth || !materials || materials.length === 0) return;
+      const sfgMats = materials.filter(m => String(m.nomenclature || m.specSub || m.spec || '').trim().toLowerCase().startsWith('ajax'));
+      sfgMats.forEach(mat => {
+        const cleanNom = String(mat.nomenclature || mat.specSub || mat.spec || '').trim();
+        const qtyVal = (mat.quantity !== undefined && mat.quantity !== null) ? mat.quantity : (mat.qty !== undefined && mat.qty !== null ? mat.qty : 1);
+        const resolved = resolveUpstreamSfgEntry(cleanNom, parentStage, sfgLookupIndex, parentName);
+        const childKey = resolved
+          ? `${resolved.stage.toUpperCase()}|||${normalizeSfgName(resolved.productName1C)}`
+          : `UNMATCHED|||${normalizeSfgName(cleanNom)}`;
+
+        const isCycle = branchVisited.has(childKey);
+        chainRows.push({
+          depth,
+          materialCode: mat.materialCode || '',
+          nomenclature: cleanNom,
+          qtyPerUnit: qtyVal,
+          parentStage,
+          resolved,
+          isCycle
+        });
+
+        if (resolved && !isCycle && resolved.bomMaterials && resolved.bomMaterials.length > 0) {
+          const nextVisited = new Set(branchVisited);
+          nextVisited.add(childKey);
+          walk(resolved.bomMaterials, resolved.stage, resolved.productName1C, depth + 1, nextVisited);
+        }
+      });
+    };
+
+    walk(rootSfgMats, rootItem.stage, rootItem.productName1C, 1, visited);
+    return chainRows;
+  }
+
+  /**
    * Bật / Tắt mở rộng hiển thị từng cột kho trong nhóm Tồn Kho 1C
    */
   window.toggleWipStockWarehouse = function(whId) {
@@ -381,6 +681,422 @@
     if (window.renderWipControlView) window.renderWipControlView('wipContainer');
   };
 
+  function captureWipSearchFocus() {
+    if (typeof document === 'undefined' || !document.activeElement) return null;
+    const el = document.activeElement;
+    if (el && (el.id === 'wipSearchInput' || el.id === 'wipSfgSearchInput')) {
+      return {
+        id: el.id,
+        start: typeof el.selectionStart === 'number' ? el.selectionStart : (el.value || '').length,
+        end: typeof el.selectionEnd === 'number' ? el.selectionEnd : (el.value || '').length
+      };
+    }
+    return null;
+  }
+
+  function restoreWipSearchFocus(focusState) {
+    if (!focusState || typeof document === 'undefined') return;
+    const el = document.getElementById(focusState.id);
+    if (el && typeof el.focus === 'function') {
+      el.focus();
+      try {
+        if (typeof el.setSelectionRange === 'function') {
+          el.setSelectionRange(focusState.start, focusState.end);
+        }
+      } catch (e) {}
+    }
+  }
+
+  function renderWipSubtabSwitcherHtml(activeSubView) {
+    const isTable = activeSubView !== 'SFG_LOOKUP';
+    return `
+      <div class="wip-subtab-bar" role="tablist" aria-label="Chế độ WIP Control">
+        <button type="button"
+          class="wip-subtab-btn ${isTable ? 'active' : ''}"
+          onclick="window.setWipSubView('TABLE')"
+          title="Bảng Kiểm Soát Tồn Kho 1C & BOM (kèm 4 cột Tra cứu SFG công đoạn trước cạnh Catagory)">
+          <span>📦</span>
+          <span>Bảng Kiểm Soát WIP &amp; BOM</span>
+        </button>
+        <button type="button"
+          class="wip-subtab-btn is-sfg ${!isTable ? 'active' : ''}"
+          onclick="window.setWipSubView('SFG_LOOKUP')"
+          title="Tra cứu SFG đa cấp: xem Kế hoạch - Thực tế - Gap toàn chuỗi công đoạn trước (Assembly ➔ Hardtest ➔ DIP ➔ SMD)">
+          <span>🔍</span>
+          <span>Tra cứu SFG</span>
+        </button>
+      </div>
+    `;
+  }
+
+  function renderWipDateRangeBoxHtml(curFromDate, curToDate) {
+    return `
+      <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; background: rgba(15, 23, 42, 0.4); padding: 0.35rem 0.65rem; border-radius: var(--radius-sm); border: 1px solid rgba(96, 165, 250, 0.3);">
+        <span style="font-size: 0.75rem; font-weight: 800; color: #60a5fa; display: flex; align-items: center; gap: 0.25rem;">
+          📅 Kế Hoạch:
+        </span>
+        <span style="font-size: 0.725rem; color: var(--text-muted); font-weight: 600;">Từ</span>
+        <input type="date"
+          id="wipFromDate"
+          class="select-filter font-mono font-bold"
+          value="${curFromDate}"
+          style="padding: 0.25rem 0.45rem; font-size: 0.775rem; min-width: 125px; border-radius: var(--radius-sm); border: 1px solid rgba(96, 165, 250, 0.4); background: rgba(15, 23, 42, 0.6); color: #f8fafc;"
+          onchange="window.handleWipDateRangeChange()"
+          title="Ngày bắt đầu khoảng kế hoạch">
+        <span style="font-size: 0.725rem; color: var(--text-muted); font-weight: 600;">Đến</span>
+        <input type="date"
+          id="wipToDate"
+          class="select-filter font-mono font-bold"
+          value="${curToDate}"
+          style="padding: 0.25rem 0.45rem; font-size: 0.775rem; min-width: 125px; border-radius: var(--radius-sm); border: 1px solid rgba(96, 165, 250, 0.4); background: rgba(15, 23, 42, 0.6); color: #f8fafc;"
+          onchange="window.handleWipDateRangeChange()"
+          title="Ngày kết thúc khoảng kế hoạch (mốc kiểm kê tồn kho)">
+        <button type="button"
+          id="btnWipLoadData"
+          class="btn btn-sm btn-primary"
+          onclick="window.handleWipLoadData()"
+          title="Tra cứu kế hoạch và tải lại dữ liệu tồn kho WIP theo khoảng ngày đã chọn"
+          style="font-size: 0.75rem; padding: 0.3rem 0.7rem; font-weight: 700; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #ffffff; border: 1px solid rgba(59, 130, 246, 0.5); border-radius: var(--radius-sm); display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25); margin-left: 0.25rem;">
+          <span id="wipLoadIcon" style="display: inline-block;">📥</span>
+          <span id="wipLoadText">Tra Cứu</span>
+        </button>
+      </div>
+    `;
+  }
+
+  /**
+   * Thu thập dữ liệu cho phần mới "Tra cứu SFG" (Truy vết chuỗi công đoạn đa cấp)
+   */
+  function collectSfgLookupChains(curFromDate, curToDate, curDate) {
+    const stageFilter = window.WipStore.sfgStageFilter || 'ALL';
+    const gapFilter = window.WipStore.sfgGapFilter || 'HAS_GAP';
+    const sortBy = window.WipStore.sfgSortBy || 'GAP_ASC';
+    const search = window.WipStore.sfgSearch || '';
+
+    const dataResult = window.AppStore.getWipControlData({
+      stageFilter,
+      modelFilter: 'ALL',
+      lastStepFilter: 'ALL',
+      statusFilter: 'ALL',
+      gapFilter: 'ALL',
+      sortBy: 'DEFAULT',
+      search: '',
+      fromDate: curFromDate,
+      toDate: curToDate,
+      date: curDate,
+      pageIndex: 0,
+      pageSize: 999999
+    });
+
+    const dateSet = getWipActiveDateSet(curFromDate, curToDate, curDate);
+    const sfgLookupIndex = buildSfgDataMassLookup(dateSet);
+    const searchLow = normalizeSfgName(search);
+
+    const results = [];
+    (dataResult.items || []).forEach(it => {
+      const chain = traceSfgUpstreamChain(it, sfgLookupIndex, 6);
+      if (chain.length === 0) return; // Chỉ lấy các Model có SFG trong BOM để truy vết chuỗi
+
+      // Lọc theo GAP của Model gốc (Cấp 0)
+      if (gapFilter === 'NEGATIVE' && it.gapQty >= 0) return;
+      if (gapFilter === 'POSITIVE' && it.gapQty <= 0) return;
+      if (gapFilter === 'ZERO' && it.gapQty !== 0) return;
+      if (gapFilter === 'HAS_GAP' && it.gapQty === 0) return;
+
+      // Tìm kiếm đồng thời trên Model gốc lẫn toàn bộ SFG trong chuỗi (VD: tìm tên Assembly hoặc mã Hardtest / DIP)
+      if (searchLow) {
+        const rootText = `${it.stage} ${it.model} ${it.productName1C} ${it.specCode} ${it.rawSpecCode}`;
+        const chainText = chain.map(c => {
+          const r = c.resolved;
+          return `${c.materialCode} ${c.nomenclature} ${r ? `${r.stage} ${r.productName1C} ${r.specCode}` : ''}`;
+        }).join(' ');
+        if (!normalizeSfgName(`${rootText} ${chainText}`).includes(searchLow)) return;
+      }
+
+      const deficientSteps = chain.filter(c => c.resolved && c.resolved.gapQty < 0).length;
+      const maxDepth = chain.reduce((mx, c) => Math.max(mx, c.depth), 0);
+      results.push({ root: it, chain, deficientSteps, maxDepth });
+    });
+
+    if (sortBy === 'GAP_ASC') {
+      results.sort((a, b) => a.root.gapQty - b.root.gapQty);
+    } else if (sortBy === 'GAP_DESC') {
+      results.sort((a, b) => b.root.gapQty - a.root.gapQty);
+    } else if (sortBy === 'PLAN_DESC') {
+      results.sort((a, b) => b.root.planQty - a.root.planQty);
+    } else if (sortBy === 'DEPTH_DESC') {
+      results.sort((a, b) => (b.maxDepth - a.maxDepth) || (a.root.gapQty - b.root.gapQty));
+    }
+
+    return { results, sfgLookupIndex, datesCount: dataResult.activeDates ? dataResult.activeDates.length : 7 };
+  }
+
+  /**
+   * Render giao diện phần mới "Tra cứu SFG" trong Tab WIP Control
+   */
+  function renderSfgLookupView(container, curFromDate, curToDate, curDate) {
+    const focusState = captureWipSearchFocus();
+    const { results, datesCount } = collectSfgLookupChains(curFromDate, curToDate, curDate);
+    const distinctStages = window.AppStore.getWipDistinctStages();
+    const sfgStageFilter = window.WipStore.sfgStageFilter || 'ALL';
+    const sfgGapFilter = window.WipStore.sfgGapFilter || 'HAS_GAP';
+    const sfgSortBy = window.WipStore.sfgSortBy || 'GAP_ASC';
+    const sfgSearch = window.WipStore.sfgSearch || '';
+
+    const totalNegRoots = results.filter(r => r.root.gapQty < 0).length;
+    const totalDeficientSfgSteps = results.reduce((sum, r) => sum + r.deficientSteps, 0);
+    const maxChainDepth = results.reduce((mx, r) => Math.max(mx, r.maxDepth), 0);
+
+    const rowsHtml = results.slice(0, 80).map((entry, idx) => {
+      const it = entry.root;
+      const stStyle = getStageBadgeStyle(it.stage);
+      const rawCode = String(it.specCode || it.rawSpecCode || '').trim();
+      const dispSpec = (rawCode && /^\d+$/.test(rawCode)) ? (rawCode.replace(/^0+/, '') || '0') : rawCode;
+      const rootGapColor = it.gapQty < 0 ? '#f87171' : (it.gapQty > 0 ? '#34d399' : '#94a3b8');
+      const rootStock = getMaterialStocksGroup(it.productName1C, it.specCode);
+
+      const rootRow = `
+        <tr class="wip-sfg-chain-root">
+          <td style="text-align: center; font-weight: 800; color: #94a3b8; font-size: 0.775rem;">${idx + 1}</td>
+          <td style="white-space: nowrap;">
+            <span class="badge" style="background: rgba(56, 189, 248, 0.16); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); font-size: 0.7rem; font-weight: 800;">
+              Cấp 0 (Gốc)
+            </span>
+          </td>
+          <td style="white-space: nowrap;">
+            <span class="badge" style="background: ${stStyle.bg}; border: 1px solid ${stStyle.border}; color: ${stStyle.color}; font-weight: 800; font-size: 0.725rem;">
+              ${stStyle.icon} ${escapeWipHtml(it.stage)}
+            </span>
+          </td>
+          <td style="font-size: 0.8rem; font-weight: 700; color: var(--text-primary);">
+            <div>${escapeWipHtml(it.productName1C)}</div>
+            <div style="font-size: 0.7rem; color: #38bdf8; margin-top: 0.12rem;">Group: ${escapeWipHtml(it.model || '—')}</div>
+          </td>
+          <td class="font-mono" style="white-space: nowrap; font-size: 0.75rem; color: #3b82f6; font-weight: 700;">
+            ${escapeWipHtml(dispSpec || '—')}
+          </td>
+          <td class="font-mono" style="text-align: right; color: var(--text-muted); font-size: 0.775rem;">—</td>
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: #2563eb; font-size: 0.825rem;">${it.planQty.toLocaleString('vi-VN')}</td>
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary); font-size: 0.825rem;">${it.factQty.toLocaleString('vi-VN')}</td>
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: ${rootGapColor}; font-size: 0.825rem;">${it.gapQty > 0 ? '+' : ''}${it.gapQty.toLocaleString('vi-VN')}</td>
+          <td class="font-mono" style="text-align: right; font-weight: 700; color: #10b981; font-size: 0.775rem;">${rootStock.all > 0 ? rootStock.all.toLocaleString('vi-VN') : '—'}</td>
+          <td style="text-align: center; white-space: nowrap;">
+            <button type="button" class="btn btn-xs btn-secondary wip-sfg-action-btn is-back"
+              onclick="window.openWipTableFromSfgChain(decodeURIComponent('${encodeURIComponent(it.stage || '')}'), decodeURIComponent('${encodeURIComponent(it.productName1C || '')}'))"
+              title="Mở Model này trong Bảng Kiểm Soát WIP & BOM">
+              📦 Bảng WIP
+            </button>
+          </td>
+        </tr>
+      `;
+
+      const childRows = entry.chain.map(step => {
+        const res = step.resolved;
+        const depthClass = `is-depth-${Math.min(step.depth, 3)}`;
+        const indentPx = Math.max(0, (step.depth - 1) * 14);
+        const prefixArrow = `${'↳'.repeat(step.depth)} Cấp ${step.depth}`;
+        const stInfo = getMaterialStocksGroup(step.nomenclature, step.materialCode);
+        const stgStyle = res ? getStageBadgeStyle(res.stage) : { bg: 'rgba(148,163,184,0.12)', border: 'rgba(148,163,184,0.3)', color: '#94a3b8', icon: '❓' };
+
+        const childRawSpec = res ? String(res.specCode || '').trim() : '';
+        const childSpec = (childRawSpec && /^\d+$/.test(childRawSpec)) ? (childRawSpec.replace(/^0+/, '') || '0') : childRawSpec;
+        const planHtml = res ? res.planQty.toLocaleString('vi-VN') : '—';
+        const factHtml = res ? res.factQty.toLocaleString('vi-VN') : '—';
+        const gapVal = res ? res.gapQty : null;
+        const gapHtml = res ? `${gapVal > 0 ? '+' : ''}${gapVal.toLocaleString('vi-VN')}` : '—';
+        const gapColor = res ? (gapVal < 0 ? '#f87171' : (gapVal > 0 ? '#34d399' : '#94a3b8')) : '#64748b';
+        const otherHint = (res && res.otherStages && res.otherStages.length > 0)
+          ? ` • Cũng xuất hiện ở: ${res.otherStages.map(o => `${o.stage} (KH ${o.planQty.toLocaleString('vi-VN')} / TT ${o.factQty.toLocaleString('vi-VN')} / Gap ${o.gapQty.toLocaleString('vi-VN')})`).join(', ')}`
+          : '';
+
+        return `
+          <tr class="wip-sfg-chain-child ${depthClass}">
+            <td style="text-align: center; color: #64748b; font-size: 0.725rem;">•</td>
+            <td style="white-space: nowrap;">
+              <span class="badge wip-sfg-level-badge" style="margin-left: ${indentPx}px;">
+                ${prefixArrow}
+              </span>
+            </td>
+            <td style="white-space: nowrap;" title="${escapeWipHtml(res ? `Công đoạn trước của ${step.parentStage}${otherHint}` : 'Chưa có kế hoạch trong Data_Mass')}">
+              ${res ? `
+                <span class="badge" style="background: ${stgStyle.bg}; border: 1px solid ${stgStyle.border}; color: ${stgStyle.color}; font-weight: 800; font-size: 0.725rem;">
+                  ${stgStyle.icon} ${escapeWipHtml(res.stage)}
+                </span>
+              ` : `
+                <span class="badge" style="background: rgba(148,163,184,0.12); color: #94a3b8; border: 1px solid rgba(148,163,184,0.3); font-size: 0.7rem;">Chưa có ĐM</span>
+              `}
+            </td>
+            <td class="wip-sfg-child-name" style="font-size: 0.785rem;">
+              <div style="padding-left: ${indentPx}px;">
+                <span>${escapeWipHtml(step.nomenclature)}</span>
+                ${step.isCycle ? `<span class="badge" style="margin-left: 0.35rem; font-size: 0.65rem; background: rgba(148,163,184,0.2); color: var(--text-secondary);">Đã hiển thị ở trên</span>` : ''}
+                ${otherHint ? `<div style="font-size: 0.675rem; color: var(--text-muted); font-weight: 500; margin-top: 0.15rem;">${escapeWipHtml(otherHint.replace(/^ • /, ''))}</div>` : ''}
+              </div>
+            </td>
+            <td class="font-mono wip-sfg-child-mat" style="white-space: nowrap; font-size: 0.75rem;">
+              <div>${escapeWipHtml(step.materialCode || '—')}</div>
+              ${childSpec ? `<div style="font-size: 0.675rem; color: #3b82f6;">Spec: ${escapeWipHtml(childSpec)}</div>` : ''}
+            </td>
+            <td class="font-mono font-bold" style="text-align: right; color: #d97706; font-size: 0.785rem;">${step.qtyPerUnit}</td>
+            <td class="font-mono" style="text-align: right; font-weight: 800; color: #2563eb; font-size: 0.825rem;">${planHtml}</td>
+            <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary); font-size: 0.825rem;">${factHtml}</td>
+            <td class="font-mono" style="text-align: right; font-weight: 800; color: ${gapColor}; font-size: 0.825rem;">${gapHtml}</td>
+            <td class="font-mono" style="text-align: right; font-weight: 700; color: #10b981; font-size: 0.775rem;" title="WH ASM: ${stInfo.whAssembly.toLocaleString('vi-VN')} | WH HT: ${stInfo.whHardTest.toLocaleString('vi-VN')}">
+              ${stInfo.all > 0 ? stInfo.all.toLocaleString('vi-VN') : '—'}
+            </td>
+            <td style="text-align: center; white-space: nowrap;">
+              ${res ? `
+                <button type="button" class="btn btn-xs btn-secondary wip-sfg-action-btn is-stage"
+                  onclick="window.openWipTableFromSfgChain(decodeURIComponent('${encodeURIComponent(res.stage)}'), decodeURIComponent('${encodeURIComponent(res.productName1C)}'))"
+                  title="Xem dòng SFG này tại công đoạn ${escapeWipHtml(res.stage)} trong Bảng WIP">
+                  📦 Xem ${escapeWipHtml(res.stage)}
+                </button>
+              ` : '—'}
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      return rootRow + childRows;
+    }).join('');
+
+    container.innerHTML = `
+      <div class="wip-control-root" style="display: flex; flex-direction: column; gap: 1.15rem;">
+        <!-- 1. HEADER BANNER -->
+        <div class="card-glass" style="padding: 1.15rem 1.5rem; border-radius: var(--radius-lg); border: 1px solid rgba(245, 158, 11, 0.35); background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(30, 41, 59, 0.45) 100%);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.65rem;">
+                <div class="section-icon-badge" style="background: rgba(245, 158, 11, 0.16); border: 1px solid rgba(245, 158, 11, 0.45); color: #fbbf24; font-size: 1.25rem;">
+                  🔍
+                </div>
+                <div>
+                  <h1 style="font-size: 1.35rem; font-weight: 800; color: #f8fafc; margin: 0; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                    TRA CỨU SFG — TRUY VẾT CÔNG ĐOẠN TRƯỚC
+                    <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fde047; border: 1px solid rgba(245, 158, 11, 0.45); font-size: 0.725rem;">
+                      ĐA CẤP (ASSEMBLY ➔ HARDTEST ➔ DIP)
+                    </span>
+                  </h1>
+                  <p style="font-size: 0.8rem; color: #94a3b8; margin: 0.2rem 0 0 0;">
+                    Xem trực tiếp <strong>Kế Hoạch • Thực Tế • Gap</strong> của mã SFG ở từng công đoạn trước trong BOM (VD: <strong>Assembly</strong> ➔ <strong>Hardtest</strong> ➔ <strong>DIP</strong>)
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem;">
+              ${renderWipSubtabSwitcherHtml('SFG_LOOKUP')}
+              <button type="button" class="btn btn-sm btn-primary" onclick="window.handleCopySfgChainForGoogleSheet()"
+                style="background: linear-gradient(135deg, #d97706, #b45309); border-color: rgba(245, 158, 11, 0.55); color: #fff; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.85rem; font-size: 0.775rem;">
+                <span>📋</span>
+                <span>Copy Chuỗi SFG</span>
+              </button>
+              <button type="button" class="btn btn-sm btn-secondary" onclick="window.handleWipSfgReset()" style="padding: 0.35rem 0.75rem; font-size: 0.775rem;">
+                <span>↺ Đặt lại</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. FILTER BAR -->
+        <div class="card-glass" style="padding: 1rem 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.85rem;">
+            <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; flex: 1;">
+              <div style="display: flex; align-items: center; gap: 0.35rem;">
+                <span style="font-size: 0.75rem; font-weight: 700; color: #c084fc;">🏭 Công Đoạn gốc:</span>
+                <select id="wipSfgStageFilter" class="select-filter font-bold" style="padding: 0.3rem 0.55rem; font-size: 0.775rem;" onchange="window.handleWipSfgStageChange(this.value)">
+                  <option value="ALL" ${sfgStageFilter === 'ALL' ? 'selected' : ''}>Tất cả công đoạn</option>
+                  ${distinctStages.map(st => `<option value="${escapeWipHtml(st)}" ${sfgStageFilter === st ? 'selected' : ''}>${escapeWipHtml(st)}</option>`).join('')}
+                </select>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.35rem;">
+                <span style="font-size: 0.75rem; font-weight: 700; color: #f87171;">⚖️ Chênh Lệch gốc:</span>
+                <select id="wipSfgGapFilter" class="select-filter font-bold" style="padding: 0.3rem 0.55rem; font-size: 0.775rem;" onchange="window.handleWipSfgGapChange(this.value)">
+                  <option value="HAS_GAP" ${sfgGapFilter === 'HAS_GAP' ? 'selected' : ''}>⚡ Chỉ Mã Có GAP (≠ 0)</option>
+                  <option value="NEGATIVE" ${sfgGapFilter === 'NEGATIVE' ? 'selected' : ''}>🔴 Model âm (&lt; 0)</option>
+                  <option value="POSITIVE" ${sfgGapFilter === 'POSITIVE' ? 'selected' : ''}>🟢 Model dương (&gt; 0)</option>
+                  <option value="ALL" ${sfgGapFilter === 'ALL' ? 'selected' : ''}>Tất cả (Kể cả = 0)</option>
+                </select>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.35rem;">
+                <span style="font-size: 0.75rem; font-weight: 700; color: #38bdf8;">🔃 Sắp Xếp:</span>
+                <select id="wipSfgSortBy" class="select-filter font-bold" style="padding: 0.3rem 0.55rem; font-size: 0.775rem;" onchange="window.handleWipSfgSortChange(this.value)">
+                  <option value="GAP_ASC" ${sfgSortBy === 'GAP_ASC' ? 'selected' : ''}>🔴 Âm nhiều nhất lên đầu</option>
+                  <option value="GAP_DESC" ${sfgSortBy === 'GAP_DESC' ? 'selected' : ''}>🟢 Dương nhiều nhất lên đầu</option>
+                  <option value="PLAN_DESC" ${sfgSortBy === 'PLAN_DESC' ? 'selected' : ''}>📊 Kế hoạch cao nhất</option>
+                  <option value="DEPTH_DESC" ${sfgSortBy === 'DEPTH_DESC' ? 'selected' : ''}>🧬 Chuỗi SFG sâu nhất</option>
+                </select>
+              </div>
+              <div class="search-wrap" style="flex: 1; min-width: 240px; max-width: 420px;">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="wipSfgSearchInput" class="input-search"
+                  placeholder="Tìm Model, Mã SFG (VD: MotionProtect white EU, MP.002...)"
+                  value="${escapeWipHtml(sfgSearch)}"
+                  oninput="window.handleWipSfgSearch(this.value)">
+              </div>
+            </div>
+            ${renderWipDateRangeBoxHtml(curFromDate, curToDate)}
+          </div>
+        </div>
+
+        <!-- 3. KPI SUMMARY STRIP -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0.75rem;">
+          <div class="card-glass" style="padding: 0.75rem 1rem; border-radius: var(--radius-md); border-left: 3px solid #38bdf8;">
+            <div style="font-size: 0.725rem; color: #94a3b8; font-weight: 700;">MODEL CÓ CHUỖI SFG ĐANG LỌC</div>
+            <div class="font-mono" style="font-size: 1.25rem; font-weight: 800; color: #38bdf8; margin-top: 0.2rem;">${results.length.toLocaleString('vi-VN')} <span style="font-size: 0.75rem; color: #94a3b8;">Model (${datesCount} ngày)</span></div>
+          </div>
+          <div class="card-glass" style="padding: 0.75rem 1rem; border-radius: var(--radius-md); border-left: 3px solid #f87171;">
+            <div style="font-size: 0.725rem; color: #94a3b8; font-weight: 700;">MODEL GỐC ĐANG ÂM / MẮT XÍCH SFG ÂM</div>
+            <div class="font-mono" style="font-size: 1.25rem; font-weight: 800; color: #f87171; margin-top: 0.2rem;">${totalNegRoots.toLocaleString('vi-VN')} <span style="font-size: 0.75rem; color: #94a3b8;">Model gốc •</span> ${totalDeficientSfgSteps.toLocaleString('vi-VN')} <span style="font-size: 0.75rem; color: #94a3b8;">cấp SFG âm</span></div>
+          </div>
+          <div class="card-glass" style="padding: 0.75rem 1rem; border-radius: var(--radius-md); border-left: 3px solid #fbbf24;">
+            <div style="font-size: 0.725rem; color: #94a3b8; font-weight: 700;">ĐỘ SÂU CHUỖI SFG TỐI ĐA</div>
+            <div class="font-mono" style="font-size: 1.25rem; font-weight: 800; color: #fbbf24; margin-top: 0.2rem;">${maxChainDepth} <span style="font-size: 0.75rem; color: #94a3b8;">cấp công đoạn trước</span></div>
+          </div>
+        </div>
+
+        <!-- 4. MULTI-LEVEL SFG TRACE TABLE -->
+        <div class="card-glass" style="border-radius: var(--radius-md); border: 1px solid var(--border-glass); overflow: hidden;">
+          <div class="table-container" style="max-height: 700px; overflow-y: auto;">
+            <table class="datamass-table wip-sfg-chain-table" style="width: 100%; border-collapse: separate; border-spacing: 0;">
+              <thead>
+                <tr>
+                  <th style="width: 45px; text-align: center;">STT</th>
+                  <th style="width: 120px; text-align: left;">Cấp Truy Vết</th>
+                  <th style="width: 135px; text-align: left;">Công Đoạn</th>
+                  <th style="min-width: 280px; text-align: left;">Model / Mã SFG (1C)</th>
+                  <th style="width: 125px; text-align: left;">Mã NL / Spec</th>
+                  <th style="width: 75px; text-align: right; color: #fbbf24;">Định Mức</th>
+                  <th style="width: 95px; text-align: right; color: #60a5fa;">KẾ HOẠCH<br><span style="font-size: 0.65rem;">(PLAN)</span></th>
+                  <th style="width: 95px; text-align: right; color: #34d399;">THỰC TẾ<br><span style="font-size: 0.65rem;">(FACT)</span></th>
+                  <th style="width: 100px; text-align: right; color: #f87171;">CHÊNH LỆCH<br><span style="font-size: 0.65rem;">(GAP)</span></th>
+                  <th style="width: 100px; text-align: right; color: #34d399;">TỔNG TỒN 1C</th>
+                  <th style="width: 115px; text-align: center;">Thao Tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${results.length === 0 ? `
+                  <tr>
+                    <td colspan="11" style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                      <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔍</div>
+                      <strong>Không tìm thấy chuỗi SFG nào phù hợp với bộ lọc hiện tại.</strong>
+                      <div style="margin-top: 0.5rem; font-size: 0.8rem;">Thử chuyển bộ lọc Chênh Lệch sang <strong>Tất cả</strong> hoặc nhập từ khóa khác.</div>
+                    </td>
+                  </tr>
+                ` : rowsHtml}
+              </tbody>
+            </table>
+          </div>
+          ${results.length > 80 ? `
+            <div style="padding: 0.65rem 1.25rem; font-size: 0.775rem; color: #94a3b8; border-top: 1px solid var(--border-glass); background: var(--surface-card);">
+              Đang hiển thị 80 chuỗi đầu tiên trong tổng số <strong>${results.length.toLocaleString('vi-VN')}</strong> chuỗi Model khớp bộ lọc. Nhập thêm từ khóa tìm kiếm để thu hẹp.
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `;
+    restoreWipSearchFocus(focusState);
+  }
+
   /**
    * Render chính toàn bộ Tab WIP Control
    */
@@ -405,6 +1121,16 @@
     const curToDate = window.WipStore.toDate || defaultRange.toDate;
     const curDate = curToDate || window.WipStore.date || defaultRange.toDate;
 
+    if (window.WipStore.activeSubView === 'SFG_LOOKUP') {
+      renderSfgLookupView(container, curFromDate, curToDate, curDate);
+      return;
+    }
+
+    const focusState = captureWipSearchFocus();
+    const showSfgCols = window.WipStore.showSfgColumns !== false;
+    const activeDateSet = getWipActiveDateSet(curFromDate, curToDate, curDate);
+    const sfgLookupIndex = showSfgCols ? buildSfgDataMassLookup(activeDateSet) : null;
+
     const dataResult = window.AppStore.getWipControlData({
       stageFilter: window.WipStore.stageFilter,
       modelFilter: window.WipStore.modelFilter,
@@ -422,7 +1148,7 @@
 
     const activeWhKeys = window.WipStore.activeStockWarehouses || ['all', 'whAssembly', 'whPkg', 'whRepairSemi', 'whRepairBoard'];
     const activeWhList = STOCK_WAREHOUSES_DEF.filter(w => activeWhKeys.includes(w.id));
-    const totalCols = 9 + 4 + activeWhList.length;
+    const totalCols = 9 + 4 + (showSfgCols ? 4 : 0) + activeWhList.length;
 
     const distinctStages = window.AppStore.getWipDistinctStages();
     const distinctModels = window.AppStore.getWipDistinctModels(window.WipStore.stageFilter);
@@ -529,6 +1255,20 @@
             </div>
 
             <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+              <!-- Chuyển nhanh Bảng WIP & phần mới Tra cứu SFG -->
+              ${renderWipSubtabSwitcherHtml('TABLE')}
+
+              <!-- Bật/tắt 4 cột Tra cứu SFG cạnh Catagory -->
+              <button type="button"
+                id="btnToggleWipSfgCols"
+                class="btn btn-sm"
+                onclick="window.toggleWipSfgColumns()"
+                title="Bật / Tắt 4 cột Tra cứu SFG (Công đoạn trước, Kế hoạch, Thực tế, Gap) ngay cạnh cột Catagory"
+                style="padding: 0.35rem 0.75rem; font-size: 0.775rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; ${showSfgCols ? 'background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.55); color: #fde047;' : 'background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255,255,255,0.12); color: #94a3b8;'}">
+                <span>🔍</span>
+                <span>Cột Tra cứu SFG: ${showSfgCols ? 'Bật' : 'Tắt'}</span>
+              </button>
+
               <!-- Nút Copy cho Google Sheet -->
               <button type="button" 
                 id="btnWipCopyGoogleSheet"
@@ -836,6 +1576,12 @@
                   <th rowspan="2" style="width: 290px; text-align: left; background: rgba(245, 158, 11, 0.05); color: #fbbf24;">Nomenclature</th>
                   <th rowspan="2" style="width: 70px; text-align: right; background: rgba(245, 158, 11, 0.05); color: #fbbf24;">Quantity</th>
                   <th rowspan="2" style="width: 80px; text-align: center; background: rgba(245, 158, 11, 0.05); color: #fbbf24;">Catagory</th>
+                  ${showSfgCols ? `
+                    <!-- NHÓM CỘT MỚI: TRA CỨU SFG NGAY BÊN CẠNH CỘT CATAGORY -->
+                    <th colspan="4" class="wip-sfg-group-header" style="text-align: center; background: #1f1708 !important; color: #fbbf24; font-weight: 800; font-size: 0.775rem; border-left: 2px solid #f59e0b; border-bottom: 1px solid rgba(245, 158, 11, 0.45); padding: 0.35rem 0.65rem; letter-spacing: 0.03em; position: sticky !important; top: 0 !important; z-index: 30 !important; height: 42px; box-sizing: border-box;">
+                      <span>🔍 TRA CỨU SFG (CÔNG ĐOẠN TRƯỚC)</span>
+                    </th>
+                  ` : ''}
                   <!-- NHÓM CỘT TỒN KHO 1C GROUP THEO CÁC KHO ĐƯỢC CHỌN HIỂN THỊ (ĐÓNG BĂNG TIÊU ĐỀ CHUẨN XÁC) -->
                   <th colspan="${activeWhList.length}" class="wip-stock-group-header" style="text-align: center; background: #0c182a !important; color: #34d399; font-weight: 800; font-size: 0.775rem; border-left: 2px solid #10b981; border-bottom: 1px solid rgba(16, 185, 129, 0.4); padding: 0.35rem 0.65rem; letter-spacing: 0.03em; position: sticky !important; top: 0 !important; z-index: 30 !important; height: 42px; box-sizing: border-box;">
                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
@@ -889,6 +1635,12 @@
                   </th>
                 </tr>
                 <tr class="wip-header-subrow">
+                  ${showSfgCols ? `
+                    <th class="wip-sfg-sub-header" style="width: 118px; min-width: 118px; text-align: center; background: #1a140b !important; color: #fbbf24; border-left: 2px solid #f59e0b; border-bottom: 2px solid #f59e0b !important; font-size: 0.7rem; font-weight: 800; position: sticky !important; top: 42px !important; z-index: 29 !important; height: 34px; box-sizing: border-box; white-space: nowrap; padding: 0.25rem 0.45rem;" title="Công đoạn trước sản xuất trực tiếp mã SFG này (VD: Hardtest cho Assembly, DIP cho Hardtest)">CÔNG ĐOẠN</th>
+                    <th class="wip-sfg-sub-header" style="width: 90px; min-width: 90px; text-align: right; background: #1a140b !important; color: #60a5fa; border-bottom: 2px solid #f59e0b !important; font-size: 0.7rem; font-weight: 800; position: sticky !important; top: 42px !important; z-index: 29 !important; height: 34px; box-sizing: border-box; white-space: nowrap; padding: 0.25rem 0.45rem;" title="Tổng Kế hoạch (Plan) của mã SFG ở công đoạn trước trong kỳ đang chọn">KẾ HOẠCH</th>
+                    <th class="wip-sfg-sub-header" style="width: 90px; min-width: 90px; text-align: right; background: #1a140b !important; color: #34d399; border-bottom: 2px solid #f59e0b !important; font-size: 0.7rem; font-weight: 800; position: sticky !important; top: 42px !important; z-index: 29 !important; height: 34px; box-sizing: border-box; white-space: nowrap; padding: 0.25rem 0.45rem;" title="Tổng Thực tế (Fact) của mã SFG ở công đoạn trước trong kỳ đang chọn">THỰC TẾ</th>
+                    <th class="wip-sfg-sub-header" style="width: 90px; min-width: 90px; text-align: right; background: #1a140b !important; color: #f87171; border-bottom: 2px solid #f59e0b !important; font-size: 0.7rem; font-weight: 800; position: sticky !important; top: 42px !important; z-index: 29 !important; height: 34px; box-sizing: border-box; white-space: nowrap; padding: 0.25rem 0.45rem;" title="Chênh lệch (Gap = Thực tế - Kế hoạch) của mã SFG ở công đoạn trước">GAP</th>
+                  ` : ''}
                   ${activeWhList.map((w, wIdx) => {
                     const subBg = w.id === 'all' ? '#0f2e47' : (w.id === 'whHardTest' ? '#252412' : '#0e2438');
                     const minW = w.id === 'all' ? '105px' : (w.id === 'whHardTest' ? '115px' : '95px');
@@ -940,14 +1692,21 @@
                   const hasBom = materials.length > 0;
                   const lastStepVal = (it.lastStep && it.lastStep !== '-' ? it.lastStep : (it.lastStepVal || '')).trim();
 
-                  // Render 4 cell BOM + N cell Nhóm Tồn Kho (Stock 1C Group)
+                  // Render 4 cell BOM + 4 cell Tra cứu SFG (nếu bật) + N cell Nhóm Tồn Kho (Stock 1C Group)
                   const renderBomCells = (mat) => {
+                    const emptySfgCells = showSfgCols ? `
+                      <td style="text-align: center; color: var(--text-muted); font-size: 0.775rem; border-left: 2px solid rgba(245, 158, 11, 0.35);">—</td>
+                      <td style="text-align: right; color: var(--text-muted); font-size: 0.775rem;">—</td>
+                      <td style="text-align: right; color: var(--text-muted); font-size: 0.775rem;">—</td>
+                      <td style="text-align: right; color: var(--text-muted); font-size: 0.775rem;">—</td>
+                    ` : '';
                     if (!mat) {
                       return `
                         <td style="text-align: center; color: var(--text-muted); font-size: 0.775rem;">—</td>
                         <td style="color: var(--text-muted); font-size: 0.775rem;">—</td>
                         <td style="text-align: center; color: var(--text-muted); font-size: 0.775rem;">—</td>
                         <td style="text-align: center; color: var(--text-muted); font-size: 0.775rem;">—</td>
+                        ${emptySfgCells}
                         ${activeWhList.map((w, wIdx) => `
                           <td style="text-align: center; color: var(--text-muted); font-size: 0.775rem; ${wIdx === 0 ? 'border-left: 2px solid rgba(16, 185, 129, 0.4);' : ''}">—</td>
                         `).join('')}
@@ -1042,6 +1801,43 @@
                         `}
                       </td>
 
+                      ${showSfgCols ? (() => {
+                        if (!isSfg) {
+                          return `
+                            <td style="text-align: center; color: var(--text-muted); font-size: 0.72rem; border-left: 2px solid rgba(245, 158, 11, 0.22);">—</td>
+                            <td style="text-align: right; color: var(--text-muted); font-size: 0.72rem;">—</td>
+                            <td style="text-align: right; color: var(--text-muted); font-size: 0.72rem;">—</td>
+                            <td style="text-align: right; color: var(--text-muted); font-size: 0.72rem;">—</td>
+                          `;
+                        }
+                        const upstream = resolveUpstreamSfgEntry(cleanNomen, it.stage, sfgLookupIndex, it.productName1C);
+                        if (!upstream) {
+                          return `
+                            <td style="${sfgCellStyle} text-align: center; border-left: 2px solid rgba(180, 83, 9, 0.45); font-size: 0.72rem; color: #78350f; font-weight: 700;" title="Không tìm thấy mã SFG này trong Data_Mass trong khoảng ngày đang lọc">Chưa có</td>
+                            <td style="${sfgCellStyle} text-align: right; color: #78350f; font-weight: 700;">—</td>
+                            <td style="${sfgCellStyle} text-align: right; color: #78350f; font-weight: 700;">—</td>
+                            <td style="${sfgCellStyle} text-align: right; color: #78350f; font-weight: 700;">—</td>
+                          `;
+                        }
+                        const sPlanStr = Math.round(upstream.planQty).toLocaleString('vi-VN');
+                        const sFactStr = Math.round(upstream.factQty).toLocaleString('vi-VN');
+                        const sGapVal = Math.round(upstream.gapQty);
+                        const sGapStr = (sGapVal > 0 ? '+' : '') + sGapVal.toLocaleString('vi-VN');
+                        const sGapColor = sGapVal < 0 ? '#b91c1c' : (sGapVal > 0 ? '#047857' : '#0f172a');
+                        const encNomen = encodeURIComponent(cleanNomen);
+                        const encUpStage = encodeURIComponent(upstream.stage);
+                        return `
+                          <td style="${sfgCellStyle} text-align: center; white-space: nowrap; border-left: 2px solid rgba(180, 83, 9, 0.55);">
+                            <button type="button" class="wip-sfg-trace-btn" onclick="window.openSfgLookupFromRow(decodeURIComponent('${encNomen}'), decodeURIComponent('${encUpStage}'))" title="Xem chuỗi công đoạn trước của ${escapeWipHtml(upstream.productName1C || cleanNomen)}">
+                              🔍 ${escapeWipHtml(upstream.stage)}
+                            </button>
+                          </td>
+                          <td style="${sfgCellStyle} text-align: right; font-weight: 800; color: #1d4ed8; font-variant-numeric: tabular-nums;">${sPlanStr}</td>
+                          <td style="${sfgCellStyle} text-align: right; font-weight: 800; color: #0f172a; font-variant-numeric: tabular-nums;">${sFactStr}</td>
+                          <td style="${sfgCellStyle} text-align: right; font-weight: 900; color: ${sGapColor}; font-variant-numeric: tabular-nums;">${sGapStr}</td>
+                        `;
+                      })() : ''}
+
                       <!-- CÁC Ô TỒN KHO THEO DANH SÁCH KHO ĐANG ĐƯỢC CHỌN -->
                       ${stockCellsHtml}
                     `;
@@ -1120,6 +1916,12 @@
                         <td style="background: #475569 !important; border: 1px solid #64748b;"></td>
                         <td style="background: #475569 !important; border: 1px solid #64748b;"></td>
                         <td style="background: #475569 !important; border: 1px solid #64748b;"></td>
+                        ${showSfgCols ? `
+                          <td style="background: #475569 !important; border: 1px solid #64748b;"></td>
+                          <td style="background: #475569 !important; border: 1px solid #64748b;"></td>
+                          <td style="background: #475569 !important; border: 1px solid #64748b;"></td>
+                          <td style="background: #475569 !important; border: 1px solid #64748b;"></td>
+                        ` : ''}
                         ${activeWhList.map((w, wIdx) => {
                           const minW = w.id === 'all' ? '105px' : (w.id === 'whHardTest' ? '115px' : '95px');
                           return `
@@ -1131,6 +1933,12 @@
                         <td style="color: var(--text-muted); font-size: 0.775rem;">—</td>
                         <td style="text-align: center; color: var(--text-muted); font-size: 0.775rem;">—</td>
                         <td style="text-align: center; color: var(--text-muted); font-size: 0.775rem;">—</td>
+                        ${showSfgCols ? `
+                          <td style="text-align: center; color: var(--text-muted); font-size: 0.775rem; border-left: 2px solid rgba(245, 158, 11, 0.22);">—</td>
+                          <td style="text-align: right; color: var(--text-muted); font-size: 0.775rem;">—</td>
+                          <td style="text-align: right; color: var(--text-muted); font-size: 0.775rem;">—</td>
+                          <td style="text-align: right; color: var(--text-muted); font-size: 0.775rem;">—</td>
+                        ` : ''}
                         ${activeWhList.map((w, wIdx) => {
                           let val = 0;
                           if (w.id === 'all') val = fgStocks.all;
@@ -1215,12 +2023,13 @@
     `;
 
     container.innerHTML = html;
+    if (typeof focusState !== 'undefined') restoreWipSearchFocus(focusState);
 
-    // Đảm bảo vị trí sticky top của Tầng 2 (tên các kho) luôn khớp chuẩn xác tuyệt đối với Tầng 1
+    // Đảm bảo vị trí sticky top của Tầng 2 (tên các kho & cột Tra cứu SFG) luôn khớp chuẩn xác tuyệt đối với Tầng 1
     const updateStickySubrowTop = () => {
       try {
-        const groupTh = container.querySelector('.wip-stock-group-header');
-        const subThs = container.querySelectorAll('.wip-stock-sub-header');
+        const groupTh = container.querySelector('.wip-stock-group-header') || container.querySelector('.wip-sfg-group-header');
+        const subThs = container.querySelectorAll('.wip-stock-sub-header, .wip-sfg-sub-header');
         if (groupTh && subThs.length > 0) {
           const h1 = groupTh.offsetHeight || 42;
           subThs.forEach(th => {
@@ -1762,6 +2571,7 @@
     window.WipStore.gapFilter = 'HAS_GAP';
     window.WipStore.sortBy = 'GAP_ASC';
     window.WipStore.warehouseFilter = 'ALL';
+    window.WipStore.showSfgColumns = true;
     window.WipStore.search = '';
     window.WipStore.fromDate = defaultRange.fromDate;
     window.WipStore.toDate = defaultRange.toDate;
@@ -1825,8 +2635,11 @@
 
     const activeWhKeys = window.WipStore.activeStockWarehouses || ['all', 'whAssembly', 'whPkg', 'whRepairSemi', 'whRepairBoard'];
     const activeWhList = STOCK_WAREHOUSES_DEF.filter(w => activeWhKeys.includes(w.id));
+    const showSfgCols = window.WipStore.showSfgColumns !== false;
+    const activeDateSet = showSfgCols ? getWipActiveDateSet(fromDate, toDate) : null;
+    const sfgLookupIndex = showSfgCols ? buildSfgDataMassLookup(activeDateSet) : {};
 
-    // Tiêu đề cột chuẩn TSV (gồm nhóm các cột tồn kho đang mở rộng hiển thị)
+    // Tiêu đề cột chuẩn TSV (gồm nhóm Tra cứu SFG + nhóm các cột tồn kho đang mở rộng hiển thị)
     const headers = [
       'STT',
       'Công Đoạn',
@@ -1841,6 +2654,7 @@
       'Nomenclature',
       'Quantity',
       'Catagory',
+      ...(showSfgCols ? ['Công Đoạn (SFG)', 'Kế Hoạch (SFG)', 'Thực Tế (SFG)', 'Gap (SFG)'] : []),
       ...activeWhList.map(w => `Stock 1C (${w.label})`)
     ];
 
@@ -1885,11 +2699,12 @@
           '',
           '',
           '',
+          ...(showSfgCols ? ['', '', '', ''] : []),
           ...activeWhList.map(() => '')
         ];
         rows.push(prodRow.join('\t'));
 
-        // Các dòng tiếp theo: từng nguyên vật liệu (9 cột đầu để trống, 4 cột BOM + N cột Tồn Kho Group)
+        // Các dòng tiếp theo: từng nguyên vật liệu (9 cột đầu để trống, 4 cột BOM + 4 cột SFG nếu bật + N cột Tồn Kho Group)
         materials.forEach(mat => {
           rowCount++;
           const cleanNom = clean(mat.nomenclature || mat.specSub || mat.spec);
@@ -1913,6 +2728,13 @@
             return v > 0 ? v : 0;
           });
 
+          const sfgVals = !showSfgCols ? [] : (() => {
+            if (!isSfg) return ['', '', '', ''];
+            const up = resolveUpstreamSfgEntry(cleanNom, it.stage, sfgLookupIndex, it.productName1C);
+            if (!up) return ['Chưa có', '', '', ''];
+            return [clean(up.stage), Math.round(up.planQty), Math.round(up.factQty), Math.round(up.gapQty)];
+          })();
+
           const matRow = [
             '',
             '',
@@ -1927,6 +2749,7 @@
             cleanNom,
             qtyVal,
             cat,
+            ...sfgVals,
             ...stockVals
           ];
           rows.push(matRow.join('\t'));
@@ -1959,6 +2782,7 @@
           '',
           '',
           '',
+          ...(showSfgCols ? ['', '', '', ''] : []),
           ...fgStockVals
         ];
         rows.push(row.join('\t'));
@@ -2015,6 +2839,9 @@
 
     const activeWhKeys = window.WipStore.activeStockWarehouses || ['all', 'whAssembly', 'whPkg', 'whRepairSemi', 'whRepairBoard'];
     const activeWhList = STOCK_WAREHOUSES_DEF.filter(w => activeWhKeys.includes(w.id));
+    const showSfgCols = window.WipStore.showSfgColumns !== false;
+    const activeDateSet = showSfgCols ? getWipActiveDateSet(fromDate, toDate) : null;
+    const sfgLookupIndex = showSfgCols ? buildSfgDataMassLookup(activeDateSet) : {};
 
     let csv = '\uFEFF'; // UTF-8 BOM để Google Sheets & Excel hiển thị tiếng Việt chuẩn 100%
     const escapeCsv = (s) => `"${String(s || '').replace(/"/g, '""')}"`;
@@ -2033,6 +2860,7 @@
       'Nomenclature',
       'Quantity',
       'Catagory',
+      ...(showSfgCols ? ['Công Đoạn (SFG)', 'Kế Hoạch (SFG)', 'Thực Tế (SFG)', 'Gap (SFG)'] : []),
       ...activeWhList.map(w => `Stock 1C (${w.label})`)
     ].map(escapeCsv).join(',') + '\n';
 
@@ -2071,10 +2899,11 @@
           '',
           '',
           '',
+          ...(showSfgCols ? ['', '', '', ''] : []),
           ...activeWhList.map(() => '')
         ].join(',') + '\n';
 
-        // Từng dòng nguyên vật liệu (4 ô BOM + N ô tồn kho nhóm)
+        // Từng dòng nguyên vật liệu (4 ô BOM + 4 ô SFG nếu bật + N ô tồn kho nhóm)
         materials.forEach(mat => {
           const cleanNom = String(mat.nomenclature || mat.specSub || mat.spec || '').trim();
           const isSfg = cleanNom.toLowerCase().startsWith('ajax');
@@ -2097,6 +2926,13 @@
             return v > 0 ? v : 0;
           });
 
+          const sfgVals = !showSfgCols ? [] : (() => {
+            if (!isSfg) return ['', '', '', ''];
+            const up = resolveUpstreamSfgEntry(cleanNom, it.stage, sfgLookupIndex, it.productName1C);
+            if (!up) return [escapeCsv('Chưa có'), '', '', ''];
+            return [escapeCsv(up.stage), Math.round(up.planQty), Math.round(up.factQty), Math.round(up.gapQty)];
+          })();
+
           csv += [
             '',
             '',
@@ -2111,6 +2947,7 @@
             escapeCsv(cleanNom),
             qtyVal,
             escapeCsv(cat),
+            ...sfgVals,
             ...stockVals
           ].join(',') + '\n';
         });
@@ -2141,6 +2978,7 @@
           '',
           '',
           '',
+          ...(showSfgCols ? ['', '', '', ''] : []),
           ...fgStockVals
         ].join(',') + '\n';
       }
@@ -2187,6 +3025,165 @@
       }
     });
   }
+
+  // ==========================================
+  // HANDLERS CHO CHẾ ĐỘ "TRA CỨU SFG" & CỘT SFG
+  // ==========================================
+
+  window.setWipSubView = function(view) {
+    window.WipStore.activeSubView = view === 'SFG_LOOKUP' ? 'SFG_LOOKUP' : 'TABLE';
+    window.renderWipControlView();
+  };
+
+  window.toggleWipSfgColumns = function() {
+    window.WipStore.showSfgColumns = !(window.WipStore.showSfgColumns !== false);
+    window.renderWipControlView();
+    if (window.showToast) {
+      window.showToast(
+        'info',
+        window.WipStore.showSfgColumns
+          ? 'Đã bật 4 cột Tra cứu SFG (Công Đoạn - Kế Hoạch - Thực Tế - Gap) bên cạnh cột Catagory.'
+          : 'Đã ẩn 4 cột Tra cứu SFG trong bảng WIP.'
+      );
+    }
+  };
+
+  window.openSfgLookupFromRow = function(sfgNomen, upstreamStage) {
+    window.WipStore.activeSubView = 'SFG_LOOKUP';
+    window.WipStore.sfgStageFilter = 'ALL';
+    window.WipStore.sfgGapFilter = 'ALL';
+    window.WipStore.sfgSearch = String(sfgNomen || '').trim();
+    window.renderWipControlView();
+    if (window.showToast) {
+      window.showToast('info', `Đang truy vết chuỗi SFG cho "${window.WipStore.sfgSearch}" (${upstreamStage || 'Công đoạn trước'}).`);
+    }
+  };
+
+  window.openWipTableFromSfgChain = function(stage, productName1C) {
+    window.WipStore.activeSubView = 'TABLE';
+    window.WipStore.stageFilter = stage || 'ALL';
+    window.WipStore.modelFilter = 'ALL';
+    window.WipStore.lastStepFilter = 'ALL';
+    window.WipStore.statusFilter = 'ALL';
+    window.WipStore.gapFilter = 'ALL';
+    window.WipStore.search = String(productName1C || '').trim();
+    window.WipStore.pageIndex = 0;
+    window.renderWipControlView();
+    const container = document.getElementById('wipContainer');
+    if (container) container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  window.handleWipSfgStageChange = function(val) {
+    window.WipStore.sfgStageFilter = val || 'ALL';
+    window.renderWipControlView();
+  };
+
+  window.handleWipSfgGapChange = function(val) {
+    window.WipStore.sfgGapFilter = val || 'ALL';
+    window.renderWipControlView();
+  };
+
+  window.handleWipSfgSortChange = function(val) {
+    window.WipStore.sfgSortBy = val || 'GAP_ASC';
+    window.renderWipControlView();
+  };
+
+  window.handleWipSfgSearch = function(val) {
+    window.WipStore.sfgSearch = val || '';
+    window.renderWipControlView();
+  };
+
+  window.handleWipSfgReset = function() {
+    const defaultRange = getDefaultWipDateRange();
+    window.WipStore.sfgStageFilter = 'ALL';
+    window.WipStore.sfgGapFilter = 'HAS_GAP';
+    window.WipStore.sfgSortBy = 'GAP_ASC';
+    window.WipStore.sfgSearch = '';
+    window.WipStore.fromDate = defaultRange.fromDate;
+    window.WipStore.toDate = defaultRange.toDate;
+    window.WipStore.date = defaultRange.toDate;
+    window.renderWipControlView();
+    if (window.showToast) window.showToast('info', 'Đã đặt lại bộ lọc Tra cứu SFG về mặc định!');
+  };
+
+  window.handleCopySfgChainForGoogleSheet = function() {
+    if (!window.AppStore || typeof window.AppStore.getWipControlData !== 'function') return;
+    const defaultRange = getDefaultWipDateRange();
+    const curFromDate = window.WipStore.fromDate || defaultRange.fromDate;
+    const curToDate = window.WipStore.toDate || defaultRange.toDate;
+    const curDate = window.WipStore.date || curToDate;
+
+    const { results } = collectSfgLookupChains(curFromDate, curToDate, curDate);
+    if (!results || results.length === 0) {
+      if (window.showToast) window.showToast('warning', 'Không có chuỗi SFG nào để sao chép!');
+      return;
+    }
+
+    const clean = (v) => String(v || '').replace(/[\t\r\n]/g, ' ').trim();
+    const headers = [
+      'STT',
+      'Cấp Truy Vết',
+      'Công Đoạn',
+      'Model / Mã SFG (1C)',
+      'Mã NL / Spec',
+      'Định Mức',
+      'KẾ HOẠCH (PLAN)',
+      'THỰC TẾ (FACT)',
+      'CHÊNH LỆCH (GAP)',
+      'TỔNG TỒN 1C'
+    ];
+    const rows = [headers.join('\t')];
+    let totalLines = 0;
+
+    results.forEach((entry, idx) => {
+      const it = entry.root;
+      const rootSpec = (it.specCode || it.rawSpecCode || '').replace(/^0+/, '') || '—';
+      const fgSt = getMaterialStocksGroup(it.productName1C, it.specCode);
+      const fgStockAll = fgSt.all > 0 ? fgSt.all : (it.stock1C || 0);
+      totalLines++;
+      rows.push([
+        idx + 1,
+        'Cấp 0 (Gốc)',
+        clean(it.stage),
+        clean(it.productName1C),
+        clean(rootSpec),
+        1,
+        Math.round(it.planQty || 0),
+        Math.round(it.factQty || 0),
+        Math.round(it.gapQty || 0),
+        Math.round(fgStockAll)
+      ].join('\t'));
+
+      (entry.chain || []).forEach(step => {
+        const res = step.resolved;
+        const stInfo = getMaterialStocksGroup(step.nomenclature, step.materialCode);
+        const childSpec = res && (res.specCode || res.rawSpecCode) ? (res.specCode || res.rawSpecCode).replace(/^0+/, '') : '';
+        totalLines++;
+        rows.push([
+          '',
+          `Cấp ${step.depth} (Trước ${clean(step.parentStage)})`,
+          res ? clean(res.stage) : 'Chưa có ĐM',
+          clean(step.nomenclature),
+          clean(step.materialCode || childSpec || '—'),
+          step.qtyPerUnit || 1,
+          res ? Math.round(res.planQty || 0) : '',
+          res ? Math.round(res.factQty || 0) : '',
+          res ? Math.round(res.gapQty || 0) : '',
+          Math.round(stInfo.all || 0)
+        ].join('\t'));
+      });
+    });
+
+    const tsvContent = rows.join('\n');
+    const msg = `📋 Đã copy ${results.length.toLocaleString('vi-VN')} chuỗi SFG (${totalLines.toLocaleString('vi-VN')} dòng truy vết)! Mở Google Sheet và nhấn Ctrl+V (Cmd+V).`;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(tsvContent).then(() => {
+        if (window.showToast) window.showToast('success', msg);
+      }).catch(() => legacyCopy(tsvContent, msg));
+    } else {
+      legacyCopy(tsvContent, msg);
+    }
+  };
 
   /**
    * Helper copy to clipboard

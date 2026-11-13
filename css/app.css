@@ -10014,3 +10014,234 @@ body[data-user-role="viewer"] .sim-line-input {
   border-color: #f87171;
   color: #991b1b;
 }
+
+/* =========================================================================
+   WIP CONTROL - TRA CỨU SFG (CÔNG ĐOẠN TRƯỚC & CHUỖI ĐA CẤP)
+   ========================================================================= */
+.wip-subtab-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+}
+
+.wip-subtab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.wip-subtab-btn:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.wip-subtab-btn.active {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.2));
+  border-color: rgba(16, 185, 129, 0.6);
+  color: #6ee7b7;
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.2);
+}
+
+.wip-subtab-btn.is-sfg.active {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.2));
+  border-color: rgba(245, 158, 11, 0.65);
+  color: #fde047;
+  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.22);
+}
+
+.wip-table thead tr.wip-header-group-row th.wip-sfg-group-header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 30 !important;
+  background: #1f1708 !important;
+  color: #fbbf24 !important;
+  border-left: 2px solid #f59e0b !important;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.45) !important;
+}
+
+.wip-table thead tr.wip-header-subrow th.wip-sfg-sub-header {
+  background: #1a140b !important;
+  border-bottom: 2px solid #f59e0b !important;
+}
+
+.wip-sfg-chain-table th {
+  position: sticky;
+  top: 0;
+  z-index: 25;
+  background: #0b1329 !important;
+  border-bottom: 2px solid rgba(245, 158, 11, 0.45);
+}
+
+.wip-sfg-chain-root td {
+  background: rgba(30, 41, 59, 0.48);
+  border-top: 2px solid rgba(56, 189, 248, 0.35);
+}
+
+.wip-sfg-chain-child td {
+  background: rgba(15, 23, 42, 0.35);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.wip-sfg-chain-child.is-depth-1 td {
+  background: rgba(250, 204, 21, 0.07);
+}
+
+.wip-sfg-chain-child.is-depth-2 td {
+  background: rgba(56, 189, 248, 0.06);
+}
+
+.wip-sfg-chain-child.is-depth-3 td {
+  background: rgba(168, 85, 247, 0.06);
+}
+
+.wip-sfg-trace-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 5px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  cursor: pointer;
+  border: 1.5px solid #020617 !important;
+  background: #0f172a !important;
+  color: #fef08a !important;
+  transition: transform 0.12s ease, box-shadow 0.15s ease, background 0.15s ease;
+  white-space: nowrap;
+}
+
+.wip-sfg-trace-btn:hover {
+  transform: translateY(-1px);
+  background: #1e293b !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.45);
+}
+
+.wip-sfg-child-name {
+  color: #fde047;
+  font-weight: 700;
+}
+
+.wip-sfg-child-mat {
+  color: #cbd5e1;
+}
+
+.wip-sfg-level-badge {
+  background: rgba(245, 158, 11, 0.16);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.wip-sfg-action-btn {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+}
+
+.wip-sfg-action-btn.is-back {
+  border-color: rgba(16, 185, 129, 0.45);
+  color: #6ee7b7;
+}
+
+.wip-sfg-action-btn.is-stage {
+  border-color: rgba(245, 158, 11, 0.45);
+  color: #fde047;
+}
+
+[data-theme="light"] .wip-subtab-bar {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+[data-theme="light"] .wip-subtab-btn {
+  color: #475569;
+}
+
+[data-theme="light"] .wip-subtab-btn:hover {
+  color: #0f172a;
+  background: rgba(15, 23, 42, 0.05);
+}
+
+[data-theme="light"] .wip-subtab-btn.active {
+  background: #d1fae5;
+  border-color: #10b981;
+  color: #065f46;
+}
+
+[data-theme="light"] .wip-subtab-btn.is-sfg.active {
+  background: #fef3c7;
+  border-color: #f59e0b;
+  color: #92400e;
+}
+
+[data-theme="light"] .wip-table thead tr.wip-header-group-row th.wip-sfg-group-header {
+  background: #fef3c7 !important;
+  color: #92400e !important;
+}
+
+[data-theme="light"] .wip-table thead tr.wip-header-subrow th.wip-sfg-sub-header {
+  background: #fffbeb !important;
+  color: #78350f !important;
+}
+
+[data-theme="light"] .wip-sfg-chain-table th {
+  background: #f1f5f9 !important;
+  color: #1e293b !important;
+}
+
+[data-theme="light"] .wip-sfg-chain-root td {
+  background: #f8fafc;
+}
+
+[data-theme="light"] .wip-sfg-chain-child.is-depth-1 td {
+  background: #fefce8;
+}
+
+[data-theme="light"] .wip-sfg-chain-child.is-depth-2 td {
+  background: #f0f9ff;
+}
+
+[data-theme="light"] .wip-sfg-chain-child.is-depth-3 td {
+  background: #faf5ff;
+}
+
+[data-theme="light"] .wip-sfg-child-name {
+  color: #92400e;
+}
+
+[data-theme="light"] .wip-sfg-child-mat {
+  color: #334155;
+}
+
+[data-theme="light"] .wip-sfg-level-badge {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #f59e0b;
+}
+
+[data-theme="light"] .wip-sfg-action-btn.is-back {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #065f46;
+}
+
+[data-theme="light"] .wip-sfg-action-btn.is-stage {
+  background: #fffbeb;
+  border-color: #f59e0b;
+  color: #92400e;
+}
