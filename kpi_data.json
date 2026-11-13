@@ -1,18 +1,18 @@
 {
   "success": true,
-  "timestamp": "2026-11-13 20:48:02",
-  "version": 20261113204802,
+  "timestamp": "2026-11-13 20:50:28",
+  "version": 20261113205028,
   "productivity": [
     {
       "id": "prod_1",
-      "district": "Nov - 2026",
-      "stage": "SFPD",
-      "team": "HARD TEST",
-      "fact": "",
-      "normH": "",
-      "haveH": "",
-      "result": ">= 88,05",
-      "retest": "",
+      "district": "Month",
+      "stage": "Team",
+      "team": "Process",
+      "fact": "Indicators",
+      "normH": "<>",
+      "haveH": "Level 1",
+      "result": "Level 2",
+      "retest": "Level 3",
       "downtime": "",
       "downtimePct": ""
     },
@@ -20,12 +20,12 @@
       "id": "prod_2",
       "district": "Nov - 2026",
       "stage": "SFPD",
-      "team": "",
-      "fact": "",
-      "normH": "",
-      "haveH": "",
-      "result": ">= 85",
-      "retest": "",
+      "team": "HARD TEST",
+      "fact": "Productivity",
+      "normH": "%",
+      "haveH": "< 88,05",
+      "result": ">= 88,05",
+      "retest": ">= 90,36",
       "downtime": "",
       "downtimePct": ""
     },
@@ -34,11 +34,11 @@
       "district": "Nov - 2026",
       "stage": "SFPD",
       "team": "",
-      "fact": "",
-      "normH": "",
-      "haveH": "",
-      "result": "<= 3",
-      "retest": "",
+      "fact": "Clip (all plant)",
+      "normH": "%",
+      "haveH": "< 85",
+      "result": ">= 85",
+      "retest": ">= 88,8",
       "downtime": "",
       "downtimePct": ""
     },
@@ -47,11 +47,11 @@
       "district": "Nov - 2026",
       "stage": "SFPD",
       "team": "",
-      "fact": "",
-      "normH": "",
-      "haveH": "",
-      "result": ">= 91",
-      "retest": "",
+      "fact": "Blocked batches (v1)",
+      "normH": "pcs",
+      "haveH": "> 3",
+      "result": "<= 3",
+      "retest": "<= 2",
       "downtime": "",
       "downtimePct": ""
     },
@@ -60,11 +60,11 @@
       "district": "Nov - 2026",
       "stage": "SFPD",
       "team": "",
-      "fact": "",
-      "normH": "",
-      "haveH": "",
-      "result": "<= 0,0427",
-      "retest": "",
+      "fact": "Inspection remarks, %",
+      "normH": "%",
+      "haveH": "< 91",
+      "result": ">= 91",
+      "retest": ">= 94",
       "downtime": "",
       "downtimePct": ""
     },
@@ -72,12 +72,12 @@
       "id": "prod_6",
       "district": "Nov - 2026",
       "stage": "SFPD",
-      "team": "ASSEMBLY",
-      "fact": "",
-      "normH": "",
-      "haveH": "",
-      "result": ">= 88,05",
-      "retest": "",
+      "team": "",
+      "fact": "Scrap, %",
+      "normH": "%",
+      "haveH": "> 0,0427",
+      "result": "<= 0,0427",
+      "retest": "<= 0,0417",
       "downtime": "",
       "downtimePct": ""
     },
@@ -85,12 +85,12 @@
       "id": "prod_7",
       "district": "Nov - 2026",
       "stage": "SFPD",
-      "team": "",
-      "fact": "",
-      "normH": "",
-      "haveH": "",
-      "result": ">= 85",
-      "retest": "",
+      "team": "ASSEMBLY",
+      "fact": "Productivity",
+      "normH": "%",
+      "haveH": "< 88,05",
+      "result": ">= 88,05",
+      "retest": ">= 90,36",
       "downtime": "",
       "downtimePct": ""
     },
@@ -99,11 +99,11 @@
       "district": "Nov - 2026",
       "stage": "SFPD",
       "team": "",
-      "fact": "",
-      "normH": "",
-      "haveH": "",
-      "result": "<= 3",
-      "retest": "",
+      "fact": "Clip (all plant)",
+      "normH": "%",
+      "haveH": "< 85",
+      "result": ">= 85",
+      "retest": ">= 88,8",
       "downtime": "",
       "downtimePct": ""
     },
@@ -112,11 +112,11 @@
       "district": "Nov - 2026",
       "stage": "SFPD",
       "team": "",
-      "fact": "",
-      "normH": "",
-      "haveH": "",
-      "result": ">= 91",
-      "retest": "",
+      "fact": "Blocked batches (v1)",
+      "normH": "pcs",
+      "haveH": "> 3",
+      "result": "<= 3",
+      "retest": "<= 2",
       "downtime": "",
       "downtimePct": ""
     },
@@ -125,16 +125,29 @@
       "district": "Nov - 2026",
       "stage": "SFPD",
       "team": "",
-      "fact": "",
-      "normH": "",
-      "haveH": "",
-      "result": "<= 0,0427",
-      "retest": "",
+      "fact": "Inspection remarks, %",
+      "normH": "%",
+      "haveH": "< 91",
+      "result": ">= 91",
+      "retest": ">= 94",
       "downtime": "",
       "downtimePct": ""
     },
     {
       "id": "prod_11",
+      "district": "Nov - 2026",
+      "stage": "SFPD",
+      "team": "",
+      "fact": "Scrap, %",
+      "normH": "%",
+      "haveH": "> 0,0427",
+      "result": "<= 0,0427",
+      "retest": "<= 0,0417",
+      "downtime": "",
+      "downtimePct": ""
+    },
+    {
+      "id": "prod_12",
       "district": "Productivity",
       "stage": "",
       "team": "",
@@ -147,7 +160,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_12",
+      "id": "prod_13",
       "district": "DIP",
       "stage": "Total",
       "team": "",
@@ -156,11 +169,11 @@
       "haveH": "3,106",
       "result": "90,51%",
       "retest": "",
-      "downtime": "",
+      "downtime": "18,5",
       "downtimePct": "0,60%"
     },
     {
-      "id": "prod_13",
+      "id": "prod_14",
       "district": "DIP",
       "stage": "DIP",
       "team": "Total",
@@ -169,11 +182,11 @@
       "haveH": "3106",
       "result": "90,51%",
       "retest": "",
-      "downtime": "",
+      "downtime": "18,5",
       "downtimePct": "0,60%"
     },
     {
-      "id": "prod_14",
+      "id": "prod_15",
       "district": "Hard Test",
       "stage": "Total",
       "team": "",
@@ -186,12 +199,12 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_15",
+      "id": "prod_16",
       "district": "Hard Test",
       "stage": "Focus",
       "team": "Total",
       "fact": "25.476",
-      "normH": "",
+      "normH": "740,53",
       "haveH": "7,074,166,667",
       "result": "104,68%",
       "retest": "2748",
@@ -199,7 +212,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_16",
+      "id": "prod_17",
       "district": "Hard Test",
       "stage": "Focus",
       "team": "! No Team",
@@ -212,7 +225,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_17",
+      "id": "prod_18",
       "district": "Hard Test",
       "stage": "Focus",
       "team": "[VTP] Workcell A-Hard Test-Team 1 A",
@@ -225,7 +238,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_18",
+      "id": "prod_19",
       "district": "Hard Test",
       "stage": "Focus",
       "team": "[VTP] Workcell A-Hard Test-Team 1 D",
@@ -238,7 +251,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_19",
+      "id": "prod_20",
       "district": "Hard Test",
       "stage": "Focus",
       "team": "[VTP] Workcell B-Hard Test-Team 1 B",
@@ -251,20 +264,20 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_20",
+      "id": "prod_21",
       "district": "Hard Test",
       "stage": "Focus",
       "team": "[VTP] WORKCELL B-Hard Test-Team 1 C",
       "fact": "2.62",
       "normH": "924,375",
-      "haveH": "",
+      "haveH": "86,5",
       "result": "106,86%",
       "retest": "136",
       "downtime": "",
       "downtimePct": ""
     },
     {
-      "id": "prod_21",
+      "id": "prod_22",
       "district": "Hard Test",
       "stage": "Focus",
       "team": "[VTP] Workcell DRD-Assembly Rework-Team 1 D",
@@ -277,7 +290,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_22",
+      "id": "prod_23",
       "district": "Hard Test",
       "stage": "Focus",
       "team": "[VTP] Workcell Video-Hard test-Team 1 A",
@@ -290,20 +303,20 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_23",
+      "id": "prod_24",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "Total",
       "fact": "258.468",
       "normH": "3,205,963,025",
-      "haveH": "",
+      "haveH": "2974,25",
       "result": "107,79%",
       "retest": "23286",
       "downtime": "",
       "downtimePct": ""
     },
     {
-      "id": "prod_24",
+      "id": "prod_25",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "! No Team",
@@ -316,7 +329,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_25",
+      "id": "prod_26",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "[VTP] Production Team",
@@ -329,7 +342,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_26",
+      "id": "prod_27",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "[VTP] Technical-Team 1 B",
@@ -342,20 +355,20 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_27",
+      "id": "prod_28",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "[VTP] Workcell A-Hard Test-Team 1 A",
       "fact": "32.221",
       "normH": "5,422,999,917",
-      "haveH": "",
+      "haveH": "635,25",
       "result": "85,37%",
       "retest": "4218",
       "downtime": "",
       "downtimePct": ""
     },
     {
-      "id": "prod_28",
+      "id": "prod_29",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "[VTP] Workcell A-Hard Test-Team 1 D",
@@ -368,7 +381,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_29",
+      "id": "prod_30",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "[VTP] Workcell A-Long Test-Team 1 B",
@@ -381,7 +394,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_30",
+      "id": "prod_31",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "[VTP] Workcell A-PKG-Team 1 C",
@@ -394,7 +407,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_31",
+      "id": "prod_32",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "[VTP] Workcell A-QC-Team",
@@ -407,7 +420,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_32",
+      "id": "prod_33",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "[VTP] Workcell B-Hard Test-Team 1 B",
@@ -420,7 +433,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_33",
+      "id": "prod_34",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "[VTP] WORKCELL B-Hard Test-Team 1 C",
@@ -433,7 +446,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_34",
+      "id": "prod_35",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "[VTP] WORKCELL B-Long Test-Team 1 A",
@@ -446,7 +459,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_35",
+      "id": "prod_36",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "[VTP] WORKCELL B-Long Test-Team 1 C",
@@ -459,7 +472,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_36",
+      "id": "prod_37",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "[VTP] WORKCELL B-PKG-Team 1 B",
@@ -472,7 +485,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_37",
+      "id": "prod_38",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "[VTP] Workcell B-PKG-Team 1 D",
@@ -485,7 +498,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_38",
+      "id": "prod_39",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "[VTP] Workcell DRD-Assembly Rework-Team 1 A",
@@ -498,7 +511,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_39",
+      "id": "prod_40",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "[VTP] Workcell DRD-Assembly Rework-Team 1 B",
@@ -511,7 +524,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_40",
+      "id": "prod_41",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "[VTP] Workcell DRD-Assembly Rework-Team 1 D",
@@ -524,7 +537,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_41",
+      "id": "prod_42",
       "district": "Hard Test",
       "stage": "HardTest",
       "team": "[VTP] Workcell Video-Hard test-Team 1 A",
@@ -537,7 +550,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_42",
+      "id": "prod_43",
       "district": "Assembly",
       "stage": "Total",
       "team": "",
@@ -546,11 +559,11 @@
       "haveH": "1,068,033,333",
       "result": "92,51%",
       "retest": "5121",
-      "downtime": "",
+      "downtime": "394,15",
       "downtimePct": "3,69%"
     },
     {
-      "id": "prod_43",
+      "id": "prod_44",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "Total",
@@ -559,11 +572,11 @@
       "haveH": "1,068,033,333",
       "result": "92,51%",
       "retest": "5121",
-      "downtime": "",
+      "downtime": "394,15",
       "downtimePct": "3,69%"
     },
     {
-      "id": "prod_44",
+      "id": "prod_45",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "! No Team",
@@ -576,7 +589,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_45",
+      "id": "prod_46",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] Production Team",
@@ -589,7 +602,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_46",
+      "id": "prod_47",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] Workcell A-Assembly-Team 1 B",
@@ -598,11 +611,11 @@
       "haveH": "6,488,333,333",
       "result": "104,21%",
       "retest": "46",
-      "downtime": "",
+      "downtime": "34,75",
       "downtimePct": "5,36%"
     },
     {
-      "id": "prod_47",
+      "id": "prod_48",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] Workcell A-Assembly-Team 1 D",
@@ -611,11 +624,11 @@
       "haveH": "7,998,333,333",
       "result": "95,88%",
       "retest": "26",
-      "downtime": "",
+      "downtime": "83,25",
       "downtimePct": "10,41%"
     },
     {
-      "id": "prod_48",
+      "id": "prod_49",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] Workcell A-QC-Team 1 C",
@@ -628,7 +641,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_49",
+      "id": "prod_50",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] WORKCELL B-Assembly-Team 1 A",
@@ -641,20 +654,20 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_50",
+      "id": "prod_51",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] WORKCELL B-Assembly-Team 1 C",
       "fact": "10.378",
       "normH": "8,106,552,778",
-      "haveH": "",
+      "haveH": "772,5",
       "result": "104,94%",
       "retest": "11",
       "downtime": "",
       "downtimePct": ""
     },
     {
-      "id": "prod_51",
+      "id": "prod_52",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] WORKCELL B-Assembly-Team 2 A",
@@ -667,7 +680,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_52",
+      "id": "prod_53",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] WORKCELL B-Assembly-Team 2 B",
@@ -680,7 +693,7 @@
       "downtimePct": "4,35%"
     },
     {
-      "id": "prod_53",
+      "id": "prod_54",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] WORKCELL B-Assembly-Team 2 C",
@@ -693,33 +706,33 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_54",
+      "id": "prod_55",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] WORKCELL B-Assembly-Team 2 D",
       "fact": "449",
       "normH": "6,811,277,778",
-      "haveH": "",
+      "haveH": "795,5",
       "result": "8,56%",
       "retest": "123",
       "downtime": "14",
       "downtimePct": "1,76%"
     },
     {
-      "id": "prod_55",
+      "id": "prod_56",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] WORKCELL B-Assembly-Team 3 A",
       "fact": "11.812",
       "normH": "6,959,022,222",
-      "haveH": "",
+      "haveH": "717,75",
       "result": "96,96%",
       "retest": "86",
       "downtime": "",
       "downtimePct": ""
     },
     {
-      "id": "prod_56",
+      "id": "prod_57",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] Workcell B-Assembly-Team 3 B",
@@ -732,7 +745,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_57",
+      "id": "prod_58",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] WORKCELL B-Assembly-Team 3 C",
@@ -745,7 +758,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_58",
+      "id": "prod_59",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] WORKCELL B-PKG-Team 1 A",
@@ -758,7 +771,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_59",
+      "id": "prod_60",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] Workcell DRD-Assembly Rework-Team 1 A",
@@ -771,7 +784,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_60",
+      "id": "prod_61",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] Workcell DRD-Assembly Rework-Team 1 B",
@@ -784,7 +797,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_61",
+      "id": "prod_62",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] Workcell DRD-Assembly Rework-Team 1 D",
@@ -797,7 +810,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_62",
+      "id": "prod_63",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] Workcell Fire-Assembly-Team 1 A",
@@ -810,7 +823,7 @@
       "downtimePct": "4,37%"
     },
     {
-      "id": "prod_63",
+      "id": "prod_64",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] Workcell Fire-Assembly-Team 1 B",
@@ -823,7 +836,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_64",
+      "id": "prod_65",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] Workcell Fire-Assembly-Team 1 C",
@@ -836,7 +849,7 @@
       "downtimePct": "7,60%"
     },
     {
-      "id": "prod_65",
+      "id": "prod_66",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] Workcell Fire-Assembly-Team 1 D",
@@ -849,12 +862,12 @@
       "downtimePct": "4,05%"
     },
     {
-      "id": "prod_66",
+      "id": "prod_67",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] Workcell Fire-Assembly-Team 2 A",
       "fact": "3.265",
-      "normH": "",
+      "normH": "293,85",
       "haveH": "2,460,833,333",
       "result": "119,41%",
       "retest": "21",
@@ -862,20 +875,20 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_67",
+      "id": "prod_68",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] Workcell Fire-Assembly-Team 2 B",
       "fact": "2.083",
-      "normH": "",
-      "haveH": "",
+      "normH": "187,47",
+      "haveH": "160,25",
       "result": "116,99%",
       "retest": "12",
       "downtime": "",
       "downtimePct": ""
     },
     {
-      "id": "prod_68",
+      "id": "prod_69",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] Workcell Fire-Assembly-Team 2 C",
@@ -888,7 +901,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_69",
+      "id": "prod_70",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] Workcell Fire-Assembly-Team 2 D",
@@ -901,7 +914,7 @@
       "downtimePct": "Infinity"
     },
     {
-      "id": "prod_70",
+      "id": "prod_71",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] Workcell Video-Assembly-Team 1 A",
@@ -914,7 +927,7 @@
       "downtimePct": "18,83%"
     },
     {
-      "id": "prod_71",
+      "id": "prod_72",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] WORKCELL-Assembly-Team 2D",
@@ -927,12 +940,12 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_72",
+      "id": "prod_73",
       "district": "Assembly",
       "stage": "Assembly",
       "team": "[VTP] WORKCELL-Assembly-Team 3D",
       "fact": "2.691",
-      "normH": "",
+      "normH": "73,93",
       "haveH": "130",
       "result": "56,87%",
       "retest": "14",
@@ -940,7 +953,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_73",
+      "id": "prod_74",
       "district": "Long Test",
       "stage": "Total",
       "team": "",
@@ -953,7 +966,7 @@
       "downtimePct": "7,83%"
     },
     {
-      "id": "prod_74",
+      "id": "prod_75",
       "district": "Long Test",
       "stage": "Calibration",
       "team": "Total",
@@ -966,7 +979,7 @@
       "downtimePct": "Infinity"
     },
     {
-      "id": "prod_75",
+      "id": "prod_76",
       "district": "Long Test",
       "stage": "LongTest",
       "team": "Total",
@@ -979,7 +992,7 @@
       "downtimePct": "9,05%"
     },
     {
-      "id": "prod_76",
+      "id": "prod_77",
       "district": "Long Test",
       "stage": "TestRoom",
       "team": "Total",
@@ -992,26 +1005,13 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_77",
+      "id": "prod_78",
       "district": "QC",
       "stage": "Total",
       "team": "",
       "fact": "186.946",
       "normH": "3,833,564,806",
-      "haveH": "",
-      "result": "116,98%",
-      "retest": "8597",
-      "downtime": "",
-      "downtimePct": ""
-    },
-    {
-      "id": "prod_78",
-      "district": "QC",
-      "stage": "QC",
-      "team": "Total",
-      "fact": "186.946",
-      "normH": "3,833,564,806",
-      "haveH": "",
+      "haveH": "3277,25",
       "result": "116,98%",
       "retest": "8597",
       "downtime": "",
@@ -1019,6 +1019,19 @@
     },
     {
       "id": "prod_79",
+      "district": "QC",
+      "stage": "QC",
+      "team": "Total",
+      "fact": "186.946",
+      "normH": "3,833,564,806",
+      "haveH": "3277,25",
+      "result": "116,98%",
+      "retest": "8597",
+      "downtime": "",
+      "downtimePct": ""
+    },
+    {
+      "id": "prod_80",
       "district": "PKG",
       "stage": "Total",
       "team": "",
@@ -1031,7 +1044,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_80",
+      "id": "prod_81",
       "district": "PKG",
       "stage": "PKG",
       "team": "Total",
@@ -1044,7 +1057,7 @@
       "downtimePct": ""
     },
     {
-      "id": "prod_81",
+      "id": "prod_82",
       "district": "COM PKG",
       "stage": "Total",
       "team": "",
@@ -1057,7 +1070,7 @@
       "downtimePct": "1,48%"
     },
     {
-      "id": "prod_82",
+      "id": "prod_83",
       "district": "COM PKG",
       "stage": "Completing PKG",
       "team": "Total",
@@ -1070,26 +1083,13 @@
       "downtimePct": "1,48%"
     },
     {
-      "id": "prod_83",
+      "id": "prod_84",
       "district": "Masterbox",
       "stage": "Total",
       "team": "",
       "fact": "267.937",
       "normH": "44,021,394",
-      "haveH": "",
-      "result": "99,94%",
-      "retest": "",
-      "downtime": "",
-      "downtimePct": ""
-    },
-    {
-      "id": "prod_84",
-      "district": "Masterbox",
-      "stage": "Masterbox",
-      "team": "Total",
-      "fact": "267.937",
-      "normH": "44,021,394",
-      "haveH": "",
+      "haveH": "440,5",
       "result": "99,94%",
       "retest": "",
       "downtime": "",
@@ -1097,15 +1097,28 @@
     },
     {
       "id": "prod_85",
+      "district": "Masterbox",
+      "stage": "Masterbox",
+      "team": "Total",
+      "fact": "267.937",
+      "normH": "44,021,394",
+      "haveH": "440,5",
+      "result": "99,94%",
+      "retest": "",
+      "downtime": "",
+      "downtimePct": ""
+    },
+    {
+      "id": "prod_86",
       "district": "Total",
       "stage": "",
       "team": "",
-      "fact": "",
+      "fact": "1.901.350",
       "normH": "2,869,718,605",
-      "haveH": "",
+      "haveH": "28826,25",
       "result": "99,55%",
       "retest": "64725",
-      "downtime": "",
+      "downtime": "563,25",
       "downtimePct": "1,95%"
     }
   ],
