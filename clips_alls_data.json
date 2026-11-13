@@ -256,7 +256,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
       "plan": 14284.0,
-      "sheetFact": 4251.0,
+      "sheetFact": 5154.0,
       "done": 0,
       "isDone": false
     },
@@ -306,7 +306,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat/Smoke) (9AU) white датчик диму та температури",
       "plan": 23.0,
-      "sheetFact": 4.0,
+      "sheetFact": 5.0,
       "done": 0,
       "isDone": false
     },
@@ -406,7 +406,7 @@
       "agg": "FireProtect EN54",
       "device": "Ajax EN54 FireProtect (Heat) (8EU) ASP white сповіщувач пожежний тепловий",
       "plan": 2540.0,
-      "sheetFact": 2518.0,
+      "sheetFact": 2535.0,
       "done": 1,
       "isDone": true
     },
@@ -436,7 +436,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Heat) (9AU) white сповіщувач пожежний тепловий",
       "plan": 196.0,
-      "sheetFact": 189.0,
+      "sheetFact": 196.0,
       "done": 1,
       "isDone": true
     },
@@ -446,7 +446,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Heat) (9NA) white сповіщувач пожежний тепловий",
       "plan": 87.0,
-      "sheetFact": 56.0,
+      "sheetFact": 77.0,
       "done": 0,
       "isDone": false
     },
@@ -456,7 +456,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) ASP black сповіщувач пожежний тепловий зі звуковим оповіщувачем",
       "plan": 536.0,
-      "sheetFact": 495.0,
+      "sheetFact": 517.0,
       "done": 1,
       "isDone": true
     },
@@ -466,7 +466,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) ASP white сповіщувач пожежний тепловий зі звуковим оповіщувачем",
       "plan": 1752.0,
-      "sheetFact": 1700.0,
+      "sheetFact": 1757.0,
       "done": 1,
       "isDone": true
     },
@@ -506,7 +506,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Heat/Sounder) (8MA) white сповіщувач пожежний тепловий зі звуковим оповіщувачем",
       "plan": 392.0,
-      "sheetFact": 367.0,
+      "sheetFact": 390.0,
       "done": 1,
       "isDone": true
     },
@@ -546,7 +546,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Smoke) (8EU) ASP white сповіщувач пожежний димовий",
       "plan": 16298.0,
-      "sheetFact": 217.0,
+      "sheetFact": 264.0,
       "done": 0,
       "isDone": false
     },
@@ -566,7 +566,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Smoke) (8MA) black сповіщувач пожежний димовий",
       "plan": 56.0,
-      "sheetFact": 0.0,
+      "sheetFact": 28.0,
       "done": 0,
       "isDone": false
     },
@@ -596,7 +596,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8EU) ASP white сповіщувач пожежний димовий зі звуковим оповіщувачем",
       "plan": 10769.0,
-      "sheetFact": 2841.0,
+      "sheetFact": 3360.0,
       "done": 0,
       "isDone": false
     },
@@ -2858,7 +2858,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
       "plan": 14284.0,
-      "sheetFact": 4251.0,
+      "sheetFact": 5154.0,
       "done": 0,
       "isDone": false
     },
@@ -2908,7 +2908,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat/Smoke) (9AU) white датчик диму та температури",
       "plan": 23.0,
-      "sheetFact": 4.0,
+      "sheetFact": 5.0,
       "done": 0,
       "isDone": false
     },
@@ -3008,7 +3008,7 @@
       "agg": "FireProtect EN54",
       "device": "Ajax EN54 FireProtect (Heat) (8EU) ASP white сповіщувач пожежний тепловий",
       "plan": 2540.0,
-      "sheetFact": 2518.0,
+      "sheetFact": 2535.0,
       "done": 1,
       "isDone": true
     },
@@ -3038,7 +3038,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Heat) (9AU) white сповіщувач пожежний тепловий",
       "plan": 196.0,
-      "sheetFact": 189.0,
+      "sheetFact": 196.0,
       "done": 1,
       "isDone": true
     },
@@ -3048,7 +3048,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Heat) (9NA) white сповіщувач пожежний тепловий",
       "plan": 87.0,
-      "sheetFact": 56.0,
+      "sheetFact": 77.0,
       "done": 0,
       "isDone": false
     },
@@ -3058,7 +3058,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) ASP black сповіщувач пожежний тепловий зі звуковим оповіщувачем",
       "plan": 536.0,
-      "sheetFact": 495.0,
+      "sheetFact": 517.0,
       "done": 1,
       "isDone": true
     },
@@ -3068,7 +3068,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) ASP white сповіщувач пожежний тепловий зі звуковим оповіщувачем",
       "plan": 1752.0,
-      "sheetFact": 1700.0,
+      "sheetFact": 1757.0,
       "done": 1,
       "isDone": true
     },
@@ -3108,7 +3108,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Heat/Sounder) (8MA) white сповіщувач пожежний тепловий зі звуковим оповіщувачем",
       "plan": 392.0,
-      "sheetFact": 367.0,
+      "sheetFact": 390.0,
       "done": 1,
       "isDone": true
     },
@@ -3148,7 +3148,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Smoke) (8EU) ASP white сповіщувач пожежний димовий",
       "plan": 16298.0,
-      "sheetFact": 217.0,
+      "sheetFact": 264.0,
       "done": 0,
       "isDone": false
     },
@@ -3168,7 +3168,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Smoke) (8MA) black сповіщувач пожежний димовий",
       "plan": 56.0,
-      "sheetFact": 0.0,
+      "sheetFact": 28.0,
       "done": 0,
       "isDone": false
     },
@@ -3198,7 +3198,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8EU) ASP white сповіщувач пожежний димовий зі звуковим оповіщувачем",
       "plan": 10769.0,
-      "sheetFact": 2841.0,
+      "sheetFact": 3360.0,
       "done": 0,
       "isDone": false
     },
@@ -5210,7 +5210,7 @@
   "clipAllPlant": "44.2%",
   "clipAllPlantPct": 44.2,
   "totalPlan": 485822.0,
-  "totalSheetFact": 192493.0,
+  "totalSheetFact": 194138.0,
   "hasPlanCount": 219,
   "gt90Count": 115,
   "lt90Count": 145,
@@ -9507,10 +9507,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-14 01:13:22",
+        "archivedAt": "2026-11-14 02:06:49",
         "totalItems": 260,
         "totalPlan": 485822.0,
-        "totalSheetFact": 192493.0,
+        "totalSheetFact": 194138.0,
         "qtyAllDevice": 260,
         "qtyDoneDevice": 115,
         "qtyNotDoneDevice": 145,
@@ -9772,7 +9772,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
             "plan": 14284.0,
-            "sheetFact": 4251.0,
+            "sheetFact": 5154.0,
             "done": 0,
             "isDone": false
           },
@@ -9822,7 +9822,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat/Smoke) (9AU) white датчик диму та температури",
             "plan": 23.0,
-            "sheetFact": 4.0,
+            "sheetFact": 5.0,
             "done": 0,
             "isDone": false
           },
@@ -9922,7 +9922,7 @@
             "agg": "FireProtect EN54",
             "device": "Ajax EN54 FireProtect (Heat) (8EU) ASP white сповіщувач пожежний тепловий",
             "plan": 2540.0,
-            "sheetFact": 2518.0,
+            "sheetFact": 2535.0,
             "done": 1,
             "isDone": true
           },
@@ -9952,7 +9952,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Heat) (9AU) white сповіщувач пожежний тепловий",
             "plan": 196.0,
-            "sheetFact": 189.0,
+            "sheetFact": 196.0,
             "done": 1,
             "isDone": true
           },
@@ -9962,7 +9962,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Heat) (9NA) white сповіщувач пожежний тепловий",
             "plan": 87.0,
-            "sheetFact": 56.0,
+            "sheetFact": 77.0,
             "done": 0,
             "isDone": false
           },
@@ -9972,7 +9972,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) ASP black сповіщувач пожежний тепловий зі звуковим оповіщувачем",
             "plan": 536.0,
-            "sheetFact": 495.0,
+            "sheetFact": 517.0,
             "done": 1,
             "isDone": true
           },
@@ -9982,7 +9982,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) ASP white сповіщувач пожежний тепловий зі звуковим оповіщувачем",
             "plan": 1752.0,
-            "sheetFact": 1700.0,
+            "sheetFact": 1757.0,
             "done": 1,
             "isDone": true
           },
@@ -10022,7 +10022,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Heat/Sounder) (8MA) white сповіщувач пожежний тепловий зі звуковим оповіщувачем",
             "plan": 392.0,
-            "sheetFact": 367.0,
+            "sheetFact": 390.0,
             "done": 1,
             "isDone": true
           },
@@ -10062,7 +10062,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Smoke) (8EU) ASP white сповіщувач пожежний димовий",
             "plan": 16298.0,
-            "sheetFact": 217.0,
+            "sheetFact": 264.0,
             "done": 0,
             "isDone": false
           },
@@ -10082,7 +10082,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Smoke) (8MA) black сповіщувач пожежний димовий",
             "plan": 56.0,
-            "sheetFact": 0.0,
+            "sheetFact": 28.0,
             "done": 0,
             "isDone": false
           },
@@ -10112,7 +10112,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8EU) ASP white сповіщувач пожежний димовий зі звуковим оповіщувачем",
             "plan": 10769.0,
-            "sheetFact": 2841.0,
+            "sheetFact": 3360.0,
             "done": 0,
             "isDone": false
           },
@@ -12374,7 +12374,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
             "plan": 14284.0,
-            "sheetFact": 4251.0,
+            "sheetFact": 5154.0,
             "done": 0,
             "isDone": false
           },
@@ -12424,7 +12424,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat/Smoke) (9AU) white датчик диму та температури",
             "plan": 23.0,
-            "sheetFact": 4.0,
+            "sheetFact": 5.0,
             "done": 0,
             "isDone": false
           },
@@ -12524,7 +12524,7 @@
             "agg": "FireProtect EN54",
             "device": "Ajax EN54 FireProtect (Heat) (8EU) ASP white сповіщувач пожежний тепловий",
             "plan": 2540.0,
-            "sheetFact": 2518.0,
+            "sheetFact": 2535.0,
             "done": 1,
             "isDone": true
           },
@@ -12554,7 +12554,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Heat) (9AU) white сповіщувач пожежний тепловий",
             "plan": 196.0,
-            "sheetFact": 189.0,
+            "sheetFact": 196.0,
             "done": 1,
             "isDone": true
           },
@@ -12564,7 +12564,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Heat) (9NA) white сповіщувач пожежний тепловий",
             "plan": 87.0,
-            "sheetFact": 56.0,
+            "sheetFact": 77.0,
             "done": 0,
             "isDone": false
           },
@@ -12574,7 +12574,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) ASP black сповіщувач пожежний тепловий зі звуковим оповіщувачем",
             "plan": 536.0,
-            "sheetFact": 495.0,
+            "sheetFact": 517.0,
             "done": 1,
             "isDone": true
           },
@@ -12584,7 +12584,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) ASP white сповіщувач пожежний тепловий зі звуковим оповіщувачем",
             "plan": 1752.0,
-            "sheetFact": 1700.0,
+            "sheetFact": 1757.0,
             "done": 1,
             "isDone": true
           },
@@ -12624,7 +12624,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Heat/Sounder) (8MA) white сповіщувач пожежний тепловий зі звуковим оповіщувачем",
             "plan": 392.0,
-            "sheetFact": 367.0,
+            "sheetFact": 390.0,
             "done": 1,
             "isDone": true
           },
@@ -12664,7 +12664,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Smoke) (8EU) ASP white сповіщувач пожежний димовий",
             "plan": 16298.0,
-            "sheetFact": 217.0,
+            "sheetFact": 264.0,
             "done": 0,
             "isDone": false
           },
@@ -12684,7 +12684,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Smoke) (8MA) black сповіщувач пожежний димовий",
             "plan": 56.0,
-            "sheetFact": 0.0,
+            "sheetFact": 28.0,
             "done": 0,
             "isDone": false
           },
@@ -12714,7 +12714,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8EU) ASP white сповіщувач пожежний димовий зі звуковим оповіщувачем",
             "plan": 10769.0,
-            "sheetFact": 2841.0,
+            "sheetFact": 3360.0,
             "done": 0,
             "isDone": false
           },
