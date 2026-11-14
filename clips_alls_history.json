@@ -4291,10 +4291,10 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-14 21:26:34",
+      "archivedAt": "2026-11-14 22:08:06",
       "totalItems": 260,
       "totalPlan": 485822.0,
-      "totalSheetFact": 204286.0,
+      "totalSheetFact": 205375.0,
       "qtyAllDevice": 260,
       "qtyDoneDevice": 117,
       "qtyNotDoneDevice": 143,
@@ -5236,7 +5236,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
           "plan": 9569.0,
-          "sheetFact": 4714.0,
+          "sheetFact": 4896.0,
           "done": 0,
           "isDone": false
         },
@@ -6596,7 +6596,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 8809.0,
+          "sheetFact": 9716.0,
           "done": 0,
           "isDone": false
         },
@@ -7838,7 +7838,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
           "plan": 9569.0,
-          "sheetFact": 4714.0,
+          "sheetFact": 4896.0,
           "done": 0,
           "isDone": false
         },
@@ -9198,7 +9198,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 8809.0,
+          "sheetFact": 9716.0,
           "done": 0,
           "isDone": false
         },
