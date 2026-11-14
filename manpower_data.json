@@ -82,11 +82,11 @@
       "1D": 19.0,
       "2D": 18.0
     },
-    "htDirect": 24.0,
-    "htTotal": 26.0,
+    "htDirect": 23.0,
+    "htTotal": 25.0,
     "htBreakdown": {
       "cleanroom": 4.0,
-      "operator": 20.0,
+      "operator": 19.0,
       "feeder": 1.0,
       "leader": 1.0
     }
