@@ -72,15 +72,15 @@
   "D": {
     "shift": "D",
     "name": "Shift D",
-    "assyDirect": 27.0,
-    "assyTotal": 37.0,
+    "assyDirect": 28.0,
+    "assyTotal": 38.0,
     "assyLinesDirect": {
       "1D": 14.0,
-      "2D": 13.0
+      "2D": 14.0
     },
     "assyLinesTotal": {
       "1D": 19.0,
-      "2D": 18.0
+      "2D": 19.0
     },
     "htDirect": 23.0,
     "htTotal": 25.0,
