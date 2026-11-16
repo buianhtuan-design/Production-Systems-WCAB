@@ -212,14 +212,40 @@
   }
 
   /**
-   * Lấy Target đa năng theo metric và record
+  /**
+   * Lấy Level 5 Target chuẩn từ Bảng Tổng Hợp KPI cho từng metric
    */
-  function getMetricTarget(metric, district, stage, team, defaultVal = 95) {
+  function getSummaryLevel5Target(stageOrProc, metric) {
+    const m = String(metric).toLowerCase();
+    if (m === 'prod' || m === 'productivity') return 95;
+    if (m === 'rem' || m === 'remarks') return 98;
+    if (m === 'att' || m === 'attendance') return 95;
+    if (m === 'scrap') {
+      const md = window.KPI_MASTER_DATA;
+      if (md && md.scrap && md.scrap.target) {
+        const n = parseNumericInput(md.scrap.target);
+        if (n !== null) return n;
+      }
+      return 0.0387;
+    }
+    if (m === 'blocked') return 0;
+    if (m === 'clip') return 95;
+    return 95;
+  }
+
+  /**
+   * Lấy Target đa năng theo metric và record
+   * Tự động lấy Level 5 Target từ Bảng Tổng Hợp KPI làm giá trị mặc định cho các Line bên dưới
+   */
+  function getMetricTarget(metric, district, stage, team, defaultVal = null) {
     const key = `${metric}_${district}_${stage}_${team}`;
-    if (window.KpiResultStore.targetsMap && window.KpiResultStore.targetsMap[key] !== undefined) {
+    if (window.KpiResultStore.targetsMap && window.KpiResultStore.targetsMap[key] !== undefined && window.KpiResultStore.targetsMap[key] !== '') {
       return window.KpiResultStore.targetsMap[key];
     }
-    return defaultVal;
+    if (defaultVal !== null && defaultVal !== undefined && defaultVal !== '') {
+      return defaultVal;
+    }
+    return getSummaryLevel5Target(stage, metric);
   }
 
   /**
@@ -231,6 +257,68 @@
       return window.KpiResultStore.resultsMap[key];
     }
     return defaultVal;
+  }
+
+  /**
+   * Đếm số lượng Blocked batches theo tháng (ví dụ tháng 11.2026) cho từng Process
+   */
+  function getBlockedBatchesCountForMonth(filterMonth, processKey) {
+    const masterData = window.KPI_MASTER_DATA;
+    if (!masterData || !Array.isArray(masterData.blockedBatches)) return 0;
+
+    let targetM = 11;
+    let targetY = 2026;
+    if (filterMonth) {
+      if (filterMonth.includes('-')) {
+        const parts = filterMonth.split('-');
+        targetY = parseInt(parts[0], 10);
+        targetM = parseInt(parts[1], 10);
+      } else if (filterMonth.includes('.')) {
+        const parts = filterMonth.split('.');
+        targetM = parseInt(parts[0], 10);
+        targetY = parseInt(parts[1], 10);
+      }
+    }
+    const pad = n => String(n).padStart(2, '0');
+    const dotPattern = `.${pad(targetM)}.${targetY}`;
+
+    const pKey = String(processKey || '').toUpperCase();
+
+    const matched = masterData.blockedBatches.filter(b => {
+      const d = String(b.date || '').trim();
+      if (!d.includes(dotPattern)) return false;
+
+      if (pKey === 'HARD_TEST' || pKey === 'HARD TEST' || pKey === 'HARDTEST') {
+        const area = (b.area || '').toLowerCase();
+        const gen = (b.generator || '').toLowerCase();
+        return area.includes('hard') || gen.includes('hard');
+      } else if (pKey === 'ASSEMBLY' || pKey === 'ASM') {
+        const area = (b.area || '').toLowerCase();
+        const gen = (b.generator || '').toLowerCase();
+        return area.includes('assembly') || gen.includes('assembly');
+      } else if (pKey === 'SFPD' || pKey === 'ALL') {
+        return true;
+      }
+      return true;
+    });
+
+    return matched.length;
+  }
+
+  /**
+   * Lấy dữ liệu Scrap thực tế từ Sheet KPI Data
+   */
+  function getScrapDataFromSheet() {
+    const md = window.KPI_MASTER_DATA;
+    let target = '0.0387%';
+    let actual = '0.0369%';
+    if (md) {
+      if (md.scrap && md.scrap.actual) actual = md.scrap.actual;
+      if (md.scrap && md.scrap.target) target = md.scrap.target;
+      if (md.summary && md.summary.scrapActual) actual = md.summary.scrapActual;
+      if (md.summary && md.summary.scrapTarget) target = md.summary.scrapTarget;
+    }
+    return { target, actual };
   }
 
   function parseNumericInput(val) {
@@ -352,7 +440,7 @@
   };
 
   /**
-   * Lưu Result khi người dùng tự input (dành cho Scrap, % All và Blocked batches (v1))
+   * Lưu Result khi người dùng tự input (dành cho Scrap, Blocked, Attendance...)
    */
   window.handleKpiUniversalResultChange = function(inputElem, metric, district, stage, team) {
     const raw = String(inputElem.value || '').trim();
@@ -383,18 +471,32 @@
    */
   function evaluateKpiMetricLevel(metricKey, val) {
     if (val === null || val === undefined || String(val).trim() === '' || val === '—' || val === '-') {
-      return { level: null, levelText: '—', conclusion: '—', isOk: false };
+      return { 
+        level: null, 
+        levelText: '—', 
+        levelBadgeHtml: `<span style="color: var(--text-muted); font-size: 0.75rem;">—</span>`,
+        conclusion: '—', 
+        conclusionBadgeHtml: `<span style="color: var(--text-muted); font-size: 0.75rem;">—</span>`,
+        isOk: false 
+      };
     }
     let s = String(val).replace('%', '').trim().replace(',', '.');
     const num = parseFloat(s);
     if (isNaN(num)) {
-      return { level: null, levelText: '—', conclusion: '—', isOk: false };
+      return { 
+        level: null, 
+        levelText: '—', 
+        levelBadgeHtml: `<span style="color: var(--text-muted); font-size: 0.75rem;">—</span>`,
+        conclusion: '—', 
+        conclusionBadgeHtml: `<span style="color: var(--text-muted); font-size: 0.75rem;">—</span>`,
+        isOk: false 
+      };
     }
 
     let level = 1;
     const m = String(metricKey).toLowerCase();
 
-    if (m === 'productivity') {
+    if (m === 'productivity' || m === 'prod') {
       // Level 1: < 88,05 | Level 2: >= 88,05 | Level 3: >= 90,36 | Level 4: >= 92,68 | Level 5: >= 95
       if (num >= 95) level = 5;
       else if (num >= 92.68) level = 4;
@@ -415,7 +517,7 @@
       else if (num <= 2) level = 3;
       else if (num <= 3) level = 2;
       else level = 1;
-    } else if (m === 'remarks') {
+    } else if (m === 'remarks' || m === 'rem') {
       // Level 1: < 91 | Level 2: >= 91 | Level 3: >= 94 | Level 4: >= 96 | Level 5: >= 98
       if (num >= 98) level = 5;
       else if (num >= 96) level = 4;
@@ -429,13 +531,34 @@
       else if (num <= 0.0417) level = 3;
       else if (num <= 0.0427) level = 2;
       else level = 1;
+    } else if (m === 'attendance' || m === 'att') {
+      if (num >= 95) level = 5;
+      else if (num >= 92) level = 4;
+      else if (num >= 90) level = 3;
+      else if (num >= 85) level = 2;
+      else level = 1;
     }
 
     const isOk = (level === 5);
+    const levelColors = {
+      5: { bg: 'rgba(16, 185, 129, 0.2)', text: '#34d399', border: 'rgba(16, 185, 129, 0.4)' },
+      4: { bg: 'rgba(56, 189, 248, 0.18)', text: '#38bdf8', border: 'rgba(56, 189, 248, 0.4)' },
+      3: { bg: 'rgba(245, 158, 11, 0.18)', text: '#fbbf24', border: 'rgba(245, 158, 11, 0.4)' },
+      2: { bg: 'rgba(251, 146, 60, 0.18)', text: '#fb923c', border: 'rgba(251, 146, 60, 0.4)' },
+      1: { bg: 'rgba(239, 68, 68, 0.18)', text: '#f87171', border: 'rgba(239, 68, 68, 0.4)' }
+    };
+    const c = levelColors[level] || levelColors[1];
+    const levelBadgeHtml = `<span class="badge" style="background: ${c.bg}; color: ${c.text}; border: 1px solid ${c.border}; font-size: 0.7rem; font-weight: 800; padding: 0.1rem 0.45rem; border-radius: 4px;">Level ${level}</span>`;
+    const conclusionBadgeHtml = isOk 
+      ? `<span class="badge badge-green" style="font-size: 0.725rem; font-weight: 800; padding: 0.12rem 0.55rem; border-radius: 4px; box-shadow: 0 0 8px rgba(16, 185, 129, 0.25);">🟢 OK</span>`
+      : `<span class="badge badge-red" style="font-size: 0.725rem; font-weight: 800; padding: 0.12rem 0.55rem; border-radius: 4px; box-shadow: 0 0 8px rgba(239, 68, 68, 0.25);">🔴 NG</span>`;
+
     return {
       level: level,
       levelText: `Level ${level}`,
+      levelBadgeHtml: levelBadgeHtml,
       conclusion: isOk ? 'OK' : 'NG',
+      conclusionBadgeHtml: conclusionBadgeHtml,
       isOk: isOk
     };
   }
@@ -461,8 +584,8 @@
     const evalTd = document.getElementById(`eval_${processKey}_${metricKey}`);
     const conclTd = document.getElementById(`concl_${processKey}_${metricKey}`);
     const evalRes = evaluateKpiMetricLevel(metricKey, raw);
-    if (evalTd) evalTd.textContent = evalRes.levelText;
-    if (conclTd) conclTd.textContent = evalRes.conclusion;
+    if (evalTd) evalTd.innerHTML = evalRes.levelBadgeHtml;
+    if (conclTd) conclTd.innerHTML = evalRes.conclusionBadgeHtml;
   };
 
   /**
@@ -508,7 +631,7 @@
   };
 
   /**
-   * Sinh mã HTML cho Bảng Tổng Hợp Các Chỉ Số KPI (chuẩn theo Image 1)
+   * Sinh mã HTML cho Bảng Tổng Hợp Các Chỉ Số KPI (Gọn gàng, Dark Glass tối ưu, tự động cập nhật)
    */
   function buildKpiSummaryTableHtml(allData, stageGroups, clipsActual, sfpdData) {
     const st = window.KpiResultStore;
@@ -527,12 +650,24 @@
       { key: 'scrap', name: 'Scrap, %', unit: '%', l1: '> 0,0427', l2: '<= 0,0427', l3: '<= 0,0417', l4: '<= 0,0407', l5: '<= 0,0387' }
     ];
 
+    // Dữ liệu Scrap thực tế từ Sheet KPI (Target: 0.0387%, Actual: 0.0369%)
+    const sheetScrap = getScrapDataFromSheet();
+
+    // Dữ liệu Blocked Batches theo tháng (e.g. 11.2026: Hard Test = 0, Assembly = 4)
+    let activeMonthStr = '11.2026';
+    if (st && st.fromDate && st.fromDate.length >= 7) {
+      activeMonthStr = st.fromDate.substring(0, 7);
+    }
+    const htBlockedMonthCount = getBlockedBatchesCountForMonth(activeMonthStr, 'HARD_TEST');
+    const asmBlockedMonthCount = getBlockedBatchesCountForMonth(activeMonthStr, 'ASSEMBLY');
+
     // 1. Hard Test Live Values
     const htTotalRow = allData.find(it => (it.district || '').trim().toLowerCase() === 'hard test' && ((it.stage || '').trim().toLowerCase() === 'total' || !(it.stage || '').trim()) && !(it.team || '').trim() && it.result);
     let htProdLive = (htTotalRow && htTotalRow.result) ? htTotalRow.result : '111,05%';
     
-    const htClipLive = (clipsActual && clipsActual.str && clipsActual.str !== '-') ? clipsActual.str : '98,5%';
-    const htBlockedLive = getMetricResultInput('blocked', 'Hard Test', 'HardTest', 'Ave', '0');
+    const htClipLive = (clipsActual && clipsActual.str && clipsActual.str !== '-') ? clipsActual.str : '47,7%';
+    const htBlockedInput = getMetricResultInput('blocked', 'Hard Test', 'HardTest', 'Ave', '');
+    const htBlockedLive = htBlockedInput !== '' ? htBlockedInput : String(htBlockedMonthCount);
     
     let htRemLive = '98%';
     const htGroup = stageGroups.find(g => (g.stage || '').toLowerCase() === 'hardtest');
@@ -544,16 +679,17 @@
       }
     }
     const htScrapInput = getMetricResultInput('scrap', 'Hard Test', 'HardTest', 'Ave', '');
-    const htScrapLive = htScrapInput || (st.customScrapData && st.customScrapData.actual ? st.customScrapData.actual : '');
+    const htScrapLive = htScrapInput || (st.customScrapData && st.customScrapData.actual ? st.customScrapData.actual : sheetScrap.actual);
 
     // 2. Assembly Live Values
     const asmTotalRow = allData.find(it => (it.district || '').trim().toLowerCase() === 'assembly' && ((it.stage || '').trim().toLowerCase() === 'total' || !(it.stage || '').trim()) && !(it.team || '').trim() && it.result);
     let asmProdLive = (asmTotalRow && asmTotalRow.result) ? asmTotalRow.result : '96,57%';
     
-    const asmClipLive = (clipsActual && clipsActual.str && clipsActual.str !== '-') ? clipsActual.str : '98,5%';
-    const asmBlockedLive = getMetricResultInput('blocked', 'Assembly', 'Assembly', 'Ave', '0');
+    const asmClipLive = (clipsActual && clipsActual.str && clipsActual.str !== '-') ? clipsActual.str : '47,7%';
+    const asmBlockedInput = getMetricResultInput('blocked', 'Assembly', 'Assembly', 'Ave', '');
+    const asmBlockedLive = asmBlockedInput !== '' ? asmBlockedInput : String(asmBlockedMonthCount);
     
-    let asmRemLive = '98%';
+    let asmRemLive = '94,36%';
     const asmGroup = stageGroups.find(g => (g.stage || '').toLowerCase() === 'assembly');
     if (asmGroup) {
       const valid = asmGroup.teams.map(t => parsePercentVal(getRemarksResultForTeam(t.team))).filter(v => v !== null);
@@ -563,7 +699,7 @@
       }
     }
     const asmScrapInput = getMetricResultInput('scrap', 'Assembly', 'Assembly', 'Ave', '');
-    const asmScrapLive = asmScrapInput || (st.customScrapData && st.customScrapData.actual ? st.customScrapData.actual : '');
+    const asmScrapLive = asmScrapInput || (st.customScrapData && st.customScrapData.actual ? st.customScrapData.actual : sheetScrap.actual);
 
     const liveDataMap = {
       'HARD_TEST': {
@@ -617,15 +753,16 @@
         
         // Month cell (chỉ ở hàng đầu tiên của bảng)
         if (globalRowIdx === 0) {
-          rowContent += `<td rowspan="10" class="td-cyan" style="font-size: 0.85rem; letter-spacing: 0.5px; vertical-align: middle;">${monthText}</td>`;
+          rowContent += `<td rowspan="10" class="td-month" style="font-size: 0.775rem; letter-spacing: 0.3px; vertical-align: middle;">${monthText}</td>`;
         }
 
         // Team cell
-        rowContent += `<td class="td-cyan" style="font-size: 0.8rem; vertical-align: middle;">${teamText}</td>`;
+        rowContent += `<td class="td-team" style="font-size: 0.75rem; vertical-align: middle;">${teamText}</td>`;
 
         // Process cell (chỉ ở hàng đầu của mỗi Process)
         if (indIdx === 0) {
-          rowContent += `<td rowspan="5" class="td-cyan" style="font-size: 0.85rem; letter-spacing: 0.5px; vertical-align: middle;">${proc.label}</td>`;
+          const procClass = proc.key === 'HARD_TEST' ? 'td-proc-ht' : 'td-proc-asm';
+          rowContent += `<td rowspan="5" class="${procClass}" style="font-size: 0.775rem; letter-spacing: 0.3px; vertical-align: middle;">${proc.label}</td>`;
         }
 
         // Indicators & Unit & Levels
@@ -636,7 +773,7 @@
           <td class="td-level">${indConfig.l2}</td>
           <td class="td-level">${indConfig.l3}</td>
           <td class="td-level">${indConfig.l4}</td>
-          <td class="td-level">${indConfig.l5}</td>
+          <td class="td-level-5">${indConfig.l5}</td>
           <td class="td-yellow">
             <input type="text" class="kpi-summary-result-input font-mono" 
                    data-process="${proc.key}" data-metric="${baseInd.key}" 
@@ -644,9 +781,9 @@
                    onchange="handleKpiSummaryResultChange(this, '${proc.key}', '${baseInd.key}')" 
                    title="Nhập kết quả để tự động đánh giá Level và Kết Luận (click vào để sửa)">
           </td>
-          <td class="td-cyan" id="eval_${proc.key}_${baseInd.key}">${evalObj.levelText}</td>
-          <td class="td-magenta" id="concl_${proc.key}_${baseInd.key}" style="font-weight: 900; font-size: 0.85rem; letter-spacing: 0.5px;">
-            ${evalObj.conclusion}
+          <td class="td-eval" id="eval_${proc.key}_${baseInd.key}">${evalObj.levelBadgeHtml}</td>
+          <td class="td-concl" id="concl_${proc.key}_${baseInd.key}">
+            ${evalObj.conclusionBadgeHtml}
           </td>
         `;
 
@@ -656,7 +793,7 @@
     });
 
     return `
-      <!-- KHỐI TỔNG HỢP CÁC CHỈ SỐ KPI (THEO ĐÚNG CONCEPT ẢNH SỐ 1) -->
+      <!-- KHỐI TỔNG HỢP CÁC CHỈ SỐ KPI (THEO ĐÚNG CONCEPT ẢNH SỐ 1 - DARK GLASS TỐI ƯU) -->
       <div class="kpi-summary-container">
         
         <!-- Header Bar của Bảng Tổng Hợp KPI -->
@@ -666,16 +803,16 @@
             <h4 style="font-size: 0.95rem; font-weight: 900; color: #f8fafc; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
               TỔNG HỢP CÁC CHỈ SỐ KPI
             </h4>
-            <span class="badge" style="background: rgba(0, 229, 255, 0.15); color: #00e5ff; border: 1px solid rgba(0, 229, 255, 0.4); font-size: 0.675rem; font-weight: 800; padding: 0.1rem 0.45rem;">
+            <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); font-size: 0.675rem; font-weight: 800; padding: 0.1rem 0.45rem;">
               LEVEL 1 - 5 EVALUATION
             </span>
             <span style="font-size: 0.7rem; color: #94a3b8; font-weight: 600;">
-              (Đạt Level 5 ➔ <strong>OK</strong>, còn lại ➔ <strong>NG</strong>)
+              (Đạt Level 5 ➔ <strong style="color: #34d399;">OK</strong>, còn lại ➔ <strong style="color: #f87171;">NG</strong>)
             </span>
           </div>
 
           <div style="display: flex; align-items: center; gap: 0.4rem;">
-            <button type="button" class="btn btn-sm btn-outline" onclick="handleCopyKpiSummaryTable()" style="font-size: 0.725rem; font-weight: 700; padding: 0.25rem 0.6rem; color: #00e5ff; border-color: rgba(0, 229, 255, 0.4);" title="Copy bảng Tổng Hợp KPI vào clipboard (dán Google Sheets / Excel)">
+            <button type="button" class="btn btn-sm btn-outline" onclick="handleCopyKpiSummaryTable()" style="font-size: 0.725rem; font-weight: 700; padding: 0.25rem 0.6rem; color: #38bdf8; border-color: rgba(56, 189, 248, 0.4);" title="Copy bảng Tổng Hợp KPI vào clipboard (dán Google Sheets / Excel)">
               <span>📋 Copy Bảng KPI</span>
             </button>
             <button type="button" class="btn btn-sm btn-outline" onclick="handleResetKpiSummaryOverrides()" style="font-size: 0.725rem; font-weight: 700; padding: 0.25rem 0.6rem; color: #94a3b8; border-color: rgba(148, 163, 184, 0.3);" title="Khôi phục lại các giá trị Result tự động từ dữ liệu cập nhật">
@@ -684,22 +821,22 @@
           </div>
         </div>
 
-        <!-- Bảng 13 Cột Chuẩn Image 1 -->
+        <!-- Bảng 13 Cột Chuẩn Image 1 - Giao diện Dark Glass tinh tế -->
         <div class="kpi-summary-table-wrap">
           <table class="kpi-summary-table" id="kpiSummaryLevelTable">
             <thead>
               <tr>
-                <th class="th-cyan" style="width: 85px;">Month</th>
+                <th class="th-cyan" style="width: 80px;">Month</th>
                 <th class="th-cyan" style="width: 65px;">Team</th>
-                <th class="th-cyan" style="width: 105px;">Process</th>
+                <th class="th-cyan" style="width: 100px;">Process</th>
                 <th class="th-cyan" style="min-width: 170px; text-align: left; padding-left: 0.75rem;">Indicators</th>
                 <th class="th-cyan" style="width: 45px;"><></th>
                 <th class="th-cyan" style="width: 80px;">Level 1</th>
                 <th class="th-cyan" style="width: 80px;">Level 2</th>
                 <th class="th-cyan" style="width: 80px;">Level 3</th>
                 <th class="th-cyan" style="width: 80px;">Level 4</th>
-                <th class="th-cyan" style="width: 80px;">Level 5</th>
-                <th class="th-yellow" style="width: 105px;">Result</th>
+                <th class="th-level-5" style="width: 85px;">Level 5 (Goal)</th>
+                <th class="th-yellow" style="width: 100px;">Result</th>
                 <th class="th-cyan" style="width: 95px;">Đánh Giá</th>
                 <th class="th-magenta" style="width: 85px;">Kết Luận</th>
               </tr>
@@ -824,7 +961,11 @@
     } else if (metric === 'clip') {
       window.KpiResultStore.evalFilter = val === 'PASS' ? 'CLIP_PASS' : 'CLIP_FAIL';
     } else {
-      window.KpiResultStore.evalFilter = val === 'PASS' ? 'PROD_PASS' : 'PROD_FAIL';
+      if (val === 'WARN') {
+        window.KpiResultStore.evalFilter = 'PROD_WARN';
+      } else {
+        window.KpiResultStore.evalFilter = val === 'PASS' ? 'PROD_PASS' : 'PROD_FAIL';
+      }
     }
     window.renderKpiResultView();
   };
@@ -886,17 +1027,21 @@
       const prodTarget = getMetricTarget('prod', item.district, item.stage, item.team, 95);
       const prodNum = parsePercentVal(item.result);
       const hasProd = prodNum !== null;
+      const isProdWarn = hasProd && (prodNum > 100);
       const isProdPass = hasProd && (prodNum >= prodTarget);
       const isProdFail = hasProd && (prodNum < prodTarget);
 
       // Đánh giá Remarks của Team
-      const remTarget = getMetricTarget('rem', item.district, item.stage, item.team, 95);
+      const remTarget = getMetricTarget('rem', item.district, item.stage, item.team, 98);
       const remStr = getRemarksResultForTeam(item.team);
       const remNum = parsePercentVal(remStr);
       const hasRem = remNum !== null;
       const isRemPass = hasRem && (remNum >= remTarget);
       const isRemFail = hasRem && (remNum < remTarget);
 
+      if (activeEvalFilter === 'PROD_WARN' || activeEvalFilter === 'WARN') {
+        return isProdWarn;
+      }
       if (activeEvalFilter === 'PROD_PASS' || activeEvalFilter === 'PASS') {
         return isProdPass;
       }
@@ -931,7 +1076,7 @@
 
     // 6. Giá trị dòng đầu tiên: SFPD | SFPD | ALL
     const clipsActual = getClipsAllActualFromClipsTab();
-    const clipTarget = getMetricTarget('clip', 'SFPD', 'SFPD', 'ALL', 98);
+    const clipTarget = getMetricTarget('clip', 'SFPD', 'SFPD', 'ALL', 95);
 
     const hasLiveProd = hasValidWorkcellTeams(st.customProductivityData) || (window.KPI_MASTER_DATA && hasValidWorkcellTeams(window.KPI_MASTER_DATA.productivity));
     const totalProdRow = allData.find(it => (it.district || '').trim().toLowerCase() === 'total' && !(it.stage || '').trim() && !(it.team || '').trim() && it.result);
@@ -943,12 +1088,18 @@
     const liveRemStr = (hasLiveRemarks && totalRemRow && totalRemRow.resultAve) ? String(totalRemRow.resultAve).replace(/\s+/g, '') : '98,45%';
     const liveRemVal = parsePercentVal(liveRemStr);
 
-    const sfpdScrapTarget = getMetricTarget('scrap', 'SFPD', 'SFPD', 'ALL', '');
+    // MỚI: Attendance cho SFPD
+    const sfpdAttTarget = getMetricTarget('att', 'SFPD', 'SFPD', 'ALL', 95);
+    const sfpdAttResultInput = getMetricResultInput('att', 'SFPD', 'SFPD', 'ALL', '');
+    const sfpdAttTargetNum = parseNumericInput(sfpdAttTarget);
+    const sfpdAttResultNum = parseNumericInput(sfpdAttResultInput);
+
+    const sfpdScrapTarget = getMetricTarget('scrap', 'SFPD', 'SFPD', 'ALL', 0.0387);
     const sfpdScrapResultInput = getMetricResultInput('scrap', 'SFPD', 'SFPD', 'ALL', '');
     const sfpdScrapTargetNum = parseNumericInput(sfpdScrapTarget);
     const sfpdScrapResultNum = parseNumericInput(sfpdScrapResultInput);
 
-    const sfpdBlockedTarget = getMetricTarget('blocked', 'SFPD', 'SFPD', 'ALL', '');
+    const sfpdBlockedTarget = getMetricTarget('blocked', 'SFPD', 'SFPD', 'ALL', 0);
     const sfpdBlockedResultInput = getMetricResultInput('blocked', 'SFPD', 'SFPD', 'ALL', '');
     const sfpdBlockedTargetNum = parseNumericInput(sfpdBlockedTarget);
     const sfpdBlockedResultNum = parseNumericInput(sfpdBlockedResultInput);
@@ -962,20 +1113,25 @@
       prodResult: liveProdStr,
       prodVal: liveProdVal !== null ? liveProdVal : 116.94,
       // 2. Remarks
-      remTarget: getMetricTarget('rem', 'SFPD', 'SFPD', 'ALL', 95),
+      remTarget: getMetricTarget('rem', 'SFPD', 'SFPD', 'ALL', 98),
       remResult: liveRemStr,
       remVal: liveRemVal !== null ? liveRemVal : 98.45,
-      // 3. Scrap (Tự input Target và Result)
+      // 3. Attendance (MỚI)
+      attTarget: sfpdAttTarget,
+      attResultInput: sfpdAttResultInput,
+      attTargetNum: sfpdAttTargetNum,
+      attVal: sfpdAttResultNum,
+      // 4. Scrap (Tự động lấy Target Level 5 = 0.0387%)
       scrapTarget: sfpdScrapTarget,
       scrapResultInput: sfpdScrapResultInput,
       scrapTargetNum: sfpdScrapTargetNum,
       scrapVal: sfpdScrapResultNum,
-      // 4. Blocked batches (Tự input Target và Result)
+      // 5. Blocked batches (Tự động lấy Target Level 5 = 0 pcs)
       blockedTarget: sfpdBlockedTarget,
       blockedResultInput: sfpdBlockedResultInput,
       blockedTargetNum: sfpdBlockedTargetNum,
       blockedVal: sfpdBlockedResultNum,
-      // 5. Clip (Lấy kết quả thực tế từ Tab Tra Cứu Clips All)
+      // 6. Clip (Lấy kết quả thực tế từ Tab Tra Cứu Clips All)
       clipTarget: clipTarget,
       clipResult: clipsActual.str,
       clipVal: clipsActual.val,
@@ -988,6 +1144,8 @@
 
     const sfpdProdPass = sfpdData.prodVal >= sfpdData.prodTarget;
     const sfpdRemPass = sfpdData.remVal >= sfpdData.remTarget;
+    const sfpdHasAttEval = sfpdData.attVal !== null && sfpdData.attTargetNum !== null;
+    const sfpdAttPass = sfpdHasAttEval ? (sfpdData.attVal >= sfpdData.attTargetNum) : null;
     const sfpdHasScrapEval = sfpdData.scrapVal !== null && sfpdData.scrapTargetNum !== null;
     const sfpdScrapPass = sfpdHasScrapEval ? (sfpdData.scrapVal <= sfpdData.scrapTargetNum) : null;
     const sfpdHasBlockedEval = sfpdData.blockedVal !== null && sfpdData.blockedTargetNum !== null;
@@ -1131,7 +1289,7 @@
             <table class="data-table" id="kpiMasterTableMain" style="width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: left;">
               <thead style="position: sticky; top: 0; z-index: 3; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(8px);">
                 
-                <!-- TẦNG 1: SUPER HEADERS (5 KHỐI CHỈ SỐ) -->
+                <!-- TẦNG 1: SUPER HEADERS (6 KHỐI CHỈ SỐ) -->
                 <tr style="border-bottom: 1px solid var(--border-glass);">
                   <th colspan="3" style="padding: 0.4rem 0.6rem; font-size: 0.725rem; font-weight: 800; color: #cbd5e1; text-transform: uppercase; background: rgba(15, 23, 42, 0.95);">
                     THÔNG TIN ĐƠN VỊ
@@ -1141,6 +1299,9 @@
                   </th>
                   <th colspan="3" style="text-align: center; padding: 0.4rem 0.5rem; font-size: 0.75rem; font-weight: 800; color: #c084fc; text-transform: uppercase; background: rgba(88, 28, 135, 0.3); border-left: 2px solid rgba(168, 85, 247, 0.4);">
                     Inspection remarks, %
+                  </th>
+                  <th colspan="3" style="text-align: center; padding: 0.4rem 0.5rem; font-size: 0.75rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; background: rgba(14, 116, 144, 0.3); border-left: 2px solid rgba(6, 182, 212, 0.4);">
+                    Attendance, %
                   </th>
                   <th colspan="3" style="text-align: center; padding: 0.4rem 0.5rem; font-size: 0.75rem; font-weight: 800; color: #fbbf24; text-transform: uppercase; background: rgba(180, 83, 9, 0.3); border-left: 2px solid rgba(245, 158, 11, 0.4);">
                     Scrap, % All
@@ -1167,10 +1328,11 @@
                     <div style="display: flex; flex-direction: column; align-items: center; gap: 0.15rem;">
                       <span style="color: #cbd5e1; font-size: 0.65rem; text-transform: uppercase; font-weight: 700;">Đánh Giá</span>
                       <select id="kpiProdEvalFilterSelect" onchange="handleKpiEvalFilter(this.value, 'prod')" 
-                              style="background: rgba(15, 23, 42, 0.95); color: ${(activeEvalFilter === 'PROD_PASS' || activeEvalFilter === 'PASS') ? '#34d399' : ((activeEvalFilter === 'PROD_FAIL' || activeEvalFilter === 'FAIL') ? '#f87171' : '#cbd5e1')}; border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 4px; font-size: 0.65rem; font-weight: 700; padding: 0.1rem 0.2rem; outline: none; cursor: pointer;"
-                              title="Lọc các team Đạt hoặc Chưa đạt theo Productivity">
+                              style="background: rgba(15, 23, 42, 0.95); color: ${(activeEvalFilter === 'PROD_WARN' || activeEvalFilter === 'WARN') ? '#facc15' : ((activeEvalFilter === 'PROD_PASS' || activeEvalFilter === 'PASS') ? '#34d399' : ((activeEvalFilter === 'PROD_FAIL' || activeEvalFilter === 'FAIL') ? '#f87171' : '#cbd5e1'))}; border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 4px; font-size: 0.65rem; font-weight: 700; padding: 0.1rem 0.2rem; outline: none; cursor: pointer;"
+                              title="Lọc các team Đạt, Cảnh báo (>100%) hoặc Chưa đạt theo Productivity">
                         <option value="ALL" ${activeEvalFilter === 'ALL' ? 'selected' : ''} style="background: #0f172a; color: #fff;">Tất cả ▾</option>
                         <option value="PASS" ${(activeEvalFilter === 'PROD_PASS' || activeEvalFilter === 'PASS') ? 'selected' : ''} style="background: #0f172a; color: #34d399;">🟢 Đạt</option>
+                        <option value="WARN" ${(activeEvalFilter === 'PROD_WARN' || activeEvalFilter === 'WARN') ? 'selected' : ''} style="background: #0f172a; color: #facc15;">⚠️ > 100%</option>
                         <option value="FAIL" ${(activeEvalFilter === 'PROD_FAIL' || activeEvalFilter === 'FAIL') ? 'selected' : ''} style="background: #0f172a; color: #f87171;">🔴 Chưa đạt</option>
                       </select>
                     </div>
@@ -1192,17 +1354,22 @@
                     </div>
                   </th>
 
-                  <!-- 3. Scrap, % All -->
+                  <!-- 3. Attendance, % (MỚI) -->
+                  <th style="padding: 0.35rem 0.45rem; color: #fbbf24; font-size: 0.675rem; text-transform: uppercase; text-align: right; width: 75px; border-left: 2px solid rgba(6, 182, 212, 0.4);">Target (%)</th>
+                  <th style="padding: 0.35rem 0.45rem; color: #38bdf8; font-size: 0.675rem; text-transform: uppercase; text-align: right; width: 75px;">Result Ave</th>
+                  <th style="padding: 0.35rem 0.45rem; color: #cbd5e1; font-size: 0.675rem; text-transform: uppercase; text-align: center; width: 70px;">Đánh Giá</th>
+
+                  <!-- 4. Scrap, % All -->
                   <th style="padding: 0.35rem 0.45rem; color: #fbbf24; font-size: 0.675rem; text-transform: uppercase; text-align: right; width: 75px; border-left: 2px solid rgba(245, 158, 11, 0.4);">Target (%)</th>
                   <th style="padding: 0.35rem 0.45rem; color: #fbbf24; font-size: 0.675rem; text-transform: uppercase; text-align: right; width: 75px;">Result Ave</th>
                   <th style="padding: 0.35rem 0.45rem; color: #cbd5e1; font-size: 0.675rem; text-transform: uppercase; text-align: center; width: 70px;">Đánh Giá</th>
 
-                  <!-- 4. Blocked batches (v1) -->
+                  <!-- 5. Blocked batches (v1) -->
                   <th style="padding: 0.35rem 0.45rem; color: #fbbf24; font-size: 0.675rem; text-transform: uppercase; text-align: right; width: 75px; border-left: 2px solid rgba(244, 63, 94, 0.4);">Target (%)</th>
                   <th style="padding: 0.35rem 0.45rem; color: #f87171; font-size: 0.675rem; text-transform: uppercase; text-align: right; width: 75px;">Result Ave</th>
                   <th style="padding: 0.35rem 0.45rem; color: #cbd5e1; font-size: 0.675rem; text-transform: uppercase; text-align: center; width: 70px;">Đánh Giá</th>
 
-                  <!-- 5. Clip (all plant) -->
+                  <!-- 6. Clip (all plant) -->
                   <th style="padding: 0.35rem 0.45rem; color: #fbbf24; font-size: 0.675rem; text-transform: uppercase; text-align: right; width: 75px; border-left: 2px solid rgba(16, 185, 129, 0.4);">Target (%)</th>
                   <th style="padding: 0.35rem 0.45rem; color: #34d399; font-size: 0.675rem; text-transform: uppercase; text-align: right; width: 75px;" title="Actual: Kết quả thực tế lấy trực tiếp từ Tab Tra Cứu Clips All">Actual</th>
                   <th style="padding: 0.25rem 0.35rem; text-align: center; width: 85px;">
@@ -1230,6 +1397,8 @@
                       data-is-sfpd="true"
                       data-prod-val="${sfpdData.prodVal}"
                       data-rem-val="${sfpdData.remVal}"
+                      data-att-val="${sfpdData.attVal !== null ? sfpdData.attVal : ''}"
+                      data-att-target="${sfpdData.attTargetNum !== null ? sfpdData.attTargetNum : ''}"
                       data-scrap-val="${sfpdData.scrapVal !== null ? sfpdData.scrapVal : ''}"
                       data-scrap-target="${sfpdData.scrapTargetNum !== null ? sfpdData.scrapTargetNum : ''}"
                       data-blocked-val="${sfpdData.blockedVal !== null ? sfpdData.blockedVal : ''}"
@@ -1257,9 +1426,11 @@
                       <span style="color: #ffffff;">${sfpdData.prodResult}</span>
                     </td>
                     <td style="padding: 0.35rem 0.45rem; text-align: center; white-space: nowrap;">
-                      ${sfpdProdPass ?
-                        `<span class="badge badge-green kpi-eval-badge-prod">🟢 Đạt</span>` :
-                        `<span class="badge badge-red kpi-eval-badge-prod">🔴 Chưa đạt</span>`
+                      ${sfpdData.prodVal > 100 ?
+                        `<span class="badge badge-amber kpi-eval-badge-prod" style="background: rgba(234, 179, 8, 0.22); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.5); font-weight: 800;" title="Năng suất SFPD vượt 100% (${sfpdData.prodVal}%) - Cảnh báo kiểm tra">⚠️ > 100%</span>` :
+                        (sfpdProdPass ?
+                          `<span class="badge badge-green kpi-eval-badge-prod">🟢 Đạt</span>` :
+                          `<span class="badge badge-red kpi-eval-badge-prod">🔴 Chưa đạt</span>`)
                       }
                     </td>
 
@@ -1281,7 +1452,32 @@
                       }
                     </td>
 
-                    <!-- 3. Scrap, % All (Cho phép tự input cả Target và Result) -->
+                    <!-- 3. Attendance, % (MỚI - Tự input Result sau) -->
+                    <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; border-left: 2px solid rgba(34, 197, 94, 0.6);">
+                      <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
+                        <input type="number" step="0.1" value="${sfpdData.attTarget}" class="font-mono kpi-target-input-att"
+                               oninput="handleKpiUniversalTargetChange(this, 'att', 'SFPD', 'SFPD', 'ALL')"
+                               style="width: 44px; padding: 0.15rem 0.25rem; font-size: 0.7rem; font-weight: 800; color: #fbbf24; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(245, 158, 11, 0.5); border-radius: 3px; text-align: right; outline: none;">
+                      </div>
+                    </td>
+                    <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap;">
+                      <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
+                        <input type="number" step="any" value="${sfpdData.attResultInput}" class="font-mono kpi-result-input-att" placeholder="-"
+                               oninput="handleKpiUniversalResultChange(this, 'att', 'SFPD', 'SFPD', 'ALL')"
+                               title="Nhập kết quả Attendance (%) thực tế cho toàn nhà máy"
+                               style="width: 50px; padding: 0.15rem 0.25rem; font-size: 0.725rem; font-weight: 800; color: ${sfpdAttPass === true ? '#34d399' : (sfpdAttPass === false ? '#f87171' : '#ffffff')}; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(6, 182, 212, 0.45); border-radius: 3px; text-align: right; outline: none;">
+                      </div>
+                    </td>
+                    <td style="padding: 0.35rem 0.45rem; text-align: center; white-space: nowrap;">
+                      ${sfpdAttPass === true ?
+                        `<span class="badge badge-green kpi-eval-badge-att">🟢 Đạt</span>` :
+                        (sfpdAttPass === false ?
+                          `<span class="badge badge-red kpi-eval-badge-att">🔴 Chưa đạt</span>` :
+                          `<span class="kpi-eval-badge-att" style="color: var(--text-muted); font-size: 0.675rem;">-</span>`)
+                      }
+                    </td>
+
+                    <!-- 4. Scrap, % All (Tự động lấy Target Level 5 = 0.0387%) -->
                     <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; border-left: 2px solid rgba(34, 197, 94, 0.6);">
                       <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
                         <input type="number" step="any" value="${sfpdData.scrapTarget}" class="font-mono kpi-target-input-scrap" placeholder="-"
@@ -1306,7 +1502,7 @@
                       }
                     </td>
 
-                    <!-- 4. Blocked batches (v1) (Cho phép tự input cả Target và Result) -->
+                    <!-- 5. Blocked batches (v1) (Tự động lấy Target Level 5 = 0 pcs) -->
                     <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; border-left: 2px solid rgba(34, 197, 94, 0.6);">
                       <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
                         <input type="number" step="1" value="${sfpdData.blockedTarget}" class="font-mono kpi-target-input-blocked" placeholder="-"
@@ -1331,7 +1527,7 @@
                       }
                     </td>
 
-                    <!-- 5. Clip (all plant) -->
+                    <!-- 6. Clip (all plant) -->
                     <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; border-left: 2px solid rgba(34, 197, 94, 0.6);">
                       <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
                         <input type="number" step="0.1" value="${sfpdData.clipTarget}" class="font-mono"
@@ -1360,7 +1556,7 @@
                 <!-- ======================================================== -->
                 ${stageGroups.length === 0 ? `
                   <tr>
-                    <td colspan="18" style="padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; font-style: italic;">
+                    <td colspan="21" style="padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; font-style: italic;">
                       Không có Team nào phù hợp với bộ lọc hiện tại.
                     </td>
                   </tr>
@@ -1391,12 +1587,26 @@
                     aveRemStr = aveRemNum.toFixed(2).replace('.', ',') + '%';
                   }
 
-                  // Targets cho hàng Ave
+                  // 3. Tính toán Ave cho Attendance (MỚI)
+                  const aveAttTarget = getMetricTarget('att', group.district, group.stage, 'Ave', 95);
+                  const validAttList = group.teams
+                    .map(it => parseNumericInput(getMetricResultInput('att', it.district, it.stage, it.team, '')))
+                    .filter(v => v !== null);
+                  const autoAveAtt = validAttList.length > 0
+                    ? Math.round((validAttList.reduce((a, b) => a + b, 0) / validAttList.length) * 100) / 100
+                    : '';
+                  const aveAttResultManual = getMetricResultInput('att', group.district, group.stage, 'Ave', '');
+                  const aveAttResultInput = String(aveAttResultManual).trim() !== '' ? aveAttResultManual : (autoAveAtt !== '' ? String(autoAveAtt) : '');
+                  const aveAttTargetNum = parseNumericInput(aveAttTarget);
+                  const aveAttResultNum = parseNumericInput(aveAttResultInput);
+                  const aveAttPass = (aveAttTargetNum !== null && aveAttResultNum !== null) ? (aveAttResultNum >= aveAttTargetNum) : null;
+
+                  // Targets cho hàng Ave (Tự động lấy Level 5)
                   const aveProdTarget = getMetricTarget('prod', group.district, group.stage, 'Ave', 95);
-                  const aveRemTarget = getMetricTarget('rem', group.district, group.stage, 'Ave', 95);
-                  const aveScrapTarget = getMetricTarget('scrap', group.district, group.stage, 'Ave', '');
-                  const aveBlockedTarget = getMetricTarget('blocked', group.district, group.stage, 'Ave', '');
-                  const aveClipTarget = getMetricTarget('clip', group.district, group.stage, 'Ave', 98);
+                  const aveRemTarget = getMetricTarget('rem', group.district, group.stage, 'Ave', 98);
+                  const aveScrapTarget = getMetricTarget('scrap', group.district, group.stage, 'Ave', 0.0387);
+                  const aveBlockedTarget = getMetricTarget('blocked', group.district, group.stage, 'Ave', 0);
+                  const aveClipTarget = getMetricTarget('clip', group.district, group.stage, 'Ave', 95);
 
                   // Giá trị nhập tay hoặc tự trung bình từ các team cho Scrap & Blocked ở hàng Ave
                   const validScrapList = group.teams
@@ -1426,9 +1636,13 @@
                   // Đánh giá hàng Ave Productivity & Remarks
                   let aveProdBadge = `<span style="color: var(--text-muted); font-size: 0.675rem;">-</span>`;
                   if (aveProdNum !== null) {
-                    aveProdBadge = (aveProdNum >= aveProdTarget) ? 
-                      `<span class="badge badge-green kpi-eval-badge-prod">🟢 Đạt</span>` : 
-                      `<span class="badge badge-red kpi-eval-badge-prod">🔴 Chưa đạt</span>`;
+                    if (aveProdNum > 100) {
+                      aveProdBadge = `<span class="badge badge-amber kpi-eval-badge-prod" style="background: rgba(234, 179, 8, 0.22); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.5); font-weight: 800;" title="Năng suất trung bình vượt 100% (${aveProdNum}%) - Cảnh báo kiểm tra">⚠️ > 100%</span>`;
+                    } else if (aveProdNum >= aveProdTarget) {
+                      aveProdBadge = `<span class="badge badge-green kpi-eval-badge-prod">🟢 Đạt</span>`;
+                    } else {
+                      aveProdBadge = `<span class="badge badge-red kpi-eval-badge-prod">🔴 Chưa đạt</span>`;
+                    }
                   }
 
                   let aveRemBadge = `<span style="color: var(--text-muted); font-size: 0.675rem;">-</span>`;
@@ -1446,16 +1660,20 @@
 
                     let prodBadge = `<span style="color: var(--text-muted); font-size: 0.675rem;">-</span>`;
                     if (hasProd) {
-                      prodBadge = (prodNum >= prodTarget) ? 
-                        `<span class="badge badge-green kpi-eval-badge-prod">🟢 Đạt</span>` : 
-                        `<span class="badge badge-red kpi-eval-badge-prod">🔴 Chưa đạt</span>`;
+                      if (prodNum > 100) {
+                        prodBadge = `<span class="badge badge-amber kpi-eval-badge-prod" style="background: rgba(234, 179, 8, 0.22); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.5); font-weight: 800;" title="Năng suất line vượt 100% (${prodNum}%) - Cảnh báo kiểm tra">⚠️ > 100%</span>`;
+                      } else if (prodNum >= prodTarget) {
+                        prodBadge = `<span class="badge badge-green kpi-eval-badge-prod">🟢 Đạt</span>`;
+                      } else {
+                        prodBadge = `<span class="badge badge-red kpi-eval-badge-prod">🔴 Chưa đạt</span>`;
+                      }
                     }
 
                     // Remarks
                     const remStr = getRemarksResultForTeam(item.team);
                     const remNum = parsePercentVal(remStr);
                     const hasRem = remNum !== null;
-                    const remTarget = getMetricTarget('rem', item.district, item.stage, item.team, 95);
+                    const remTarget = getMetricTarget('rem', item.district, item.stage, item.team, 98);
 
                     let remBadge = `<span style="color: var(--text-muted); font-size: 0.675rem;">-</span>`;
                     if (hasRem) {
@@ -1464,20 +1682,27 @@
                         `<span class="badge badge-red kpi-eval-badge-rem">🔴 Chưa đạt</span>`;
                     }
 
-                    // Scrap, Blocked (Tự input Target & Result), Clip (Tự input Target)
-                    const scrapTarget = getMetricTarget('scrap', item.district, item.stage, item.team, '');
+                    // Attendance (MỚI - Tự input data sau)
+                    const attTarget = getMetricTarget('att', item.district, item.stage, item.team, 95);
+                    const attResultInput = getMetricResultInput('att', item.district, item.stage, item.team, '');
+                    const attTargetNum = parseNumericInput(attTarget);
+                    const attResultNum = parseNumericInput(attResultInput);
+                    const attPass = (attTargetNum !== null && attResultNum !== null) ? (attResultNum >= attTargetNum) : null;
+
+                    // Scrap, Blocked, Clip (Tự động lấy Target Level 5)
+                    const scrapTarget = getMetricTarget('scrap', item.district, item.stage, item.team, 0.0387);
                     const scrapResultInput = getMetricResultInput('scrap', item.district, item.stage, item.team, '');
                     const scrapTargetNum = parseNumericInput(scrapTarget);
                     const scrapResultNum = parseNumericInput(scrapResultInput);
                     const scrapPass = (scrapTargetNum !== null && scrapResultNum !== null) ? (scrapResultNum <= scrapTargetNum) : null;
 
-                    const blockedTarget = getMetricTarget('blocked', item.district, item.stage, item.team, '');
+                    const blockedTarget = getMetricTarget('blocked', item.district, item.stage, item.team, 0);
                     const blockedResultInput = getMetricResultInput('blocked', item.district, item.stage, item.team, '');
                     const blockedTargetNum = parseNumericInput(blockedTarget);
                     const blockedResultNum = parseNumericInput(blockedResultInput);
                     const blockedPass = (blockedTargetNum !== null && blockedResultNum !== null) ? (blockedResultNum <= blockedTargetNum) : null;
 
-                    const clipTarget = getMetricTarget('clip', item.district, item.stage, item.team, '');
+                    const clipTarget = getMetricTarget('clip', item.district, item.stage, item.team, 95);
 
                     const rowBg = idx % 2 === 0 ? 'background: rgba(255, 255, 255, 0.015);' : '';
                     const teamColor = item.team.toUpperCase().includes('WORKCELL A') ? '#60a5fa' : '#c084fc';
@@ -1489,6 +1714,8 @@
                           data-district="${item.district}"
                           data-prod-val="${prodNum !== null ? prodNum : ''}"
                           data-rem-val="${remNum !== null ? remNum : ''}"
+                          data-att-val="${attResultNum !== null ? attResultNum : ''}"
+                          data-att-target="${attTargetNum !== null ? attTargetNum : ''}"
                           data-scrap-val="${scrapResultNum !== null ? scrapResultNum : ''}"
                           data-scrap-target="${scrapTargetNum !== null ? scrapTargetNum : ''}"
                           data-blocked-val="${blockedResultNum !== null ? blockedResultNum : ''}"
@@ -1545,7 +1772,32 @@
                           ${remBadge}
                         </td>
 
-                        <!-- 3. Scrap, % All (Cho phép tự input cả Target và Result) -->
+                        <!-- 3. Attendance, % (MỚI - Tự input Result sau) -->
+                        <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; border-left: 2px solid rgba(6, 182, 212, 0.25);">
+                          <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
+                            <input type="number" step="0.1" value="${attTarget}" class="font-mono kpi-target-input-att"
+                                   oninput="handleKpiUniversalTargetChange(this, 'att', '${item.district}', '${item.stage}', '${item.team}')"
+                                   style="width: 44px; padding: 0.15rem 0.25rem; font-size: 0.7rem; font-weight: 800; color: #fbbf24; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 3px; text-align: right; outline: none;">
+                          </div>
+                        </td>
+                        <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap;">
+                          <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
+                            <input type="number" step="any" value="${attResultInput}" class="font-mono kpi-result-input-att" placeholder="-"
+                                   oninput="handleKpiUniversalResultChange(this, 'att', '${item.district}', '${item.stage}', '${item.team}')"
+                                   title="Nhập kết quả Attendance (%) cho ${item.team}"
+                                   style="width: 50px; padding: 0.15rem 0.25rem; font-size: 0.725rem; font-weight: 800; color: ${attPass === true ? '#34d399' : (attPass === false ? '#f87171' : '#f8fafc')}; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(6, 182, 212, 0.35); border-radius: 3px; text-align: right; outline: none;">
+                          </div>
+                        </td>
+                        <td style="padding: 0.35rem 0.45rem; text-align: center; white-space: nowrap;">
+                          ${attPass === true ?
+                            `<span class="badge badge-green kpi-eval-badge-att">🟢 Đạt</span>` :
+                            (attPass === false ?
+                              `<span class="badge badge-red kpi-eval-badge-att">🔴 Chưa đạt</span>` :
+                              `<span class="kpi-eval-badge-att" style="color: var(--text-muted); font-size: 0.675rem;">-</span>`)
+                          }
+                        </td>
+
+                        <!-- 4. Scrap, % All (Tự động lấy Target Level 5 = 0.0387%) -->
                         <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; border-left: 2px solid rgba(245, 158, 11, 0.25);">
                           <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
                             <input type="number" step="any" value="${scrapTarget}" class="font-mono kpi-target-input-scrap" placeholder="-"
@@ -1570,7 +1822,7 @@
                           }
                         </td>
 
-                        <!-- 4. Blocked batches (v1) (Cho phép tự input cả Target và Result) -->
+                        <!-- 5. Blocked batches (v1) (Tự động lấy Target Level 5 = 0 pcs) -->
                         <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; border-left: 2px solid rgba(244, 63, 94, 0.25);">
                           <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
                             <input type="number" step="1" value="${blockedTarget}" class="font-mono kpi-target-input-blocked" placeholder="-"
@@ -1595,7 +1847,7 @@
                           }
                         </td>
 
-                        <!-- 5. Clip (all plant) -->
+                        <!-- 6. Clip (all plant) -->
                         <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; border-left: 2px solid rgba(16, 185, 129, 0.25);">
                           <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
                             <input type="number" step="0.1" value="${clipTarget}" class="font-mono" placeholder="-"
@@ -1622,6 +1874,8 @@
                         data-district="${group.district}"
                         data-prod-val="${aveProdNum !== null ? aveProdNum : ''}"
                         data-rem-val="${aveRemNum !== null ? aveRemNum : ''}"
+                        data-att-val="${aveAttResultNum !== null ? aveAttResultNum : ''}"
+                        data-att-target="${aveAttTargetNum !== null ? aveAttTargetNum : ''}"
                         data-scrap-val="${aveScrapResultNum !== null ? aveScrapResultNum : ''}"
                         data-scrap-target="${aveScrapTargetNum !== null ? aveScrapTargetNum : ''}"
                         data-blocked-val="${aveBlockedResultNum !== null ? aveBlockedResultNum : ''}"
@@ -1676,7 +1930,32 @@
                         ${aveRemBadge}
                       </td>
 
-                      <!-- 3. Scrap Ave (Cho phép tự input cả Target và Result) -->
+                      <!-- 3. Attendance Ave (MỚI) -->
+                      <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; border-left: 2px solid rgba(234, 179, 8, 0.5);">
+                        <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
+                          <input type="number" step="0.1" value="${aveAttTarget}" class="font-mono kpi-target-input-att"
+                                 oninput="handleKpiUniversalTargetChange(this, 'att', '${group.district}', '${group.stage}', 'Ave')"
+                                 style="width: 44px; padding: 0.15rem 0.25rem; font-size: 0.7rem; font-weight: 800; color: #fbbf24; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(245, 158, 11, 0.5); border-radius: 3px; text-align: right; outline: none;">
+                        </div>
+                      </td>
+                      <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap;">
+                        <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
+                          <input type="number" step="any" value="${aveAttResultInput}" class="font-mono kpi-result-input-att" placeholder="-"
+                                 oninput="handleKpiUniversalResultChange(this, 'att', '${group.district}', '${group.stage}', 'Ave')"
+                                 title="Nhập kết quả Attendance (%) trung bình cho Stage ${group.stage}"
+                                 style="width: 50px; padding: 0.15rem 0.25rem; font-size: 0.725rem; font-weight: 800; color: ${aveAttPass === true ? '#34d399' : (aveAttPass === false ? '#f87171' : '#fef08a')}; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(6, 182, 212, 0.45); border-radius: 3px; text-align: right; outline: none;">
+                        </div>
+                      </td>
+                      <td style="padding: 0.35rem 0.45rem; text-align: center; white-space: nowrap;">
+                        ${aveAttPass === true ?
+                          `<span class="badge badge-green kpi-eval-badge-att">🟢 Đạt</span>` :
+                          (aveAttPass === false ?
+                            `<span class="badge badge-red kpi-eval-badge-att">🔴 Chưa đạt</span>` :
+                            `<span class="kpi-eval-badge-att" style="color: var(--text-muted); font-size: 0.675rem;">-</span>`)
+                        }
+                      </td>
+
+                      <!-- 4. Scrap Ave (Tự động lấy Target Level 5 = 0.0387%) -->
                       <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; border-left: 2px solid rgba(234, 179, 8, 0.5);">
                         <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
                           <input type="number" step="any" value="${aveScrapTarget}" class="font-mono kpi-target-input-scrap" placeholder="-"
@@ -1701,7 +1980,7 @@
                         }
                       </td>
 
-                      <!-- 4. Blocked Ave (Cho phép tự input cả Target và Result) -->
+                      <!-- 5. Blocked Ave (Tự động lấy Target Level 5 = 0 pcs) -->
                       <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; border-left: 2px solid rgba(234, 179, 8, 0.5);">
                         <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
                           <input type="number" step="1" value="${aveBlockedTarget}" class="font-mono kpi-target-input-blocked" placeholder="-"
@@ -1726,7 +2005,7 @@
                         }
                       </td>
 
-                      <!-- 5. Clip Ave -->
+                      <!-- 6. Clip Ave -->
                       <td style="padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; border-left: 2px solid rgba(234, 179, 8, 0.5);">
                         <div style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 0.2rem;">
                           <input type="number" step="0.1" value="${aveClipTarget}" class="font-mono" placeholder="-"
@@ -1875,6 +2154,7 @@
       'District', 'Stage', 'Team', 
       'Productivity Target (%)', 'Productivity %', 'Productivity Đánh Giá',
       'Remarks Target (%)', 'Remarks Result Ave', 'Remarks Đánh Giá',
+      'Attendance Target (%)', 'Attendance Result Ave', 'Attendance Đánh Giá',
       'Scrap Target (%)', 'Scrap Result Ave', 'Scrap Đánh Giá',
       'Blocked Target (%)', 'Blocked Result Ave', 'Blocked Đánh Giá',
       'Clip Target (%)', 'Clip Actual', 'Clip Đánh Giá'
@@ -1884,13 +2164,13 @@
     const rows = table.querySelectorAll('tbody tr');
     rows.forEach(tr => {
       const tds = tr.querySelectorAll('td');
-      if (tds.length >= 18) {
+      if (tds.length >= 21) {
         const rowVals = [];
         rowVals.push(tds[0].textContent.trim());
         rowVals.push(tds[1].textContent.trim());
         rowVals.push(tds[2].textContent.trim());
 
-        for (let colIdx = 3; colIdx < 18; colIdx += 3) {
+        for (let colIdx = 3; colIdx < 21; colIdx += 3) {
           const targetInp = tds[colIdx].querySelector('input');
           const target = targetInp ? (targetInp.value.trim() || '-') : tds[colIdx].textContent.trim();
           const resInp = tds[colIdx + 1].querySelector('input');
@@ -1907,7 +2187,7 @@
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(tsvContent).then(() => {
         if (window.showToast) {
-          window.showToast('success', '📋 Đã copy toàn bộ 18 cột bảng KPI! Hãy dán (Ctrl+V) vào Google Sheets hoặc Excel.');
+          window.showToast('success', '📋 Đã copy toàn bộ 21 cột bảng KPI! Hãy dán (Ctrl+V) vào Google Sheets hoặc Excel.');
         } else {
           alert('Đã copy bảng vào Clipboard! Bạn có thể dán (Ctrl+V) vào Google Sheets hoặc Excel.');
         }
@@ -1950,6 +2230,7 @@
       'District', 'Stage', 'Team', 
       'Productivity Target (%)', 'Productivity %', 'Productivity Đánh Giá',
       'Remarks Target (%)', 'Remarks Result Ave', 'Remarks Đánh Giá',
+      'Attendance Target (%)', 'Attendance Result Ave', 'Attendance Đánh Giá',
       'Scrap Target (%)', 'Scrap Result Ave', 'Scrap Đánh Giá',
       'Blocked Target (%)', 'Blocked Result Ave', 'Blocked Đánh Giá',
       'Clip Target (%)', 'Clip Actual', 'Clip Đánh Giá'
@@ -1959,13 +2240,13 @@
     const rows = table.querySelectorAll('tbody tr');
     rows.forEach(tr => {
       const tds = tr.querySelectorAll('td');
-      if (tds.length >= 18) {
+      if (tds.length >= 21) {
         const rowVals = [];
         rowVals.push(`"${tds[0].textContent.trim().replace(/"/g, '""')}"`);
         rowVals.push(`"${tds[1].textContent.trim().replace(/"/g, '""')}"`);
         rowVals.push(`"${tds[2].textContent.trim().replace(/"/g, '""')}"`);
 
-        for (let colIdx = 3; colIdx < 18; colIdx += 3) {
+        for (let colIdx = 3; colIdx < 21; colIdx += 3) {
           const targetInp = tds[colIdx].querySelector('input');
           const target = (targetInp ? (targetInp.value.trim() || '-') : tds[colIdx].textContent.trim()).replace(/"/g, '""');
           const resInp = tds[colIdx + 1].querySelector('input');

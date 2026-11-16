@@ -1737,15 +1737,15 @@ def fetch_and_parse_kpi_data(ctx):
     prod_filter_note = ''
     remarks_filter_note = ''
 
-    # Đọc Target / Actual SCRAP ở hàng 0 (cột AC..AJ)
-    r0 = rows[0]
-    for idx_c in range(27, len(r0) - 1):
-        lbl = (r0[idx_c] or '').strip().lower()
-        val = (r0[idx_c + 1] or '').strip()
-        if lbl == 'target' and val:
-            scrap_target = val
-        elif lbl == 'actual' and val:
-            scrap_actual = val
+    # Đọc Target / Actual SCRAP (tìm qua 25 hàng đầu ở các cột 27..len)
+    for r_check in rows[:25]:
+        for idx_c in range(27, len(r_check) - 1):
+            lbl = (r_check[idx_c] or '').strip().lower()
+            val = (r_check[idx_c + 1] or '').strip()
+            if lbl == 'target' and val and not scrap_target:
+                scrap_target = val
+            elif lbl == 'actual' and val and not scrap_actual:
+                scrap_actual = val
 
     cur_dist = ''
     cur_stage = ''
@@ -1872,6 +1872,28 @@ def fetch_and_parse_kpi_data(ctx):
                 'dumpQty': r[35].strip() if len(r) > 35 else ''
             })
 
+    # 5. Blocked batches (v1) (cols 37..47)
+    blocked_batches = []
+    for r_idx in range(14, len(rows)):
+        r = rows[r_idx]
+        if len(r) > 37 and r[37].strip():
+            d = r[37].strip()
+            if 'date' in d.lower() or 'ngày' in d.lower():
+                continue
+            blocked_batches.append({
+                'date': d,
+                'unblockDate': r[38].strip() if len(r) > 38 else '',
+                'device': r[39].strip() if len(r) > 39 else '',
+                'area': r[40].strip() if len(r) > 40 else '',
+                'cl': r[41].strip() if len(r) > 41 else '',
+                'generator': r[42].strip() if len(r) > 42 else '',
+                'responsible': r[43].strip() if len(r) > 43 else '',
+                'nonConformance': r[44].strip() if len(r) > 44 else '',
+                'qty': r[45].strip() if len(r) > 45 else '',
+                'detectedQty': r[46].strip() if len(r) > 46 else '',
+                'defectPct': r[47].strip() if len(r) > 47 else ''
+            })
+
     workcell_count = sum(
         1 for it in productivity
         if 'WORKCELL A' in it['team'].upper() or 'WORKCEL A' in it['team'].upper()
@@ -1891,6 +1913,7 @@ def fetch_and_parse_kpi_data(ctx):
             'actual': scrap_actual,
             'items': scrap_items
         },
+        'blockedBatches': blocked_batches,
         'summary': {
             'totalProductivity': total_productivity,
             'totalRemarks': total_remarks,

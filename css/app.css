@@ -10574,18 +10574,83 @@ body[data-user-role="viewer"] .sim-line-input {
 }
 
 /* Sticky Summary Column (Cột Tổng Cộng cố định bên trái, cạnh Cột 1) */
+.assembly-adj-table .sticky-col-header,
+.assembly-adj-table .sticky-col-cell {
+  position: sticky !important;
+  left: 0 !important;
+  width: 220px !important;
+  min-width: 220px !important;
+  max-width: 220px !important;
+  box-sizing: border-box;
+}
+
 .assembly-adj-table .sticky-col-summary-header {
   position: sticky !important;
-  left: 180px !important;
-  z-index: 14 !important;
+  left: 220px !important;
+  z-index: 34 !important;
+  width: 75px !important;
+  min-width: 75px !important;
+  max-width: 75px !important;
+  box-sizing: border-box;
   box-shadow: 4px 0 10px rgba(0, 0, 0, 0.35);
 }
 
 .assembly-adj-table .sticky-col-summary-cell {
   position: sticky !important;
-  left: 180px !important;
+  left: 220px !important;
   z-index: 9 !important;
+  width: 75px !important;
+  min-width: 75px !important;
+  max-width: 75px !important;
+  box-sizing: border-box;
   box-shadow: 4px 0 10px rgba(0, 0, 0, 0.35);
+}
+
+/* Header sticky rows */
+.assembly-adj-table thead tr.adj-header-kip-row th {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.assembly-adj-table thead tr.adj-header-kip-row th.sticky-col-header {
+  z-index: 35 !important;
+}
+.assembly-adj-table thead tr.adj-header-kip-row th.sticky-col-summary-header {
+  z-index: 34 !important;
+}
+
+.assembly-adj-table thead tr.adj-header-date-row th {
+  position: sticky;
+  top: 34px;
+  z-index: 20;
+}
+.assembly-adj-table thead tr.adj-header-date-row th.sticky-col-header {
+  z-index: 35 !important;
+}
+.assembly-adj-table thead tr.adj-header-date-row th.sticky-col-summary-header {
+  z-index: 34 !important;
+}
+
+.assembly-adj-table thead tr.adj-header-shift-row th {
+  position: sticky;
+  top: 62px;
+  z-index: 20;
+}
+.assembly-adj-table thead tr.adj-header-shift-row th.sticky-col-header {
+  z-index: 35 !important;
+}
+.assembly-adj-table thead tr.adj-header-shift-row th.sticky-col-summary-header {
+  z-index: 34 !important;
+}
+
+/* Row Chênh lệch tổng theo ngày */
+.adj-row-diff-daily td {
+  box-sizing: border-box;
+}
+
+[data-theme="light"] .adj-row-diff-daily td {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
 }
 
 [data-theme="light"] .assembly-adj-table .sticky-col-summary-header {
@@ -10603,119 +10668,192 @@ body[data-user-role="viewer"] .sim-line-input {
 }
 
 /* =========================================================================
- * BẢNG TỔNG HỢP CÁC CHỈ SỐ KPI (THEO ĐÚNG CONCEPT ẢNH SỐ 1)
+ * BẢNG TỔNG HỢP CÁC CHỈ SỐ KPI (THEO ĐÚNG CONCEPT ẢNH SỐ 1 - DARK GLASS TỐI ƯU)
  * ========================================================================= */
 .kpi-summary-container {
-  padding: 0.85rem 1.25rem 1.15rem 1.25rem;
-  background: rgba(15, 23, 42, 0.45);
-  border-bottom: 2px solid var(--border-glass);
+  padding: 0.85rem 1.15rem 1rem 1.15rem;
+  background: rgba(15, 23, 42, 0.65);
+  border-bottom: 1px solid var(--border-glass);
 }
 
 .kpi-summary-table-wrap {
   overflow-x: auto;
-  border-radius: 4px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  background: rgba(15, 23, 42, 0.5);
 }
 
 .kpi-summary-table {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.775rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.75rem;
   text-align: center;
-  border: 2px solid #000000;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
   font-family: inherit;
 }
 
 .kpi-summary-table th,
 .kpi-summary-table td {
-  border: 1px solid #000000;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
   padding: 0.35rem 0.5rem;
   vertical-align: middle;
 }
 
 .kpi-summary-table thead th {
-  font-weight: 900;
-  font-size: 0.775rem;
-  letter-spacing: 0.2px;
+  font-weight: 800;
+  font-size: 0.725rem;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  background: rgba(30, 41, 59, 0.95);
+  color: #cbd5e1;
+  border-bottom: 2px solid rgba(56, 189, 248, 0.4);
+  padding: 0.45rem 0.5rem;
+}
+
+/* Th Header colors theo concept tối ưu */
+.kpi-summary-table .th-dim {
+  background: rgba(30, 41, 59, 0.95);
+  color: #94a3b8;
 }
 
 .kpi-summary-table .th-cyan {
-  background: #00e5ff !important;
-  color: #000000 !important;
+  background: rgba(14, 116, 144, 0.35) !important;
+  color: #38bdf8 !important;
+  border-bottom: 2px solid #0284c7 !important;
+}
+
+.kpi-summary-table .th-level-5 {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #34d399 !important;
+  border-bottom: 2px solid #10b981 !important;
 }
 
 .kpi-summary-table .th-yellow {
-  background: #ffff00 !important;
-  color: #000000 !important;
+  background: rgba(245, 158, 11, 0.25) !important;
+  color: #fde047 !important;
+  border-bottom: 2px solid #f59e0b !important;
 }
 
 .kpi-summary-table .th-magenta {
-  background: #ff00ff !important;
-  color: #000000 !important;
+  background: rgba(168, 85, 247, 0.25) !important;
+  color: #e879f9 !important;
+  border-bottom: 2px solid #c084fc !important;
 }
 
-.kpi-summary-table .td-cyan {
-  background: #00e5ff !important;
-  color: #000000 !important;
-  font-weight: 900 !important;
+/* Td Cell styling theo theme dark glass */
+.kpi-summary-table .td-month {
+  background: rgba(56, 189, 248, 0.06) !important;
+  color: #38bdf8 !important;
+  font-weight: 800 !important;
 }
 
-.kpi-summary-table .td-yellow {
-  background: #ffff00 !important;
-  color: #000000 !important;
-  font-weight: 900 !important;
+.kpi-summary-table .td-team {
+  background: rgba(16, 185, 129, 0.05) !important;
+  color: #34d399 !important;
+  font-weight: 700 !important;
 }
 
-.kpi-summary-table .td-magenta {
-  background: #ff00ff !important;
-  color: #000000 !important;
-  font-weight: 900 !important;
+.kpi-summary-table .td-proc-ht {
+  background: rgba(99, 102, 241, 0.1) !important;
+  color: #818cf8 !important;
+  font-weight: 800 !important;
+}
+
+.kpi-summary-table .td-proc-asm {
+  background: rgba(244, 114, 182, 0.1) !important;
+  color: #f472b6 !important;
+  font-weight: 800 !important;
 }
 
 .kpi-summary-table .td-white {
-  background: #ffffff !important;
-  color: #000000 !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  color: #94a3b8 !important;
 }
 
 .kpi-summary-table .td-indicator {
-  background: #ffffff !important;
-  color: #000000 !important;
-  font-weight: 700 !important;
+  background: rgba(255, 255, 255, 0.015) !important;
+  color: #f1f5f9 !important;
+  font-weight: 600 !important;
   text-align: left !important;
   padding-left: 0.75rem !important;
 }
 
 .kpi-summary-table .td-level {
-  background: #ffffff !important;
-  color: #000000 !important;
-  font-weight: 600 !important;
+  background: rgba(255, 255, 255, 0.01) !important;
+  color: #94a3b8 !important;
+  font-weight: 500 !important;
   font-family: var(--font-mono, monospace);
+  font-size: 0.725rem;
+}
+
+.kpi-summary-table .td-level-5 {
+  background: rgba(16, 185, 129, 0.1) !important;
+  color: #34d399 !important;
+  font-weight: 700 !important;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.725rem;
+  border-left: 1px solid rgba(16, 185, 129, 0.25) !important;
+  border-right: 1px solid rgba(16, 185, 129, 0.25) !important;
+}
+
+.kpi-summary-table .td-yellow {
+  background: rgba(245, 158, 11, 0.1) !important;
+  color: #fde047 !important;
+  font-weight: 800 !important;
+  border-left: 1px solid rgba(245, 158, 11, 0.25) !important;
+  border-right: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+.kpi-summary-table .td-eval {
+  background: rgba(15, 23, 42, 0.4) !important;
+  font-weight: 700 !important;
+  font-size: 0.75rem;
+}
+
+.kpi-summary-table .td-concl {
+  background: rgba(15, 23, 42, 0.5) !important;
+  font-weight: 800 !important;
   font-size: 0.75rem;
 }
 
 .kpi-summary-table .tr-divider-process td {
-  border-bottom: 2.5px solid #000000 !important;
+  border-bottom: 2px solid rgba(59, 130, 246, 0.4) !important;
+}
+
+.kpi-summary-table tbody tr:hover td {
+  background-color: rgba(59, 130, 246, 0.06) !important;
 }
 
 .kpi-summary-result-input {
   background: transparent !important;
-  border: none !important;
-  color: #000000 !important;
-  font-weight: 900 !important;
-  font-size: 0.8rem !important;
+  border: 1px solid transparent !important;
+  color: #fde047 !important;
+  font-weight: 800 !important;
+  font-size: 0.775rem !important;
   text-align: center !important;
   width: 100% !important;
   outline: none !important;
-  padding: 0 !important;
+  padding: 0.15rem 0.25rem !important;
   margin: 0 !important;
   font-family: inherit;
   cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.kpi-summary-result-input:hover {
+  background: rgba(245, 158, 11, 0.15) !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
 }
 
 .kpi-summary-result-input:focus {
-  background: #ffffff !important;
-  box-shadow: 0 0 0 2px #0284c7 !important;
-  border-radius: 2px !important;
+  background: rgba(15, 23, 42, 0.95) !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.4) !important;
+  border-color: #f59e0b !important;
+  color: #ffffff !important;
 }
 
 

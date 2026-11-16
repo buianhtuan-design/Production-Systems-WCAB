@@ -806,15 +806,15 @@
               <thead>
                 <!-- TẦNG HEADER 1: KÍP (Nền vàng nổi bật chuẩn Concept ảnh 4) -->
                 <tr class="adj-header-kip-row" style="background: #fde047;">
-                  <th class="sticky-col-header" style="position: sticky; left: 0; z-index: 15; background: #fde047; color: #000000; font-weight: 900; border-right: 1px solid rgba(0,0,0,0.2); border-bottom: 1px solid rgba(0,0,0,0.2); text-align: left; padding: 0.4rem 0.65rem; min-width: 180px; max-width: 180px; width: 180px;">
+                  <th class="sticky-col-header" style="position: sticky; top: 0; left: 0; z-index: 35; background: #fde047; color: #000000; font-weight: 900; border-right: 1px solid rgba(0,0,0,0.2); border-bottom: 1px solid rgba(0,0,0,0.2); text-align: left; padding: 0.4rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; height: 34px; box-sizing: border-box;">
                     KÍP
                   </th>
                   <!-- CỘT TỔNG CỘNG: CHUYỂN SANG BÊN TRÁI CẠNH CỘT 1 -->
-                  <th class="sticky-col-summary-header" style="position: sticky; left: 180px; z-index: 14; background: #fde047; color: #000000; font-weight: 900; font-size: 0.88rem; text-align: center; border-right: 2px solid rgba(0,0,0,0.3); border-bottom: 1px solid rgba(0,0,0,0.2); padding: 0.4rem 0.45rem; min-width: 85px; max-width: 85px; width: 85px; box-shadow: 4px 0 8px rgba(0,0,0,0.15);">
+                  <th class="sticky-col-summary-header" style="position: sticky; top: 0; left: 220px; z-index: 34; background: #fde047; color: #000000; font-weight: 900; font-size: 0.88rem; text-align: center; border-right: 2px solid rgba(0,0,0,0.3); border-bottom: 1px solid rgba(0,0,0,0.2); padding: 0.4rem 0.45rem; min-width: 75px; max-width: 75px; width: 75px; height: 34px; box-sizing: border-box; box-shadow: 4px 0 10px rgba(0,0,0,0.25);">
                     TỔNG
                   </th>
                   ${colsData.map(cd => `
-                    <th style="background: #fde047; color: #000000; font-weight: 900; font-size: 0.95rem; text-align: center; border-right: 1px solid rgba(0,0,0,0.15); border-bottom: 1px solid rgba(0,0,0,0.2); padding: 0.4rem 0.5rem; min-width: 80px;">
+                    <th style="position: sticky; top: 0; z-index: 20; background: #fde047; color: #000000; font-weight: 900; font-size: 0.95rem; text-align: center; border-right: 1px solid rgba(0,0,0,0.15); border-bottom: 1px solid rgba(0,0,0,0.2); padding: 0.4rem 0.5rem; min-width: 80px; height: 34px; box-sizing: border-box;">
                       ${cd.kip}
                     </th>
                   `).join('')}
@@ -822,15 +822,15 @@
 
                 <!-- TẦNG HEADER 2: NGÀY (DATE) -->
                 <tr class="adj-header-date-row" style="background: var(--bg-card-header, #0f172a);">
-                  <th class="sticky-col-header" style="position: sticky; left: 0; z-index: 15; background: var(--bg-card-header, #0f172a); color: var(--text-primary, #f8fafc); font-weight: 700; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); text-align: left; padding: 0.35rem 0.65rem; min-width: 180px; max-width: 180px; width: 180px;">
+                  <th class="sticky-col-header" style="position: sticky; top: 34px; left: 0; z-index: 35; background: var(--bg-card-header, #0f172a); color: var(--text-primary, #f8fafc); font-weight: 700; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); text-align: left; padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; height: 28px; box-sizing: border-box;">
                     NGÀY
                   </th>
                   <!-- CỘT TỔNG CỘNG: HEADER 2 -->
-                  <th class="sticky-col-summary-header" style="position: sticky; left: 180px; z-index: 14; background: #1e293b; color: #fbbf24; font-weight: 800; font-size: 0.76rem; text-align: center; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.45rem; min-width: 85px; max-width: 85px; width: 85px; box-shadow: 4px 0 8px rgba(0,0,0,0.25); white-space: nowrap;">
+                  <th class="sticky-col-summary-header" style="position: sticky; top: 34px; left: 220px; z-index: 34; background: #1e293b; color: #fbbf24; font-weight: 800; font-size: 0.76rem; text-align: center; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.45rem; min-width: 75px; max-width: 75px; width: 75px; height: 28px; box-sizing: border-box; box-shadow: 4px 0 10px rgba(0,0,0,0.25); white-space: nowrap;">
                     KỲ CHỌN
                   </th>
                   ${colsData.map(cd => `
-                    <th style="color: var(--text-primary, #f8fafc); font-weight: 700; font-size: 0.78rem; text-align: center; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.45rem; white-space: nowrap;">
+                    <th style="position: sticky; top: 34px; z-index: 20; background: var(--bg-card-header, #0f172a); color: var(--text-primary, #f8fafc); font-weight: 700; font-size: 0.78rem; text-align: center; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.45rem; white-space: nowrap; height: 28px; box-sizing: border-box;">
                       ${formatDateDisplay(cd.dateStr)}
                     </th>
                   `).join('')}
@@ -838,17 +838,17 @@
 
                 <!-- TẦNG HEADER 3: CA (SHIFT: DAY / NIGHT) -->
                 <tr class="adj-header-shift-row" style="background: var(--bg-card-solid, #1e293b);">
-                  <th class="sticky-col-header" style="position: sticky; left: 0; z-index: 15; background: var(--bg-card-solid, #1e293b); color: var(--text-secondary, #cbd5e1); font-weight: 700; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); text-align: left; padding: 0.35rem 0.65rem; min-width: 180px; max-width: 180px; width: 180px;">
+                  <th class="sticky-col-header" style="position: sticky; top: 62px; left: 0; z-index: 35; background: var(--bg-card-solid, #1e293b); color: var(--text-secondary, #cbd5e1); font-weight: 700; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); text-align: left; padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; height: 28px; box-sizing: border-box;">
                     CA
                   </th>
                   <!-- CỘT TỔNG CỘNG: HEADER 3 -->
-                  <th class="sticky-col-summary-header" style="position: sticky; left: 180px; z-index: 14; background: #0f172a; color: #f8fafc; font-weight: 800; font-size: 0.76rem; text-align: center; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.35rem 0.45rem; min-width: 85px; max-width: 85px; width: 85px; box-shadow: 4px 0 8px rgba(0,0,0,0.25);">
+                  <th class="sticky-col-summary-header" style="position: sticky; top: 62px; left: 220px; z-index: 34; background: #0f172a; color: #f8fafc; font-weight: 800; font-size: 0.76rem; text-align: center; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.35rem 0.45rem; min-width: 75px; max-width: 75px; width: 75px; height: 28px; box-sizing: border-box; box-shadow: 4px 0 10px rgba(0,0,0,0.25);">
                     ${colsData.length} CA
                   </th>
                   ${colsData.map(cd => {
                     const isDay = cd.shift === 'Day';
                     return `
-                      <th style="color: ${isDay ? '#fbbf24' : '#c084fc'}; font-weight: 800; font-size: 0.78rem; text-align: center; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.35rem 0.45rem;">
+                      <th style="position: sticky; top: 62px; z-index: 20; background: var(--bg-card-solid, #1e293b); color: ${isDay ? '#fbbf24' : '#c084fc'}; font-weight: 800; font-size: 0.78rem; text-align: center; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.35rem 0.45rem; height: 28px; box-sizing: border-box;">
                         ${cd.shift}
                       </th>
                     `;
@@ -859,11 +859,11 @@
               <tbody>
                 <!-- 1. KẾ HOẠCH CẦN (PLAN) -->
                 <tr class="adj-row-plan" style="background: rgba(59, 130, 246, 0.08);">
-                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #0f1a30; font-weight: 700; color: #93c5fd; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.65rem; min-width: 180px; max-width: 180px; width: 180px;">
+                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #0f1a30; font-weight: 700; color: #93c5fd; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;">
                     👷 1. Kế Hoạch Cần (Plan)
                   </td>
                   <!-- TỔNG CỘNG PLAN (BÊN TRÁI) -->
-                  <td class="sticky-col-summary-cell" style="position: sticky; left: 180px; z-index: 9; text-align: right; font-weight: 900; color: #93c5fd; font-size: 0.85rem; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; background: #0b1329; box-shadow: 4px 0 8px rgba(0,0,0,0.25); min-width: 85px; max-width: 85px; width: 85px;">
+                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; color: #93c5fd; font-size: 0.85rem; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.5rem; background: #0b1329; box-shadow: 4px 0 10px rgba(0,0,0,0.25); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
                     ${summary.totalPlanValue.toFixed(1)}
                   </td>
                   ${colsData.map(cd => `
@@ -875,11 +875,11 @@
 
                 <!-- 1B. KẾ HOẠCH CẦN SỐ LINE -->
                 <tr class="adj-row-plan-lines" style="background: rgba(147, 51, 234, 0.06);">
-                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #16122c; font-weight: 700; color: #c084fc; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.65rem; min-width: 180px; max-width: 180px; width: 180px;">
+                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #16122c; font-weight: 700; color: #c084fc; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;">
                     🏭 1b. Kế Hoạch Cần Số Line
                   </td>
                   <!-- TỔNG CỘNG LINE CẦN (BÊN TRÁI) -->
-                  <td class="sticky-col-summary-cell" style="position: sticky; left: 180px; z-index: 9; text-align: right; font-weight: 900; color: #c084fc; font-size: 0.85rem; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; background: #0b1329; box-shadow: 4px 0 8px rgba(0,0,0,0.25); min-width: 85px; max-width: 85px; width: 85px;">
+                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; color: #c084fc; font-size: 0.85rem; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.5rem; background: #0b1329; box-shadow: 4px 0 10px rgba(0,0,0,0.25); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
                     ${summary.totalPlanLines.toFixed(1)}
                   </td>
                   ${colsData.map(cd => `
@@ -891,11 +891,11 @@
 
                 <!-- 2B. THỰC TẾ CÓ SỐ LINE -->
                 <tr class="adj-row-act-lines" style="background: rgba(16, 185, 129, 0.08); border-bottom: 2px solid var(--border-glass, #475569);">
-                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #0c1e1c; font-weight: 800; color: #34d399; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.35rem 0.65rem; min-width: 180px; max-width: 180px; width: 180px;">
+                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #0c1e1c; font-weight: 800; color: #34d399; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;">
                     🏭 2b. Thực Tế Có Số Line
                   </td>
                   <!-- TỔNG CỘNG LINE THỰC TẾ (BÊN TRÁI) -->
-                  <td class="sticky-col-summary-cell" style="position: sticky; left: 180px; z-index: 9; text-align: right; font-weight: 900; color: #34d399; font-size: 0.95rem; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.35rem 0.55rem; background: #0b1329; box-shadow: 4px 0 8px rgba(0,0,0,0.25); min-width: 85px; max-width: 85px; width: 85px;">
+                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; color: #34d399; font-size: 0.95rem; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.35rem 0.5rem; background: #0b1329; box-shadow: 4px 0 10px rgba(0,0,0,0.25); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
                     ${summary.totalActualLines}
                   </td>
                   ${colsData.map(cd => `
@@ -911,7 +911,7 @@
                   const otCount = lineSum.otShifts;
                   return `
                     <tr class="adj-row-line hover-row" data-line="${lineName}">
-                      <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: var(--bg-card-solid, #1e293b); font-weight: 800; color: var(--text-primary, #f8fafc); border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.65rem; min-width: 180px; max-width: 180px; width: 180px;">
+                      <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: var(--bg-card-solid, #1e293b); font-weight: 800; color: var(--text-primary, #f8fafc); border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;">
                         Line ${lineName}
                         <small style="font-size: 0.68rem; color: var(--text-muted); font-weight: normal; margin-left: 0.35rem;">
                           (${lineSum.direct}ng / ${lineSum.total}ng)
@@ -919,7 +919,7 @@
                       </td>
 
                       <!-- CỘT TỔNG CỘNG CHO TỪNG LINE (CHỈ HIỂN THỊ "OT X", NẾU 0 OT THÌ ĐỂ TRỐNG) -->
-                      <td class="sticky-col-summary-cell" style="position: sticky; left: 180px; z-index: 9; text-align: center; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.3rem 0.35rem; background: #0b1329; box-shadow: 4px 0 8px rgba(0,0,0,0.25); min-width: 85px; max-width: 85px; width: 85px;">
+                      <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: center; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.3rem 0.35rem; background: #0b1329; box-shadow: 4px 0 10px rgba(0,0,0,0.25); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
                         ${otCount > 0 ? `
                           <div style="text-align: center;">
                             <span style="background: #fde047; color: #000000; font-weight: 900; font-size: 0.76rem; padding: 0.15rem 0.5rem; border-radius: 4px; display: inline-block;" title="Line ${lineName} có ${otCount} ca làm thêm (OT)">
@@ -962,20 +962,45 @@
                   `;
                 }).join('')}
 
-                <!-- CHÊNH LỆCH SAU ĐIỀU CHỈNH -->
+                <!-- CHÊNH LỆCH SAU ĐIỀU CHỈNH THEO CA -->
                 <tr class="adj-row-diff" style="background: rgba(15, 23, 42, 0.85); border-top: 2px solid var(--border-glass, #475569);">
-                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #0b1329; font-weight: 900; color: #f8fafc; border-right: 1px solid var(--border-glass, #334155); border-top: 2px solid var(--border-glass, #475569); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.65rem; min-width: 180px; max-width: 180px; width: 180px;">
-                    ⚖️ Chênh Lệch Sau Điều Chỉnh
+                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #0b1329; font-weight: 900; color: #f8fafc; border-right: 1px solid var(--border-glass, #334155); border-top: 2px solid var(--border-glass, #475569); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;" title="Chênh lệch giữa số line thực tế có và số line kế hoạch cần của từng ca">
+                    ⚖️ Chênh Lệch Sau Điều Chỉnh Theo Ca
                   </td>
-                  <!-- TỔNG CỘNG CHÊNH LỆCH (BÊN TRÁI) -->
-                  <td class="sticky-col-summary-cell" style="position: sticky; left: 180px; z-index: 9; text-align: right; font-weight: 900; font-size: 0.95rem; border-right: 2px solid rgba(245, 158, 11, 0.5); border-top: 2px solid var(--border-glass, #475569); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; background: ${summary.totalDiffLines >= 0 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'}; color: ${summary.totalDiffLines >= 0 ? '#4ade80' : '#f87171'}; box-shadow: 4px 0 8px rgba(0,0,0,0.25); min-width: 85px; max-width: 85px; width: 85px;">
+                  <!-- TỔNG CỘNG CHÊNH LỆCH THEO CA (BÊN TRÁI) -->
+                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; font-size: 0.95rem; border-right: 2px solid rgba(245, 158, 11, 0.5); border-top: 2px solid var(--border-glass, #475569); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.5rem; background: ${summary.totalDiffLines >= 0 ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)'}; color: ${summary.totalDiffLines >= 0 ? '#4ade80' : '#f87171'}; box-shadow: 4px 0 10px rgba(0,0,0,0.25); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
                     ${(summary.totalDiffLines > 0 ? '+' : '') + summary.totalDiffLines.toFixed(1)}
                   </td>
                   ${colsData.map(cd => {
                     const isNeg = cd.diffLines < 0;
                     const diffText = (cd.diffLines > 0 ? '+' : '') + cd.diffLines.toFixed(1);
                     return `
-                      <td style="text-align: right; font-weight: 900; font-size: 0.95rem; border-right: 1px solid var(--border-glass, #334155); border-top: 2px solid var(--border-glass, #475569); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; background: ${isNeg ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.12)'}; color: ${isNeg ? '#f87171' : '#34d399'};" title="${isNeg ? 'Thiếu line so với kế hoạch cần' : 'Đạt / vượt số line yêu cầu'}">
+                      <td style="text-align: right; font-weight: 900; font-size: 0.95rem; border-right: 1px solid var(--border-glass, #334155); border-top: 2px solid var(--border-glass, #475569); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; background: ${isNeg ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.12)'}; color: ${isNeg ? '#f87171' : '#34d399'};" title="${isNeg ? 'Thiếu line so với kế hoạch cần' : 'Đạt / vượt số line yêu cầu'} (Ca ${cd.shift})">
+                        ${diffText}
+                      </td>
+                    `;
+                  }).join('')}
+                </tr>
+
+                <!-- HÀNG MỚI: CHÊNH LỆCH TỔNG THEO NGÀY (GỒM CẢ CA NGÀY VÀ CA ĐÊM) -->
+                <tr class="adj-row-diff-daily" style="background: rgba(30, 41, 59, 0.95); border-bottom: 2px solid var(--border-glass, #475569);">
+                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #070d1e; font-weight: 900; color: #38bdf8; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;" title="Tổng chênh lệch sau điều chỉnh theo từng ngày (gồm cả Ca Ngày + Ca Đêm)">
+                    📅 Chênh Lệch Tổng Theo Ngày
+                  </td>
+                  <!-- TỔNG CỘNG CHÊNH LỆCH THEO NGÀY (TOÀN KỲ) -->
+                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; font-size: 0.95rem; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.35rem 0.5rem; background: ${summary.totalDiffLines >= 0 ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}; color: ${summary.totalDiffLines >= 0 ? '#34d399' : '#f87171'}; box-shadow: 4px 0 10px rgba(0,0,0,0.25); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
+                    ${(summary.totalDiffLines > 0 ? '+' : '') + summary.totalDiffLines.toFixed(1)}
+                  </td>
+                  ${dates.map(dStr => {
+                    const dayCol = colsData.find(c => c.dateStr === dStr && c.shift === 'Day');
+                    const nightCol = colsData.find(c => c.dateStr === dStr && c.shift === 'Night');
+                    const dayDiff = dayCol ? dayCol.diffLines : 0;
+                    const nightDiff = nightCol ? nightCol.diffLines : 0;
+                    const dailyDiff = Math.round((dayDiff + nightDiff) * 10) / 10;
+                    const isNeg = dailyDiff < 0;
+                    const diffText = (dailyDiff > 0 ? '+' : '') + dailyDiff.toFixed(1);
+                    return `
+                      <td colspan="2" style="text-align: center; font-weight: 900; font-size: 0.95rem; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.35rem 0.55rem; background: ${isNeg ? 'rgba(239, 68, 68, 0.22)' : 'rgba(16, 185, 129, 0.2)'}; color: ${isNeg ? '#f87171' : '#34d399'};" title="Tổng chênh lệch ngày ${formatDateDisplay(dStr)}: ${diffText} line (Ca Ngày: ${dayDiff > 0 ? '+' : ''}${dayDiff} | Ca Đêm: ${nightDiff > 0 ? '+' : ''}${nightDiff})">
                         ${diffText}
                       </td>
                     `;
@@ -984,11 +1009,11 @@
 
                 <!-- SỐ LINE OT -->
                 <tr class="adj-row-ot-lines" style="background: rgba(245, 158, 11, 0.05);">
-                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #1c1911; font-weight: 700; color: #facc15; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.65rem; min-width: 180px; max-width: 180px; width: 180px;">
+                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #1c1911; font-weight: 700; color: #facc15; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;">
                     ⚡ Số Line OT
                   </td>
                   <!-- TỔNG SỐ LINE OT (BÊN TRÁI) -->
-                  <td class="sticky-col-summary-cell" style="position: sticky; left: 180px; z-index: 9; text-align: right; font-weight: 900; color: #000000; background: #fde047; border-right: 2px solid #d97706; border-bottom: 1px solid rgba(0,0,0,0.15); padding: 0.35rem 0.55rem; font-size: 0.88rem; box-shadow: 4px 0 8px rgba(0,0,0,0.25); min-width: 85px; max-width: 85px; width: 85px;">
+                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; color: #000000; background: #fde047; border-right: 2px solid #d97706; border-bottom: 1px solid rgba(0,0,0,0.15); padding: 0.35rem 0.5rem; font-size: 0.88rem; box-shadow: 4px 0 10px rgba(0,0,0,0.25); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
                     ${summary.totalOtLinesCount > 0 ? summary.totalOtLinesCount : ''}
                   </td>
                   ${colsData.map(cd => `
@@ -1000,11 +1025,11 @@
 
                 <!-- SỐ NGƯỜI OT -->
                 <tr class="adj-row-ot-people" style="background: rgba(245, 158, 11, 0.08);">
-                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #1f1b0e; font-weight: 800; color: #fbbf24; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.65rem; min-width: 180px; max-width: 180px; width: 180px;">
+                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #1f1b0e; font-weight: 800; color: #fbbf24; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;">
                     👥 Số Người OT
                   </td>
                   <!-- TỔNG SỐ NGƯỜI OT (BÊN TRÁI) -->
-                  <td class="sticky-col-summary-cell" style="position: sticky; left: 180px; z-index: 9; text-align: right; font-weight: 900; color: #000000; background: #fde047; border-right: 2px solid #d97706; border-bottom: 1px solid rgba(0,0,0,0.15); padding: 0.35rem 0.55rem; font-size: 0.88rem; box-shadow: 4px 0 8px rgba(0,0,0,0.25); min-width: 85px; max-width: 85px; width: 85px;">
+                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; color: #000000; background: #fde047; border-right: 2px solid #d97706; border-bottom: 1px solid rgba(0,0,0,0.15); padding: 0.35rem 0.5rem; font-size: 0.88rem; box-shadow: 4px 0 10px rgba(0,0,0,0.25); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
                     ${summary.totalOtPeopleCount > 0 ? summary.totalOtPeopleCount : ''}
                   </td>
                   ${colsData.map(cd => `
@@ -1404,6 +1429,10 @@
       cells.forEach(c => {
         let txt = (c.innerText || '').trim().replace(/\r?\n/g, ' ');
         rowVals.push(txt);
+        const span = c.colSpan || 1;
+        for (let s = 1; s < span; s++) {
+          rowVals.push('');
+        }
       });
       tsv += rowVals.join('\t') + '\r\n';
     });
@@ -1448,6 +1477,10 @@
       cells.forEach(c => {
         let txt = (c.innerText || '').trim().replace(/"/g, '""');
         rowVals.push(`"${txt}"`);
+        const span = c.colSpan || 1;
+        for (let s = 1; s < span; s++) {
+          rowVals.push('""');
+        }
       });
       csv += rowVals.join(',') + '\r\n';
     });
