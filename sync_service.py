@@ -1749,17 +1749,43 @@ def fetch_and_parse_kpi_data(ctx):
 
     cur_dist = ''
     cur_stage = ''
+    prod_started = False
     prod_stopped = False
     remarks_started = False
     remarks_stopped = False
     ftt_started = False
     scrap_started = False
+    kpi_summary_rows = []
 
     for r_idx in range(1, len(rows)):
         r = rows[r_idx]
         c0 = r[0].strip() if len(r) > 0 else ''
         c1 = r[1].strip() if len(r) > 1 else ''
         c2 = r[2].strip() if len(r) > 2 else ''
+
+        # 0. Bảng Tổng Hợp Chỉ Số KPI (ở đầu sheet)
+        if not prod_started:
+            if c0.lower() == 'district':
+                prod_started = True
+            elif len(r) >= 10 and any(k in (r[3] if len(r)>3 else '') for k in ['Productivity', 'Clip', 'Blocked', 'remarks', 'Scrap']):
+                kpi_summary_rows.append({
+                    'month': c0,
+                    'team': c1,
+                    'process': c2,
+                    'indicator': r[3] if len(r) > 3 else '',
+                    'unit': r[4] if len(r) > 4 else '',
+                    'l1': r[5] if len(r) > 5 else '',
+                    'l2': r[6] if len(r) > 6 else '',
+                    'l3': r[7] if len(r) > 7 else '',
+                    'l4': r[8] if len(r) > 8 else '',
+                    'l5': r[9] if len(r) > 9 else '',
+                    'result': r[10] if len(r) > 10 else '',
+                    'eval': r[11] if len(r) > 11 else '',
+                    'conclusion': r[12] if len(r) > 12 else ''
+                })
+            # Nếu chưa gặp dòng tiêu đề 'District' thì chưa đọc khối Productivity
+            if not prod_started:
+                continue
 
         # 1. Productivity (cols 0..12)
         if not prod_stopped:
@@ -1856,6 +1882,7 @@ def fetch_and_parse_kpi_data(ctx):
         'success': True,
         'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
         'version': int(time.strftime('%Y%m%d%H%M%S')),
+        'kpiSummary': kpi_summary_rows,
         'productivity': productivity,
         'remarks': remarks,
         'ftt': ftt_items,

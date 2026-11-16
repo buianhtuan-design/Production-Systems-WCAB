@@ -2861,6 +2861,11 @@ function renderDataMassView() {
     if (typeof window.renderManpowerLoadingPlanChart === 'function') {
       window.renderManpowerLoadingPlanChart(schedule, stagesForManpower, isSplit, shiftFilter);
     }
+
+    // Render Kế Hoạch Điều Chỉnh Line Overtime (Assembly) bên dưới biểu đồ
+    if (typeof window.renderAssemblyAdjustmentPlan === 'function') {
+      window.renderAssemblyAdjustmentPlan(schedule, stagesForManpower);
+    }
   }
 
   // ========================================================

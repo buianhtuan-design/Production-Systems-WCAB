@@ -15,6 +15,20 @@
     const container = document.getElementById(targetContainerId);
     if (!container) return;
 
+    // 0. Lưu vị trí cuộn và trạng thái tương tác để chống giật / nhảy trang khi re-render
+    const prevWinY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+    const prevWinX = window.scrollX || window.pageXOffset || document.documentElement.scrollLeft || 0;
+    const simWrapper = document.getElementById('simTableScrollWrapper');
+    const prevSimScrollTop = simWrapper ? simWrapper.scrollTop : null;
+    const prevSimScrollLeft = simWrapper ? simWrapper.scrollLeft : null;
+    const htSimWrapper = document.getElementById('hardtestSimTableScrollWrapper');
+    const prevHtScrollTop = htSimWrapper ? htSimWrapper.scrollTop : null;
+    const prevHtScrollLeft = htSimWrapper ? htSimWrapper.scrollLeft : null;
+    const prevActiveEl = document.activeElement;
+    const prevActiveRowKey = prevActiveEl ? prevActiveEl.getAttribute('data-row-key') : null;
+    const prevActiveShift = prevActiveEl ? prevActiveEl.getAttribute('data-shift') : null;
+    const prevActiveId = prevActiveEl ? prevActiveEl.id : null;
+
     if (!window.AppStore) {
       container.innerHTML = '<div class="alert alert-warning">Đang khởi tạo AppStore...</div>';
       return;
@@ -405,6 +419,43 @@
     html += `</div>`;
     container.innerHTML = html;
     updateSimulatorStickyOffsets();
+
+    // Khôi phục vị trí cuộn mượt mà & chính xác tuyệt đối (giữ nguyên vị trí dòng và cột người dùng đang thao tác)
+    const restoreCapacityScrolls = () => {
+      if (prevWinY > 0 || prevWinX > 0) {
+        window.scrollTo(prevWinX, prevWinY);
+      }
+      const newSim = document.getElementById('simTableScrollWrapper');
+      if (newSim && prevSimScrollTop !== null) {
+        newSim.scrollTop = prevSimScrollTop;
+        newSim.scrollLeft = prevSimScrollLeft;
+      }
+      const newHt = document.getElementById('hardtestSimTableScrollWrapper');
+      if (newHt && prevHtScrollTop !== null) {
+        newHt.scrollTop = prevHtScrollTop;
+        newHt.scrollLeft = prevHtScrollLeft;
+      }
+      if (prevActiveRowKey && prevActiveShift) {
+        try {
+          const matchingEl = container.querySelector(`[data-row-key="${CSS.escape(prevActiveRowKey)}"][data-shift="${prevActiveShift}"]`);
+          if (matchingEl && document.activeElement !== matchingEl) {
+            try { matchingEl.focus({ preventScroll: true }); } catch (e) { matchingEl.focus(); }
+          }
+        } catch (e) {}
+      } else if (prevActiveId) {
+        const matchingId = document.getElementById(prevActiveId);
+        if (matchingId && document.activeElement !== matchingId) {
+          try { matchingId.focus({ preventScroll: true }); } catch (e) { matchingId.focus(); }
+        }
+      }
+    };
+
+    restoreCapacityScrolls();
+    if (typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(restoreCapacityScrolls);
+    }
+    setTimeout(restoreCapacityScrolls, 25);
+    setTimeout(restoreCapacityScrolls, 80);
   };
 
   /**
@@ -2935,7 +2986,7 @@
 
       // Line dropdown for Day Shift
       const lineSelectDayHtml = `
-        <select class="sim-table-line-select${asmLockClass} font-mono" ${asmLockAttr} onchange="handleTableLineDayChange(decodeURIComponent('${encodedRowKey}'), this.value)" style="padding: 0.15rem 0.25rem; font-size: 0.775rem; font-weight: 800; color: ${assignedDayLineId ? '#38bdf8' : '#64748b'}; background: rgba(15, 23, 42, 0.9); border: 1px solid ${assignedDayLineId ? 'rgba(56, 189, 248, 0.5)' : 'rgba(255, 255, 255, 0.15)'}; border-radius: 6px; outline: none; cursor: pointer; text-align: center; min-width: 58px;" title="${isAsmRowLocked ? '🔒' + asmLockTitleSuffix : 'Chọn Line SX Ca Ngày'}">
+        <select class="sim-table-line-select${asmLockClass} font-mono" ${asmLockAttr} data-row-key="${encodedRowKey}" data-shift="day" onchange="handleTableLineDayChange(decodeURIComponent('${encodedRowKey}'), this.value)" style="padding: 0.15rem 0.25rem; font-size: 0.775rem; font-weight: 800; color: ${assignedDayLineId ? '#38bdf8' : '#64748b'}; background: rgba(15, 23, 42, 0.9); border: 1px solid ${assignedDayLineId ? 'rgba(56, 189, 248, 0.5)' : 'rgba(255, 255, 255, 0.15)'}; border-radius: 6px; outline: none; cursor: pointer; text-align: center; min-width: 58px;" title="${isAsmRowLocked ? '🔒' + asmLockTitleSuffix : 'Chọn Line SX Ca Ngày'}">
           <option value="" ${!assignedDayLineId ? 'selected' : ''}>--</option>
           ${uniqueLineOptions.map(lid => {
             return `<option value="${lid}" ${assignedDayLineId === lid ? 'selected' : ''}>${lid}</option>`;
@@ -2945,7 +2996,7 @@
 
       // Line dropdown for Night Shift
       const lineSelectNightHtml = `
-        <select class="sim-table-line-select${asmLockClass} font-mono" ${asmLockAttr} onchange="handleTableLineNightChange(decodeURIComponent('${encodedRowKey}'), this.value)" style="padding: 0.15rem 0.25rem; font-size: 0.775rem; font-weight: 800; color: ${assignedNightLineId ? '#c084fc' : '#64748b'}; background: rgba(15, 23, 42, 0.9); border: 1px solid ${assignedNightLineId ? 'rgba(192, 132, 252, 0.5)' : 'rgba(255, 255, 255, 0.15)'}; border-radius: 6px; outline: none; cursor: pointer; text-align: center; min-width: 58px;" title="${isAsmRowLocked ? '🔒' + asmLockTitleSuffix : 'Chọn Line SX Ca Đêm'}">
+        <select class="sim-table-line-select${asmLockClass} font-mono" ${asmLockAttr} data-row-key="${encodedRowKey}" data-shift="night" onchange="handleTableLineNightChange(decodeURIComponent('${encodedRowKey}'), this.value)" style="padding: 0.15rem 0.25rem; font-size: 0.775rem; font-weight: 800; color: ${assignedNightLineId ? '#c084fc' : '#64748b'}; background: rgba(15, 23, 42, 0.9); border: 1px solid ${assignedNightLineId ? 'rgba(192, 132, 252, 0.5)' : 'rgba(255, 255, 255, 0.15)'}; border-radius: 6px; outline: none; cursor: pointer; text-align: center; min-width: 58px;" title="${isAsmRowLocked ? '🔒' + asmLockTitleSuffix : 'Chọn Line SX Ca Đêm'}">
           <option value="" ${!assignedNightLineId ? 'selected' : ''}>--</option>
           ${uniqueLineOptions.map(lid => {
             return `<option value="${lid}" ${assignedNightLineId === lid ? 'selected' : ''}>${lid}</option>`;

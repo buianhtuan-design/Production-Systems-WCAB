@@ -1059,6 +1059,13 @@
     const container = typeof containerId === 'string' ? document.getElementById(containerId) : containerId;
     if (!container) return;
 
+    // Lưu vị trí cuộn trước khi re-render
+    const prevWinY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+    const prevWinX = window.scrollX || window.pageXOffset || document.documentElement.scrollLeft || 0;
+    const pfcWrap = container.querySelector('#pfcTableContainerWrap') || container.querySelector('.table-container');
+    const prevWrapTop = pfcWrap ? pfcWrap.scrollTop : null;
+    const prevWrapLeft = pfcWrap ? pfcWrap.scrollLeft : null;
+
     const store = window.PlanFactCheckStore;
     const { models, logs, activeDates, stages, groups, kpi } = collectPlanFactCheckData();
 
@@ -1638,7 +1645,7 @@
 
         <!-- 5. BẢNG DỮ LIỆU CHÍNH -->
         <div class="card-glass" style="border-radius: var(--radius-md); border: 1px solid var(--border-glass, #334155); overflow: hidden;">
-          <div class="table-container" style="max-height: 720px; overflow-y: auto; overflow-x: auto;">
+          <div class="table-container" id="pfcTableContainerWrap" style="max-height: 720px; overflow-y: auto; overflow-x: auto;">
 
             ${isSummaryView ? `
               <!-- CHẾ ĐỘ 1: BẢNG TỔNG HỢP THEO MODEL (ĐÚNG CONCEPT ẢNH 1) -->
@@ -1766,6 +1773,22 @@
         ${modalHtml}
       </div>
     `;
+
+    // Khôi phục lại vị trí cuộn mượt mà
+    const restorePfcScroll = () => {
+      if (prevWinY > 0 || prevWinX > 0) {
+        window.scrollTo(prevWinX, prevWinY);
+      }
+      const newWrap = container.querySelector('#pfcTableContainerWrap') || container.querySelector('.table-container');
+      if (newWrap && prevWrapTop !== null) {
+        newWrap.scrollTop = prevWrapTop;
+        newWrap.scrollLeft = prevWrapLeft;
+      }
+    };
+    restorePfcScroll();
+    if (typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(restorePfcScroll);
+    }
   };
 
   // ==========================================

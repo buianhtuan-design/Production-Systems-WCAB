@@ -10432,3 +10432,291 @@ body[data-user-role="viewer"] .sim-line-input {
   color: #0f172a !important;
   border-top: 2px solid #cbd5e1 !important;
 }
+
+/* ==================================================================== */
+/* KẾ HOẠCH ĐIỀU CHỈNH LINE OVERTIME / LÀM THÊM - CÔNG ĐOẠN ASSEMBLY    */
+/* ==================================================================== */
+
+.assembly-adjustment-card {
+  background: var(--bg-card-solid, #131c35);
+  transition: all 0.2s ease;
+}
+
+.assembly-adj-scroll-wrap::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.assembly-adj-scroll-wrap::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 4px;
+}
+
+.assembly-adj-scroll-wrap::-webkit-scrollbar-thumb {
+  background: rgba(245, 158, 11, 0.4);
+  border-radius: 4px;
+}
+
+.assembly-adj-scroll-wrap::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 158, 11, 0.7);
+}
+
+.assembly-adj-table th,
+.assembly-adj-table td {
+  box-sizing: border-box;
+}
+
+.adj-cell-ot {
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.adj-cell-ot:hover {
+  filter: brightness(1.1);
+  transform: scale(1.04);
+  box-shadow: 0 0 10px rgba(253, 224, 71, 0.5);
+  z-index: 2;
+}
+
+.adj-cell-empty {
+  position: relative;
+  transition: background 0.15s ease;
+}
+
+.adj-cell-empty:hover {
+  background: rgba(253, 224, 71, 0.15) !important;
+}
+
+.adj-cell-empty:hover .adj-hover-plus {
+  opacity: 0.9 !important;
+  color: #fde047 !important;
+  transform: scale(1.2);
+}
+
+/* Light Theme Styling for Adjustment Table */
+[data-theme="light"] .assembly-adjustment-card {
+  background: #ffffff;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .assembly-adj-table {
+  color: #0f172a;
+}
+
+[data-theme="light"] .adj-header-date-row th {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .adj-header-shift-row th {
+  background: #e2e8f0 !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .adj-row-plan td {
+  background: #eff6ff !important;
+  color: #1e40af !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .adj-row-plan-lines td {
+  background: #faf5ff !important;
+  color: #6b21a8 !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .adj-row-act-lines td {
+  background: #ecfdf5 !important;
+  color: #065f46 !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .adj-row-line td {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .adj-row-line td.adj-cell-ot {
+  background: #fef08a !important;
+  color: #713f12 !important;
+}
+
+[data-theme="light"] .adj-row-diff td {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .adj-row-ot-lines td {
+  background: #fffbeb !important;
+  color: #92400e !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .adj-row-ot-people td {
+  background: #fef3c7 !important;
+  color: #78350f !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .assembly-adj-table .sticky-col-header,
+[data-theme="light"] .assembly-adj-table .sticky-col-cell {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  border-right-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .assembly-adj-table .adj-header-kip-row th {
+  background: #fef08a !important;
+  color: #000000 !important;
+}
+
+/* Sticky Summary Column (Cột Tổng Cộng cố định bên trái, cạnh Cột 1) */
+.assembly-adj-table .sticky-col-summary-header {
+  position: sticky !important;
+  left: 180px !important;
+  z-index: 14 !important;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.35);
+}
+
+.assembly-adj-table .sticky-col-summary-cell {
+  position: sticky !important;
+  left: 180px !important;
+  z-index: 9 !important;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="light"] .assembly-adj-table .sticky-col-summary-header {
+  background: #fef08a !important;
+  color: #000000 !important;
+  border-right-color: #f59e0b !important;
+  box-shadow: 3px 0 8px rgba(15, 23, 42, 0.12);
+}
+
+[data-theme="light"] .assembly-adj-table .sticky-col-summary-cell {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  border-right-color: #f59e0b !important;
+  box-shadow: 3px 0 8px rgba(15, 23, 42, 0.12);
+}
+
+/* =========================================================================
+ * BẢNG TỔNG HỢP CÁC CHỈ SỐ KPI (THEO ĐÚNG CONCEPT ẢNH SỐ 1)
+ * ========================================================================= */
+.kpi-summary-container {
+  padding: 0.85rem 1.25rem 1.15rem 1.25rem;
+  background: rgba(15, 23, 42, 0.45);
+  border-bottom: 2px solid var(--border-glass);
+}
+
+.kpi-summary-table-wrap {
+  overflow-x: auto;
+  border-radius: 4px;
+}
+
+.kpi-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.775rem;
+  text-align: center;
+  border: 2px solid #000000;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  font-family: inherit;
+}
+
+.kpi-summary-table th,
+.kpi-summary-table td {
+  border: 1px solid #000000;
+  padding: 0.35rem 0.5rem;
+  vertical-align: middle;
+}
+
+.kpi-summary-table thead th {
+  font-weight: 900;
+  font-size: 0.775rem;
+  letter-spacing: 0.2px;
+}
+
+.kpi-summary-table .th-cyan {
+  background: #00e5ff !important;
+  color: #000000 !important;
+}
+
+.kpi-summary-table .th-yellow {
+  background: #ffff00 !important;
+  color: #000000 !important;
+}
+
+.kpi-summary-table .th-magenta {
+  background: #ff00ff !important;
+  color: #000000 !important;
+}
+
+.kpi-summary-table .td-cyan {
+  background: #00e5ff !important;
+  color: #000000 !important;
+  font-weight: 900 !important;
+}
+
+.kpi-summary-table .td-yellow {
+  background: #ffff00 !important;
+  color: #000000 !important;
+  font-weight: 900 !important;
+}
+
+.kpi-summary-table .td-magenta {
+  background: #ff00ff !important;
+  color: #000000 !important;
+  font-weight: 900 !important;
+}
+
+.kpi-summary-table .td-white {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+.kpi-summary-table .td-indicator {
+  background: #ffffff !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+  text-align: left !important;
+  padding-left: 0.75rem !important;
+}
+
+.kpi-summary-table .td-level {
+  background: #ffffff !important;
+  color: #000000 !important;
+  font-weight: 600 !important;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+}
+
+.kpi-summary-table .tr-divider-process td {
+  border-bottom: 2.5px solid #000000 !important;
+}
+
+.kpi-summary-result-input {
+  background: transparent !important;
+  border: none !important;
+  color: #000000 !important;
+  font-weight: 900 !important;
+  font-size: 0.8rem !important;
+  text-align: center !important;
+  width: 100% !important;
+  outline: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.kpi-summary-result-input:focus {
+  background: #ffffff !important;
+  box-shadow: 0 0 0 2px #0284c7 !important;
+  border-radius: 2px !important;
+}
+
+
+

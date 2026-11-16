@@ -91,7 +91,8 @@
     filterNote: (window.KPI_MASTER_DATA && window.KPI_MASTER_DATA.meta && window.KPI_MASTER_DATA.meta.remarksFilterNote) || '',
     remarksMap: buildRemarksLookupMap((window.KPI_MASTER_DATA && window.KPI_MASTER_DATA.remarks) || RAW_KPI_REMARKS_DATA),
     targetsMap: {}, // Lưu toàn bộ targets theo key: `${metric}_${district}_${stage}_${team}`
-    resultsMap: {}  // Lưu các kết quả nhập tay (Scrap, Blocked...) theo key: `${metric}_${district}_${stage}_${team}`
+    resultsMap: {}, // Lưu các kết quả nhập tay (Scrap, Blocked...) theo key: `${metric}_${district}_${stage}_${team}`
+    summaryResultsMap: {} // Lưu kết quả bảng Tổng Hợp KPI theo key: `summary_${processKey}_${metricKey}`
   };
 
   // Khôi phục targets và custom data từ localStorage
@@ -112,6 +113,11 @@
     const savedResults = localStorage.getItem('AJAX_PROPLAN_KPI_ALL_RESULTS');
     if (savedResults) {
       window.KpiResultStore.resultsMap = JSON.parse(savedResults) || {};
+    }
+
+    const savedSummaryResults = localStorage.getItem('AJAX_PROPLAN_KPI_SUMMARY_RESULTS');
+    if (savedSummaryResults) {
+      window.KpiResultStore.summaryResultsMap = JSON.parse(savedSummaryResults) || {};
     }
 
     const savedCustomProd = localStorage.getItem('AJAX_PROPLAN_KPI_PRODUCTIVITY_CUSTOM_DATA');
@@ -370,6 +376,343 @@
       refreshStageAveManualMetric(stage, metric);
     }
   };
+
+  /**
+   * Đánh giá Level (1 đến 5) và Kết luận (OK nếu Level 5, còn lại NG)
+   * theo đúng bảng Concept KPI Tổng Hợp (Image 1)
+   */
+  function evaluateKpiMetricLevel(metricKey, val) {
+    if (val === null || val === undefined || String(val).trim() === '' || val === '—' || val === '-') {
+      return { level: null, levelText: '—', conclusion: '—', isOk: false };
+    }
+    let s = String(val).replace('%', '').trim().replace(',', '.');
+    const num = parseFloat(s);
+    if (isNaN(num)) {
+      return { level: null, levelText: '—', conclusion: '—', isOk: false };
+    }
+
+    let level = 1;
+    const m = String(metricKey).toLowerCase();
+
+    if (m === 'productivity') {
+      // Level 1: < 88,05 | Level 2: >= 88,05 | Level 3: >= 90,36 | Level 4: >= 92,68 | Level 5: >= 95
+      if (num >= 95) level = 5;
+      else if (num >= 92.68) level = 4;
+      else if (num >= 90.36) level = 3;
+      else if (num >= 88.05) level = 2;
+      else level = 1;
+    } else if (m === 'clip') {
+      // Level 1: < 85 | Level 2: >= 85 | Level 3: >= 88,8 | Level 4: >= 92,5 | Level 5: >= 95
+      if (num >= 95) level = 5;
+      else if (num >= 92.5) level = 4;
+      else if (num >= 88.8) level = 3;
+      else if (num >= 85) level = 2;
+      else level = 1;
+    } else if (m === 'blocked') {
+      // Level 1: > 3 | Level 2: <= 3 | Level 3: <= 2 | Level 4: <= 1 | Level 5: <= 0
+      if (num <= 0) level = 5;
+      else if (num <= 1) level = 4;
+      else if (num <= 2) level = 3;
+      else if (num <= 3) level = 2;
+      else level = 1;
+    } else if (m === 'remarks') {
+      // Level 1: < 91 | Level 2: >= 91 | Level 3: >= 94 | Level 4: >= 96 | Level 5: >= 98
+      if (num >= 98) level = 5;
+      else if (num >= 96) level = 4;
+      else if (num >= 94) level = 3;
+      else if (num >= 91) level = 2;
+      else level = 1;
+    } else if (m === 'scrap') {
+      // Level 1: > 0,0427 | Level 2: <= 0,0427 | Level 3: <= 0,0417 | Level 4: <= 0,0407 | Level 5: <= 0,0387
+      if (num <= 0.0387) level = 5;
+      else if (num <= 0.0407) level = 4;
+      else if (num <= 0.0417) level = 3;
+      else if (num <= 0.0427) level = 2;
+      else level = 1;
+    }
+
+    const isOk = (level === 5);
+    return {
+      level: level,
+      levelText: `Level ${level}`,
+      conclusion: isOk ? 'OK' : 'NG',
+      isOk: isOk
+    };
+  }
+
+  /**
+   * Lưu kết quả nhập tay trên bảng KPI Tổng Hợp và tức thì đánh giá lại Level + Kết luận
+   */
+  window.handleKpiSummaryResultChange = function(inputElem, processKey, metricKey) {
+    const raw = String(inputElem.value || '').trim();
+    const key = `summary_${processKey}_${metricKey}`;
+    if (!window.KpiResultStore.summaryResultsMap) window.KpiResultStore.summaryResultsMap = {};
+
+    if (raw === '') {
+      delete window.KpiResultStore.summaryResultsMap[key];
+    } else {
+      window.KpiResultStore.summaryResultsMap[key] = raw;
+    }
+
+    try {
+      localStorage.setItem('AJAX_PROPLAN_KPI_SUMMARY_RESULTS', JSON.stringify(window.KpiResultStore.summaryResultsMap));
+    } catch (e) {}
+
+    const evalTd = document.getElementById(`eval_${processKey}_${metricKey}`);
+    const conclTd = document.getElementById(`concl_${processKey}_${metricKey}`);
+    const evalRes = evaluateKpiMetricLevel(metricKey, raw);
+    if (evalTd) evalTd.textContent = evalRes.levelText;
+    if (conclTd) conclTd.textContent = evalRes.conclusion;
+  };
+
+  /**
+   * Copy toàn bộ 13 cột của Bảng Tổng Hợp KPI dạng TSV cho Google Sheets / Excel
+   */
+  window.handleCopyKpiSummaryTable = function() {
+    const table = document.getElementById('kpiSummaryLevelTable');
+    if (!table) return;
+    let tsv = '';
+    const rows = table.querySelectorAll('tr');
+    rows.forEach(r => {
+      const cells = r.querySelectorAll('th, td');
+      const rowTexts = [];
+      cells.forEach(c => {
+        const inp = c.querySelector('input');
+        const txt = inp ? inp.value.trim() : c.innerText.trim();
+        rowTexts.push(txt);
+      });
+      if (rowTexts.length > 0) tsv += rowTexts.join('\t') + '\n';
+    });
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(tsv).then(() => {
+        showKpiToast('📋 Đã copy Bảng Tổng Hợp KPI vào clipboard! Dán trực tiếp vào Google Sheets / Excel.');
+      }).catch(() => {
+        alert('Không thể copy tự động, vui lòng chọn và copy thủ công.');
+      });
+    }
+  };
+
+  /**
+   * Khôi phục kết quả Bảng Tổng Hợp KPI về giá trị tự động từ dữ liệu gốc
+   */
+  window.handleResetKpiSummaryOverrides = function() {
+    if (confirm('Khôi phục các kết quả Bảng Tổng Hợp KPI về giá trị tự động từ dữ liệu cập nhật?')) {
+      window.KpiResultStore.summaryResultsMap = {};
+      try {
+        localStorage.removeItem('AJAX_PROPLAN_KPI_SUMMARY_RESULTS');
+      } catch (e) {}
+      renderKpiResultView('kpiResultContainer');
+      showKpiToast('🔄 Đã khôi phục kết quả Bảng Tổng Hợp KPI theo dữ liệu gốc!');
+    }
+  };
+
+  /**
+   * Sinh mã HTML cho Bảng Tổng Hợp Các Chỉ Số KPI (chuẩn theo Image 1)
+   */
+  function buildKpiSummaryTableHtml(allData, stageGroups, clipsActual, sfpdData) {
+    const st = window.KpiResultStore;
+    const sheetSummary = (window.KPI_MASTER_DATA && Array.isArray(window.KPI_MASTER_DATA.kpiSummary)) ? window.KPI_MASTER_DATA.kpiSummary : [];
+    
+    // Month text: lấy từ dòng sheet hoặc mặc định Nov - 2026
+    const monthText = (sheetSummary[0] && sheetSummary[0].month) ? sheetSummary[0].month : 'Nov - 2026';
+    const teamText = 'SFPD';
+
+    // 5 chỉ số tiêu chuẩn
+    const baseIndicators = [
+      { key: 'productivity', name: 'Productivity', unit: '%', l1: '< 88,05', l2: '>= 88,05', l3: '>= 90,36', l4: '>= 92,68', l5: '>= 95' },
+      { key: 'clip', name: 'Clip (all plant)', unit: '%', l1: '< 85', l2: '>= 85', l3: '>= 88,8', l4: '>= 92,5', l5: '>= 95' },
+      { key: 'blocked', name: 'Blocked batches (v1)', unit: 'pcs', l1: '> 3', l2: '<= 3', l3: '<= 2', l4: '<= 1', l5: '<= 0' },
+      { key: 'remarks', name: 'Inspection remarks, %', unit: '%', l1: '< 91', l2: '>= 91', l3: '>= 94', l4: '>= 96', l5: '>= 98' },
+      { key: 'scrap', name: 'Scrap, %', unit: '%', l1: '> 0,0427', l2: '<= 0,0427', l3: '<= 0,0417', l4: '<= 0,0407', l5: '<= 0,0387' }
+    ];
+
+    // 1. Hard Test Live Values
+    const htTotalRow = allData.find(it => (it.district || '').trim().toLowerCase() === 'hard test' && ((it.stage || '').trim().toLowerCase() === 'total' || !(it.stage || '').trim()) && !(it.team || '').trim() && it.result);
+    let htProdLive = (htTotalRow && htTotalRow.result) ? htTotalRow.result : '111,05%';
+    
+    const htClipLive = (clipsActual && clipsActual.str && clipsActual.str !== '-') ? clipsActual.str : '98,5%';
+    const htBlockedLive = getMetricResultInput('blocked', 'Hard Test', 'HardTest', 'Ave', '0');
+    
+    let htRemLive = '98%';
+    const htGroup = stageGroups.find(g => (g.stage || '').toLowerCase() === 'hardtest');
+    if (htGroup) {
+      const valid = htGroup.teams.map(t => parsePercentVal(getRemarksResultForTeam(t.team))).filter(v => v !== null);
+      if (valid.length > 0) {
+        const avg = Math.round((valid.reduce((a, b) => a + b, 0) / valid.length) * 100) / 100;
+        htRemLive = avg.toFixed(2).replace('.', ',') + '%';
+      }
+    }
+    const htScrapInput = getMetricResultInput('scrap', 'Hard Test', 'HardTest', 'Ave', '');
+    const htScrapLive = htScrapInput || (st.customScrapData && st.customScrapData.actual ? st.customScrapData.actual : '');
+
+    // 2. Assembly Live Values
+    const asmTotalRow = allData.find(it => (it.district || '').trim().toLowerCase() === 'assembly' && ((it.stage || '').trim().toLowerCase() === 'total' || !(it.stage || '').trim()) && !(it.team || '').trim() && it.result);
+    let asmProdLive = (asmTotalRow && asmTotalRow.result) ? asmTotalRow.result : '96,57%';
+    
+    const asmClipLive = (clipsActual && clipsActual.str && clipsActual.str !== '-') ? clipsActual.str : '98,5%';
+    const asmBlockedLive = getMetricResultInput('blocked', 'Assembly', 'Assembly', 'Ave', '0');
+    
+    let asmRemLive = '98%';
+    const asmGroup = stageGroups.find(g => (g.stage || '').toLowerCase() === 'assembly');
+    if (asmGroup) {
+      const valid = asmGroup.teams.map(t => parsePercentVal(getRemarksResultForTeam(t.team))).filter(v => v !== null);
+      if (valid.length > 0) {
+        const avg = Math.round((valid.reduce((a, b) => a + b, 0) / valid.length) * 100) / 100;
+        asmRemLive = avg.toFixed(2).replace('.', ',') + '%';
+      }
+    }
+    const asmScrapInput = getMetricResultInput('scrap', 'Assembly', 'Assembly', 'Ave', '');
+    const asmScrapLive = asmScrapInput || (st.customScrapData && st.customScrapData.actual ? st.customScrapData.actual : '');
+
+    const liveDataMap = {
+      'HARD_TEST': {
+        productivity: htProdLive,
+        clip: htClipLive,
+        blocked: htBlockedLive,
+        remarks: htRemLive,
+        scrap: htScrapLive
+      },
+      'ASSEMBLY': {
+        productivity: asmProdLive,
+        clip: asmClipLive,
+        blocked: asmBlockedLive,
+        remarks: asmRemLive,
+        scrap: asmScrapLive
+      }
+    };
+
+    const processes = [
+      { key: 'HARD_TEST', label: 'HARD TEST', startIndex: 0 },
+      { key: 'ASSEMBLY', label: 'ASSEMBLY', startIndex: 5 }
+    ];
+
+    let rowsHtml = '';
+    let globalRowIdx = 0;
+
+    processes.forEach((proc, procIdx) => {
+      baseIndicators.forEach((baseInd, indIdx) => {
+        const sheetRow = sheetSummary[proc.startIndex + indIdx] || {};
+        const indConfig = {
+          key: baseInd.key,
+          name: sheetRow.indicator || baseInd.name,
+          unit: sheetRow.unit || baseInd.unit,
+          l1: sheetRow.l1 || baseInd.l1,
+          l2: sheetRow.l2 || baseInd.l2,
+          l3: sheetRow.l3 || baseInd.l3,
+          l4: sheetRow.l4 || baseInd.l4,
+          l5: sheetRow.l5 || baseInd.l5
+        };
+
+        const manualKey = `summary_${proc.key}_${baseInd.key}`;
+        const manualVal = (st.summaryResultsMap && st.summaryResultsMap[manualKey] !== undefined) ? st.summaryResultsMap[manualKey] : null;
+        const autoLiveVal = liveDataMap[proc.key][baseInd.key] || '';
+        const displayVal = (manualVal !== null && String(manualVal).trim() !== '') ? manualVal : autoLiveVal;
+
+        const evalObj = evaluateKpiMetricLevel(baseInd.key, displayVal);
+        const isLastInProc = (indIdx === baseIndicators.length - 1);
+        const trClass = (isLastInProc && procIdx === 0) ? 'class="tr-divider-process"' : '';
+
+        let rowContent = '';
+        
+        // Month cell (chỉ ở hàng đầu tiên của bảng)
+        if (globalRowIdx === 0) {
+          rowContent += `<td rowspan="10" class="td-cyan" style="font-size: 0.85rem; letter-spacing: 0.5px; vertical-align: middle;">${monthText}</td>`;
+        }
+
+        // Team cell
+        rowContent += `<td class="td-cyan" style="font-size: 0.8rem; vertical-align: middle;">${teamText}</td>`;
+
+        // Process cell (chỉ ở hàng đầu của mỗi Process)
+        if (indIdx === 0) {
+          rowContent += `<td rowspan="5" class="td-cyan" style="font-size: 0.85rem; letter-spacing: 0.5px; vertical-align: middle;">${proc.label}</td>`;
+        }
+
+        // Indicators & Unit & Levels
+        rowContent += `
+          <td class="td-indicator">${indConfig.name}</td>
+          <td class="td-white" style="font-weight: 700; text-align: center;">${indConfig.unit}</td>
+          <td class="td-level">${indConfig.l1}</td>
+          <td class="td-level">${indConfig.l2}</td>
+          <td class="td-level">${indConfig.l3}</td>
+          <td class="td-level">${indConfig.l4}</td>
+          <td class="td-level">${indConfig.l5}</td>
+          <td class="td-yellow">
+            <input type="text" class="kpi-summary-result-input font-mono" 
+                   data-process="${proc.key}" data-metric="${baseInd.key}" 
+                   value="${displayVal}" 
+                   onchange="handleKpiSummaryResultChange(this, '${proc.key}', '${baseInd.key}')" 
+                   title="Nhập kết quả để tự động đánh giá Level và Kết Luận (click vào để sửa)">
+          </td>
+          <td class="td-cyan" id="eval_${proc.key}_${baseInd.key}">${evalObj.levelText}</td>
+          <td class="td-magenta" id="concl_${proc.key}_${baseInd.key}" style="font-weight: 900; font-size: 0.85rem; letter-spacing: 0.5px;">
+            ${evalObj.conclusion}
+          </td>
+        `;
+
+        rowsHtml += `<tr ${trClass}>${rowContent}</tr>`;
+        globalRowIdx++;
+      });
+    });
+
+    return `
+      <!-- KHỐI TỔNG HỢP CÁC CHỈ SỐ KPI (THEO ĐÚNG CONCEPT ẢNH SỐ 1) -->
+      <div class="kpi-summary-container">
+        
+        <!-- Header Bar của Bảng Tổng Hợp KPI -->
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.65rem;">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <span style="font-size: 1.15rem;">📋</span>
+            <h4 style="font-size: 0.95rem; font-weight: 900; color: #f8fafc; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
+              TỔNG HỢP CÁC CHỈ SỐ KPI
+            </h4>
+            <span class="badge" style="background: rgba(0, 229, 255, 0.15); color: #00e5ff; border: 1px solid rgba(0, 229, 255, 0.4); font-size: 0.675rem; font-weight: 800; padding: 0.1rem 0.45rem;">
+              LEVEL 1 - 5 EVALUATION
+            </span>
+            <span style="font-size: 0.7rem; color: #94a3b8; font-weight: 600;">
+              (Đạt Level 5 ➔ <strong>OK</strong>, còn lại ➔ <strong>NG</strong>)
+            </span>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.4rem;">
+            <button type="button" class="btn btn-sm btn-outline" onclick="handleCopyKpiSummaryTable()" style="font-size: 0.725rem; font-weight: 700; padding: 0.25rem 0.6rem; color: #00e5ff; border-color: rgba(0, 229, 255, 0.4);" title="Copy bảng Tổng Hợp KPI vào clipboard (dán Google Sheets / Excel)">
+              <span>📋 Copy Bảng KPI</span>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline" onclick="handleResetKpiSummaryOverrides()" style="font-size: 0.725rem; font-weight: 700; padding: 0.25rem 0.6rem; color: #94a3b8; border-color: rgba(148, 163, 184, 0.3);" title="Khôi phục lại các giá trị Result tự động từ dữ liệu cập nhật">
+              <span>🔄 Reset Data Gốc</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Bảng 13 Cột Chuẩn Image 1 -->
+        <div class="kpi-summary-table-wrap">
+          <table class="kpi-summary-table" id="kpiSummaryLevelTable">
+            <thead>
+              <tr>
+                <th class="th-cyan" style="width: 85px;">Month</th>
+                <th class="th-cyan" style="width: 65px;">Team</th>
+                <th class="th-cyan" style="width: 105px;">Process</th>
+                <th class="th-cyan" style="min-width: 170px; text-align: left; padding-left: 0.75rem;">Indicators</th>
+                <th class="th-cyan" style="width: 45px;"><></th>
+                <th class="th-cyan" style="width: 80px;">Level 1</th>
+                <th class="th-cyan" style="width: 80px;">Level 2</th>
+                <th class="th-cyan" style="width: 80px;">Level 3</th>
+                <th class="th-cyan" style="width: 80px;">Level 4</th>
+                <th class="th-cyan" style="width: 80px;">Level 5</th>
+                <th class="th-yellow" style="width: 105px;">Result</th>
+                <th class="th-cyan" style="width: 95px;">Đánh Giá</th>
+                <th class="th-magenta" style="width: 85px;">Kết Luận</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    `;
+  }
 
   /**
    * Tra cứu số liệu Inspection remarks cho 1 team
@@ -777,6 +1120,11 @@
             </div>
 
           </div>
+
+          <!-- ======================================================== -->
+          <!-- BẢNG TỔNG HỢP CÁC CHỈ SỐ KPI (THEO ĐÚNG CONCEPT ẢNH SỐ 1) -->
+          <!-- ======================================================== -->
+          ${buildKpiSummaryTableHtml(allData, stageGroups, clipsActual, sfpdData)}
 
           <!-- Bảng Master Table 2 Tầng Header (Co gọn về bên trái, mở rộng 5 nhóm chỉ số) -->
           <div style="overflow-x: auto; max-height: 600px; overflow-y: auto;">
@@ -1683,9 +2031,11 @@
 
     let curDist = '';
     let curStage = '';
+    let prodStarted = false;
     let prodStopped = false;
     let remarksStarted = false;
     let remarksStopped = false;
+    const parsedSummary = [];
 
     for (let i = 1; i < rows.length; i++) {
       const r = rows[i];
@@ -1694,6 +2044,30 @@
       const c0 = String(r[0] || '').trim();
       const c1 = String(r[1] || '').trim();
       const c2 = String(r[2] || '').trim();
+
+      // 0. Bảng Tổng Hợp Chỉ Số KPI ở đầu sheet
+      if (!prodStarted) {
+        if (c0.toLowerCase() === 'district') {
+          prodStarted = true;
+        } else if (r.length >= 10 && ['Productivity', 'Clip', 'Blocked', 'remarks', 'Scrap'].some(k => (r[3] || '').includes(k))) {
+          parsedSummary.push({
+            month: c0,
+            team: c1,
+            process: c2,
+            indicator: r[3] ? String(r[3]).trim() : '',
+            unit: r[4] ? String(r[4]).trim() : '',
+            l1: r[5] ? String(r[5]).trim() : '',
+            l2: r[6] ? String(r[6]).trim() : '',
+            l3: r[7] ? String(r[7]).trim() : '',
+            l4: r[8] ? String(r[8]).trim() : '',
+            l5: r[9] ? String(r[9]).trim() : '',
+            result: r[10] ? String(r[10]).trim() : '',
+            eval: r[11] ? String(r[11]).trim() : '',
+            conclusion: r[12] ? String(r[12]).trim() : ''
+          });
+        }
+        if (!prodStarted) continue;
+      }
 
       if (!prodStopped) {
         if (c0.startsWith('Applied filters') || c0.startsWith('[Param]')) {
@@ -1748,6 +2122,7 @@
       productivity: parsedProd,
       remarks: parsedRemarks,
       scrap: scrapObj,
+      kpiSummary: parsedSummary,
       meta: { prodFilterNote, remarksFilterNote }
     };
   }
@@ -1756,11 +2131,17 @@
     const prodList = payload && Array.isArray(payload.productivity) ? payload.productivity : [];
     const remList = payload && Array.isArray(payload.remarks) ? payload.remarks : [];
     const scrapObj = (payload && payload.scrap) ? payload.scrap : null;
+    const summaryList = (payload && Array.isArray(payload.kpiSummary)) ? payload.kpiSummary : [];
     const syncTs = (payload && payload.timestamp) || new Date().toLocaleString('vi-VN');
     const filterNote = (payload && payload.meta && (payload.meta.remarksFilterNote || payload.meta.prodFilterNote)) || '';
 
     if (!hasValidWorkcellTeams(prodList)) {
       throw new Error('Không tìm thấy dữ liệu team Workcell A/B hợp lệ từ Sheet KPI Data');
+    }
+
+    if (summaryList.length > 0) {
+      if (!window.KPI_MASTER_DATA) window.KPI_MASTER_DATA = {};
+      window.KPI_MASTER_DATA.kpiSummary = summaryList;
     }
 
     window.KpiResultStore.customProductivityData = prodList;

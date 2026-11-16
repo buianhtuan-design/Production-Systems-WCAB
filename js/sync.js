@@ -200,6 +200,21 @@ window.SyncService = {
 
   refreshVisibleModulesAfterSync() {
     try {
+      const activeEl = document.activeElement;
+      const isUserTypingOrSelecting = activeEl && (
+        activeEl.tagName === 'INPUT' || 
+        activeEl.tagName === 'SELECT' || 
+        activeEl.tagName === 'TEXTAREA' ||
+        activeEl.isContentEditable
+      );
+      if (isUserTypingOrSelecting) {
+        console.log('User is interacting with form controls, deferring visual module refresh...');
+        return;
+      }
+
+      const winY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+      const winX = window.scrollX || window.pageXOffset || document.documentElement.scrollLeft || 0;
+
       if (typeof renderAttentionPointsSection === 'function' && window.__LATEST_SCHEDULE__) {
         renderAttentionPointsSection(window.__LATEST_SCHEDULE__);
       }
@@ -210,9 +225,7 @@ window.SyncService = {
       if (typeof window.renderWipControlView === 'function') {
         const wipTab = document.getElementById('tab-wip');
         if (wipTab && wipTab.classList.contains('active')) {
-          const activeEl = document.activeElement;
-          const isUserTyping = activeEl && (activeEl.id === 'wipSearchInput' || activeEl.id === 'wipSfgSearchInput');
-          if (!isUserTyping) window.renderWipControlView('wipContainer');
+          window.renderWipControlView('wipContainer');
         }
       }
       if (typeof window.renderClipsAllPlanView === 'function') {
@@ -230,6 +243,13 @@ window.SyncService = {
       if (typeof window.renderPlanFactCheckView === 'function') {
         const pfcTab = document.getElementById('tab-plan-fact-check');
         if (pfcTab && pfcTab.classList.contains('active')) window.renderPlanFactCheckView('planFactCheckContainer');
+      }
+
+      if (winY > 0 || winX > 0) {
+        window.scrollTo(winX, winY);
+        if (typeof requestAnimationFrame === 'function') {
+          requestAnimationFrame(() => window.scrollTo(winX, winY));
+        }
       }
     } catch (e) {}
   },
