@@ -1,7 +1,7 @@
 {
   "success": true,
-  "timestamp": "2026-11-16 16:03:53",
-  "version": 20261116160353,
+  "timestamp": "2026-11-16 16:04:21",
+  "version": 20261116160421,
   "kpiSummary": [
     {
       "month": "Nov - 2026",
@@ -6253,7 +6253,7 @@
     },
     {
       "date": "13.11.2026",
-      "unblockDate": "",
+      "unblockDate": "16.11.2026",
       "device": "Ajax MotionCam Outdoor",
       "area": "Long Test",
       "cl": "",
