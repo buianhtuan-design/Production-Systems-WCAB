@@ -60,11 +60,11 @@
       "2C": 19.0,
       "3C": 19.0
     },
-    "htDirect": 25.0,
-    "htTotal": 27.0,
+    "htDirect": 26.0,
+    "htTotal": 28.0,
     "htBreakdown": {
       "cleanroom": 2.0,
-      "operator": 23.0,
+      "operator": 24.0,
       "feeder": 1.0,
       "leader": 1.0
     }
