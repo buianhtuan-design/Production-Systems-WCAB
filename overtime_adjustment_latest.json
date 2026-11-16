@@ -1,0 +1,30 @@
+{
+  "id": "ADJ_1794814800000_init",
+  "stage": "ASSEMBLY",
+  "stageName": "🔧 ASSEMBLY",
+  "planner": "Lê Ngọc Duy GLD",
+  "planDate": "16/11/2026",
+  "completedAt": "2026-11-16T08:20:00.000Z",
+  "timeStr": "15:20",
+  "dateStr": "16/11/2026",
+  "otCount": 5,
+  "otMap": {
+    "11/18/2026_Night": ["1C", "3C"],
+    "2026-11-18_Night": ["1C", "3C"],
+    "11/19/2026_Day": ["1D", "2D"],
+    "2026-11-19_Day": ["1D", "2D"],
+    "11/19/2026_Night": ["2C"],
+    "2026-11-19_Night": ["2C"]
+  },
+  "allStagesOtMap": {
+    "ASSEMBLY": {
+      "11/18/2026_Night": ["1C", "3C"],
+      "2026-11-18_Night": ["1C", "3C"],
+      "11/19/2026_Day": ["1D", "2D"],
+      "2026-11-19_Day": ["1D", "2D"],
+      "11/19/2026_Night": ["2C"],
+      "2026-11-19_Night": ["2C"]
+    }
+  },
+  "totalOtCountAllStages": 5
+}
