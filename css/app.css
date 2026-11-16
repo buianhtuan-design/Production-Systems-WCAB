@@ -10606,40 +10606,45 @@ body[data-user-role="viewer"] .sim-line-input {
   box-shadow: 4px 0 10px rgba(0, 0, 0, 0.35);
 }
 
-/* Header sticky rows */
-.assembly-adj-table thead tr.adj-header-kip-row th {
+/* Header sticky: Đóng băng từ Hàng Ca (Row Ca sticks to top: 0) & Đóng băng Cột Tổng (Col 1 & Col 2 sticky left) */
+.assembly-adj-table thead tr.adj-header-kip-row th.sticky-col-header {
+  position: sticky !important;
+  left: 0 !important;
+  z-index: 15 !important;
+}
+.assembly-adj-table thead tr.adj-header-kip-row th.sticky-col-summary-header {
+  position: sticky !important;
+  left: 220px !important;
+  z-index: 14 !important;
+}
+
+.assembly-adj-table thead tr.adj-header-date-row th.sticky-col-header {
+  position: sticky !important;
+  left: 0 !important;
+  z-index: 15 !important;
+}
+.assembly-adj-table thead tr.adj-header-date-row th.sticky-col-summary-header {
+  position: sticky !important;
+  left: 220px !important;
+  z-index: 14 !important;
+}
+
+/* Hàng Ca ghim cố định ở đỉnh bảng (top: 0) khi cuộn dọc */
+.assembly-adj-table thead tr.adj-header-shift-row th {
   position: sticky;
   top: 0;
   z-index: 20;
 }
-.assembly-adj-table thead tr.adj-header-kip-row th.sticky-col-header {
-  z-index: 35 !important;
-}
-.assembly-adj-table thead tr.adj-header-kip-row th.sticky-col-summary-header {
-  z-index: 34 !important;
-}
-
-.assembly-adj-table thead tr.adj-header-date-row th {
-  position: sticky;
-  top: 34px;
-  z-index: 20;
-}
-.assembly-adj-table thead tr.adj-header-date-row th.sticky-col-header {
-  z-index: 35 !important;
-}
-.assembly-adj-table thead tr.adj-header-date-row th.sticky-col-summary-header {
-  z-index: 34 !important;
-}
-
-.assembly-adj-table thead tr.adj-header-shift-row th {
-  position: sticky;
-  top: 62px;
-  z-index: 20;
-}
 .assembly-adj-table thead tr.adj-header-shift-row th.sticky-col-header {
+  position: sticky !important;
+  top: 0 !important;
+  left: 0 !important;
   z-index: 35 !important;
 }
 .assembly-adj-table thead tr.adj-header-shift-row th.sticky-col-summary-header {
+  position: sticky !important;
+  top: 0 !important;
+  left: 220px !important;
   z-index: 34 !important;
 }
 

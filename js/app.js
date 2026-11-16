@@ -4330,9 +4330,10 @@ window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, is
 
     const barOpacity = d.isSelected ? '1' : '0.45';
 
-    // Tính trạng thái Over & số người thiếu của ngày
+    // Tính trạng thái Over & số người thiếu/dư của ngày
     const isOver = (d.hasActual && (d.loadingPct > 100 || d.planVal > d.actVal));
     const shortage = Math.max(0, Math.round((d.planVal - d.actVal) * 10) / 10);
+    const surplus = Math.max(0, Math.round((d.actVal - d.planVal) * 10) / 10);
 
     // Plan Bar (Màu Xanh) & Actual Bar (Màu Cam) + Hiển thị số người ở chân biểu đồ
     const cxPlan = xPlan + barW / 2;
@@ -4464,8 +4465,8 @@ window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, is
     const dayWeight = (d.isWeekend || d.isSelected) ? '800' : '600';
     const rotText = d.rot ? `${d.rot.day}/${d.rot.night}` : '';
 
-    // Badge báo số người thiếu chuyển xuống dưới sát chân biểu đồ (Chỉ để dạng -0.8 theo chỉ đạo)
-    let shortageFootBadgeHtml = '';
+    // Badge báo số người thiếu (Đỏ) hoặc dư (Xanh) chuyển xuống dưới sát chân biểu đồ
+    let balanceFootBadgeHtml = '';
     if (isOver && shortage > 0) {
       const shortageStr = (shortage % 1 === 0) ? shortage.toFixed(0) : shortage.toFixed(1);
       const shortageH = isExpanded ? 16 : 13.5;
@@ -4475,7 +4476,7 @@ window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, is
       const shortageW = Math.max(isExpanded ? 32 : 25, shortageText.length * (isExpanded ? 6.5 : 5.5) + 8);
       const shortageY = isExpanded ? (yBase + 48) : (yBase + (isStaggerShortage ? 61 : 47));
 
-      shortageFootBadgeHtml = `
+      balanceFootBadgeHtml = `
         <g class="chart-shortage-foot" style="cursor: pointer;">
           <rect x="${cx - shortageW / 2}" y="${shortageY}" width="${shortageW}" height="${shortageH}" rx="${shortageH / 2}" 
                 fill="#dc2626" stroke="#fca5a5" stroke-width="1.2" filter="url(#badgeShadow)">
@@ -4483,6 +4484,26 @@ window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, is
           </rect>
           <text x="${cx}" y="${shortageY + shortageH * 0.72}" fill="#ffffff" font-size="${shortageFontSize}" font-weight="900" font-family="'JetBrains Mono', monospace" text-anchor="middle">
             ${shortageText}
+          </text>
+        </g>
+      `;
+    } else if (d.hasActual && surplus > 0) {
+      const surplusStr = (surplus % 1 === 0) ? surplus.toFixed(0) : surplus.toFixed(1);
+      const surplusH = isExpanded ? 16 : 13.5;
+      const surplusText = `+${surplusStr}`;
+      const surplusFontSize = isExpanded ? 9 : 7.8;
+      const isStaggerSurplus = (!isExpanded && (i % 2 === 1));
+      const surplusW = Math.max(isExpanded ? 32 : 25, surplusText.length * (isExpanded ? 6.5 : 5.5) + 8);
+      const surplusY = isExpanded ? (yBase + 48) : (yBase + (isStaggerSurplus ? 61 : 47));
+
+      balanceFootBadgeHtml = `
+        <g class="chart-surplus-foot" style="cursor: pointer;">
+          <rect x="${cx - surplusW / 2}" y="${surplusY}" width="${surplusW}" height="${surplusH}" rx="${surplusH / 2}" 
+                fill="#059669" stroke="#6ee7b7" stroke-width="1.2" filter="url(#badgeShadow)">
+            <title>Ngày ${d.date}: Dư ${surplusStr} người so với kế hoạch (Thực tế: ${d.actVal} | Kế hoạch: ${d.planVal})</title>
+          </rect>
+          <text x="${cx}" y="${surplusY + surplusH * 0.72}" fill="#ffffff" font-size="${surplusFontSize}" font-weight="900" font-family="'JetBrains Mono', monospace" text-anchor="middle">
+            ${surplusText}
           </text>
         </g>
       `;
@@ -4499,7 +4520,7 @@ window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, is
         <text x="${cx}" y="${yBase + 39}" fill="#38bdf8" font-size="${isExpanded ? '8.5' : '7.5'}" font-weight="700" text-anchor="middle">
           ${rotText}
         </text>
-        ${shortageFootBadgeHtml}
+        ${balanceFootBadgeHtml}
       </g>
     `;
 
@@ -4620,7 +4641,8 @@ window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, is
           <span class="strip-legend-item"><span class="strip-legend-dot" style="background: #38bdf8;"></span> Plan (người)</span>
           <span class="strip-legend-item"><span class="strip-legend-dot" style="background: #fb923c;"></span> Nhân Lực Có (người)</span>
           <span class="strip-legend-item"><span class="strip-legend-line" style="background: linear-gradient(90deg, #c084fc, #38bdf8);"></span> % Loading</span>
-          <span class="strip-legend-item"><span class="strip-legend-dot" style="background: #dc2626; border-radius: 2px;"></span> Over (Thiếu ng)</span>
+          <span class="strip-legend-item"><span class="strip-legend-dot" style="background: #dc2626; border-radius: 2px;"></span> Thiếu ng (Over)</span>
+          <span class="strip-legend-item"><span class="strip-legend-dot" style="background: #059669; border-radius: 2px;"></span> Dư ng (Surplus)</span>
           <span class="strip-legend-item"><span class="strip-legend-dash"></span> 100% Chuẩn</span>
         </div>
       </div>
