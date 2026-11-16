@@ -266,7 +266,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) WL Standard ASP white датчик диму та температури",
       "plan": 7237.0,
-      "sheetFact": 5030.0,
+      "sheetFact": 5058.0,
       "done": 0,
       "isDone": false
     },
@@ -2888,7 +2888,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) WL Standard ASP white датчик диму та температури",
       "plan": 7237.0,
-      "sheetFact": 5030.0,
+      "sheetFact": 5058.0,
       "done": 0,
       "isDone": false
     },
@@ -5250,7 +5250,7 @@
   "clipAllPlant": "50.8%",
   "clipAllPlantPct": 50.8,
   "totalPlan": 485822.0,
-  "totalSheetFact": 234651.0,
+  "totalSheetFact": 234679.0,
   "hasPlanCount": 219,
   "gt90Count": 133,
   "lt90Count": 129,
@@ -9547,10 +9547,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-16 21:46:05",
+        "archivedAt": "2026-11-16 21:47:53",
         "totalItems": 262,
         "totalPlan": 485822.0,
-        "totalSheetFact": 234651.0,
+        "totalSheetFact": 234679.0,
         "qtyAllDevice": 262,
         "qtyDoneDevice": 133,
         "qtyNotDoneDevice": 129,
@@ -9822,7 +9822,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) WL Standard ASP white датчик диму та температури",
             "plan": 7237.0,
-            "sheetFact": 5030.0,
+            "sheetFact": 5058.0,
             "done": 0,
             "isDone": false
           },
@@ -12444,7 +12444,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) WL Standard ASP white датчик диму та температури",
             "plan": 7237.0,
-            "sheetFact": 5030.0,
+            "sheetFact": 5058.0,
             "done": 0,
             "isDone": false
           },
