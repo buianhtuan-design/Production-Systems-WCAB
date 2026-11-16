@@ -263,14 +263,105 @@
     }
   });
 
-  function handleIncomingAdjPlan(remotePlan, isManual) {
-    if (!remotePlan || !remotePlan.otMap) return;
+  const RAW_GITHUB_BASE = 'https://raw.githubusercontent.com/buianhtuan-design/Production-Systems-WCAB/main/';
+
+  async function safeFetchJson(url) {
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res || !res.ok) return null;
+      return await res.json();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async function fetchRemoteOvertimeBundle() {
+    const bust = Date.now();
+    const isGh = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
+    
+    // 1. Thử gọi API server local (/api/overtime-adjustment) nếu không phải GitHub Pages
+    const apiPromise = !isGh
+      ? safeFetchJson('/api/overtime-adjustment?t=' + bust)
+      : Promise.resolve(null);
+    
+    // 2. Thử đọc static files ./overtime_adjustment_latest.json & history
+    const staticLatestPromise = safeFetchJson('./overtime_adjustment_latest.json?t=' + bust);
+    const staticHistPromise = safeFetchJson('./overtime_adjustment_history.json?t=' + bust);
+    
+    // 3. Fallback raw GitHub nếu trên GitHub Pages hoặc static bị miss
+    const rawLatestPromise = isGh
+      ? safeFetchJson(RAW_GITHUB_BASE + 'overtime_adjustment_latest.json?t=' + bust)
+      : Promise.resolve(null);
+    const rawHistPromise = isGh
+      ? safeFetchJson(RAW_GITHUB_BASE + 'overtime_adjustment_history.json?t=' + bust)
+      : Promise.resolve(null);
+
+    const [apiData, staticLatest, staticHist, rawLatest, rawHist] = await Promise.all([
+      apiPromise, staticLatestPromise, staticHistPromise, rawLatestPromise, rawHistPromise
+    ]);
+
+    let latestPlan = null;
+    let historyList = [];
+
+    if (apiData && apiData.success) {
+      if (apiData.latestPlan && apiData.latestPlan.id) latestPlan = apiData.latestPlan;
+      if (Array.isArray(apiData.history)) historyList = apiData.history;
+    }
+
+    const candidates = [latestPlan, staticLatest, rawLatest].filter(p => p && p.id);
+    if (candidates.length > 0) {
+      candidates.sort((a, b) => new Date(b.completedAt || b.createdAt || 0) - new Date(a.completedAt || a.createdAt || 0));
+      latestPlan = candidates[0];
+    }
+
+    const histMap = new Map();
+    [historyList, staticHist, rawHist].forEach(list => {
+      if (Array.isArray(list)) {
+        list.forEach(item => {
+          if (item && item.id) histMap.set(item.id, item);
+        });
+      }
+    });
+    if (latestPlan && latestPlan.id) {
+      histMap.set(latestPlan.id, latestPlan);
+    }
+    const mergedHistory = Array.from(histMap.values()).sort(
+      (a, b) => new Date(b.completedAt || b.createdAt || 0) - new Date(a.completedAt || a.createdAt || 0)
+    );
+
+    return {
+      success: !!latestPlan,
+      latestPlan,
+      history: mergedHistory
+    };
+  }
+
+  function handleIncomingAdjPlan(remotePlan, isManual, optionalHistory) {
+    if (!remotePlan) return;
     const store = window.AssemblyAdjustmentStore;
+
+    // 1. Cập nhật tất cả các công đoạn nếu remotePlan có allStagesOtMap
+    if (remotePlan.allStagesOtMap && typeof remotePlan.allStagesOtMap === 'object') {
+      Object.keys(remotePlan.allStagesOtMap).forEach(stg => {
+        const m = remotePlan.allStagesOtMap[stg];
+        if (m && typeof m === 'object') {
+          saveStoredOtMap(m, stg);
+        }
+      });
+    }
+
     const incomingStage = remotePlan.stage || store.selectedStage || DEFAULT_STAGE;
-    store.selectedStage = incomingStage;
-    localStorage.setItem(SELECTED_STAGE_KEY, incomingStage);
-    store.otMap = { ...remotePlan.otMap };
-    saveStoredOtMap(store.otMap, incomingStage);
+    if (remotePlan.otMap && typeof remotePlan.otMap === 'object') {
+      saveStoredOtMap(remotePlan.otMap, incomingStage);
+    }
+
+    // Nếu người dùng đang xem đúng công đoạn này
+    if (store.selectedStage === incomingStage && remotePlan.otMap) {
+      store.otMap = { ...remotePlan.otMap };
+    } else {
+      store.otMap = loadStoredOtMap(store.selectedStage);
+    }
+
     if (remotePlan.planner) {
       store.plannerName = remotePlan.planner;
       localStorage.setItem(PLANNER_KEY, remotePlan.planner);
@@ -279,8 +370,22 @@
       store.planDate = remotePlan.planDate;
       localStorage.setItem(PLAN_DATE_KEY, remotePlan.planDate);
     }
+
+    // Cập nhật Lịch Sử
+    if (Array.isArray(optionalHistory) && optionalHistory.length > 0) {
+      store.history = optionalHistory;
+      saveHistoryPlans(store.history);
+    } else if (remotePlan.id) {
+      if (!Array.isArray(store.history)) store.history = [];
+      if (!store.history.find(h => h.id === remotePlan.id)) {
+        store.history.unshift(remotePlan);
+        if (store.history.length > 30) store.history = store.history.slice(0, 30);
+        saveHistoryPlans(store.history);
+      }
+    }
+
     window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
-    if (window.showToast) {
+    if (window.showToast && !isManual) {
       const stageName = STAGE_CONFIGS[incomingStage]?.name || incomingStage;
       window.showToast('info', `🔔 Đã đồng bộ Kế Hoạch Điều Chỉnh [${stageName}] từ [${remotePlan.planner || 'User'}] (${remotePlan.planDate || ''})!`);
     }
@@ -1417,13 +1522,31 @@
   /**
    * Hoàn Thành Kế Hoạch Điều Chỉnh & Đồng bộ đa người dùng
    */
-  window.handleCompleteAssemblyAdjPlan = function() {
+  window.handleCompleteAssemblyAdjPlan = async function() {
     const store = window.AssemblyAdjustmentStore;
     const currentStage = store.selectedStage || DEFAULT_STAGE;
     const now = new Date();
     const planId = 'ADJ_' + now.getTime();
     
-    // Đếm tổng số ca OT
+    // 1. Lưu lại map của công đoạn hiện tại vào storage
+    saveStoredOtMap(store.otMap, currentStage);
+
+    // 2. Thu thập toàn bộ OT map của TẤT CẢ các công đoạn
+    const allStagesOtMap = {};
+    let totalOtCountAllStages = 0;
+    Object.keys(STAGE_CONFIGS).forEach(stgKey => {
+      const map = (stgKey === currentStage) ? (store.otMap || {}) : loadStoredOtMap(stgKey);
+      let count = 0;
+      Object.values(map || {}).forEach(arr => {
+        if (Array.isArray(arr)) count += arr.length;
+      });
+      if (count > 0 || stgKey === currentStage) {
+        allStagesOtMap[stgKey] = JSON.parse(JSON.stringify(map || {}));
+        totalOtCountAllStages += count;
+      }
+    });
+
+    // Đếm tổng số ca OT công đoạn hiện tại
     let otCount = 0;
     Object.values(store.otMap || {}).forEach(arr => {
       if (Array.isArray(arr)) otCount += arr.length;
@@ -1439,7 +1562,9 @@
       timeStr: now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
       dateStr: now.toLocaleDateString('vi-VN'),
       otCount,
-      otMap: JSON.parse(JSON.stringify(store.otMap || {}))
+      otMap: JSON.parse(JSON.stringify(store.otMap || {})),
+      allStagesOtMap,
+      totalOtCountAllStages
     };
 
     if (!Array.isArray(store.history)) store.history = [];
@@ -1447,7 +1572,7 @@
     if (store.history.length > 30) store.history = store.history.slice(0, 30);
     saveHistoryPlans(store.history);
 
-    // Phát broadcast đồng bộ tới tất cả tabs & browsers
+    // Phát broadcast đồng bộ tới tất cả tabs & browsers trên cùng máy
     if (adjSyncChannel) {
       try {
         adjSyncChannel.postMessage({ type: 'ADJUSTMENT_PLAN_COMPLETED', plan: record });
@@ -1459,15 +1584,51 @@
 
     window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
 
+    // Gửi lên Server API /api/overtime-adjustment để lưu file JSON & kích hoạt GitHub Auto-push
+    let serverSyncSuccess = false;
+    try {
+      const res = await fetch('/api/overtime-adjustment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: record })
+      });
+      if (res && res.ok) {
+        serverSyncSuccess = true;
+      }
+    } catch (e) {}
+
     if (window.showToast) {
-      window.showToast('success', `✅ ĐÃ HOÀN THÀNH KẾ HOẠCH ĐIỀU CHỈNH [${record.stageName}]! Người lập: ${record.planner} • Đã lưu vào Lịch Sử và đồng bộ cho tất cả User.`);
+      const syncNote = serverSyncSuccess
+        ? ' • Đã lưu lên máy chủ & tự động đồng bộ GitHub cho tất cả User!'
+        : ' • Đã lưu thành công và sẵn sàng đồng bộ cho tất cả User!';
+      window.showToast('success', `✅ ĐÃ HOÀN THÀNH KẾ HOẠCH ĐIỀU CHỈNH [${record.stageName}]! Người lập: ${record.planner}${syncNote}`);
     }
   };
 
   /**
-   * Đồng Bộ Ngay Lập Tức Kế Hoạch Mới Nhất
+   * Đồng Bộ Ngay Lập Tức Kế Hoạch Mới Nhất (Đa Nguồn: Server LAN, Static JSON, GitHub Raw, Cloud)
    */
-  window.handleForceSyncAssemblyAdjPlan = function() {
+  window.handleForceSyncAssemblyAdjPlan = async function() {
+    if (window.showToast) {
+      window.showToast('info', '⏳ Đang kiểm tra và tải kế hoạch điều chỉnh Overtime mới nhất từ máy chủ / GitHub...');
+    }
+
+    try {
+      const bundle = await fetchRemoteOvertimeBundle();
+      if (bundle && bundle.latestPlan) {
+        const plan = bundle.latestPlan;
+        handleIncomingAdjPlan(plan, true, bundle.history);
+        if (window.showToast) {
+          const stgName = STAGE_CONFIGS[plan.stage]?.name || plan.stage || 'ASSEMBLY';
+          window.showToast('success', `🔄 ĐÃ ĐỒNG BỘ THÀNH CÔNG: Kế hoạch điều chỉnh [${stgName}] từ [${plan.planner || 'User'}] (${plan.planDate || plan.dateStr || ''} lúc ${plan.timeStr || ''} • ${plan.otCount || 0} ca OT)!`);
+        }
+        return;
+      }
+    } catch (e) {
+      console.warn('Lỗi khi fetch remote overtime bundle:', e);
+    }
+
+    // Fallback: Kiểm tra LATEST_SYNC_KEY trong localStorage nếu không gọi được mạng
     try {
       const syncStr = localStorage.getItem(LATEST_SYNC_KEY);
       if (syncStr) {
@@ -1475,7 +1636,7 @@
         if (payload && payload.plan) {
           handleIncomingAdjPlan(payload.plan, true);
           if (window.showToast) {
-            window.showToast('success', `🔄 ĐÃ ĐỒNG BỘ THÀNH CÔNG: Kế hoạch điều chỉnh mới nhất từ [${payload.plan.planner || 'User'}]!`);
+            window.showToast('success', `🔄 ĐÃ ĐỒNG BỘ: Kế hoạch điều chỉnh từ [${payload.plan.planner || 'User'}]!`);
           }
           return;
         }
@@ -1572,6 +1733,17 @@
     const restoredStage = found.stage || DEFAULT_STAGE;
     store.selectedStage = restoredStage;
     localStorage.setItem(SELECTED_STAGE_KEY, restoredStage);
+
+    // Khôi phục tất cả công đoạn nếu bản ghi có allStagesOtMap
+    if (found.allStagesOtMap && typeof found.allStagesOtMap === 'object') {
+      Object.keys(found.allStagesOtMap).forEach(stg => {
+        const m = found.allStagesOtMap[stg];
+        if (m && typeof m === 'object') {
+          saveStoredOtMap(m, stg);
+        }
+      });
+    }
+
     store.otMap = JSON.parse(JSON.stringify(found.otMap || {}));
     saveStoredOtMap(store.otMap, restoredStage);
     store.plannerName = found.planner;
@@ -1750,5 +1922,34 @@
     URL.revokeObjectURL(url);
     if (window.showToast) window.showToast('success', '📥 Đã tải xuống file CSV Kế Hoạch Điều Chỉnh (kèm Cột Tổng Cộng)!');
   };
+
+  // Tự động kiểm tra và đồng bộ kế hoạch Overtime mới nhất khi khởi động trang
+  async function initOvertimeSyncOnLoad() {
+    try {
+      const bundle = await fetchRemoteOvertimeBundle();
+      if (bundle && bundle.latestPlan) {
+        const remotePlan = bundle.latestPlan;
+        const store = window.AssemblyAdjustmentStore;
+
+        const localLatestTime = (store.history && store.history[0] && store.history[0].completedAt)
+          ? new Date(store.history[0].completedAt).getTime()
+          : 0;
+        const remoteTime = new Date(remotePlan.completedAt || remotePlan.createdAt || 0).getTime();
+
+        if (remoteTime >= localLatestTime || !store.history || store.history.length === 0) {
+          handleIncomingAdjPlan(remotePlan, false, bundle.history);
+          console.log('[Overtime Auto-Sync] ✅ Đã tự động nạp kế hoạch Overtime mới nhất:', remotePlan.id);
+        }
+      }
+    } catch (e) {
+      console.warn('[Overtime Auto-Sync] Lỗi nạp khởi đầu:', e);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => setTimeout(initOvertimeSyncOnLoad, 600));
+  } else {
+    setTimeout(initOvertimeSyncOnLoad, 600);
+  }
 
 })();

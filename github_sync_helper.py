@@ -35,6 +35,8 @@ DATA_FILE_PATHS = [
     'sync_status.json',
     'assembly_completed_plan_latest.json',
     'assembly_plan_history.json',
+    'overtime_adjustment_latest.json',
+    'overtime_adjustment_history.json',
     'cloud_sync_config.json'
 ]
 

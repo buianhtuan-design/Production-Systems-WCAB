@@ -80,6 +80,8 @@ class AppRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.handle_api_status()
         elif self.path == '/api/completed-plan' or self.path.startswith('/api/completed-plan?'):
             self.handle_api_get_completed_plan()
+        elif self.path == '/api/overtime-adjustment' or self.path.startswith('/api/overtime-adjustment?'):
+            self.handle_api_get_overtime_adjustment()
         elif self.path == '/api/cloud-sync-config' or self.path.startswith('/api/cloud-sync-config?'):
             self.handle_api_get_cloud_sync_config()
         elif self.path == '/api/users' or self.path.startswith('/api/users?'):
@@ -90,6 +92,8 @@ class AppRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_POST(self):
         if self.path == '/api/completed-plan' or self.path.startswith('/api/completed-plan?'):
             self.handle_api_post_completed_plan()
+        elif self.path == '/api/overtime-adjustment' or self.path.startswith('/api/overtime-adjustment?'):
+            self.handle_api_post_overtime_adjustment()
         elif self.path == '/api/cloud-sync-config' or self.path.startswith('/api/cloud-sync-config?'):
             self.handle_api_post_cloud_sync_config()
         elif self.path == '/api/users' or self.path.startswith('/api/users?'):
@@ -349,6 +353,110 @@ class AppRequestHandler(http.server.SimpleHTTPRequestHandler):
                 'savedAt': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'githubSyncStarted': True,
                 'message': 'Đã lưu và đồng bộ kế hoạch thành công lên máy chủ!'
+            }
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps(res, ensure_ascii=False).encode('utf-8'))
+        except Exception as e:
+            self.send_response(500)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            err_data = {'success': False, 'error': str(e)}
+            self.wfile.write(json.dumps(err_data, ensure_ascii=False).encode('utf-8'))
+
+    def handle_api_get_overtime_adjustment(self):
+        latest_file = os.path.join(WORKSPACE_DIR, 'overtime_adjustment_latest.json')
+        history_file = os.path.join(WORKSPACE_DIR, 'overtime_adjustment_history.json')
+        latest_plan = None
+        history = []
+        if os.path.exists(latest_file):
+            try:
+                with open(latest_file, 'r', encoding='utf-8') as f:
+                    latest_plan = json.load(f)
+            except Exception as e:
+                print(f"[Error reading latest overtime plan]: {e}")
+        if os.path.exists(history_file):
+            try:
+                with open(history_file, 'r', encoding='utf-8') as f:
+                    history = json.load(f)
+                if not isinstance(history, list):
+                    history = []
+            except Exception as e:
+                print(f"[Error reading overtime plan history]: {e}")
+
+        lan_ip = get_local_lan_ip()
+        data = {
+            'success': True,
+            'hasPlan': latest_plan is not None,
+            'latestPlan': latest_plan,
+            'history': history,
+            'lanIp': lan_ip,
+            'lanUrl': f"http://{lan_ip}:{PORT}",
+            'serverTime': time.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json; charset=utf-8')
+        self.end_headers()
+        self.wfile.write(json.dumps(data, ensure_ascii=False).encode('utf-8'))
+
+    def handle_api_post_overtime_adjustment(self):
+        try:
+            content_length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(content_length).decode('utf-8')
+            payload = json.loads(body)
+            plan = payload.get('plan') or payload
+            if not plan:
+                raise ValueError("Payload missing plan object")
+
+            latest_file = os.path.join(WORKSPACE_DIR, 'overtime_adjustment_latest.json')
+            history_file = os.path.join(WORKSPACE_DIR, 'overtime_adjustment_history.json')
+
+            # Lưu bản mới nhất (atomic write)
+            latest_tmp = latest_file + '.tmp'
+            with open(latest_tmp, 'w', encoding='utf-8') as f:
+                json.dump(plan, f, ensure_ascii=False, indent=2)
+            os.replace(latest_tmp, latest_file)
+
+            # Cập nhật danh sách lịch sử
+            history = []
+            if os.path.exists(history_file):
+                try:
+                    with open(history_file, 'r', encoding='utf-8') as f:
+                        history = json.load(f)
+                    if not isinstance(history, list):
+                        history = []
+                except:
+                    history = []
+
+            # Tránh trùng id
+            history = [h for h in history if h.get('id') != plan.get('id')]
+            history.insert(0, plan)
+            history = history[:50]  # Giữ tối đa 50 bản ghi lịch sử
+
+            history_tmp = history_file + '.tmp'
+            with open(history_tmp, 'w', encoding='utf-8') as f:
+                json.dump(history, f, ensure_ascii=False, indent=2)
+            os.replace(history_tmp, history_file)
+
+            # Tự động đẩy bản kế hoạch vừa hoàn thành lên GitHub ở background để User truy cập GitHub Pages cũng đồng bộ được
+            def _push_overtime_plan_async():
+                try:
+                    from github_sync_helper import auto_push_data_to_github
+                    auto_push_data_to_github()
+                except Exception as push_err:
+                    print(f"[Overtime Plan GitHub Sync] ⚠️ {push_err}")
+
+            threading.Thread(target=_push_overtime_plan_async, daemon=True).start()
+
+            res = {
+                'success': True,
+                'id': plan.get('id'),
+                'planner': plan.get('planner'),
+                'stage': plan.get('stage'),
+                'savedAt': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'githubSyncStarted': True,
+                'message': 'Đã lưu và đồng bộ kế hoạch điều chỉnh Overtime thành công lên máy chủ & GitHub!'
             }
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
