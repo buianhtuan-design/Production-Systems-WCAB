@@ -350024,6 +350024,51 @@
         "category": "Material",
         "process": "Com PKG",
         "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000005788",
+        "nomenclature": "Screw 3x12 mm countersunk for CB",
+        "spec": "Screw 3x12 mm countersunk for CB",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000012778",
+        "nomenclature": "Screw 2.5x12 countersunk head PZ",
+        "spec": "Screw 2.5x12 countersunk head PZ",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000015287",
+        "nomenclature": "Zip-Lock bag 40*60",
+        "spec": "Zip-Lock bag 40*60",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000083995",
+        "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "Die cut part acrylic 9mm x 30mm",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000006421",
+        "nomenclature": "Terminal with wire FBWH28-32AWG",
+        "spec": "Terminal with wire FBWH28-32AWG",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
       }
     ]
   },
@@ -350039,6 +350084,51 @@
         "nomenclature": "Screw for metal TECH 3.5/13 mm countersunk RN cb",
         "spec": "Screw for metal TECH 3.5/13 mm countersunk RN cb",
         "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000005788",
+        "nomenclature": "Screw 3x12 mm countersunk for CB",
+        "spec": "Screw 3x12 mm countersunk for CB",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000012778",
+        "nomenclature": "Screw 2.5x12 countersunk head PZ",
+        "spec": "Screw 2.5x12 countersunk head PZ",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000015287",
+        "nomenclature": "Zip-Lock bag 40*60",
+        "spec": "Zip-Lock bag 40*60",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000083995",
+        "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "Die cut part acrylic 9mm x 30mm",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000006421",
+        "nomenclature": "Terminal with wire FBWH28-32AWG",
+        "spec": "Terminal with wire FBWH28-32AWG",
+        "quantity": 1.0,
         "category": "Material",
         "process": "Com PKG",
         "stage": "Com PKG"
