@@ -419634,6 +419634,7 @@
     "PCB NVR.003.MBR.001v5_BM",
     "Screw_AntiDrop_M4x12_HEX3.0_SS_Nickel",
     "Ajax, HB2.005.MBR.001v0_HB2_66A_8EU_black_HRD",
+    "Warehouse",
     "[Package]_FPJ_2_RB_(Heat/Smoke)_UL_FCC_white_v2",
     "Stencil CMT.001.IRB.001v3_BOT",
     "Urgo tape",
@@ -425048,5 +425049,5 @@
   "totalItems": 4746,
   "totalCodes": 9566,
   "totalStock": 230505927.48,
-  "lastUpdated": "2026-11-17 03:09:25"
+  "lastUpdated": "2026-11-17 03:25:36"
 }
