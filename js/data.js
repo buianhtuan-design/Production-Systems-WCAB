@@ -4211,6 +4211,10 @@ class Store {
       if (window.BOM_MASTER_DATA && (specCode || rawSpecCode)) {
         bomData = window.BOM_MASTER_DATA[specCode] || window.BOM_MASTER_DATA[rawSpecCode] || window.BOM_MASTER_DATA[padSpecCode] || null;
       }
+      // NẾU KHÔNG TÌM THẤY THEO SPEC CODE -> TRA CỨU THEO TÊN MÃ 1C (ví dụ mã cũ 46798 đã đổi sang 000069262)
+      if (!bomData && window.BOM_MASTER_DATA && p1c && typeof window.findBomByProductName === 'function') {
+        bomData = window.findBomByProductName(p1c, it.stage);
+      }
       let bomMaterials = (bomData && bomData.materials) ? bomData.materials : [];
       if (bomMaterials.length > 1) {
         bomMaterials = [...bomMaterials].sort((a, b) => {
@@ -4317,6 +4321,24 @@ class Store {
     const deficitCount = filtered.filter(x => x.planQty > 0 && x.stock1C < x.planQty).length;
     const inStockCount = filtered.filter(x => x.stock1C > 0).length;
 
+    // Tổng hợp tồn kho 1C theo từng nhóm kho của toàn bộ danh sách khớp lọc
+    const totalWhStock = {
+      all: totalStock1C,
+      whAssembly: 0,
+      whPkg: 0,
+      whRepairSemi: 0,
+      whRepairBoard: 0,
+      whHardTest: 0
+    };
+    filtered.forEach(cur => {
+      const whs = cur.stockWarehouses || {};
+      totalWhStock.whAssembly += (whs['WH ASSEMBLY_VTP'] || 0);
+      totalWhStock.whPkg += (whs['PKG_VTP'] || 0);
+      totalWhStock.whRepairSemi += (whs['Repair of semi-finished products_VTP'] || 0);
+      totalWhStock.whRepairBoard += (whs['Repair of board_VTP'] || 0);
+      totalWhStock.whHardTest += (whs['WH of Hard Test_VTP'] || 0);
+    });
+
     // 5. Pagination
     const totalPages = Math.ceil(totalItems / pageSize) || 1;
     const currentPage = Math.min(Math.max(0, pageIndex), totalPages - 1);
@@ -4341,6 +4363,7 @@ class Store {
         totalPlan,
         totalFact,
         totalGap,
+        totalWhStock,
         deficitCount,
         inStockCount,
         totalItems
@@ -4619,4 +4642,56 @@ class Store {
 window.AppStore = new Store();
 window.getFactoryWeekRange = function(refDate, isFullWeek) {
   return window.AppStore ? window.AppStore.getFactoryWeekRange(refDate, isFullWeek) : null;
+};
+
+/**
+ * Tra cứu Định mức BOM theo Tên mã 1C (Product Name 1C) và Công Đoạn
+ * Dùng khi Specification Code không có trong Sheet BOM-Plan (ví dụ các mã cũ như 46798 đã đổi thành 000069262)
+ */
+window.findBomByProductName = function(productName, stage) {
+  if (!productName || !window.BOM_MASTER_DATA) return null;
+  const cleanName = String(productName).trim().toLowerCase();
+  if (!cleanName) return null;
+
+  if (!window._BOM_BY_NAME_CACHE) {
+    const cache = new Map();
+    const stageCache = new Map();
+    Object.values(window.BOM_MASTER_DATA).forEach(item => {
+      if (!item || !item.productName) return;
+      const pn = String(item.productName).trim().toLowerCase();
+      if (!pn) return;
+      if (!cache.has(pn) || ((item.materials || []).length > (cache.get(pn).materials || []).length)) {
+        cache.set(pn, item);
+      }
+      const stg = (item.stage || item.process || '').trim().toUpperCase();
+      if (stg) {
+        const key = `${stg}|||${pn}`;
+        if (!stageCache.has(key) || ((item.materials || []).length > (stageCache.get(key).materials || []).length)) {
+          stageCache.set(key, item);
+        }
+      }
+    });
+    window._BOM_BY_NAME_CACHE = cache;
+    window._BOM_BY_STAGE_NAME_CACHE = stageCache;
+  }
+
+  if (stage) {
+    const stgKey = `${String(stage).trim().toUpperCase()}|||${cleanName}`;
+    if (window._BOM_BY_STAGE_NAME_CACHE && window._BOM_BY_STAGE_NAME_CACHE.has(stgKey)) {
+      return window._BOM_BY_STAGE_NAME_CACHE.get(stgKey);
+    }
+  }
+
+  if (window._BOM_BY_NAME_CACHE && window._BOM_BY_NAME_CACHE.has(cleanName)) {
+    return window._BOM_BY_NAME_CACHE.get(cleanName);
+  }
+
+  const simplified = cleanName.replace(/\s+/g, ' ');
+  for (const [key, item] of (window._BOM_BY_NAME_CACHE ? window._BOM_BY_NAME_CACHE.entries() : [])) {
+    if (key.replace(/\s+/g, ' ') === simplified) {
+      return item;
+    }
+  }
+
+  return null;
 };

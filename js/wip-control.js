@@ -464,16 +464,19 @@
       .replace(/'/g, '&#39;');
   }
 
-  function extractBomMaterialsForWipItem(rawSpecCode, fallbackMaterials) {
+  function extractBomMaterialsForWipItem(rawSpecCode, fallbackMaterials, p1c, stage) {
     let materials = fallbackMaterials;
     const rawCode = String(rawSpecCode || '').trim();
     let displaySpec = rawCode;
     if (rawCode && /^\d+$/.test(rawCode)) {
       displaySpec = rawCode.replace(/^0+/, '') || '0';
     }
-    if ((!materials || materials.length === 0) && window.BOM_MASTER_DATA && (rawCode || displaySpec)) {
+    if ((!materials || materials.length === 0) && window.BOM_MASTER_DATA) {
       const padCode = rawCode.padStart(9, '0');
-      const b = window.BOM_MASTER_DATA[displaySpec] || window.BOM_MASTER_DATA[rawCode] || window.BOM_MASTER_DATA[padCode];
+      let b = window.BOM_MASTER_DATA[displaySpec] || window.BOM_MASTER_DATA[rawCode] || window.BOM_MASTER_DATA[padCode];
+      if (!b && p1c && typeof window.findBomByProductName === 'function') {
+        b = window.findBomByProductName(p1c, stage);
+      }
       if (b && b.materials) materials = b.materials;
     }
     return sortMaterialsSfgFirst(materials);
@@ -650,7 +653,7 @@
    */
   function traceSfgUpstreamChain(rootItem, sfgLookupIndex, maxDepth = 6) {
     const chainRows = [];
-    const rootMaterials = extractBomMaterialsForWipItem(rootItem.specCode || rootItem.rawSpecCode, rootItem.bomMaterials);
+    const rootMaterials = extractBomMaterialsForWipItem(rootItem.specCode || rootItem.rawSpecCode, rootItem.bomMaterials, rootItem.productName1C, rootItem.stage);
     const rootSfgMats = rootMaterials.filter(m => String(m.nomenclature || m.specSub || m.spec || '').trim().toLowerCase().startsWith('ajax'));
 
     const visited = new Set();
@@ -1608,6 +1611,70 @@
         </div>
 
         <!-- ========================================== -->
+        <!-- 2b. TỔNG HỢP CHỈ SỐ & TỔNG CHÊNH LỆCH TRÊN CÙNG -->
+        <!-- ========================================== -->
+        <div class="card-glass" style="padding: 0.75rem 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass); background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.5) 100%);">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+            <!-- Cụm bên trái: Tiêu đề & Tổng Model -->
+            <div style="display: flex; align-items: center; gap: 0.65rem;">
+              <span style="font-size: 0.775rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.04em; display: flex; align-items: center; gap: 0.35rem;">
+                <span>📊 TỔNG HỢP KỲ:</span>
+                <span style="color: #cbd5e1; font-weight: 700;">${dataResult.dateRangeText || ''}</span>
+              </span>
+              <span class="badge" style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.35); color: #93c5fd; font-size: 0.75rem; font-weight: 800;">
+                📦 ${(dataResult.totalItems || 0).toLocaleString('vi-VN')} Model
+              </span>
+            </div>
+
+            <!-- Cụm các thẻ chỉ số chính: Kế hoạch, Thực tế, TỔNG CHÊNH LỆCH, Tồn kho 1C -->
+            <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.65rem;">
+              <!-- 1. Tổng Kế Hoạch -->
+              <div style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.65rem; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 6px;">
+                <span style="font-size: 0.725rem; color: #93c5fd; font-weight: 700;">📅 Kế Hoạch:</span>
+                <span class="font-mono" style="font-size: 0.825rem; font-weight: 900; color: #60a5fa;">
+                  ${(stats.totalPlan || 0).toLocaleString('vi-VN')}
+                </span>
+              </div>
+
+              <!-- 2. Tổng Thực Tế -->
+              <div style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.65rem; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px;">
+                <span style="font-size: 0.725rem; color: #a7f3d0; font-weight: 700;">🏭 Thực Tế:</span>
+                <span class="font-mono" style="font-size: 0.825rem; font-weight: 900; color: #34d399;">
+                  ${(stats.totalFact || 0).toLocaleString('vi-VN')}
+                </span>
+              </div>
+
+              <!-- 3. TỔNG CHÊNH LỆCH (CARD NỔI BẬT NHẤT THEO YÊU CẦU CỦA USER) -->
+              <div style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.3rem 0.85rem; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); ${stats.totalGap < 0 ? 'background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(185, 28, 28, 0.35)); border: 1px solid rgba(239, 68, 68, 0.7);' : (stats.totalGap > 0 ? 'background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.35)); border: 1px solid rgba(16, 185, 129, 0.7);' : 'background: rgba(100, 116, 139, 0.2); border: 1px solid rgba(100, 116, 139, 0.4);')}">
+                <span style="font-size: 0.775rem; font-weight: 800; color: ${stats.totalGap < 0 ? '#fca5a5' : (stats.totalGap > 0 ? '#6ee7b7' : '#cbd5e1')};">
+                  ⚖️ TỔNG CHÊNH LỆCH:
+                </span>
+                <span class="font-mono" style="font-size: 0.95rem; font-weight: 900; letter-spacing: 0.02em; color: ${stats.totalGap < 0 ? '#f87171' : (stats.totalGap > 0 ? '#34d399' : '#f8fafc')};">
+                  ${stats.totalGap > 0 ? '+' : ''}${(stats.totalGap || 0).toLocaleString('vi-VN')}
+                </span>
+                ${stats.totalGap < 0 ? `
+                  <span class="badge" style="background: #ef4444; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.1rem 0.35rem; border-radius: 3px;">
+                    ⚠️ Thiếu ${Math.abs(stats.totalGap).toLocaleString('vi-VN')}
+                  </span>
+                ` : (stats.totalGap > 0 ? `
+                  <span class="badge" style="background: #10b981; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.1rem 0.35rem; border-radius: 3px;">
+                    ✅ Vượt ${stats.totalGap.toLocaleString('vi-VN')}
+                  </span>
+                ` : '')}
+              </div>
+
+              <!-- 4. Tổng Tồn Kho 1C -->
+              <div style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.65rem; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px;">
+                <span style="font-size: 0.725rem; color: #6ee7b7; font-weight: 700;">📦 Tồn Kho 1C:</span>
+                <span class="font-mono" style="font-size: 0.825rem; font-weight: 900; color: #34d399;">
+                  ${(stats.totalStock1C || 0).toLocaleString('vi-VN')}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
         <!-- 3. WIP DATA TABLE WITH STOCK 1C            -->
         <!-- ========================================== -->
         <div class="card-glass" style="border-radius: var(--radius-md); border: 1px solid var(--border-glass); overflow: hidden;">
@@ -1717,6 +1784,51 @@
                     `;
                   }).join('')}
                 </tr>
+
+                <!-- HÀNG TỔNG CỘNG ĐÓNG BĂNG TRÊN ĐẦU BẢNG (STICKY GRAND TOTAL ROW) -->
+                <tr class="wip-grand-total-row" style="position: sticky; top: 76px; z-index: 28; background: #0c182a !important; border-bottom: 2px solid #3b82f6; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);">
+                  <th colspan="4" style="text-align: right; padding: 0.5rem 0.85rem; font-size: 0.8rem; font-weight: 800; color: #f8fafc; border-right: 1px solid var(--border-glass); background: #0c182a !important;">
+                    📊 TỔNG CỘNG (${(dataResult.totalItems || 0).toLocaleString('vi-VN')} Model Khớp Lọc):
+                  </th>
+                  <!-- KẾ HOẠCH -->
+                  <th class="font-mono" style="text-align: right; color: #60a5fa; font-size: 0.875rem; font-weight: 900; padding: 0.5rem 0.65rem; background: #0c182a !important;">
+                    ${(stats.totalPlan || 0).toLocaleString('vi-VN')}
+                  </th>
+                  <!-- THỰC TẾ -->
+                  <th class="font-mono" style="text-align: right; color: #f8fafc; font-size: 0.875rem; font-weight: 900; padding: 0.5rem 0.65rem; background: #0c182a !important;">
+                    ${(stats.totalFact || 0).toLocaleString('vi-VN')}
+                  </th>
+                  <!-- CHÊNH LỆCH (TỔNG CHÊNH LỆCH ĐÓNG BĂNG TRÊN ĐẦU CỘT GAP) -->
+                  <th class="font-mono" style="text-align: right; font-size: 0.925rem; font-weight: 900; padding: 0.5rem 0.65rem; background: ${stats.totalGap < 0 ? 'rgba(239, 68, 68, 0.25)' : (stats.totalGap > 0 ? 'rgba(16, 185, 129, 0.25)' : '#0c182a')} !important; color: ${stats.totalGap < 0 ? '#f87171' : (stats.totalGap > 0 ? '#34d399' : '#94a3b8')};">
+                    ${stats.totalGap > 0 ? '+' : ''}${(stats.totalGap || 0).toLocaleString('vi-VN')}
+                  </th>
+                  <!-- Specification Code & Last Step & 4 Cột BOM (6 cột) -->
+                  <th colspan="6" style="text-align: left; padding: 0.5rem 0.75rem; font-size: 0.75rem; color: #fbbf24; font-weight: 700; background: #0c182a !important;">
+                    ${stats.totalGap < 0 ? `⚠️ Thiếu hụt: ${Math.abs(stats.totalGap).toLocaleString('vi-VN')} pcs (${stats.deficitCount || 0} Model âm)` : `✅ Tiến độ đạt cân đối`}
+                  </th>
+                  ${showSfgCols ? `
+                    <!-- 4 CỘT SFG -->
+                    <th colspan="4" style="text-align: center; color: #a1a1aa; font-size: 0.75rem; border-left: 2px solid rgba(245, 158, 11, 0.45); background: #0c182a !important;">—</th>
+                  ` : ''}
+                  <!-- CÁC CỘT TỒN KHO 1C THEO NHÓM KHO -->
+                  ${activeWhList.map((w, wIdx) => {
+                    let whTotal = 0;
+                    if (stats.totalWhStock) {
+                      if (w.id === 'all') whTotal = stats.totalWhStock.all;
+                      else if (w.id === 'whAssembly') whTotal = stats.totalWhStock.whAssembly;
+                      else if (w.id === 'whPkg') whTotal = stats.totalWhStock.whPkg;
+                      else if (w.id === 'whRepairSemi') whTotal = stats.totalWhStock.whRepairSemi;
+                      else if (w.id === 'whRepairBoard') whTotal = stats.totalWhStock.whRepairBoard;
+                      else if (w.id === 'whHardTest') whTotal = stats.totalWhStock.whHardTest;
+                    }
+                    const minW = w.id === 'all' ? '105px' : (w.id === 'whHardTest' ? '115px' : '95px');
+                    return `
+                      <th class="font-mono" style="text-align: right; width: ${minW}; min-width: ${minW}; color: #34d399; font-size: 0.8rem; font-weight: 800; padding: 0.5rem 0.55rem; ${wIdx === 0 ? 'border-left: 2px solid #10b981;' : ''} background: #0c182a !important;">
+                        ${whTotal > 0 ? whTotal.toLocaleString('vi-VN') : '0'}
+                      </th>
+                    `;
+                  }).join('')}
+                </tr>
               </thead>
               <tbody>
                 ${items.length === 0 ? `
@@ -1748,10 +1860,20 @@
 
                   // Lấy danh sách nguyên vật liệu từ Sheet BOM-Plan mới (kết hợp Sheet BOM)
                   let materials = it.bomMaterials;
+                  let bomItem = it.bom;
                   if ((!materials || materials.length === 0) && window.BOM_MASTER_DATA) {
                     const padCode = rawCode.padStart(9, '0');
-                    const b = window.BOM_MASTER_DATA[displaySpecCode] || window.BOM_MASTER_DATA[rawCode] || window.BOM_MASTER_DATA[padCode];
-                    if (b && b.materials) materials = b.materials;
+                    let b = window.BOM_MASTER_DATA[displaySpecCode] || window.BOM_MASTER_DATA[rawCode] || window.BOM_MASTER_DATA[padCode];
+                    if (!b && it.productName1C && typeof window.findBomByProductName === 'function') {
+                      b = window.findBomByProductName(it.productName1C, it.stage);
+                    }
+                    if (b) {
+                      bomItem = b;
+                      if (b.materials) materials = b.materials;
+                    }
+                  }
+                  if (!bomItem && it.productName1C && typeof window.findBomByProductName === 'function') {
+                    bomItem = window.findBomByProductName(it.productName1C, it.stage);
                   }
                   materials = sortMaterialsSfgFirst(materials);
 
@@ -1959,16 +2081,32 @@
                       <td style="white-space: nowrap;">
                         ${displaySpecCode ? `
                           <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.35rem;">
-                            <span class="font-mono font-bold" style="font-size: 0.775rem; color: #60a5fa; letter-spacing: 0.02em;" title="Specification Code: ${displaySpecCode}">
-                              ${displaySpecCode}
-                            </span>
+                            <div style="display: flex; flex-direction: column; gap: 1px;">
+                              <span class="font-mono font-bold" style="font-size: 0.775rem; color: #60a5fa; letter-spacing: 0.02em;" title="Specification Code gốc trong DataMass: ${displaySpecCode}">
+                                ${displaySpecCode}
+                              </span>
+                              ${(bomItem && bomItem.specCode && String(bomItem.specCode).replace(/^0+/, '') !== String(displaySpecCode).replace(/^0+/, '')) ? `
+                                <span style="font-size: 0.65rem; color: #38bdf8; font-family: monospace; font-weight: 600;" title="Đã đổi sang mã BOM mới: 0000${String(bomItem.specCode).replace(/^0+/, '')}">
+                                  ➔ 0000${String(bomItem.specCode).replace(/^0+/, '')}
+                                </span>
+                              ` : ''}
+                            </div>
                             <button type="button" class="btn-copy-mini" onclick="window.copyToClipboard('${displaySpecCode}', 'Đã copy Spec Code: ${displaySpecCode}')" title="Sao chép Specification Code" style="background: transparent; border: none; cursor: pointer; opacity: 0.6; padding: 1px 3px; font-size: 0.7rem; transition: opacity 0.15s ease;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
+                              📋
+                            </button>
+                          </div>
+                        ` : (bomItem && bomItem.specCode ? `
+                          <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.35rem;">
+                            <span class="font-mono font-bold" style="font-size: 0.775rem; color: #60a5fa; letter-spacing: 0.02em;" title="Specification Code (BOM): 0000${String(bomItem.specCode).replace(/^0+/, '')}">
+                              0000${String(bomItem.specCode).replace(/^0+/, '')}
+                            </span>
+                            <button type="button" class="btn-copy-mini" onclick="window.copyToClipboard('${bomItem.specCode}', 'Đã copy Spec Code: ${bomItem.specCode}')" title="Sao chép Specification Code" style="background: transparent; border: none; cursor: pointer; opacity: 0.6; padding: 1px 3px; font-size: 0.7rem; transition: opacity 0.15s ease;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
                               📋
                             </button>
                           </div>
                         ` : `
                           <span style="color: var(--text-muted); font-size: 0.775rem;">—</span>
-                        `}
+                        `)}
                       </td>
 
                       <!-- 9. Last Step -->
@@ -2758,7 +2896,10 @@
       let materials = it.bomMaterials;
       if ((!materials || materials.length === 0) && window.BOM_MASTER_DATA) {
         const padCode = rawCode.padStart(9, '0');
-        const b = window.BOM_MASTER_DATA[displaySpecCode] || window.BOM_MASTER_DATA[rawCode] || window.BOM_MASTER_DATA[padCode];
+        let b = window.BOM_MASTER_DATA[displaySpecCode] || window.BOM_MASTER_DATA[rawCode] || window.BOM_MASTER_DATA[padCode];
+        if (!b && it.productName1C && typeof window.findBomByProductName === 'function') {
+          b = window.findBomByProductName(it.productName1C, it.stage);
+        }
         if (b && b.materials) materials = b.materials;
       }
       materials = sortMaterialsSfgFirst(materials);
@@ -2959,7 +3100,10 @@
       let materials = it.bomMaterials;
       if ((!materials || materials.length === 0) && window.BOM_MASTER_DATA) {
         const padCode = rawCode.padStart(9, '0');
-        const b = window.BOM_MASTER_DATA[displaySpecCode] || window.BOM_MASTER_DATA[rawCode] || window.BOM_MASTER_DATA[padCode];
+        let b = window.BOM_MASTER_DATA[displaySpecCode] || window.BOM_MASTER_DATA[rawCode] || window.BOM_MASTER_DATA[padCode];
+        if (!b && it.productName1C && typeof window.findBomByProductName === 'function') {
+          b = window.findBomByProductName(it.productName1C, it.stage);
+        }
         if (b && b.materials) materials = b.materials;
       }
       materials = sortMaterialsSfgFirst(materials);

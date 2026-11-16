@@ -1147,6 +1147,14 @@ def fetch_and_parse_bom(ctx):
                 bom_by_product = json.load(bf)
 
     if bom_by_product:
+        # Bổ sung các mã quy cách cũ đã đổi (ví dụ 46798 -> 69262) để luôn tra cứu được BOM
+        known_aliases = {
+            '46798': '69262',
+            '000046798': '69262'
+        }
+        for old_c, target_c in known_aliases.items():
+            if target_c in bom_by_product and old_c not in bom_by_product:
+                bom_by_product[old_c] = bom_by_product[target_c]
         bom_json_path = os.path.join(WORKSPACE_DIR, 'bom_data.json')
         bom_js_path = os.path.join(WORKSPACE_DIR, 'js', 'bom-data.js')
         with open(bom_json_path, 'w', encoding='utf-8') as bf:
