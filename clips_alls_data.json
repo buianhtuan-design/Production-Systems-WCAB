@@ -186,7 +186,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat) (8EU) ASP black датчик температури",
       "plan": 76.0,
-      "sheetFact": 76.0,
+      "sheetFact": 77.0,
       "done": 1,
       "isDone": true
     },
@@ -546,7 +546,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Smoke) (8EU) ASP white сповіщувач пожежний димовий",
       "plan": 16298.0,
-      "sheetFact": 1019.0,
+      "sheetFact": 1132.0,
       "done": 0,
       "isDone": false
     },
@@ -686,7 +686,7 @@
       "agg": "",
       "device": "Ajax Manual Call Point (Red) (8EU) PL ручний пожежний сповіщувач",
       "plan": 154.0,
-      "sheetFact": 154.0,
+      "sheetFact": 158.0,
       "done": 1,
       "isDone": true
     },
@@ -1626,7 +1626,7 @@
       "agg": "",
       "device": "Ajax MotionCam HDR (PhOD) Jeweller (8EU) ASP white датчик руху з камерою",
       "plan": 12585.0,
-      "sheetFact": 4442.0,
+      "sheetFact": 5058.0,
       "done": 0,
       "isDone": false
     },
@@ -1636,7 +1636,7 @@
       "agg": "MotionCam Outdoor",
       "device": "Ajax MotionCam Outdoor (8EU) ASP white датчик руху з камерою",
       "plan": 5950.0,
-      "sheetFact": 1063.0,
+      "sheetFact": 1200.0,
       "done": 0,
       "isDone": false
     },
@@ -1946,7 +1946,7 @@
       "agg": "DoorProtect",
       "device": "Ajax DoorProtect (8EU) ASP black датчик відкриття",
       "plan": 5524.0,
-      "sheetFact": 1268.0,
+      "sheetFact": 2218.0,
       "done": 0,
       "isDone": false
     },
@@ -2808,7 +2808,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat) (8EU) ASP black датчик температури",
       "plan": 76.0,
-      "sheetFact": 76.0,
+      "sheetFact": 77.0,
       "done": 1,
       "isDone": true
     },
@@ -3168,7 +3168,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Smoke) (8EU) ASP white сповіщувач пожежний димовий",
       "plan": 16298.0,
-      "sheetFact": 1019.0,
+      "sheetFact": 1132.0,
       "done": 0,
       "isDone": false
     },
@@ -3308,7 +3308,7 @@
       "agg": "",
       "device": "Ajax Manual Call Point (Red) (8EU) PL ручний пожежний сповіщувач",
       "plan": 154.0,
-      "sheetFact": 154.0,
+      "sheetFact": 158.0,
       "done": 1,
       "isDone": true
     },
@@ -4248,7 +4248,7 @@
       "agg": "",
       "device": "Ajax MotionCam HDR (PhOD) Jeweller (8EU) ASP white датчик руху з камерою",
       "plan": 12585.0,
-      "sheetFact": 4442.0,
+      "sheetFact": 5058.0,
       "done": 0,
       "isDone": false
     },
@@ -4258,7 +4258,7 @@
       "agg": "MotionCam Outdoor",
       "device": "Ajax MotionCam Outdoor (8EU) ASP white датчик руху з камерою",
       "plan": 5950.0,
-      "sheetFact": 1063.0,
+      "sheetFact": 1200.0,
       "done": 0,
       "isDone": false
     },
@@ -4568,7 +4568,7 @@
       "agg": "DoorProtect",
       "device": "Ajax DoorProtect (8EU) ASP black датчик відкриття",
       "plan": 5524.0,
-      "sheetFact": 1268.0,
+      "sheetFact": 2218.0,
       "done": 0,
       "isDone": false
     },
@@ -5250,7 +5250,7 @@
   "clipAllPlant": "50.8%",
   "clipAllPlantPct": 50.8,
   "totalPlan": 485822.0,
-  "totalSheetFact": 233043.0,
+  "totalSheetFact": 234864.0,
   "hasPlanCount": 219,
   "gt90Count": 133,
   "lt90Count": 129,
@@ -9547,10 +9547,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-16 17:45:31",
+        "archivedAt": "2026-11-16 17:46:38",
         "totalItems": 262,
         "totalPlan": 485822.0,
-        "totalSheetFact": 233043.0,
+        "totalSheetFact": 234864.0,
         "qtyAllDevice": 262,
         "qtyDoneDevice": 133,
         "qtyNotDoneDevice": 129,
@@ -9742,7 +9742,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat) (8EU) ASP black датчик температури",
             "plan": 76.0,
-            "sheetFact": 76.0,
+            "sheetFact": 77.0,
             "done": 1,
             "isDone": true
           },
@@ -10102,7 +10102,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Smoke) (8EU) ASP white сповіщувач пожежний димовий",
             "plan": 16298.0,
-            "sheetFact": 1019.0,
+            "sheetFact": 1132.0,
             "done": 0,
             "isDone": false
           },
@@ -10242,7 +10242,7 @@
             "agg": "",
             "device": "Ajax Manual Call Point (Red) (8EU) PL ручний пожежний сповіщувач",
             "plan": 154.0,
-            "sheetFact": 154.0,
+            "sheetFact": 158.0,
             "done": 1,
             "isDone": true
           },
@@ -11182,7 +11182,7 @@
             "agg": "",
             "device": "Ajax MotionCam HDR (PhOD) Jeweller (8EU) ASP white датчик руху з камерою",
             "plan": 12585.0,
-            "sheetFact": 4442.0,
+            "sheetFact": 5058.0,
             "done": 0,
             "isDone": false
           },
@@ -11192,7 +11192,7 @@
             "agg": "MotionCam Outdoor",
             "device": "Ajax MotionCam Outdoor (8EU) ASP white датчик руху з камерою",
             "plan": 5950.0,
-            "sheetFact": 1063.0,
+            "sheetFact": 1200.0,
             "done": 0,
             "isDone": false
           },
@@ -11502,7 +11502,7 @@
             "agg": "DoorProtect",
             "device": "Ajax DoorProtect (8EU) ASP black датчик відкриття",
             "plan": 5524.0,
-            "sheetFact": 1268.0,
+            "sheetFact": 2218.0,
             "done": 0,
             "isDone": false
           },
@@ -12364,7 +12364,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat) (8EU) ASP black датчик температури",
             "plan": 76.0,
-            "sheetFact": 76.0,
+            "sheetFact": 77.0,
             "done": 1,
             "isDone": true
           },
@@ -12724,7 +12724,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Smoke) (8EU) ASP white сповіщувач пожежний димовий",
             "plan": 16298.0,
-            "sheetFact": 1019.0,
+            "sheetFact": 1132.0,
             "done": 0,
             "isDone": false
           },
@@ -12864,7 +12864,7 @@
             "agg": "",
             "device": "Ajax Manual Call Point (Red) (8EU) PL ручний пожежний сповіщувач",
             "plan": 154.0,
-            "sheetFact": 154.0,
+            "sheetFact": 158.0,
             "done": 1,
             "isDone": true
           },
@@ -13804,7 +13804,7 @@
             "agg": "",
             "device": "Ajax MotionCam HDR (PhOD) Jeweller (8EU) ASP white датчик руху з камерою",
             "plan": 12585.0,
-            "sheetFact": 4442.0,
+            "sheetFact": 5058.0,
             "done": 0,
             "isDone": false
           },
@@ -13814,7 +13814,7 @@
             "agg": "MotionCam Outdoor",
             "device": "Ajax MotionCam Outdoor (8EU) ASP white датчик руху з камерою",
             "plan": 5950.0,
-            "sheetFact": 1063.0,
+            "sheetFact": 1200.0,
             "done": 0,
             "isDone": false
           },
@@ -14124,7 +14124,7 @@
             "agg": "DoorProtect",
             "device": "Ajax DoorProtect (8EU) ASP black датчик відкриття",
             "plan": 5524.0,
-            "sheetFact": 1268.0,
+            "sheetFact": 2218.0,
             "done": 0,
             "isDone": false
           },
