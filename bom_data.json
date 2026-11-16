@@ -386092,5 +386092,131 @@
       }
     ],
     "source": "BOM"
+  },
+  "46798": {
+    "productCode": "69262",
+    "specCode": "69262",
+    "productName": "Ajax DoorProtect white EU (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000121342",
+        "nomenclature": "Ajax, DP.011.MBR.001v3_DPJ_8EU_white_HRD",
+        "spec": "Ajax, DP.011.MBR.001v3_DPJ_8EU_white_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000003659",
+        "nomenclature": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
+        "spec": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000005279",
+        "nomenclature": "DoorProtect_case_backside_white",
+        "spec": "DoorProtect_case_backside_white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000034547",
+        "nomenclature": "DoorProtect_case_frontside_white_2part_assembly",
+        "spec": "DoorProtect_case_frontside_white_2part_assembly",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000005282",
+        "nomenclature": "DoorProtect_case_switch_white",
+        "spec": "DoorProtect_case_switch_white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000163876",
+        "nomenclature": "[Sticker]_DPJ_CE_EU_v5",
+        "spec": "[Sticker]_DPJ_CE_EU_v5",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "000046798": {
+    "productCode": "69262",
+    "specCode": "69262",
+    "productName": "Ajax DoorProtect white EU (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000121342",
+        "nomenclature": "Ajax, DP.011.MBR.001v3_DPJ_8EU_white_HRD",
+        "spec": "Ajax, DP.011.MBR.001v3_DPJ_8EU_white_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000003659",
+        "nomenclature": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
+        "spec": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000005279",
+        "nomenclature": "DoorProtect_case_backside_white",
+        "spec": "DoorProtect_case_backside_white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000034547",
+        "nomenclature": "DoorProtect_case_frontside_white_2part_assembly",
+        "spec": "DoorProtect_case_frontside_white_2part_assembly",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000005282",
+        "nomenclature": "DoorProtect_case_switch_white",
+        "spec": "DoorProtect_case_switch_white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000163876",
+        "nomenclature": "[Sticker]_DPJ_CE_EU_v5",
+        "spec": "[Sticker]_DPJ_CE_EU_v5",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
   }
 }
