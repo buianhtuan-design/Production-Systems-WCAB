@@ -349883,6 +349883,168 @@
       }
     ]
   },
+  "78549": {
+    "productCode": "78549",
+    "specCode": "78549",
+    "productName": "Ajax DoorProtect Plus (8EU) WL Kale Guvenlik black (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000121423",
+        "nomenclature": "Ajax, DoorProtect Plus_ v.9_868 Mhz_DPPJ_8EU_WL_black_HRD",
+        "spec": "Ajax, DoorProtect Plus_ v.9_868 Mhz_DPPJ_8EU_WL_black_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000133995",
+        "nomenclature": "Ajax DPP/DP/GP black WL Case frontside Kale Guvenlik logo (напівфабрикат)",
+        "spec": "Ajax DPP/DP/GP black WL Case frontside Kale Guvenlik logo (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000003659",
+        "nomenclature": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
+        "spec": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000005275",
+        "nomenclature": "DoorProtect_case_backside_black",
+        "spec": "DoorProtect_case_backside_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000005276",
+        "nomenclature": "DoorProtect_case_switch_black",
+        "spec": "DoorProtect_case_switch_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000026830",
+        "nomenclature": "DoorProtect Plus CE WL Standard sticker",
+        "spec": "DoorProtect Plus CE WL Standard sticker",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "000078549": {
+    "productCode": "78549",
+    "specCode": "78549",
+    "productName": "Ajax DoorProtect Plus (8EU) WL Kale Guvenlik black (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000121423",
+        "nomenclature": "Ajax, DoorProtect Plus_ v.9_868 Mhz_DPPJ_8EU_WL_black_HRD",
+        "spec": "Ajax, DoorProtect Plus_ v.9_868 Mhz_DPPJ_8EU_WL_black_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000133995",
+        "nomenclature": "Ajax DPP/DP/GP black WL Case frontside Kale Guvenlik logo (напівфабрикат)",
+        "spec": "Ajax DPP/DP/GP black WL Case frontside Kale Guvenlik logo (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000003659",
+        "nomenclature": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
+        "spec": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000005275",
+        "nomenclature": "DoorProtect_case_backside_black",
+        "spec": "DoorProtect_case_backside_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000005276",
+        "nomenclature": "DoorProtect_case_switch_black",
+        "spec": "DoorProtect_case_switch_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000026830",
+        "nomenclature": "DoorProtect Plus CE WL Standard sticker",
+        "spec": "DoorProtect Plus CE WL Standard sticker",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "66428": {
+    "productCode": "66428",
+    "specCode": "66428",
+    "productName": "Ajax, Монтажний комплект v.5 (Door two Vietnam)",
+    "stage": "Com PKG",
+    "process": "Com PKG",
+    "materials": [
+      {
+        "materialCode": "000005787",
+        "nomenclature": "Screw for metal TECH 3.5/13 mm countersunk RN cb",
+        "spec": "Screw for metal TECH 3.5/13 mm countersunk RN cb",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      }
+    ]
+  },
+  "000066428": {
+    "productCode": "66428",
+    "specCode": "66428",
+    "productName": "Ajax, Монтажний комплект v.5 (Door two Vietnam)",
+    "stage": "Com PKG",
+    "process": "Com PKG",
+    "materials": [
+      {
+        "materialCode": "000005787",
+        "nomenclature": "Screw for metal TECH 3.5/13 mm countersunk RN cb",
+        "spec": "Screw for metal TECH 3.5/13 mm countersunk RN cb",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      }
+    ]
+  },
   "63395": {
     "productCode": "63395",
     "specCode": "63395",
