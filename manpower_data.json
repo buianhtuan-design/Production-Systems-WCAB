@@ -97,13 +97,13 @@
     "lines": [
       "3D"
     ],
-    "assyDirect": 13.0,
-    "assyTotal": 18.0,
+    "assyDirect": 12.0,
+    "assyTotal": 17.0,
     "assyLinesDirect": {
-      "3D": 13.0
+      "3D": 12.0
     },
     "assyLinesTotal": {
-      "3D": 18.0
+      "3D": 17.0
     },
     "htDirect": 0.0,
     "htTotal": 0.0,
