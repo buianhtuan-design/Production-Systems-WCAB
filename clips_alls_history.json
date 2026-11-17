@@ -4291,10 +4291,10 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-17 23:45:09",
+      "archivedAt": "2026-11-18 00:45:56",
       "totalItems": 264,
       "totalPlan": 485822.0,
-      "totalSheetFact": 250898.0,
+      "totalSheetFact": 251592.0,
       "qtyAllDevice": 264,
       "qtyDoneDevice": 145,
       "qtyNotDoneDevice": 119,
@@ -5796,7 +5796,7 @@
           "agg": "",
           "device": "Ajax KeyPad TouchScreen (8EU) ASP white клавіатура",
           "plan": 5397.0,
-          "sheetFact": 2738.0,
+          "sheetFact": 2791.0,
           "done": 0,
           "isDone": false
         },
@@ -5946,7 +5946,7 @@
           "agg": "",
           "device": "Ajax MotionCam HDR (PhOD) Jeweller (8EU) ASP white датчик руху з камерою",
           "plan": 12585.0,
-          "sheetFact": 6847.0,
+          "sheetFact": 7488.0,
           "done": 0,
           "isDone": false
         },
@@ -8438,7 +8438,7 @@
           "agg": "",
           "device": "Ajax KeyPad TouchScreen (8EU) ASP white клавіатура",
           "plan": 5397.0,
-          "sheetFact": 2738.0,
+          "sheetFact": 2791.0,
           "done": 0,
           "isDone": false
         },
@@ -8588,7 +8588,7 @@
           "agg": "",
           "device": "Ajax MotionCam HDR (PhOD) Jeweller (8EU) ASP white датчик руху з камерою",
           "plan": 12585.0,
-          "sheetFact": 6847.0,
+          "sheetFact": 7488.0,
           "done": 0,
           "isDone": false
         },
