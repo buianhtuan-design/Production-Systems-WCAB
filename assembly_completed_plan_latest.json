@@ -1,15 +1,15 @@
 {
-  "id": "PLAN_1794836899368_zc2w",
-  "createdAt": "2026-11-16T13:48:17.736Z",
-  "dateStr": "16/11/2026",
-  "timeStr": "20:48:17",
+  "id": "PLAN_1794883621956_sagm",
+  "createdAt": "2026-11-17T02:47:01.001Z",
+  "dateStr": "17/11/2026",
+  "timeStr": "09:47:01",
   "planner": "Phan Văn Thắng",
   "stage": "ASSEMBLY",
-  "modelsCount": 52,
-  "grandPlan": 38523,
-  "grandFact": 34987,
-  "grandPlanDay": 10500,
-  "grandPlanNight": 1396,
+  "modelsCount": 55,
+  "grandPlan": 54944,
+  "grandFact": 42716,
+  "grandPlanDay": 11028,
+  "grandPlanNight": 2401,
   "workingLinesDay": [
     "1",
     "2",
@@ -17,8 +17,8 @@
     "4",
     "5",
     "6",
-    "2C",
-    "3C",
+    "1B",
+    "2B",
     "3D"
   ],
   "workingLinesNight": [
@@ -28,15 +28,16 @@
     "4",
     "5",
     "6",
-    "2D",
-    "1D"
+    "1A",
+    "2A",
+    "3A"
   ],
   "snapshot": {
     "plannerName": "Phan Văn Thắng",
     "selectedCapacityStage": "ASSEMBLY",
     "stageFilter": "ASSEMBLY",
     "simFromDate": "2026-11-12",
-    "simToDate": "2026-11-16",
+    "simToDate": "2026-11-17",
     "simTargetDate": "2026-11-06",
     "simScope": "CUMULATIVE",
     "simPlanStatusFilter": "GAP_NEGATIVE",
@@ -49,8 +50,8 @@
       "4",
       "5",
       "6",
-      "2C",
-      "3C",
+      "1B",
+      "2B",
       "3D"
     ],
     "simWorkingLinesNight": [
@@ -60,17 +61,18 @@
       "4",
       "5",
       "6",
-      "2D",
-      "1D"
+      "1A",
+      "2A",
+      "3A"
     ],
     "simManualLinesDay": {
       "ASSEMBLY___DoorProtect Plus v5 8xx___Ajax DoorProtect Plus (8EU) WL Standard white (напівфабрикат)": "NONE",
-      "ASSEMBLY___MotionCam HDR (8xx) white___Ajax MotionCam HDR (8EU) white (напівфабрикат)": "3C",
+      "ASSEMBLY___MotionCam HDR (8xx) white___Ajax MotionCam HDR (8EU) white (напівфабрикат)": "NONE",
       "ASSEMBLY___StreetSiren white___Ajax StreetSiren white EU (напівфабрикат)": "NONE",
       "ASSEMBLY___MotionProtect (8xx)___Ajax MotionProtect white EU (напівфабрикат)": "NONE",
-      "ASSEMBLY___Hub 2 4G white___Ajax Hub 2 4G (8EU/ECG) white (напівфабрикат)": "NONE",
-      "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus white EU (напівфабрикат)": "2C",
-      "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": "3C",
+      "ASSEMBLY___Hub 2 4G white___Ajax Hub 2 4G (8EU/ECG) white (напівфабрикат)": "2B",
+      "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus white EU (напівфабрикат)": "NONE",
+      "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": "2B",
       "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus black EU (напівфабрикат)": "NONE",
       "ASSEMBLY___Hub 2 Plus (AU/AUX)___Ajax Hub 2 Plus (9AU/AUX) white (напівфабрикат)": "NONE",
       "ASSEMBLY___KeyPad TouchScreen white (8xx)___Ajax KeyPad TouchScreen (8EU) white (напівфабрикат)": "2C",
@@ -82,9 +84,12 @@
       "ASSEMBLY___DoorProtect___Ajax DoorProtect (8EU) WL Standard white (напівфабрикат)": "NONE",
       "ASSEMBLY___Hub 4G UEU___Ajax Hub 4G (8EU/UEU) white (напівфабрикат)": "NONE",
       "ASSEMBLY___MotionCam Outdoor___Ajax MotionCam Outdoor (8EU) white (напівфабрикат)": "NONE",
-      "ASSEMBLY___DoorProtect Plus 8xx___Ajax DoorProtect Plus white EU (напівфабрикат)": "3D",
+      "ASSEMBLY___DoorProtect Plus 8xx___Ajax DoorProtect Plus white EU (напівфабрикат)": "NONE",
       "ASSEMBLY___DoorProtect___Ajax DoorProtect white EU (напівфабрикат)": "3D",
-      "ASSEMBLY___DoorProtect___Ajax DoorProtect black EU (напівфабрикат)": "3D"
+      "ASSEMBLY___DoorProtect___Ajax DoorProtect black EU (напівфабрикат)": "NONE",
+      "ASSEMBLY___MotionProtect Plus (9хх)___Ajax MotionProtect Plus (9AU) white (напівфабрикат)": "1B",
+      "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": "3D",
+      "ASSEMBLY___MotionCam Outdoor (PhOD) Jeweller___Ajax MotionCam Outdoor (PhOD) Jeweller (8EU) white (напівфабрикат)": "1B"
     },
     "simManualLinesNight": {
       "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus white EU (напівфабрикат)": "1D",
@@ -92,7 +97,7 @@
       "ASSEMBLY___StreetSiren white___Ajax StreetSiren white EU (напівфабрикат)": "NONE",
       "ASSEMBLY___Hub 2 4G white___Ajax Hub 2 4G (8EU/ECG) white (напівфабрикат)": "NONE",
       "ASSEMBLY___MotionCam HDR (8xx) white___Ajax MotionCam HDR (8EU) white (напівфабрикат)": "NONE",
-      "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": "1D",
+      "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": "1A",
       "ASSEMBLY___DoorProtect Plus v5 8xx___Ajax DoorProtect Plus black EU (напівфабрикат)": "NONE",
       "ASSEMBLY___Hub 2 Plus (AU/AUX)___Ajax Hub 2 Plus (9AU/AUX) white (напівфабрикат)": "NONE",
       "ASSEMBLY___MotionProtect (8xx)___Ajax MotionProtect white EU (напівфабрикат)": "NONE",
@@ -107,19 +112,20 @@
       "ASSEMBLY___Hub 4G black (915)_ULA___Ajax Hub 4G (9NA/ULA) black (напівфабрикат)": "NONE",
       "ASSEMBLY___Hub 4G white (915)_ULA___Ajax Hub 4G (9AU/ULA) white (напівфабрикат)": "NONE",
       "ASSEMBLY___DoorProtect___Ajax DoorProtect black EU (напівфабрикат)": "NONE",
-      "ASSEMBLY___DoorProtect___Ajax DoorProtect white EU (напівфабрикат)": "2D",
+      "ASSEMBLY___DoorProtect___Ajax DoorProtect white EU (напівфабрикат)": "3A",
       "ASSEMBLY___Hub 2 Plus___Ajax Hub 2 Plus white EU (напівфабрикат)": "2D",
       "ASSEMBLY___CombiProtect (8xx)___Ajax CombiProtect black EU (напівфабрикат)": "NONE",
-      "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": "1D"
+      "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": "NONE",
+      "ASSEMBLY___HomeSiren white___Ajax HomeSiren (8EU) WL Standard white (напівфабрикат)": "2A"
     },
     "simLineOverridesDay": {
       "ASSEMBLY___DoorProtect Plus v5 8xx___Ajax DoorProtect Plus (8EU) WL Standard white (напівфабрикат)": "NONE",
-      "ASSEMBLY___MotionCam HDR (8xx) white___Ajax MotionCam HDR (8EU) white (напівфабрикат)": "3C",
+      "ASSEMBLY___MotionCam HDR (8xx) white___Ajax MotionCam HDR (8EU) white (напівфабрикат)": "NONE",
       "ASSEMBLY___StreetSiren white___Ajax StreetSiren white EU (напівфабрикат)": "NONE",
       "ASSEMBLY___MotionProtect (8xx)___Ajax MotionProtect white EU (напівфабрикат)": "NONE",
-      "ASSEMBLY___Hub 2 4G white___Ajax Hub 2 4G (8EU/ECG) white (напівфабрикат)": "NONE",
-      "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus white EU (напівфабрикат)": "2C",
-      "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": "3C",
+      "ASSEMBLY___Hub 2 4G white___Ajax Hub 2 4G (8EU/ECG) white (напівфабрикат)": "2B",
+      "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus white EU (напівфабрикат)": "NONE",
+      "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": "2B",
       "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus black EU (напівфабрикат)": "NONE",
       "ASSEMBLY___Hub 2 Plus (AU/AUX)___Ajax Hub 2 Plus (9AU/AUX) white (напівфабрикат)": "NONE",
       "ASSEMBLY___KeyPad TouchScreen white (8xx)___Ajax KeyPad TouchScreen (8EU) white (напівфабрикат)": "2C",
@@ -131,9 +137,12 @@
       "ASSEMBLY___DoorProtect___Ajax DoorProtect (8EU) WL Standard white (напівфабрикат)": "NONE",
       "ASSEMBLY___Hub 4G UEU___Ajax Hub 4G (8EU/UEU) white (напівфабрикат)": "NONE",
       "ASSEMBLY___MotionCam Outdoor___Ajax MotionCam Outdoor (8EU) white (напівфабрикат)": "NONE",
-      "ASSEMBLY___DoorProtect Plus 8xx___Ajax DoorProtect Plus white EU (напівфабрикат)": "3D",
+      "ASSEMBLY___DoorProtect Plus 8xx___Ajax DoorProtect Plus white EU (напівфабрикат)": "NONE",
       "ASSEMBLY___DoorProtect___Ajax DoorProtect white EU (напівфабрикат)": "3D",
-      "ASSEMBLY___DoorProtect___Ajax DoorProtect black EU (напівфабрикат)": "3D"
+      "ASSEMBLY___DoorProtect___Ajax DoorProtect black EU (напівфабрикат)": "NONE",
+      "ASSEMBLY___MotionProtect Plus (9хх)___Ajax MotionProtect Plus (9AU) white (напівфабрикат)": "1B",
+      "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": "3D",
+      "ASSEMBLY___MotionCam Outdoor (PhOD) Jeweller___Ajax MotionCam Outdoor (PhOD) Jeweller (8EU) white (напівфабрикат)": "1B"
     },
     "simLineOverridesNight": {
       "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus white EU (напівфабрикат)": "1D",
@@ -141,7 +150,7 @@
       "ASSEMBLY___StreetSiren white___Ajax StreetSiren white EU (напівфабрикат)": "NONE",
       "ASSEMBLY___Hub 2 4G white___Ajax Hub 2 4G (8EU/ECG) white (напівфабрикат)": "NONE",
       "ASSEMBLY___MotionCam HDR (8xx) white___Ajax MotionCam HDR (8EU) white (напівфабрикат)": "NONE",
-      "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": "1D",
+      "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": "1A",
       "ASSEMBLY___DoorProtect Plus v5 8xx___Ajax DoorProtect Plus black EU (напівфабрикат)": "NONE",
       "ASSEMBLY___Hub 2 Plus (AU/AUX)___Ajax Hub 2 Plus (9AU/AUX) white (напівфабрикат)": "NONE",
       "ASSEMBLY___MotionProtect (8xx)___Ajax MotionProtect white EU (напівфабрикат)": "NONE",
@@ -156,19 +165,20 @@
       "ASSEMBLY___Hub 4G black (915)_ULA___Ajax Hub 4G (9NA/ULA) black (напівфабрикат)": "NONE",
       "ASSEMBLY___Hub 4G white (915)_ULA___Ajax Hub 4G (9AU/ULA) white (напівфабрикат)": "NONE",
       "ASSEMBLY___DoorProtect___Ajax DoorProtect black EU (напівфабрикат)": "NONE",
-      "ASSEMBLY___DoorProtect___Ajax DoorProtect white EU (напівфабрикат)": "2D",
+      "ASSEMBLY___DoorProtect___Ajax DoorProtect white EU (напівфабрикат)": "3A",
       "ASSEMBLY___Hub 2 Plus___Ajax Hub 2 Plus white EU (напівфабрикат)": "2D",
       "ASSEMBLY___CombiProtect (8xx)___Ajax CombiProtect black EU (напівфабрикат)": "NONE",
-      "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": "1D"
+      "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": "NONE",
+      "ASSEMBLY___HomeSiren white___Ajax HomeSiren (8EU) WL Standard white (напівфабрикат)": "2A"
     },
     "simLineOverrides": {
       "ASSEMBLY___DoorProtect Plus v5 8xx___Ajax DoorProtect Plus (8EU) WL Standard white (напівфабрикат)": "NONE",
-      "ASSEMBLY___MotionCam HDR (8xx) white___Ajax MotionCam HDR (8EU) white (напівфабрикат)": "3C",
+      "ASSEMBLY___MotionCam HDR (8xx) white___Ajax MotionCam HDR (8EU) white (напівфабрикат)": "NONE",
       "ASSEMBLY___StreetSiren white___Ajax StreetSiren white EU (напівфабрикат)": "NONE",
       "ASSEMBLY___MotionProtect (8xx)___Ajax MotionProtect white EU (напівфабрикат)": "NONE",
-      "ASSEMBLY___Hub 2 4G white___Ajax Hub 2 4G (8EU/ECG) white (напівфабрикат)": "NONE",
-      "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus white EU (напівфабрикат)": "2C",
-      "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": "3C",
+      "ASSEMBLY___Hub 2 4G white___Ajax Hub 2 4G (8EU/ECG) white (напівфабрикат)": "2B",
+      "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus white EU (напівфабрикат)": "NONE",
+      "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": "2B",
       "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus black EU (напівфабрикат)": "NONE",
       "ASSEMBLY___Hub 2 Plus (AU/AUX)___Ajax Hub 2 Plus (9AU/AUX) white (напівфабрикат)": "NONE",
       "ASSEMBLY___KeyPad TouchScreen white (8xx)___Ajax KeyPad TouchScreen (8EU) white (напівфабрикат)": "2C",
@@ -180,20 +190,25 @@
       "ASSEMBLY___DoorProtect___Ajax DoorProtect (8EU) WL Standard white (напівфабрикат)": "NONE",
       "ASSEMBLY___Hub 4G UEU___Ajax Hub 4G (8EU/UEU) white (напівфабрикат)": "NONE",
       "ASSEMBLY___MotionCam Outdoor___Ajax MotionCam Outdoor (8EU) white (напівфабрикат)": "NONE",
-      "ASSEMBLY___DoorProtect Plus 8xx___Ajax DoorProtect Plus white EU (напівфабрикат)": "3D",
+      "ASSEMBLY___DoorProtect Plus 8xx___Ajax DoorProtect Plus white EU (напівфабрикат)": "NONE",
       "ASSEMBLY___DoorProtect___Ajax DoorProtect white EU (напівфабрикат)": "3D",
-      "ASSEMBLY___DoorProtect___Ajax DoorProtect black EU (напівфабрикат)": "3D"
+      "ASSEMBLY___DoorProtect___Ajax DoorProtect black EU (напівфабрикат)": "NONE",
+      "ASSEMBLY___MotionProtect Plus (9хх)___Ajax MotionProtect Plus (9AU) white (напівфабрикат)": "1B",
+      "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": "3D",
+      "ASSEMBLY___MotionCam Outdoor (PhOD) Jeweller___Ajax MotionCam Outdoor (PhOD) Jeweller (8EU) white (напівфабрикат)": "1B"
     },
     "simManualSeqsDay": {
       "ASSEMBLY___StreetSiren white___Ajax StreetSiren white EU (напівфабрикат)": "1",
-      "ASSEMBLY___MotionProtect (8xx)___Ajax MotionProtect white EU (напівфабрикат)": "1",
-      "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus white EU (напівфабрикат)": "1",
-      "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": "3",
+      "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": "1",
       "ASSEMBLY___KeyPad TouchScreen white (8xx)___Ajax KeyPad TouchScreen (8EU) white (напівфабрикат)": "2",
       "ASSEMBLY___Hub 2 Plus (NA/AUX)___Ajax Hub 2 Plus (9NA/AUX) black_(напівфабрикат)": "4",
       "ASSEMBLY___DoorProtect Plus v5 8xx___Ajax DoorProtect Plus black EU (напівфабрикат)": "1",
       "ASSEMBLY___Hub 2 Plus (AU/AUX)___Ajax Hub 2 Plus (9AU/AUX) white (напівфабрикат)": "2",
-      "ASSEMBLY___MotionCam HDR (9xx) 9AU white___Ajax MotionCam HDR (9AU) white (напівфабрикат)": "4"
+      "ASSEMBLY___MotionCam HDR (9xx) 9AU white___Ajax MotionCam HDR (9AU) white (напівфабрикат)": "4",
+      "ASSEMBLY___DoorProtect___Ajax DoorProtect white EU (напівфабрикат)": "1",
+      "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": "2",
+      "ASSEMBLY___MotionCam Outdoor (PhOD) Jeweller___Ajax MotionCam Outdoor (PhOD) Jeweller (8EU) white (напівфабрикат)": "2",
+      "ASSEMBLY___Hub 2 4G white___Ajax Hub 2 4G (8EU/ECG) white (напівфабрикат)": "2"
     },
     "simManualSeqsNight": {
       "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": "1",
@@ -203,14 +218,17 @@
       "ASSEMBLY___DoorProtect___Ajax DoorProtect black EU (напівфабрикат)": "0",
       "ASSEMBLY___KeyPad TouchScreen white (8xx)___Ajax KeyPad TouchScreen (8EU) white (напівфабрикат)": "3",
       "ASSEMBLY___Hub 2 Plus___Ajax Hub 2 Plus white EU (напівфабрикат)": "2",
-      "ASSEMBLY___DoorProtect___Ajax DoorProtect white EU (напівфабрикат)": "1",
-      "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": "3"
+      "ASSEMBLY___DoorProtect___Ajax DoorProtect white EU (напівфабрикат)": "1"
     },
     "simManualPfDay": {
-      "ASSEMBLY___MotionProtect (8xx)___Ajax MotionProtect white EU (напівфабрикат)": 100,
       "ASSEMBLY___DoorProtect Plus v5 8xx___Ajax DoorProtect Plus (8EU) WL Standard white (напівфабрикат)": 85,
-      "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus white EU (напівфабрикат)": 45,
-      "ASSEMBLY___DoorProtect___Ajax DoorProtect black EU (напівфабрикат)": 100
+      "ASSEMBLY___DoorProtect___Ajax DoorProtect black EU (напівфабрикат)": 100,
+      "ASSEMBLY___DoorProtect___Ajax DoorProtect white EU (напівфабрикат)": 85,
+      "ASSEMBLY___MotionProtect Plus (9хх)___Ajax MotionProtect Plus (9AU) white (напівфабрикат)": 65,
+      "ASSEMBLY___LeaksProtect 8EU WL___Ajax LeaksProtect (8EU) WL Standard white (напівфабрикат)": 45,
+      "ASSEMBLY___MotionCam Outdoor (PhOD) Jeweller___Ajax MotionCam Outdoor (PhOD) Jeweller (8EU) white (напівфабрикат)": 85,
+      "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": 85,
+      "ASSEMBLY___Hub 2 4G white___Ajax Hub 2 4G (8EU/ECG) white (напівфабрикат)": 65
     },
     "simManualPfNight": {
       "ASSEMBLY___DoorProtect Plus v5 8xx___Ajax DoorProtect Plus black EU (напівфабрикат)": 65,
@@ -221,13 +239,15 @@
       "ASSEMBLY___MotionCam HDR (8xx) white___Ajax MotionCam HDR (8EU) white (напівфабрикат)": 228,
       "ASSEMBLY___StreetSiren white___Ajax StreetSiren white EU (напівфабрикат)": 1100,
       "ASSEMBLY___MotionProtect (8xx)___Ajax MotionProtect white EU (напівфабрикат)": 2211,
-      "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": 2000,
+      "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": 1000,
       "ASSEMBLY___DoorProtect Plus v5 8xx___Ajax DoorProtect Plus black EU (напівфабрикат)": 1800,
       "ASSEMBLY___KeyPad TouchScreen white (8xx)___Ajax KeyPad TouchScreen (8EU) white (напівфабрикат)": 565,
       "ASSEMBLY___MotionCam HDR (9xx) 9AU white___Ajax MotionCam HDR (9AU) white (напівфабрикат)": 39,
       "ASSEMBLY___DoorProtect___Ajax DoorProtect (8EU) WL Standard white (напівфабрикат)": 1500,
-      "ASSEMBLY___DoorProtect___Ajax DoorProtect white EU (напівфабрикат)": 3288,
-      "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus white EU (напівфабрикат)": 1000
+      "ASSEMBLY___DoorProtect___Ajax DoorProtect white EU (напівфабрикат)": 2000,
+      "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus white EU (напівфабрикат)": 1000,
+      "ASSEMBLY___MotionCam Outdoor (PhOD) Jeweller___Ajax MotionCam Outdoor (PhOD) Jeweller (8EU) white (напівфабрикат)": 500,
+      "ASSEMBLY___Hub 2 4G white___Ajax Hub 2 4G (8EU/ECG) white (напівфабрикат)": 550
     },
     "simManualPlanNight": {
       "ASSEMBLY___MotionCam Outdoor___Ajax MotionCam Outdoor (8EU) white (напівфабрикат)": 245,
@@ -308,13 +328,16 @@
       "ASSEMBLY___Hub 4G black (915)_ULA___Ajax Hub 4G (9NA/ULA) black (напівфабрикат)": "không có mạch",
       "ASSEMBLY___Hub 4G white (915)_ULA___Ajax Hub 4G (9AU/ULA) white (напівфабрикат)": "không có mạch",
       "ASSEMBLY___KeyPad TouchScreen white (8xx)___Ajax KeyPad TouchScreen (8EU) white (напівфабрикат)": "Ramup 45%",
-      "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": "Ca ngày 16 cover",
+      "ASSEMBLY___MotionCam HDR (PhOD)___Ajax MotionCam HDR (PhOD) Jeweller (8EU) white (напівфабрикат)": "Ca ngày 1A cover",
       "ASSEMBLY___MotionProtect Plus (8xx)___Ajax MotionProtect Plus white EU (напівфабрикат)": "Không có pcb",
-      "ASSEMBLY___DoorProtect___Ajax DoorProtect (8EU) WL Standard white (напівфабрикат)": "Hàng NG không lên đèn chạy lại Hard Test"
+      "ASSEMBLY___DoorProtect___Ajax DoorProtect (8EU) WL Standard white (напівфабрикат)": "Hàng NG không lên đèn chạy lại Hard Test",
+      "ASSEMBLY___DoorProtect___Ajax DoorProtect black EU (напівфабрикат)": "Không có mach",
+      "ASSEMBLY___HomeSiren white___Ajax HomeSiren (8EU) WL Standard white (напівфабрикат)": "Ca đêm line 2A sản xuất",
+      "ASSEMBLY___DoorProtect___Ajax DoorProtect white EU (напівфабрикат)": "Line 3A"
     },
     "hardtestState": {
       "hardtestSimFromDate": "2026-11-12",
-      "hardtestSimToDate": "2026-11-16",
+      "hardtestSimToDate": "2026-11-17",
       "hardtestSimShiftType": "FULL_DAY",
       "hardtestSimStageFilter": "ALL",
       "hardtestSimGroupFilter": "ALL",
