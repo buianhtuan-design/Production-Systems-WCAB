@@ -4291,10 +4291,10 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-18 03:32:38",
+      "archivedAt": "2026-11-18 04:32:30",
       "totalItems": 264,
       "totalPlan": 485822.0,
-      "totalSheetFact": 256087.0,
+      "totalSheetFact": 256585.0,
       "qtyAllDevice": 264,
       "qtyDoneDevice": 147,
       "qtyNotDoneDevice": 117,
@@ -6736,7 +6736,7 @@
           "agg": "",
           "device": "Ajax BulletCam (5 Mp/2.8 mm) ASP white відеокамера спостереження",
           "plan": 2590.0,
-          "sheetFact": 310.0,
+          "sheetFact": 689.0,
           "done": 0,
           "isDone": false
         },
@@ -6816,7 +6816,7 @@
           "agg": "",
           "device": "Ajax TurretCam (5 Mp/2.8 mm) ASP white відеокамера спостереження",
           "plan": 1675.0,
-          "sheetFact": 429.0,
+          "sheetFact": 548.0,
           "done": 0,
           "isDone": false
         },
@@ -9378,7 +9378,7 @@
           "agg": "",
           "device": "Ajax BulletCam (5 Mp/2.8 mm) ASP white відеокамера спостереження",
           "plan": 2590.0,
-          "sheetFact": 310.0,
+          "sheetFact": 689.0,
           "done": 0,
           "isDone": false
         },
@@ -9458,7 +9458,7 @@
           "agg": "",
           "device": "Ajax TurretCam (5 Mp/2.8 mm) ASP white відеокамера спостереження",
           "plan": 1675.0,
-          "sheetFact": 429.0,
+          "sheetFact": 548.0,
           "done": 0,
           "isDone": false
         },
