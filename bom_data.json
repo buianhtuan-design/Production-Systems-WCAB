@@ -350643,8 +350643,8 @@
     "productCode": "28201",
     "specCode": "28201",
     "productName": "Ajax DoorProtect S black magnet (напівфабрикат)",
-    "stage": "COM PKG",
-    "process": "COM PKG",
+    "stage": "Com PKG",
+    "process": "Com PKG",
     "materials": [
       {
         "materialCode": "000062108",
@@ -350652,8 +350652,8 @@
         "spec": "DPS_plastic_MagnetFrontside_black_v1",
         "quantity": 1.0,
         "category": "Material",
-        "process": "COM PKG",
-        "stage": "COM PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       },
       {
         "materialCode": "000062107",
@@ -350661,8 +350661,8 @@
         "spec": "DPS_plastic_MagnetBackside_black_v1",
         "quantity": 1.0,
         "category": "Material",
-        "process": "COM PKG",
-        "stage": "COM PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       },
       {
         "materialCode": "000081097",
@@ -350670,8 +350670,8 @@
         "spec": "Plastic case DPS_plastic_MagnetBracket_black_v2",
         "quantity": 1.0,
         "category": "Material",
-        "process": "COM PKG",
-        "stage": "COM PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       },
       {
         "materialCode": "000083994",
@@ -350679,8 +350679,8 @@
         "spec": "Die cut part acrylic 10mm x 35mm",
         "quantity": 1.0,
         "category": "Material",
-        "process": "COM PKG",
-        "stage": "COM PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       },
       {
         "materialCode": "000013143",
@@ -350688,8 +350688,8 @@
         "spec": "Y30BH 35x13x10mm magnet HSS",
         "quantity": 1.0,
         "category": "Material",
-        "process": "COM PKG",
-        "stage": "COM PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       },
       {
         "materialCode": "000061393",
@@ -350697,8 +350697,8 @@
         "spec": "Screw M3x8",
         "quantity": 1.0,
         "category": "Material",
-        "process": "COM PKG",
-        "stage": "COM PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       }
     ]
   },
@@ -350706,8 +350706,8 @@
     "productCode": "28201",
     "specCode": "28201",
     "productName": "Ajax DoorProtect S black magnet (напівфабрикат)",
-    "stage": "COM PKG",
-    "process": "COM PKG",
+    "stage": "Com PKG",
+    "process": "Com PKG",
     "materials": [
       {
         "materialCode": "000062108",
@@ -350715,8 +350715,8 @@
         "spec": "DPS_plastic_MagnetFrontside_black_v1",
         "quantity": 1.0,
         "category": "Material",
-        "process": "COM PKG",
-        "stage": "COM PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       },
       {
         "materialCode": "000062107",
@@ -350724,8 +350724,8 @@
         "spec": "DPS_plastic_MagnetBackside_black_v1",
         "quantity": 1.0,
         "category": "Material",
-        "process": "COM PKG",
-        "stage": "COM PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       },
       {
         "materialCode": "000081097",
@@ -350733,8 +350733,8 @@
         "spec": "Plastic case DPS_plastic_MagnetBracket_black_v2",
         "quantity": 1.0,
         "category": "Material",
-        "process": "COM PKG",
-        "stage": "COM PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       },
       {
         "materialCode": "000083994",
@@ -350742,8 +350742,8 @@
         "spec": "Die cut part acrylic 10mm x 35mm",
         "quantity": 1.0,
         "category": "Material",
-        "process": "COM PKG",
-        "stage": "COM PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       },
       {
         "materialCode": "000013143",
@@ -350751,8 +350751,8 @@
         "spec": "Y30BH 35x13x10mm magnet HSS",
         "quantity": 1.0,
         "category": "Material",
-        "process": "COM PKG",
-        "stage": "COM PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       },
       {
         "materialCode": "000061393",
@@ -350760,248 +350760,370 @@
         "spec": "Screw M3x8",
         "quantity": 1.0,
         "category": "Material",
-        "process": "COM PKG",
-        "stage": "COM PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       }
     ]
   },
-  "63399": {
-    "productCode": "63399",
-    "specCode": "63399",
-    "productName": "Ajax DoorProtect (9AU) AR WL Prosegur white датчик відкриття",
-    "stage": "PKG",
-    "process": "PKG",
+  "83528": {
+    "productCode": "83528",
+    "specCode": "83528",
+    "productName": "Ajax MotionCam HDR (9NA) black (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
     "materials": [
       {
-        "materialCode": "000000000",
-        "nomenclature": "",
-        "spec": "",
+        "materialCode": "000117032",
+        "nomenclature": "Ajax, CAM.008.MBR.001v2_HRD",
+        "spec": "Ajax, CAM.008.MBR.001v2_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000133164",
+        "nomenclature": "Ajax, CAM.008.PIR.001v3_MCJ_HDR_9NA_black_HRD",
+        "spec": "Ajax, CAM.008.PIR.001v3_MCJ_HDR_9NA_black_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000157475",
+        "nomenclature": "Ajax, CAM.008.OSB.001v5_HRD",
+        "spec": "Ajax, CAM.008.OSB.001v5_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000118242",
+        "nomenclature": "Case element  MCHD_plastic_Front_AJ_black_v3",
+        "spec": "Case element  MCHD_plastic_Front_AJ_black_v3",
         "quantity": 1.0,
         "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000104376",
+        "nomenclature": "Case element MCHD rubber Camera Eye black v2",
+        "spec": "Case element MCHD rubber Camera Eye black v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000014919",
+        "nomenclature": "MotionCam_case_backside_black",
+        "spec": "MotionCam_case_backside_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000104069",
+        "nomenclature": "PCB CAM.008.FIC.001v0",
+        "spec": "PCB CAM.008.FIC.001v0",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000059502",
+        "nomenclature": "MCS_plastic_CaseMirror_black_v2",
+        "spec": "MCS_plastic_CaseMirror_black_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000014930",
+        "nomenclature": "MotionCam_case_button_black",
+        "spec": "MotionCam_case_button_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000014931",
+        "nomenclature": "MotionCam_case_optical_fiber",
+        "spec": "MotionCam_case_optical_fiber",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000014932",
+        "nomenclature": "MotionCam_lens_optical_fiber",
+        "spec": "MotionCam_lens_optical_fiber",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000005953",
+        "nomenclature": "Plastic Lens WP1.2GI12V1-JB Poly IR®4-0.015",
+        "spec": "Plastic Lens WP1.2GI12V1-JB Poly IR®4-0.015",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000088675",
+        "nomenclature": "Power supply (CR123A battery)  1600mAh LiMnO2",
+        "spec": "Power supply (CR123A battery)  1600mAh LiMnO2",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000015288",
+        "nomenclature": "Self-tapping screw 2.9*16 DIN 7981 half-round head. Cb",
+        "spec": "Self-tapping screw 2.9*16 DIN 7981 half-round head. Cb",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
       }
-    ],
-    "source": "BOM"
+    ]
   },
-  "000063399": {
-    "productCode": "63399",
-    "specCode": "63399",
-    "productName": "Ajax DoorProtect (9AU) AR WL Prosegur white датчик відкриття",
-    "stage": "PKG",
-    "process": "PKG",
+  "000083528": {
+    "productCode": "83528",
+    "specCode": "83528",
+    "productName": "Ajax MotionCam HDR (9NA) black (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
     "materials": [
       {
-        "materialCode": "000000000",
-        "nomenclature": "",
-        "spec": "",
+        "materialCode": "000117032",
+        "nomenclature": "Ajax, CAM.008.MBR.001v2_HRD",
+        "spec": "Ajax, CAM.008.MBR.001v2_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000133164",
+        "nomenclature": "Ajax, CAM.008.PIR.001v3_MCJ_HDR_9NA_black_HRD",
+        "spec": "Ajax, CAM.008.PIR.001v3_MCJ_HDR_9NA_black_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000157475",
+        "nomenclature": "Ajax, CAM.008.OSB.001v5_HRD",
+        "spec": "Ajax, CAM.008.OSB.001v5_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000118242",
+        "nomenclature": "Case element  MCHD_plastic_Front_AJ_black_v3",
+        "spec": "Case element  MCHD_plastic_Front_AJ_black_v3",
         "quantity": 1.0,
         "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000104376",
+        "nomenclature": "Case element MCHD rubber Camera Eye black v2",
+        "spec": "Case element MCHD rubber Camera Eye black v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000014919",
+        "nomenclature": "MotionCam_case_backside_black",
+        "spec": "MotionCam_case_backside_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000104069",
+        "nomenclature": "PCB CAM.008.FIC.001v0",
+        "spec": "PCB CAM.008.FIC.001v0",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000059502",
+        "nomenclature": "MCS_plastic_CaseMirror_black_v2",
+        "spec": "MCS_plastic_CaseMirror_black_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000014930",
+        "nomenclature": "MotionCam_case_button_black",
+        "spec": "MotionCam_case_button_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000014931",
+        "nomenclature": "MotionCam_case_optical_fiber",
+        "spec": "MotionCam_case_optical_fiber",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000014932",
+        "nomenclature": "MotionCam_lens_optical_fiber",
+        "spec": "MotionCam_lens_optical_fiber",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000005953",
+        "nomenclature": "Plastic Lens WP1.2GI12V1-JB Poly IR®4-0.015",
+        "spec": "Plastic Lens WP1.2GI12V1-JB Poly IR®4-0.015",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000088675",
+        "nomenclature": "Power supply (CR123A battery)  1600mAh LiMnO2",
+        "spec": "Power supply (CR123A battery)  1600mAh LiMnO2",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000015288",
+        "nomenclature": "Self-tapping screw 2.9*16 DIN 7981 half-round head. Cb",
+        "spec": "Self-tapping screw 2.9*16 DIN 7981 half-round head. Cb",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
       }
-    ],
-    "source": "BOM"
+    ]
   },
-  "63438": {
-    "productCode": "63438",
-    "specCode": "63438",
-    "productName": "Ajax DoorProtect Plus U Jeweller (8EU) ASP black датчик відкриття",
-    "stage": "PKG",
-    "process": "PKG",
+  "10353": {
+    "productCode": "10353",
+    "specCode": "10353",
+    "productName": "Ajax DoorProtect Fibra small magnet black (напівфабрикат)",
+    "stage": "Com PKG",
+    "process": "Com PKG",
     "materials": [
       {
-        "materialCode": "000130377",
-        "nomenclature": "Ajax DoorProtect Plus U Jeweller (8EU) black (напівфабрикат)",
-        "spec": "Ajax DoorProtect Plus U Jeweller (8EU) black (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000065910",
-        "nomenclature": "Ajax DoorProtect S black magnet (напівфабрикат)",
-        "spec": "Ajax DoorProtect S black magnet (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000033367",
-        "nomenclature": "Ajax DoorProtect Fibra small magnet black (напівфабрикат)",
-        "spec": "Ajax DoorProtect Fibra small magnet black (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000171041",
-        "nomenclature": "Ajax, Монтажний комплект v.5 (Door two Vietnam) (плівка)",
-        "spec": "Ajax, Монтажний комплект v.5 (Door two Vietnam) (плівка)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000081090",
-        "nomenclature": "Plastic case DPS_plastic_Bracket_black_v2",
-        "spec": "",
+        "materialCode": "000028585",
+        "nomenclature": "Plastic case DP Fibra smallMagnet backside bl",
+        "spec": "Plastic case DP Fibra smallMagnet backside bl",
         "quantity": 1.0,
         "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       },
       {
-        "materialCode": "000061393",
-        "nomenclature": "Screw M3x8",
-        "spec": "",
+        "materialCode": "000028587",
+        "nomenclature": "Plastic case DP Fibra smallMagnet frontside bl",
+        "spec": "Plastic case DP Fibra smallMagnet frontside bl",
         "quantity": 1.0,
         "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       },
       {
-        "materialCode": "000135872",
-        "nomenclature": "[Package]_DPPJ_U_CE_black_v2",
-        "spec": "",
-        "quantity": 1.0,
+        "materialCode": "000005989",
+        "nomenclature": "Neodymium magnet 4x8 mm",
+        "spec": "Neodymium magnet 4x8 mm",
+        "quantity": 3.0,
         "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       },
       {
-        "materialCode": "000096202",
-        "nomenclature": "DoorProtect S package liner_v2",
-        "spec": "",
+        "materialCode": "000041207",
+        "nomenclature": "KISCUTF13202 adhesive tape die-cut part 24*4mm",
+        "spec": "KISCUTF13202 adhesive tape die-cut part 24*4mm",
         "quantity": 1.0,
         "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000096203",
-        "nomenclature": "DoorProtect S package liner 2 part_v2",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000133575",
-        "nomenclature": "[Manual]_DPPJ_U_CE_GPSR_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       }
-    ],
-    "source": "BOM"
+    ]
   },
-  "000063438": {
-    "productCode": "63438",
-    "specCode": "63438",
-    "productName": "Ajax DoorProtect Plus U Jeweller (8EU) ASP black датчик відкриття",
-    "stage": "PKG",
-    "process": "PKG",
+  "000010353": {
+    "productCode": "10353",
+    "specCode": "10353",
+    "productName": "Ajax DoorProtect Fibra small magnet black (напівфабрикат)",
+    "stage": "Com PKG",
+    "process": "Com PKG",
     "materials": [
       {
-        "materialCode": "000130377",
-        "nomenclature": "Ajax DoorProtect Plus U Jeweller (8EU) black (напівфабрикат)",
-        "spec": "Ajax DoorProtect Plus U Jeweller (8EU) black (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000065910",
-        "nomenclature": "Ajax DoorProtect S black magnet (напівфабрикат)",
-        "spec": "Ajax DoorProtect S black magnet (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000033367",
-        "nomenclature": "Ajax DoorProtect Fibra small magnet black (напівфабрикат)",
-        "spec": "Ajax DoorProtect Fibra small magnet black (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000171041",
-        "nomenclature": "Ajax, Монтажний комплект v.5 (Door two Vietnam) (плівка)",
-        "spec": "Ajax, Монтажний комплект v.5 (Door two Vietnam) (плівка)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000081090",
-        "nomenclature": "Plastic case DPS_plastic_Bracket_black_v2",
-        "spec": "",
+        "materialCode": "000028585",
+        "nomenclature": "Plastic case DP Fibra smallMagnet backside bl",
+        "spec": "Plastic case DP Fibra smallMagnet backside bl",
         "quantity": 1.0,
         "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       },
       {
-        "materialCode": "000061393",
-        "nomenclature": "Screw M3x8",
-        "spec": "",
+        "materialCode": "000028587",
+        "nomenclature": "Plastic case DP Fibra smallMagnet frontside bl",
+        "spec": "Plastic case DP Fibra smallMagnet frontside bl",
         "quantity": 1.0,
         "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       },
       {
-        "materialCode": "000135872",
-        "nomenclature": "[Package]_DPPJ_U_CE_black_v2",
-        "spec": "",
-        "quantity": 1.0,
+        "materialCode": "000005989",
+        "nomenclature": "Neodymium magnet 4x8 mm",
+        "spec": "Neodymium magnet 4x8 mm",
+        "quantity": 3.0,
         "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       },
       {
-        "materialCode": "000096202",
-        "nomenclature": "DoorProtect S package liner_v2",
-        "spec": "",
+        "materialCode": "000041207",
+        "nomenclature": "KISCUTF13202 adhesive tape die-cut part 24*4mm",
+        "spec": "KISCUTF13202 adhesive tape die-cut part 24*4mm",
         "quantity": 1.0,
         "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000096203",
-        "nomenclature": "DoorProtect S package liner 2 part_v2",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000133575",
-        "nomenclature": "[Manual]_DPPJ_U_CE_GPSR_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
+        "process": "Com PKG",
+        "stage": "Com PKG"
       }
-    ],
-    "source": "BOM"
+    ]
   },
   "63414": {
     "productCode": "63414",
@@ -351049,7 +351171,7 @@
       {
         "materialCode": "000081090",
         "nomenclature": "Plastic case DPS_plastic_Bracket_black_v2",
-        "spec": "",
+        "spec": "Plastic case DPS_plastic_Bracket_black_v2",
         "quantity": 1.0,
         "category": "Material",
         "process": "PKG",
@@ -351058,7 +351180,7 @@
       {
         "materialCode": "000061393",
         "nomenclature": "Screw M3x8",
-        "spec": "",
+        "spec": "Screw M3x8",
         "quantity": 1.0,
         "category": "Material",
         "process": "PKG",
@@ -351067,7 +351189,7 @@
       {
         "materialCode": "000133574",
         "nomenclature": "[Manual]_DPJ_U_CE_GPSR_v1",
-        "spec": "",
+        "spec": "[Manual]_DPJ_U_CE_GPSR_v1",
         "quantity": 1.0,
         "category": "Material",
         "process": "PKG",
@@ -351076,7 +351198,7 @@
       {
         "materialCode": "000135869",
         "nomenclature": "[Package]_DPJ_U_CE_black_v2",
-        "spec": "",
+        "spec": "[Package]_DPJ_U_CE_black_v2",
         "quantity": 1.0,
         "category": "Material",
         "process": "PKG",
@@ -351085,7 +351207,7 @@
       {
         "materialCode": "000096202",
         "nomenclature": "DoorProtect S package liner_v2",
-        "spec": "",
+        "spec": "DoorProtect S package liner_v2",
         "quantity": 1.0,
         "category": "Material",
         "process": "PKG",
@@ -351094,14 +351216,13 @@
       {
         "materialCode": "000096203",
         "nomenclature": "DoorProtect S package liner 2 part_v2",
-        "spec": "",
+        "spec": "DoorProtect S package liner 2 part_v2",
         "quantity": 1.0,
         "category": "Material",
         "process": "PKG",
         "stage": "PKG"
       }
-    ],
-    "source": "BOM"
+    ]
   },
   "000063414": {
     "productCode": "63414",
@@ -351149,7 +351270,7 @@
       {
         "materialCode": "000081090",
         "nomenclature": "Plastic case DPS_plastic_Bracket_black_v2",
-        "spec": "",
+        "spec": "Plastic case DPS_plastic_Bracket_black_v2",
         "quantity": 1.0,
         "category": "Material",
         "process": "PKG",
@@ -351158,7 +351279,7 @@
       {
         "materialCode": "000061393",
         "nomenclature": "Screw M3x8",
-        "spec": "",
+        "spec": "Screw M3x8",
         "quantity": 1.0,
         "category": "Material",
         "process": "PKG",
@@ -351167,7 +351288,7 @@
       {
         "materialCode": "000133574",
         "nomenclature": "[Manual]_DPJ_U_CE_GPSR_v1",
-        "spec": "",
+        "spec": "[Manual]_DPJ_U_CE_GPSR_v1",
         "quantity": 1.0,
         "category": "Material",
         "process": "PKG",
@@ -351176,7 +351297,7 @@
       {
         "materialCode": "000135869",
         "nomenclature": "[Package]_DPJ_U_CE_black_v2",
-        "spec": "",
+        "spec": "[Package]_DPJ_U_CE_black_v2",
         "quantity": 1.0,
         "category": "Material",
         "process": "PKG",
@@ -351185,7 +351306,7 @@
       {
         "materialCode": "000096202",
         "nomenclature": "DoorProtect S package liner_v2",
-        "spec": "",
+        "spec": "DoorProtect S package liner_v2",
         "quantity": 1.0,
         "category": "Material",
         "process": "PKG",
@@ -351194,6 +351315,457 @@
       {
         "materialCode": "000096203",
         "nomenclature": "DoorProtect S package liner 2 part_v2",
+        "spec": "DoorProtect S package liner 2 part_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "52491": {
+    "productCode": "52491",
+    "specCode": "52491",
+    "productName": "Ajax, DP.012.MBR.001v1_DPPJ_U_8EU_black_HRD",
+    "stage": "HARD TEST",
+    "process": "HARD TEST",
+    "materials": [
+      {
+        "materialCode": "000069779",
+        "nomenclature": "Ajax, DP.012.MBR.001v1_[DPP-8ХХ]_DIP",
+        "spec": "Ajax, DP.012.MBR.001v1_[DPP-8ХХ]_DIP",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      },
+      {
+        "materialCode": "000133552",
+        "nomenclature": "[Sticker][4b]_DPPJ_U_QR_black_v1",
+        "spec": "[Sticker][4b]_DPPJ_U_QR_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      }
+    ]
+  },
+  "000052491": {
+    "productCode": "52491",
+    "specCode": "52491",
+    "productName": "Ajax, DP.012.MBR.001v1_DPPJ_U_8EU_black_HRD",
+    "stage": "HARD TEST",
+    "process": "HARD TEST",
+    "materials": [
+      {
+        "materialCode": "000069779",
+        "nomenclature": "Ajax, DP.012.MBR.001v1_[DPP-8ХХ]_DIP",
+        "spec": "Ajax, DP.012.MBR.001v1_[DPP-8ХХ]_DIP",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      },
+      {
+        "materialCode": "000133552",
+        "nomenclature": "[Sticker][4b]_DPPJ_U_QR_black_v1",
+        "spec": "[Sticker][4b]_DPPJ_U_QR_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      }
+    ]
+  },
+  "52507": {
+    "productCode": "52507",
+    "specCode": "52507",
+    "productName": "Ajax DoorProtect Plus U Jeweller (8EU) black (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000130519",
+        "nomenclature": "Ajax, DP.012.MBR.001v1_DPPJ_U_8EU_black_HRD",
+        "spec": "Ajax, DP.012.MBR.001v1_DPPJ_U_8EU_black_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000059513",
+        "nomenclature": "DPS_2p-ASM_Frontside_AJ_black_v1",
+        "spec": "DPS_2p-ASM_Frontside_AJ_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000074525",
+        "nomenclature": "Plastic case DPS_plastic_Backside_black_v2",
+        "spec": "Plastic case DPS_plastic_Backside_black_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000059522",
+        "nomenclature": "DPS_plastic_Switch_black_v1",
+        "spec": "DPS_plastic_Switch_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000003659",
+        "nomenclature": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
+        "spec": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000133550",
+        "nomenclature": "[Sticker]_DPPJ_U_CE_EU_v1",
+        "spec": "[Sticker]_DPPJ_U_CE_EU_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000023716",
+        "nomenclature": "QR code PD sticker",
+        "spec": "QR code PD sticker",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000056277",
+        "nomenclature": "[Sticker]_UKCA_v1",
+        "spec": "[Sticker]_UKCA_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "000052507": {
+    "productCode": "52507",
+    "specCode": "52507",
+    "productName": "Ajax DoorProtect Plus U Jeweller (8EU) black (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000130519",
+        "nomenclature": "Ajax, DP.012.MBR.001v1_DPPJ_U_8EU_black_HRD",
+        "spec": "Ajax, DP.012.MBR.001v1_DPPJ_U_8EU_black_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000059513",
+        "nomenclature": "DPS_2p-ASM_Frontside_AJ_black_v1",
+        "spec": "DPS_2p-ASM_Frontside_AJ_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000074525",
+        "nomenclature": "Plastic case DPS_plastic_Backside_black_v2",
+        "spec": "Plastic case DPS_plastic_Backside_black_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000059522",
+        "nomenclature": "DPS_plastic_Switch_black_v1",
+        "spec": "DPS_plastic_Switch_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000003659",
+        "nomenclature": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
+        "spec": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000133550",
+        "nomenclature": "[Sticker]_DPPJ_U_CE_EU_v1",
+        "spec": "[Sticker]_DPPJ_U_CE_EU_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000023716",
+        "nomenclature": "QR code PD sticker",
+        "spec": "QR code PD sticker",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000056277",
+        "nomenclature": "[Sticker]_UKCA_v1",
+        "spec": "[Sticker]_UKCA_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "63438": {
+    "productCode": "63438",
+    "specCode": "63438",
+    "productName": "Ajax DoorProtect Plus U Jeweller (8EU) ASP black датчик відкриття",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000130377",
+        "nomenclature": "Ajax DoorProtect Plus U Jeweller (8EU) black (напівфабрикат)",
+        "spec": "Ajax DoorProtect Plus U Jeweller (8EU) black (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000065910",
+        "nomenclature": "Ajax DoorProtect S black magnet (напівфабрикат)",
+        "spec": "Ajax DoorProtect S black magnet (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000033367",
+        "nomenclature": "Ajax DoorProtect Fibra small magnet black (напівфабрикат)",
+        "spec": "Ajax DoorProtect Fibra small magnet black (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171041",
+        "nomenclature": "Ajax, Монтажний комплект v.5 (Door two Vietnam) (плівка)",
+        "spec": "Ajax, Монтажний комплект v.5 (Door two Vietnam) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000081090",
+        "nomenclature": "Plastic case DPS_plastic_Bracket_black_v2",
+        "spec": "Plastic case DPS_plastic_Bracket_black_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000061393",
+        "nomenclature": "Screw M3x8",
+        "spec": "Screw M3x8",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000135872",
+        "nomenclature": "[Package]_DPPJ_U_CE_black_v2",
+        "spec": "[Package]_DPPJ_U_CE_black_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000096202",
+        "nomenclature": "DoorProtect S package liner_v2",
+        "spec": "DoorProtect S package liner_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000096203",
+        "nomenclature": "DoorProtect S package liner 2 part_v2",
+        "spec": "DoorProtect S package liner 2 part_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000133575",
+        "nomenclature": "[Manual]_DPPJ_U_CE_GPSR_v1",
+        "spec": "[Manual]_DPPJ_U_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063438": {
+    "productCode": "63438",
+    "specCode": "63438",
+    "productName": "Ajax DoorProtect Plus U Jeweller (8EU) ASP black датчик відкриття",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000130377",
+        "nomenclature": "Ajax DoorProtect Plus U Jeweller (8EU) black (напівфабрикат)",
+        "spec": "Ajax DoorProtect Plus U Jeweller (8EU) black (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000065910",
+        "nomenclature": "Ajax DoorProtect S black magnet (напівфабрикат)",
+        "spec": "Ajax DoorProtect S black magnet (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000033367",
+        "nomenclature": "Ajax DoorProtect Fibra small magnet black (напівфабрикат)",
+        "spec": "Ajax DoorProtect Fibra small magnet black (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171041",
+        "nomenclature": "Ajax, Монтажний комплект v.5 (Door two Vietnam) (плівка)",
+        "spec": "Ajax, Монтажний комплект v.5 (Door two Vietnam) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000081090",
+        "nomenclature": "Plastic case DPS_plastic_Bracket_black_v2",
+        "spec": "Plastic case DPS_plastic_Bracket_black_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000061393",
+        "nomenclature": "Screw M3x8",
+        "spec": "Screw M3x8",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000135872",
+        "nomenclature": "[Package]_DPPJ_U_CE_black_v2",
+        "spec": "[Package]_DPPJ_U_CE_black_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000096202",
+        "nomenclature": "DoorProtect S package liner_v2",
+        "spec": "DoorProtect S package liner_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000096203",
+        "nomenclature": "DoorProtect S package liner 2 part_v2",
+        "spec": "DoorProtect S package liner 2 part_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000133575",
+        "nomenclature": "[Manual]_DPPJ_U_CE_GPSR_v1",
+        "spec": "[Manual]_DPPJ_U_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "63399": {
+    "productCode": "63399",
+    "specCode": "63399",
+    "productName": "Ajax DoorProtect (9AU) AR WL Prosegur white датчик відкриття",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000000000",
+        "nomenclature": "",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ],
+    "source": "BOM"
+  },
+  "000063399": {
+    "productCode": "63399",
+    "specCode": "63399",
+    "productName": "Ajax DoorProtect (9AU) AR WL Prosegur white датчик відкриття",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000000000",
+        "nomenclature": "",
         "spec": "",
         "quantity": 1.0,
         "category": "Material",
@@ -365808,170 +366380,6 @@
       {
         "materialCode": "000163873",
         "nomenclature": "[Sticker]_DPPJ_CE_EU_v3",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      }
-    ],
-    "source": "BOM"
-  },
-  "52507": {
-    "productCode": "52507",
-    "specCode": "52507",
-    "productName": "Ajax DoorProtect Plus U Jeweller (8EU) black (напівфабрикат)",
-    "stage": "ASSEMBLY",
-    "process": "ASSEMBLY",
-    "materials": [
-      {
-        "materialCode": "000130519",
-        "nomenclature": "Ajax, DP.012.MBR.001v1_DPPJ_U_8EU_black_HRD",
-        "spec": "Ajax, DP.012.MBR.001v1_DPPJ_U_8EU_black_HRD",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000059513",
-        "nomenclature": "DPS_2p-ASM_Frontside_AJ_black_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000074525",
-        "nomenclature": "Plastic case DPS_plastic_Backside_black_v2",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000059522",
-        "nomenclature": "DPS_plastic_Switch_black_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000003659",
-        "nomenclature": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000133550",
-        "nomenclature": "[Sticker]_DPPJ_U_CE_EU_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000023716",
-        "nomenclature": "QR code PD sticker",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000056277",
-        "nomenclature": "[Sticker]_UKCA_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      }
-    ],
-    "source": "BOM"
-  },
-  "000052507": {
-    "productCode": "52507",
-    "specCode": "52507",
-    "productName": "Ajax DoorProtect Plus U Jeweller (8EU) black (напівфабрикат)",
-    "stage": "ASSEMBLY",
-    "process": "ASSEMBLY",
-    "materials": [
-      {
-        "materialCode": "000130519",
-        "nomenclature": "Ajax, DP.012.MBR.001v1_DPPJ_U_8EU_black_HRD",
-        "spec": "Ajax, DP.012.MBR.001v1_DPPJ_U_8EU_black_HRD",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000059513",
-        "nomenclature": "DPS_2p-ASM_Frontside_AJ_black_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000074525",
-        "nomenclature": "Plastic case DPS_plastic_Backside_black_v2",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000059522",
-        "nomenclature": "DPS_plastic_Switch_black_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000003659",
-        "nomenclature": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000133550",
-        "nomenclature": "[Sticker]_DPPJ_U_CE_EU_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000023716",
-        "nomenclature": "QR code PD sticker",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000056277",
-        "nomenclature": "[Sticker]_UKCA_v1",
         "spec": "",
         "quantity": 1.0,
         "category": "Material",
