@@ -352313,6 +352313,1356 @@
       }
     ]
   },
+  "79628": {
+    "productCode": "79628",
+    "specCode": "79628",
+    "productName": "Ajax MotionProtect (8MA) black (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000125162",
+        "nomenclature": "Ajax, MP.002.MBR.001v0_868 Mhz_MPJ_8MA_black_HRD",
+        "spec": "Ajax, MP.002.MBR.001v0_868 Mhz_MPJ_8MA_black_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000005315",
+        "nomenclature": "MotionProtect_case_backside_black",
+        "spec": "MotionProtect_case_backside_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000033083",
+        "nomenclature": "MotionProtect_case_frontside_black_v2",
+        "spec": "MotionProtect_case_frontside_black_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000005318",
+        "nomenclature": "MotionProtect_case_switch_black",
+        "spec": "MotionProtect_case_switch_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000024141",
+        "nomenclature": "MotionProtect_WL_case_optical fiber",
+        "spec": "MotionProtect_WL_case_optical fiber",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000005320",
+        "nomenclature": "MotionProtect_case_mirror_black",
+        "spec": "MotionProtect_case_mirror_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000003659",
+        "nomenclature": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
+        "spec": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000005953",
+        "nomenclature": "Plastic Lens WP1.2GI12V1-JB Poly IR®4-0.015",
+        "spec": "Plastic Lens WP1.2GI12V1-JB Poly IR®4-0.015",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000015288",
+        "nomenclature": "Self-tapping screw 2.9*16 DIN 7981 half-round head. Cb",
+        "spec": "Self-tapping screw 2.9*16 DIN 7981 half-round head. Cb",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000155181",
+        "nomenclature": "[Sticker]_MPJ_CE_EU_v4",
+        "spec": "[Sticker]_MPJ_CE_EU_v4",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "000079628": {
+    "productCode": "79628",
+    "specCode": "79628",
+    "productName": "Ajax MotionProtect (8MA) black (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000125162",
+        "nomenclature": "Ajax, MP.002.MBR.001v0_868 Mhz_MPJ_8MA_black_HRD",
+        "spec": "Ajax, MP.002.MBR.001v0_868 Mhz_MPJ_8MA_black_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000005315",
+        "nomenclature": "MotionProtect_case_backside_black",
+        "spec": "MotionProtect_case_backside_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000033083",
+        "nomenclature": "MotionProtect_case_frontside_black_v2",
+        "spec": "MotionProtect_case_frontside_black_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000005318",
+        "nomenclature": "MotionProtect_case_switch_black",
+        "spec": "MotionProtect_case_switch_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000024141",
+        "nomenclature": "MotionProtect_WL_case_optical fiber",
+        "spec": "MotionProtect_WL_case_optical fiber",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000005320",
+        "nomenclature": "MotionProtect_case_mirror_black",
+        "spec": "MotionProtect_case_mirror_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000003659",
+        "nomenclature": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
+        "spec": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000005953",
+        "nomenclature": "Plastic Lens WP1.2GI12V1-JB Poly IR®4-0.015",
+        "spec": "Plastic Lens WP1.2GI12V1-JB Poly IR®4-0.015",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000015288",
+        "nomenclature": "Self-tapping screw 2.9*16 DIN 7981 half-round head. Cb",
+        "spec": "Self-tapping screw 2.9*16 DIN 7981 half-round head. Cb",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000155181",
+        "nomenclature": "[Sticker]_MPJ_CE_EU_v4",
+        "spec": "[Sticker]_MPJ_CE_EU_v4",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "319": {
+    "productCode": "319",
+    "specCode": "319",
+    "productName": "Ajax, Монтажний комплект v.3 (motion)",
+    "stage": "Com PKG",
+    "process": "Com PKG",
+    "materials": [
+      {
+        "materialCode": "000005787",
+        "nomenclature": "Screw for metal TECH 3.5/13 mm countersunk RN cb",
+        "spec": "Screw for metal TECH 3.5/13 mm countersunk RN cb",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000005788",
+        "nomenclature": "Screw 3x12 mm countersunk for CB",
+        "spec": "Screw 3x12 mm countersunk for CB",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000005790",
+        "nomenclature": "Screw un. 3.0/30 tai p/r CP",
+        "spec": "Screw un. 3.0/30 tai p/r CP",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000003989",
+        "nomenclature": "Dowel 6x30 nylon UPA/100/.",
+        "spec": "Dowel 6x30 nylon UPA/100/.",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000083995",
+        "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "Die cut part acrylic 9mm x 30mm",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000015287",
+        "nomenclature": "Zip-Lock bag 40*60",
+        "spec": "Zip-Lock bag 40*60",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      }
+    ]
+  },
+  "000000319": {
+    "productCode": "319",
+    "specCode": "319",
+    "productName": "Ajax, Монтажний комплект v.3 (motion)",
+    "stage": "Com PKG",
+    "process": "Com PKG",
+    "materials": [
+      {
+        "materialCode": "000005787",
+        "nomenclature": "Screw for metal TECH 3.5/13 mm countersunk RN cb",
+        "spec": "Screw for metal TECH 3.5/13 mm countersunk RN cb",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000005788",
+        "nomenclature": "Screw 3x12 mm countersunk for CB",
+        "spec": "Screw 3x12 mm countersunk for CB",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000005790",
+        "nomenclature": "Screw un. 3.0/30 tai p/r CP",
+        "spec": "Screw un. 3.0/30 tai p/r CP",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000003989",
+        "nomenclature": "Dowel 6x30 nylon UPA/100/.",
+        "spec": "Dowel 6x30 nylon UPA/100/.",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000083995",
+        "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "Die cut part acrylic 9mm x 30mm",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000015287",
+        "nomenclature": "Zip-Lock bag 40*60",
+        "spec": "Zip-Lock bag 40*60",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      }
+    ]
+  },
+  "83527": {
+    "productCode": "83527",
+    "specCode": "83527",
+    "productName": "Ajax, CAM.008.PIR.001v3_MCJ_HDR_9NA_black_HRD",
+    "stage": "HARD TEST",
+    "process": "HARD TEST",
+    "materials": [
+      {
+        "materialCode": "000119380",
+        "nomenclature": "Ajax, CAM.008.PIR.001v3_(9XX)_DIP",
+        "spec": "Ajax, CAM.008.PIR.001v3_(9XX)_DIP",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      },
+      {
+        "materialCode": "000123142",
+        "nomenclature": "[Sticker][4b]_MCJ_HDR_FCC_QR_black_v1",
+        "spec": "[Sticker][4b]_MCJ_HDR_FCC_QR_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      }
+    ]
+  },
+  "000083527": {
+    "productCode": "83527",
+    "specCode": "83527",
+    "productName": "Ajax, CAM.008.PIR.001v3_MCJ_HDR_9NA_black_HRD",
+    "stage": "HARD TEST",
+    "process": "HARD TEST",
+    "materials": [
+      {
+        "materialCode": "000119380",
+        "nomenclature": "Ajax, CAM.008.PIR.001v3_(9XX)_DIP",
+        "spec": "Ajax, CAM.008.PIR.001v3_(9XX)_DIP",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      },
+      {
+        "materialCode": "000123142",
+        "nomenclature": "[Sticker][4b]_MCJ_HDR_FCC_QR_black_v1",
+        "spec": "[Sticker][4b]_MCJ_HDR_FCC_QR_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      }
+    ]
+  },
+  "63391": {
+    "productCode": "63391",
+    "specCode": "63391",
+    "productName": "Ajax MotionProtect U Jeweller (8EU) ASP white датчик руху",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000121965",
+        "nomenclature": "Ajax MotionProtect U Jeweller (8EU) white (напівфабрикат)",
+        "spec": "Ajax MotionProtect U Jeweller (8EU) white (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171044",
+        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000059495",
+        "nomenclature": "MPS_plastic_Bracket_white_v2",
+        "spec": "MPS_plastic_Bracket_white_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000047439",
+        "nomenclature": "Screw M3x12 PH1 DIN965",
+        "spec": "Screw M3x12 PH1 DIN965",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000133576",
+        "nomenclature": "[Manual]_MPJ_U_CE_GPSR_v1",
+        "spec": "[Manual]_MPJ_U_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000031246",
+        "nomenclature": "MotionProtect Fibra package liner",
+        "spec": "MotionProtect Fibra package liner",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000135873",
+        "nomenclature": "[Package]_MPJ_U_CE_white_v2",
+        "spec": "[Package]_MPJ_U_CE_white_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063391": {
+    "productCode": "63391",
+    "specCode": "63391",
+    "productName": "Ajax MotionProtect U Jeweller (8EU) ASP white датчик руху",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000121965",
+        "nomenclature": "Ajax MotionProtect U Jeweller (8EU) white (напівфабрикат)",
+        "spec": "Ajax MotionProtect U Jeweller (8EU) white (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171044",
+        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000059495",
+        "nomenclature": "MPS_plastic_Bracket_white_v2",
+        "spec": "MPS_plastic_Bracket_white_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000047439",
+        "nomenclature": "Screw M3x12 PH1 DIN965",
+        "spec": "Screw M3x12 PH1 DIN965",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000133576",
+        "nomenclature": "[Manual]_MPJ_U_CE_GPSR_v1",
+        "spec": "[Manual]_MPJ_U_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000031246",
+        "nomenclature": "MotionProtect Fibra package liner",
+        "spec": "MotionProtect Fibra package liner",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000135873",
+        "nomenclature": "[Package]_MPJ_U_CE_white_v2",
+        "spec": "[Package]_MPJ_U_CE_white_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "63390": {
+    "productCode": "63390",
+    "specCode": "63390",
+    "productName": "Ajax MotionProtect U Jeweller (8EU) ASP black датчик руху",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000121968",
+        "nomenclature": "Ajax MotionProtect U Jeweller (8EU) black (напівфабрикат)",
+        "spec": "Ajax MotionProtect U Jeweller (8EU) black (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171044",
+        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000059496",
+        "nomenclature": "MPS_plastic_Bracket_black_v2",
+        "spec": "MPS_plastic_Bracket_black_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000047439",
+        "nomenclature": "Screw M3x12 PH1 DIN965",
+        "spec": "Screw M3x12 PH1 DIN965",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000133576",
+        "nomenclature": "[Manual]_MPJ_U_CE_GPSR_v1",
+        "spec": "[Manual]_MPJ_U_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000031246",
+        "nomenclature": "MotionProtect Fibra package liner",
+        "spec": "MotionProtect Fibra package liner",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000135874",
+        "nomenclature": "[Package]_MPJ_U_CE_black_v2",
+        "spec": "[Package]_MPJ_U_CE_black_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063390": {
+    "productCode": "63390",
+    "specCode": "63390",
+    "productName": "Ajax MotionProtect U Jeweller (8EU) ASP black датчик руху",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000121968",
+        "nomenclature": "Ajax MotionProtect U Jeweller (8EU) black (напівфабрикат)",
+        "spec": "Ajax MotionProtect U Jeweller (8EU) black (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171044",
+        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000059496",
+        "nomenclature": "MPS_plastic_Bracket_black_v2",
+        "spec": "MPS_plastic_Bracket_black_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000047439",
+        "nomenclature": "Screw M3x12 PH1 DIN965",
+        "spec": "Screw M3x12 PH1 DIN965",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000133576",
+        "nomenclature": "[Manual]_MPJ_U_CE_GPSR_v1",
+        "spec": "[Manual]_MPJ_U_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000031246",
+        "nomenclature": "MotionProtect Fibra package liner",
+        "spec": "MotionProtect Fibra package liner",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000135874",
+        "nomenclature": "[Package]_MPJ_U_CE_black_v2",
+        "spec": "[Package]_MPJ_U_CE_black_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "74657": {
+    "productCode": "74657",
+    "specCode": "74657",
+    "productName": "Ajax, NVR.003.MBR.001v5_[MASS_R7-04Q]_NVR_8сh_9AU_black_HRD",
+    "stage": "HARD TEST",
+    "process": "HARD TEST",
+    "materials": [
+      {
+        "materialCode": "000094148",
+        "nomenclature": "Ajax, NVR.003.MBR.001v5_[MASS_R7-04Q]_DIP",
+        "spec": "Ajax, NVR.003.MBR.001v5_[MASS_R7-04Q]_DIP",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      },
+      {
+        "materialCode": "000104684",
+        "nomenclature": "[Sticker]_NVR_8сh_CE_FCC_QR_black_v4",
+        "spec": "[Sticker]_NVR_8сh_CE_FCC_QR_black_v4",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      },
+      {
+        "materialCode": "000029476",
+        "nomenclature": "Battery CR2032 Panasonic BAT487",
+        "spec": "Battery CR2032 Panasonic BAT487",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      }
+    ]
+  },
+  "000074657": {
+    "productCode": "74657",
+    "specCode": "74657",
+    "productName": "Ajax, NVR.003.MBR.001v5_[MASS_R7-04Q]_NVR_8сh_9AU_black_HRD",
+    "stage": "HARD TEST",
+    "process": "HARD TEST",
+    "materials": [
+      {
+        "materialCode": "000094148",
+        "nomenclature": "Ajax, NVR.003.MBR.001v5_[MASS_R7-04Q]_DIP",
+        "spec": "Ajax, NVR.003.MBR.001v5_[MASS_R7-04Q]_DIP",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      },
+      {
+        "materialCode": "000104684",
+        "nomenclature": "[Sticker]_NVR_8сh_CE_FCC_QR_black_v4",
+        "spec": "[Sticker]_NVR_8сh_CE_FCC_QR_black_v4",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      },
+      {
+        "materialCode": "000029476",
+        "nomenclature": "Battery CR2032 Panasonic BAT487",
+        "spec": "Battery CR2032 Panasonic BAT487",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      }
+    ]
+  },
+  "74658": {
+    "productCode": "74658",
+    "specCode": "74658",
+    "productName": "Ajax NVR (8ch) (9AU) black (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000123746",
+        "nomenclature": "Ajax, NVR.003.MBR.001v5_[MASS_R7-04Q]_NVR_8сh_9AU_black_HRD",
+        "spec": "Ajax, NVR.003.MBR.001v5_[MASS_R7-04Q]_NVR_8сh_9AU_black_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000123735",
+        "nomenclature": "Ajax, NVR.003.PWB.001v3_NVR_HRD",
+        "spec": "Ajax, NVR.003.PWB.001v3_NVR_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000070381",
+        "nomenclature": "Plastic case NVR_2p-ASM_FrontsideCase_AJ_bl",
+        "spec": "Plastic case NVR_2p-ASM_FrontsideCase_AJ_bl",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000037019",
+        "nomenclature": "Plastic case NVR_backside bl",
+        "spec": "Plastic case NVR_backside bl",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000070388",
+        "nomenclature": "The housing element is rubber NVR_ruber_Button_MU_black_v1",
+        "spec": "The housing element is rubber NVR_ruber_Button_MU_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000054147",
+        "nomenclature": "Plastic case NVR_jig bl",
+        "spec": "Plastic case NVR_jig bl",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 8.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000072221",
+        "nomenclature": "[Sticker]_HDD_Warning_v1",
+        "spec": "[Sticker]_HDD_Warning_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "000074658": {
+    "productCode": "74658",
+    "specCode": "74658",
+    "productName": "Ajax NVR (8ch) (9AU) black (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000123746",
+        "nomenclature": "Ajax, NVR.003.MBR.001v5_[MASS_R7-04Q]_NVR_8сh_9AU_black_HRD",
+        "spec": "Ajax, NVR.003.MBR.001v5_[MASS_R7-04Q]_NVR_8сh_9AU_black_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000123735",
+        "nomenclature": "Ajax, NVR.003.PWB.001v3_NVR_HRD",
+        "spec": "Ajax, NVR.003.PWB.001v3_NVR_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000070381",
+        "nomenclature": "Plastic case NVR_2p-ASM_FrontsideCase_AJ_bl",
+        "spec": "Plastic case NVR_2p-ASM_FrontsideCase_AJ_bl",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000037019",
+        "nomenclature": "Plastic case NVR_backside bl",
+        "spec": "Plastic case NVR_backside bl",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000070388",
+        "nomenclature": "The housing element is rubber NVR_ruber_Button_MU_black_v1",
+        "spec": "The housing element is rubber NVR_ruber_Button_MU_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000054147",
+        "nomenclature": "Plastic case NVR_jig bl",
+        "spec": "Plastic case NVR_jig bl",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 8.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000072221",
+        "nomenclature": "[Sticker]_HDD_Warning_v1",
+        "spec": "[Sticker]_HDD_Warning_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "32062": {
+    "productCode": "32062",
+    "specCode": "32062",
+    "productName": "Ajax, Монтажний комплект NVR Cables Kit Type C White",
+    "stage": "Com PKG",
+    "process": "Com PKG",
+    "materials": [
+      {
+        "materialCode": "000007283",
+        "nomenclature": "Patch cord 1m white",
+        "spec": "Patch cord 1m white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000049222",
+        "nomenclature": "NVR package liner for Cables",
+        "spec": "NVR package liner for Cables",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000007278",
+        "nomenclature": "Power Cable 2 Pin Plug to IEC320 C7 1.5 m White",
+        "spec": "Power Cable 2 Pin Plug to IEC320 C7 1.5 m White",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      }
+    ]
+  },
+  "000032062": {
+    "productCode": "32062",
+    "specCode": "32062",
+    "productName": "Ajax, Монтажний комплект NVR Cables Kit Type C White",
+    "stage": "Com PKG",
+    "process": "Com PKG",
+    "materials": [
+      {
+        "materialCode": "000007283",
+        "nomenclature": "Patch cord 1m white",
+        "spec": "Patch cord 1m white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000049222",
+        "nomenclature": "NVR package liner for Cables",
+        "spec": "NVR package liner for Cables",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000007278",
+        "nomenclature": "Power Cable 2 Pin Plug to IEC320 C7 1.5 m White",
+        "spec": "Power Cable 2 Pin Plug to IEC320 C7 1.5 m White",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      }
+    ]
+  },
+  "66299": {
+    "productCode": "66299",
+    "specCode": "66299",
+    "productName": "Ajax MotionProtect Outdoor (8EU) Ekingen Elektronik white датчик руху",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000019205",
+        "nomenclature": "Ajax MotionProtect Outdoor white EU (golden sample)",
+        "spec": "Ajax MotionProtect Outdoor white EU (golden sample)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170912",
+        "nomenclature": "Ajax, Монтажний комплект (MPO Vietnam) (плівка)",
+        "spec": "Ajax, Монтажний комплект (MPO Vietnam) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000012899",
+        "nomenclature": "MotionProtect_Outdoor_case_bracket_v5.24_white",
+        "spec": "MotionProtect_Outdoor_case_bracket_v5.24_white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000143518",
+        "nomenclature": "[Package]_MPOJ_CE_FCC_white_v1",
+        "spec": "[Package]_MPOJ_CE_FCC_white_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000012920",
+        "nomenclature": "MotionProtect Outdoor package liner",
+        "spec": "MotionProtect Outdoor package liner",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000013579",
+        "nomenclature": "MotionProtect Outdoor package liner cover",
+        "spec": "MotionProtect Outdoor package liner cover",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000125402",
+        "nomenclature": "[Manual]_MPOJ_CE_GPSR_v1",
+        "spec": "[Manual]_MPOJ_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000012923",
+        "nomenclature": "Cable tie 4.8x300mm, nylon, white",
+        "spec": "Cable tie 4.8x300mm, nylon, white",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000066299": {
+    "productCode": "66299",
+    "specCode": "66299",
+    "productName": "Ajax MotionProtect Outdoor (8EU) Ekingen Elektronik white датчик руху",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000019205",
+        "nomenclature": "Ajax MotionProtect Outdoor white EU (golden sample)",
+        "spec": "Ajax MotionProtect Outdoor white EU (golden sample)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170912",
+        "nomenclature": "Ajax, Монтажний комплект (MPO Vietnam) (плівка)",
+        "spec": "Ajax, Монтажний комплект (MPO Vietnam) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000012899",
+        "nomenclature": "MotionProtect_Outdoor_case_bracket_v5.24_white",
+        "spec": "MotionProtect_Outdoor_case_bracket_v5.24_white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000143518",
+        "nomenclature": "[Package]_MPOJ_CE_FCC_white_v1",
+        "spec": "[Package]_MPOJ_CE_FCC_white_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000012920",
+        "nomenclature": "MotionProtect Outdoor package liner",
+        "spec": "MotionProtect Outdoor package liner",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000013579",
+        "nomenclature": "MotionProtect Outdoor package liner cover",
+        "spec": "MotionProtect Outdoor package liner cover",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000125402",
+        "nomenclature": "[Manual]_MPOJ_CE_GPSR_v1",
+        "spec": "[Manual]_MPOJ_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000012923",
+        "nomenclature": "Cable tie 4.8x300mm, nylon, white",
+        "spec": "Cable tie 4.8x300mm, nylon, white",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "63604": {
+    "productCode": "63604",
+    "specCode": "63604",
+    "productName": "Ajax LeaksProtect (8EU) GB white датчик затоплення",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000019905",
+        "nomenclature": "Ajax LeaksProtect white EU (напівфабрикат)",
+        "spec": "Ajax LeaksProtect white EU (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000074351",
+        "nomenclature": "[Package]_LPJ_CE_white_v3",
+        "spec": "[Package]_LPJ_CE_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000169286",
+        "nomenclature": "CPE Package 110x73 white matte",
+        "spec": "CPE Package 110x73 white matte",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000124384",
+        "nomenclature": "[Manual]_LPJ_CE_GPSR_v1",
+        "spec": "[Manual]_LPJ_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063604": {
+    "productCode": "63604",
+    "specCode": "63604",
+    "productName": "Ajax LeaksProtect (8EU) GB white датчик затоплення",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000019905",
+        "nomenclature": "Ajax LeaksProtect white EU (напівфабрикат)",
+        "spec": "Ajax LeaksProtect white EU (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000074351",
+        "nomenclature": "[Package]_LPJ_CE_white_v3",
+        "spec": "[Package]_LPJ_CE_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000169286",
+        "nomenclature": "CPE Package 110x73 white matte",
+        "spec": "CPE Package 110x73 white matte",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000124384",
+        "nomenclature": "[Manual]_LPJ_CE_GPSR_v1",
+        "spec": "[Manual]_LPJ_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "63388": {
+    "productCode": "63388",
+    "specCode": "63388",
+    "productName": "Ajax MotionProtect (9SA) black датчик руху",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000033209",
+        "nomenclature": "Ajax MotionProtect (9SA) black (напівфабрикат)",
+        "spec": "Ajax MotionProtect (9SA) black (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171044",
+        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000005317",
+        "nomenclature": "MotionProtect_case_bracket_black",
+        "spec": "MotionProtect_case_bracket_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000143511",
+        "nomenclature": "[Package]_MPJ_CE_FCC_black_v1",
+        "spec": "[Package]_MPJ_CE_FCC_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000031246",
+        "nomenclature": "MotionProtect Fibra package liner",
+        "spec": "MotionProtect Fibra package liner",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000124360",
+        "nomenclature": "[Manual]_MPJ_CE_GPSR_v1",
+        "spec": "[Manual]_MPJ_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063388": {
+    "productCode": "63388",
+    "specCode": "63388",
+    "productName": "Ajax MotionProtect (9SA) black датчик руху",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000033209",
+        "nomenclature": "Ajax MotionProtect (9SA) black (напівфабрикат)",
+        "spec": "Ajax MotionProtect (9SA) black (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171044",
+        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000005317",
+        "nomenclature": "MotionProtect_case_bracket_black",
+        "spec": "MotionProtect_case_bracket_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000143511",
+        "nomenclature": "[Package]_MPJ_CE_FCC_black_v1",
+        "spec": "[Package]_MPJ_CE_FCC_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000031246",
+        "nomenclature": "MotionProtect Fibra package liner",
+        "spec": "MotionProtect Fibra package liner",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000124360",
+        "nomenclature": "[Manual]_MPJ_CE_GPSR_v1",
+        "spec": "[Manual]_MPJ_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
   "63399": {
     "productCode": "63399",
     "specCode": "63399",
@@ -357771,170 +359121,6 @@
     ],
     "source": "BOM"
   },
-  "66299": {
-    "productCode": "66299",
-    "specCode": "66299",
-    "productName": "Ajax MotionProtect Outdoor (8EU) Ekingen Elektronik white датчик руху",
-    "stage": "PKG",
-    "process": "PKG",
-    "materials": [
-      {
-        "materialCode": "000019205",
-        "nomenclature": "Ajax MotionProtect Outdoor white EU (golden sample)",
-        "spec": "Ajax MotionProtect Outdoor white EU (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000012922",
-        "nomenclature": "Ajax, Монтажний комплект (MPO)",
-        "spec": "Ajax, Монтажний комплект (MPO)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000012899",
-        "nomenclature": "MotionProtect_Outdoor_case_bracket_v5.24_white",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000143518",
-        "nomenclature": "[Package]_MPOJ_CE_FCC_white_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000012920",
-        "nomenclature": "MotionProtect Outdoor package liner",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000013579",
-        "nomenclature": "MotionProtect Outdoor package liner cover",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000125402",
-        "nomenclature": "[Manual]_MPOJ_CE_GPSR_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000012923",
-        "nomenclature": "Cable tie 4.8x300mm, nylon, white",
-        "spec": "",
-        "quantity": 3.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      }
-    ],
-    "source": "BOM"
-  },
-  "000066299": {
-    "productCode": "66299",
-    "specCode": "66299",
-    "productName": "Ajax MotionProtect Outdoor (8EU) Ekingen Elektronik white датчик руху",
-    "stage": "PKG",
-    "process": "PKG",
-    "materials": [
-      {
-        "materialCode": "000019205",
-        "nomenclature": "Ajax MotionProtect Outdoor white EU (golden sample)",
-        "spec": "Ajax MotionProtect Outdoor white EU (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000012922",
-        "nomenclature": "Ajax, Монтажний комплект (MPO)",
-        "spec": "Ajax, Монтажний комплект (MPO)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000012899",
-        "nomenclature": "MotionProtect_Outdoor_case_bracket_v5.24_white",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000143518",
-        "nomenclature": "[Package]_MPOJ_CE_FCC_white_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000012920",
-        "nomenclature": "MotionProtect Outdoor package liner",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000013579",
-        "nomenclature": "MotionProtect Outdoor package liner cover",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000125402",
-        "nomenclature": "[Manual]_MPOJ_CE_GPSR_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000012923",
-        "nomenclature": "Cable tie 4.8x300mm, nylon, white",
-        "spec": "",
-        "quantity": 3.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      }
-    ],
-    "source": "BOM"
-  },
   "63572": {
     "productCode": "63572",
     "specCode": "63572",
@@ -359090,98 +360276,6 @@
       {
         "materialCode": "000087247",
         "nomenclature": "[Sticker for package]_UL_logo",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      }
-    ],
-    "source": "BOM"
-  },
-  "63604": {
-    "productCode": "63604",
-    "specCode": "63604",
-    "productName": "Ajax LeaksProtect (8EU) GB white датчик затоплення",
-    "stage": "PKG",
-    "process": "PKG",
-    "materials": [
-      {
-        "materialCode": "000019905",
-        "nomenclature": "Ajax LeaksProtect white EU (напівфабрикат)",
-        "spec": "Ajax LeaksProtect white EU (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000074351",
-        "nomenclature": "[Package]_LPJ_CE_white_v3",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000169286",
-        "nomenclature": "CPE Package 110x73 white matte",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000124384",
-        "nomenclature": "[Manual]_LPJ_CE_GPSR_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      }
-    ],
-    "source": "BOM"
-  },
-  "000063604": {
-    "productCode": "63604",
-    "specCode": "63604",
-    "productName": "Ajax LeaksProtect (8EU) GB white датчик затоплення",
-    "stage": "PKG",
-    "process": "PKG",
-    "materials": [
-      {
-        "materialCode": "000019905",
-        "nomenclature": "Ajax LeaksProtect white EU (напівфабрикат)",
-        "spec": "Ajax LeaksProtect white EU (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000074351",
-        "nomenclature": "[Package]_LPJ_CE_white_v3",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000169286",
-        "nomenclature": "CPE Package 110x73 white matte",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000124384",
-        "nomenclature": "[Manual]_LPJ_CE_GPSR_v1",
         "spec": "",
         "quantity": 1.0,
         "category": "Material",
