@@ -256,7 +256,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
       "plan": 14284.0,
-      "sheetFact": 7271.0,
+      "sheetFact": 8089.0,
       "done": 0,
       "isDone": false
     },
@@ -286,7 +286,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8MA) black датчик диму та температури",
       "plan": 362.0,
-      "sheetFact": 342.0,
+      "sheetFact": 354.0,
       "done": 1,
       "isDone": true
     },
@@ -296,7 +296,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8MA) white датчик диму та температури",
       "plan": 1127.0,
-      "sheetFact": 1088.0,
+      "sheetFact": 1079.0,
       "done": 1,
       "isDone": true
     },
@@ -706,7 +706,7 @@
       "agg": "",
       "device": "Ajax Manual Call Point (Red) (8MA) ручний пожежний сповіщувач",
       "plan": 450.0,
-      "sheetFact": 439.0,
+      "sheetFact": 444.0,
       "done": 1,
       "isDone": true
     },
@@ -2898,7 +2898,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
       "plan": 14284.0,
-      "sheetFact": 7271.0,
+      "sheetFact": 8089.0,
       "done": 0,
       "isDone": false
     },
@@ -2928,7 +2928,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8MA) black датчик диму та температури",
       "plan": 362.0,
-      "sheetFact": 342.0,
+      "sheetFact": 354.0,
       "done": 1,
       "isDone": true
     },
@@ -2938,7 +2938,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8MA) white датчик диму та температури",
       "plan": 1127.0,
-      "sheetFact": 1088.0,
+      "sheetFact": 1079.0,
       "done": 1,
       "isDone": true
     },
@@ -3348,7 +3348,7 @@
       "agg": "",
       "device": "Ajax Manual Call Point (Red) (8MA) ручний пожежний сповіщувач",
       "plan": 450.0,
-      "sheetFact": 439.0,
+      "sheetFact": 444.0,
       "done": 1,
       "isDone": true
     },
@@ -5290,7 +5290,7 @@
   "clipAllPlant": "54.9%",
   "clipAllPlantPct": 54.9,
   "totalPlan": 485822.0,
-  "totalSheetFact": 250072.0,
+  "totalSheetFact": 250898.0,
   "hasPlanCount": 219,
   "gt90Count": 145,
   "lt90Count": 119,
@@ -9587,10 +9587,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-17 16:52:55",
+        "archivedAt": "2026-11-17 17:52:05",
         "totalItems": 264,
         "totalPlan": 485822.0,
-        "totalSheetFact": 250072.0,
+        "totalSheetFact": 250898.0,
         "qtyAllDevice": 264,
         "qtyDoneDevice": 145,
         "qtyNotDoneDevice": 119,
@@ -9852,7 +9852,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
             "plan": 14284.0,
-            "sheetFact": 7271.0,
+            "sheetFact": 8089.0,
             "done": 0,
             "isDone": false
           },
@@ -9882,7 +9882,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8MA) black датчик диму та температури",
             "plan": 362.0,
-            "sheetFact": 342.0,
+            "sheetFact": 354.0,
             "done": 1,
             "isDone": true
           },
@@ -9892,7 +9892,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8MA) white датчик диму та температури",
             "plan": 1127.0,
-            "sheetFact": 1088.0,
+            "sheetFact": 1079.0,
             "done": 1,
             "isDone": true
           },
@@ -10302,7 +10302,7 @@
             "agg": "",
             "device": "Ajax Manual Call Point (Red) (8MA) ручний пожежний сповіщувач",
             "plan": 450.0,
-            "sheetFact": 439.0,
+            "sheetFact": 444.0,
             "done": 1,
             "isDone": true
           },
@@ -12494,7 +12494,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
             "plan": 14284.0,
-            "sheetFact": 7271.0,
+            "sheetFact": 8089.0,
             "done": 0,
             "isDone": false
           },
@@ -12524,7 +12524,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8MA) black датчик диму та температури",
             "plan": 362.0,
-            "sheetFact": 342.0,
+            "sheetFact": 354.0,
             "done": 1,
             "isDone": true
           },
@@ -12534,7 +12534,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8MA) white датчик диму та температури",
             "plan": 1127.0,
-            "sheetFact": 1088.0,
+            "sheetFact": 1079.0,
             "done": 1,
             "isDone": true
           },
@@ -12944,7 +12944,7 @@
             "agg": "",
             "device": "Ajax Manual Call Point (Red) (8MA) ручний пожежний сповіщувач",
             "plan": 450.0,
-            "sheetFact": 439.0,
+            "sheetFact": 444.0,
             "done": 1,
             "isDone": true
           },
