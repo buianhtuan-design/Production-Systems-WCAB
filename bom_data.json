@@ -249263,258 +249263,6 @@
       }
     ]
   },
-  "63651": {
-    "productCode": "63651",
-    "specCode": "63651",
-    "productName": "Ajax HomeSiren (9NA) UPC black (напівфабрикат)",
-    "stage": "ASSEMBLY",
-    "process": "ASSEMBLY",
-    "materials": [
-      {
-        "materialCode": "000121650",
-        "nomenclature": "Ajax, HS.001.MBR.001v5_HSJ_9NA_black_HRD",
-        "spec": "Ajax, HS.001.MBR.001v5_HSJ_9NA_black_HRD",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000061508",
-        "nomenclature": "HSS_plastic_Frontside_black_v2",
-        "spec": "HSS_plastic_Frontside_black_v2",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000046762",
-        "nomenclature": "Plastic case HS backside bl v1.09",
-        "spec": "Plastic case HS backside bl v1.09",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000008685",
-        "nomenclature": "Plastic case HS button bl",
-        "spec": "Plastic case HS button bl",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000008686",
-        "nomenclature": "Plastic case HS logo holder bl",
-        "spec": "Plastic case HS logo holder bl",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000008687",
-        "nomenclature": "HomeSiren_case_Logo_v1.05_Alu includind double-side-tape",
-        "spec": "HomeSiren_case_Logo_v1.05_Alu includind double-side-tape",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000003659",
-        "nomenclature": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
-        "spec": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
-        "quantity": 2.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000007682",
-        "nomenclature": "Screw PA 1,7x6 SUS304 bl",
-        "spec": "Screw PA 1,7x6 SUS304 bl",
-        "quantity": 4.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000008208",
-        "nomenclature": "Self-tapping screw 1,5х5,  PH0, SUS304",
-        "spec": "Self-tapping screw 1,5х5,  PH0, SUS304",
-        "quantity": 2.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000085585",
-        "nomenclature": "HS_fabric_FrontCover82N18S_black_v0",
-        "spec": "HS_fabric_FrontCover82N18S_black_v0",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000133337",
-        "nomenclature": "[Sticker]_HSJ_FCC_UL_v1",
-        "spec": "[Sticker]_HSJ_FCC_UL_v1",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000087219",
-        "nomenclature": "[Sticker]_HSJ_Battery_replacement_UL",
-        "spec": "[Sticker]_HSJ_Battery_replacement_UL",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000087205",
-        "nomenclature": "[Sticker]_SCA_logo",
-        "spec": "[Sticker]_SCA_logo",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      }
-    ]
-  },
-  "000063651": {
-    "productCode": "63651",
-    "specCode": "63651",
-    "productName": "Ajax HomeSiren (9NA) UPC black (напівфабрикат)",
-    "stage": "ASSEMBLY",
-    "process": "ASSEMBLY",
-    "materials": [
-      {
-        "materialCode": "000121650",
-        "nomenclature": "Ajax, HS.001.MBR.001v5_HSJ_9NA_black_HRD",
-        "spec": "Ajax, HS.001.MBR.001v5_HSJ_9NA_black_HRD",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000061508",
-        "nomenclature": "HSS_plastic_Frontside_black_v2",
-        "spec": "HSS_plastic_Frontside_black_v2",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000046762",
-        "nomenclature": "Plastic case HS backside bl v1.09",
-        "spec": "Plastic case HS backside bl v1.09",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000008685",
-        "nomenclature": "Plastic case HS button bl",
-        "spec": "Plastic case HS button bl",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000008686",
-        "nomenclature": "Plastic case HS logo holder bl",
-        "spec": "Plastic case HS logo holder bl",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000008687",
-        "nomenclature": "HomeSiren_case_Logo_v1.05_Alu includind double-side-tape",
-        "spec": "HomeSiren_case_Logo_v1.05_Alu includind double-side-tape",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000003659",
-        "nomenclature": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
-        "spec": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
-        "quantity": 2.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000007682",
-        "nomenclature": "Screw PA 1,7x6 SUS304 bl",
-        "spec": "Screw PA 1,7x6 SUS304 bl",
-        "quantity": 4.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000008208",
-        "nomenclature": "Self-tapping screw 1,5х5,  PH0, SUS304",
-        "spec": "Self-tapping screw 1,5х5,  PH0, SUS304",
-        "quantity": 2.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000085585",
-        "nomenclature": "HS_fabric_FrontCover82N18S_black_v0",
-        "spec": "HS_fabric_FrontCover82N18S_black_v0",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000133337",
-        "nomenclature": "[Sticker]_HSJ_FCC_UL_v1",
-        "spec": "[Sticker]_HSJ_FCC_UL_v1",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000087219",
-        "nomenclature": "[Sticker]_HSJ_Battery_replacement_UL",
-        "spec": "[Sticker]_HSJ_Battery_replacement_UL",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000087205",
-        "nomenclature": "[Sticker]_SCA_logo",
-        "spec": "[Sticker]_SCA_logo",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      }
-    ]
-  },
   "63653": {
     "productCode": "63653",
     "specCode": "63653",
@@ -374704,6 +374452,260 @@
       {
         "materialCode": "000083995",
         "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ],
+    "source": "BOM"
+  },
+  "63651": {
+    "productCode": "63651",
+    "specCode": "63651",
+    "productName": "Ajax HomeSiren (9NA) UPC black (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000121650",
+        "nomenclature": "Ajax, HS.001.MBR.001v5_HSJ_9NA_black_HRD",
+        "spec": "Ajax, HS.001.MBR.001v5_HSJ_9NA_black_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000061508",
+        "nomenclature": "HSS_plastic_Frontside_black_v2",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000046762",
+        "nomenclature": "Plastic case HS backside bl v1.09",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000008685",
+        "nomenclature": "Plastic case HS button bl",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000008686",
+        "nomenclature": "Plastic case HS logo holder bl",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000008687",
+        "nomenclature": "HomeSiren_case_Logo_v1.05_Alu includind double-side-tape",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000003659",
+        "nomenclature": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
+        "spec": "",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007682",
+        "nomenclature": "Screw PA 1,7x6 SUS304 bl",
+        "spec": "",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000008208",
+        "nomenclature": "Self-tapping screw 1,5х5,  PH0, SUS304",
+        "spec": "",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000085585",
+        "nomenclature": "HS_fabric_FrontCover82N18S_black_v0",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000133337",
+        "nomenclature": "[Sticker]_HSJ_FCC_UL_v1",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000087219",
+        "nomenclature": "[Sticker]_HSJ_Battery_replacement_UL",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000087205",
+        "nomenclature": "[Sticker]_SCA_logo",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ],
+    "source": "BOM"
+  },
+  "000063651": {
+    "productCode": "63651",
+    "specCode": "63651",
+    "productName": "Ajax HomeSiren (9NA) UPC black (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000121650",
+        "nomenclature": "Ajax, HS.001.MBR.001v5_HSJ_9NA_black_HRD",
+        "spec": "Ajax, HS.001.MBR.001v5_HSJ_9NA_black_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000061508",
+        "nomenclature": "HSS_plastic_Frontside_black_v2",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000046762",
+        "nomenclature": "Plastic case HS backside bl v1.09",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000008685",
+        "nomenclature": "Plastic case HS button bl",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000008686",
+        "nomenclature": "Plastic case HS logo holder bl",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000008687",
+        "nomenclature": "HomeSiren_case_Logo_v1.05_Alu includind double-side-tape",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000003659",
+        "nomenclature": "CR-123a Huiderui 3V 1600mAh LiMnO2 battery",
+        "spec": "",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007682",
+        "nomenclature": "Screw PA 1,7x6 SUS304 bl",
+        "spec": "",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000008208",
+        "nomenclature": "Self-tapping screw 1,5х5,  PH0, SUS304",
+        "spec": "",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000085585",
+        "nomenclature": "HS_fabric_FrontCover82N18S_black_v0",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000133337",
+        "nomenclature": "[Sticker]_HSJ_FCC_UL_v1",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000087219",
+        "nomenclature": "[Sticker]_HSJ_Battery_replacement_UL",
+        "spec": "",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000087205",
+        "nomenclature": "[Sticker]_SCA_logo",
         "spec": "",
         "quantity": 1.0,
         "category": "Material",
