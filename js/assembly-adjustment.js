@@ -1229,55 +1229,23 @@
 
         <!-- Body Container (Hỗ trợ thu gọn/mở rộng) -->
         <div id="assemblyAdjustmentTableBodyWrap" style="${isCollapsed ? 'display: none;' : 'margin-top: 0.75rem;'}">
-          <div class="table-container assembly-adj-scroll-wrap" style="overflow-x: auto; max-height: 720px; border: 1px solid var(--border-glass, #334155); border-radius: 8px;">
+          <div class="table-container assembly-adj-scroll-wrap" style="overflow: auto; max-height: 620px; border: 1px solid var(--border-glass, #334155); border-radius: 8px;">
             <table class="data-table assembly-adj-table" id="assemblyAdjustmentTable" style="width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.8rem;">
               <thead>
-                <!-- TẦNG HEADER 1: KÍP (Nền vàng nổi bật chuẩn Concept) -->
-                <tr class="adj-header-kip-row" style="background: #fde047;">
-                  <th class="sticky-col-header" style="position: sticky; left: 0; z-index: 15; background: #fde047; color: #000000; font-weight: 900; border-right: 1px solid rgba(0,0,0,0.2); border-bottom: 1px solid rgba(0,0,0,0.2); text-align: left; padding: 0.4rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; height: 34px; box-sizing: border-box;">
-                    KÍP
+                <!-- HEADER DUY NHẤT GỘP NGÀY - CA - KÍP & ĐÓNG BĂNG CỐ ĐỊNH Ở ĐỈNH BẢNG (top: 0) -->
+                <tr class="adj-header-shift-row" style="background: var(--bg-card-solid, #1e293b);">
+                  <th class="sticky-col-header" style="position: sticky; top: 0; left: 0; z-index: 35; background: var(--bg-card-solid, #1e293b); color: #f8fafc; font-weight: 800; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); text-align: left; padding: 0.45rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; height: 36px; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: none;">
+                    📅 CA SẢN XUẤT
                   </th>
                   <!-- CỘT TỔNG CỘNG: CỐ ĐỊNH BÊN TRÁI CẠNH CỘT 1 -->
-                  <th class="sticky-col-summary-header" style="position: sticky; left: 220px; z-index: 14; background: #fde047; color: #000000; font-weight: 900; font-size: 0.88rem; text-align: center; border-right: 2px solid rgba(0,0,0,0.3); border-bottom: 1px solid rgba(0,0,0,0.2); padding: 0.4rem 0.45rem; min-width: 75px; max-width: 75px; width: 75px; height: 34px; box-sizing: border-box; box-shadow: 4px 0 10px rgba(0,0,0,0.25);">
-                    TỔNG
-                  </th>
-                  ${colsData.map(cd => `
-                    <th style="background: #fde047; color: #000000; font-weight: 900; font-size: 0.95rem; text-align: center; border-right: 1px solid rgba(0,0,0,0.15); border-bottom: 1px solid rgba(0,0,0,0.2); padding: 0.4rem 0.5rem; min-width: 80px; height: 34px; box-sizing: border-box;">
-                      ${cd.kip}
-                    </th>
-                  `).join('')}
-                </tr>
-
-                <!-- TẦNG HEADER 2: NGÀY (DATE) -->
-                <tr class="adj-header-date-row" style="background: var(--bg-card-header, #0f172a);">
-                  <th class="sticky-col-header" style="position: sticky; left: 0; z-index: 15; background: var(--bg-card-header, #0f172a); color: var(--text-primary, #f8fafc); font-weight: 700; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); text-align: left; padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; height: 28px; box-sizing: border-box;">
-                    NGÀY
-                  </th>
-                  <!-- CỘT TỔNG CỘNG: HEADER 2 -->
-                  <th class="sticky-col-summary-header" style="position: sticky; left: 220px; z-index: 14; background: #1e293b; color: #fbbf24; font-weight: 800; font-size: 0.76rem; text-align: center; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.45rem; min-width: 75px; max-width: 75px; width: 75px; height: 28px; box-sizing: border-box; box-shadow: 4px 0 10px rgba(0,0,0,0.25); white-space: nowrap;">
-                    KỲ CHỌN
-                  </th>
-                  ${colsData.map(cd => `
-                    <th style="background: var(--bg-card-header, #0f172a); color: var(--text-primary, #f8fafc); font-weight: 700; font-size: 0.78rem; text-align: center; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.45rem; white-space: nowrap; height: 28px; box-sizing: border-box;">
-                      ${formatDateDisplay(cd.dateStr)}
-                    </th>
-                  `).join('')}
-                </tr>
-
-                <!-- TẦNG HEADER 3: CA (SHIFT: DAY / NIGHT) - ĐÓNG BĂNG TỪ HÀNG CA -->
-                <tr class="adj-header-shift-row" style="background: var(--bg-card-solid, #1e293b);">
-                  <th class="sticky-col-header" style="position: sticky; top: 0; left: 0; z-index: 35; background: var(--bg-card-solid, #1e293b); color: var(--text-secondary, #cbd5e1); font-weight: 700; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); text-align: left; padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; height: 28px; box-sizing: border-box;">
-                    CA
-                  </th>
-                  <!-- CỘT TỔNG CỘNG: HEADER 3 -->
-                  <th class="sticky-col-summary-header" style="position: sticky; top: 0; left: 220px; z-index: 34; background: #0f172a; color: #f8fafc; font-weight: 800; font-size: 0.76rem; text-align: center; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.35rem 0.45rem; min-width: 75px; max-width: 75px; width: 75px; height: 28px; box-sizing: border-box; box-shadow: 4px 0 10px rgba(0,0,0,0.25);">
-                    ${colsData.length} CA
+                  <th class="sticky-col-summary-header" style="position: sticky; top: 0; left: 220px; z-index: 34; background: #0f172a; color: #fbbf24; font-weight: 900; font-size: 0.72rem; text-align: center; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.4rem 0.25rem; min-width: 75px; max-width: 75px; width: 75px; height: 36px; box-sizing: border-box; box-shadow: 4px 0 10px rgba(0,0,0,0.25); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: none;">
+                    TỔNG (${colsData.length})
                   </th>
                   ${colsData.map(cd => {
                     const isDay = cd.shift === 'Day';
                     return `
-                      <th style="position: sticky; top: 0; z-index: 20; background: var(--bg-card-solid, #1e293b); color: ${isDay ? '#fbbf24' : '#c084fc'}; font-weight: 800; font-size: 0.78rem; text-align: center; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.35rem 0.45rem; height: 28px; box-sizing: border-box;">
-                        ${cd.shift}
+                      <th style="position: sticky; top: 0; z-index: 25; background: var(--bg-card-solid, #1e293b); color: #f8fafc; font-weight: 800; font-size: 0.75rem; text-align: center; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.4rem 0.5rem; min-width: 122px; height: 36px; box-sizing: border-box; white-space: nowrap; text-transform: none;" title="Ngày ${formatDateDisplay(cd.dateStr)} • Ca ${cd.shift} • Kíp ${cd.kip}">
+                        <span>${formatDateDisplay(cd.dateStr)}</span> - <span style="color: ${isDay ? '#fbbf24' : '#c084fc'};">${cd.shift}</span> - <span style="color: #fde047;">${cd.kip}</span>
                       </th>
                     `;
                   }).join('')}
