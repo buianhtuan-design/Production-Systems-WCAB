@@ -1,7 +1,7 @@
 {
   "success": true,
-  "timestamp": "2026-11-18 17:30:21",
-  "version": 20261118173021,
+  "timestamp": "2026-11-18 17:31:34",
+  "version": 20261118173134,
   "kpiSummary": [
     {
       "month": "Nov - 2026",
@@ -2500,7 +2500,7 @@
   ],
   "scrap": {
     "target": "0.0387%",
-    "actual": "0.0318%",
+    "actual": "0.0369%",
     "items": [
       {
         "item": "CMT_4p-ASM_FrontASM_MU_black_v2",
@@ -6269,7 +6269,7 @@
     "totalProductivity": "99,97%",
     "totalRemarks": "98 %",
     "scrapTarget": "0.0387%",
-    "scrapActual": "0.0318%",
+    "scrapActual": "0.0369%",
     "workcellTeamsCount": 30
   },
   "meta": {
