@@ -405,12 +405,73 @@ class AppRequestHandler(http.server.SimpleHTTPRequestHandler):
             content_length = int(self.headers.get('Content-Length', 0))
             body = self.rfile.read(content_length).decode('utf-8')
             payload = json.loads(body)
-            plan = payload.get('plan') or payload
-            if not plan:
-                raise ValueError("Payload missing plan object")
 
             latest_file = os.path.join(WORKSPACE_DIR, 'overtime_adjustment_latest.json')
             history_file = os.path.join(WORKSPACE_DIR, 'overtime_adjustment_history.json')
+
+            # Hỗ trợ đồng bộ xóa 1 bản ghi lịch sử lên máy chủ & GitHub
+            if payload.get('action') == 'delete_history':
+                del_id = payload.get('id')
+                history = []
+                if os.path.exists(history_file):
+                    try:
+                        with open(history_file, 'r', encoding='utf-8') as f:
+                            history = json.load(f)
+                        if not isinstance(history, list):
+                            history = []
+                    except Exception:
+                        history = []
+                if del_id:
+                    history = [h for h in history if h.get('id') != del_id]
+
+                history_tmp = history_file + '.tmp'
+                with open(history_tmp, 'w', encoding='utf-8') as f:
+                    json.dump(history, f, ensure_ascii=False, indent=2)
+                os.replace(history_tmp, history_file)
+
+                # Nếu bản mới nhất vừa bị xóa thì cập nhật latest sang history[0] (nếu còn)
+                if os.path.exists(latest_file):
+                    try:
+                        with open(latest_file, 'r', encoding='utf-8') as f:
+                            cur_latest = json.load(f)
+                        if isinstance(cur_latest, dict) and cur_latest.get('id') == del_id and history:
+                            latest_tmp = latest_file + '.tmp'
+                            with open(latest_tmp, 'w', encoding='utf-8') as f:
+                                json.dump(history[0], f, ensure_ascii=False, indent=2)
+                            os.replace(latest_tmp, latest_file)
+                    except Exception:
+                        pass
+
+                github_res = {'pushed': False}
+                try:
+                    import importlib
+                    import github_sync_helper
+                    importlib.reload(github_sync_helper)
+                    github_res = github_sync_helper.push_overtime_plan_to_github(
+                        planner_name='Delete History',
+                        stage_name='OVERTIME',
+                    )
+                except Exception as push_err:
+                    print(f"[Overtime Delete GitHub Sync] ⚠️ {push_err}")
+                    github_res = {'pushed': False, 'error': str(push_err)}
+
+                res = {
+                    'success': True,
+                    'deletedId': del_id,
+                    'remainingHistoryCount': len(history),
+                    'githubPushed': bool(github_res.get('pushed')),
+                    'githubSha': github_res.get('sha', ''),
+                    'githubError': github_res.get('error', ''),
+                }
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.end_headers()
+                self.wfile.write(json.dumps(res, ensure_ascii=False).encode('utf-8'))
+                return
+
+            plan = payload.get('plan') or payload
+            if not plan or not isinstance(plan, dict):
+                raise ValueError("Payload missing plan object")
 
             # Lưu bản mới nhất (atomic write)
             latest_tmp = latest_file + '.tmp'
@@ -418,36 +479,45 @@ class AppRequestHandler(http.server.SimpleHTTPRequestHandler):
                 json.dump(plan, f, ensure_ascii=False, indent=2)
             os.replace(latest_tmp, latest_file)
 
-            # Cập nhật danh sách lịch sử
-            history = []
-            if os.path.exists(history_file):
-                try:
-                    with open(history_file, 'r', encoding='utf-8') as f:
-                        history = json.load(f)
-                    if not isinstance(history, list):
+            # Cập nhật danh sách lịch sử (ưu tiên danh sách sạch từ client nếu có gửi kèm)
+            client_history = payload.get('history')
+            if isinstance(client_history, list) and len(client_history) > 0:
+                history = [h for h in client_history if isinstance(h, dict) and h.get('id') and h.get('id') != plan.get('id')]
+                history.insert(0, plan)
+                history = history[:50]
+            else:
+                history = []
+                if os.path.exists(history_file):
+                    try:
+                        with open(history_file, 'r', encoding='utf-8') as f:
+                            history = json.load(f)
+                        if not isinstance(history, list):
+                            history = []
+                    except Exception:
                         history = []
-                except:
-                    history = []
-
-            # Tránh trùng id
-            history = [h for h in history if h.get('id') != plan.get('id')]
-            history.insert(0, plan)
-            history = history[:50]  # Giữ tối đa 50 bản ghi lịch sử
+                history = [h for h in history if h.get('id') != plan.get('id')]
+                history.insert(0, plan)
+                history = history[:50]
 
             history_tmp = history_file + '.tmp'
             with open(history_tmp, 'w', encoding='utf-8') as f:
                 json.dump(history, f, ensure_ascii=False, indent=2)
             os.replace(history_tmp, history_file)
 
-            # Tự động đẩy bản kế hoạch vừa hoàn thành lên GitHub ở background để User truy cập GitHub Pages cũng đồng bộ được
-            def _push_overtime_plan_async():
-                try:
-                    from github_sync_helper import auto_push_data_to_github
-                    auto_push_data_to_github()
-                except Exception as push_err:
-                    print(f"[Overtime Plan GitHub Sync] ⚠️ {push_err}")
-
-            threading.Thread(target=_push_overtime_plan_async, daemon=True).start()
+            # Đẩy trực tiếp 2 file JSON kế hoạch Overtime lên GitHub qua GitHub API (nhanh ~1-2s, không bị chặn bởi UI Local hay .git/index.lock)
+            github_res = {'pushed': False}
+            try:
+                import importlib
+                import github_sync_helper
+                importlib.reload(github_sync_helper)
+                github_res = github_sync_helper.push_overtime_plan_to_github(
+                    planner_name=plan.get('planner', ''),
+                    stage_name=plan.get('stage', ''),
+                    ot_count=plan.get('otCount'),
+                )
+            except Exception as push_err:
+                print(f"[Overtime Plan GitHub Sync] ⚠️ {push_err}")
+                github_res = {'pushed': False, 'error': str(push_err)}
 
             res = {
                 'success': True,
@@ -456,7 +526,13 @@ class AppRequestHandler(http.server.SimpleHTTPRequestHandler):
                 'stage': plan.get('stage'),
                 'savedAt': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'githubSyncStarted': True,
+                'githubPushed': bool(github_res.get('pushed')),
+                'githubSha': github_res.get('sha', ''),
+                'githubError': github_res.get('error', ''),
+                'historyCount': len(history),
                 'message': 'Đã lưu và đồng bộ kế hoạch điều chỉnh Overtime thành công lên máy chủ & GitHub!'
+                           if github_res.get('pushed')
+                           else 'Đã lưu lên máy chủ Local (đang chờ kết nối GitHub).'
             }
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')

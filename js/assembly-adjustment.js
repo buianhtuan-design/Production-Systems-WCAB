@@ -382,6 +382,42 @@
   });
 
   const RAW_GITHUB_BASE = 'https://raw.githubusercontent.com/buianhtuan-design/Production-Systems-WCAB/main/';
+  const GITHUB_API_CONTENTS_BASE = 'https://api.github.com/repos/buianhtuan-design/Production-Systems-WCAB/contents/';
+
+  function sanitizePlanRecord(plan) {
+    if (!plan || typeof plan !== 'object') return null;
+    const copy = JSON.parse(JSON.stringify(plan));
+    if (copy.otMap && typeof copy.otMap === 'object') {
+      copy.otMap = sanitizeOtMap(copy.otMap);
+      let cnt = 0;
+      Object.values(copy.otMap).forEach(arr => {
+        if (Array.isArray(arr)) cnt += arr.length;
+      });
+      copy.otCount = cnt;
+    }
+    if (copy.allStagesOtMap && typeof copy.allStagesOtMap === 'object') {
+      const cleanAll = {};
+      let totalCnt = 0;
+      Object.keys(copy.allStagesOtMap).forEach(stg => {
+        const cleanM = sanitizeOtMap(copy.allStagesOtMap[stg]);
+        cleanAll[stg] = cleanM;
+        Object.values(cleanM).forEach(arr => {
+          if (Array.isArray(arr)) totalCnt += arr.length;
+        });
+      });
+      copy.allStagesOtMap = cleanAll;
+      copy.totalOtCountAllStages = totalCnt;
+    }
+    if (copy.planDate) copy.planDate = shortenYear26(copy.planDate);
+    if (copy.dateStr) copy.dateStr = shortenYear26(copy.dateStr);
+    return copy;
+  }
+
+  function getPlanTimestampMs(plan) {
+    if (!plan || typeof plan !== 'object') return 0;
+    const t = new Date(plan.completedAt || plan.createdAt || 0).getTime();
+    return Number.isFinite(t) ? t : 0;
+  }
 
   async function safeFetchJson(url) {
     try {
@@ -393,20 +429,52 @@
     }
   }
 
+  /**
+   * Đọc trực tiếp file JSON mới nhất từ GitHub Contents API (KHÔNG bị delay cache 5 phút như raw.githubusercontent.com)
+   */
+  async function safeFetchGitHubApiJson(filename, bust) {
+    try {
+      const url = `${GITHUB_API_CONTENTS_BASE}${encodeURIComponent(filename)}?ref=main&t=${bust}`;
+      const res = await fetch(url, {
+        cache: 'no-store',
+        headers: { 'Accept': 'application/vnd.github+json' }
+      });
+      if (!res || !res.ok) return null;
+      const meta = await res.json();
+      if (!meta || !meta.content) return null;
+      const b64 = String(meta.content).replace(/\s+/g, '');
+      const binStr = atob(b64);
+      const bytes = new Uint8Array(binStr.length);
+      for (let i = 0; i < binStr.length; i++) {
+        bytes[i] = binStr.charCodeAt(i);
+      }
+      const utf8Text = (typeof TextDecoder !== 'undefined')
+        ? new TextDecoder('utf-8').decode(bytes)
+        : decodeURIComponent(escape(binStr));
+      return JSON.parse(utf8Text);
+    } catch (e) {
+      return null;
+    }
+  }
+
   async function fetchRemoteOvertimeBundle() {
     const bust = Date.now();
     const isGh = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
-    
-    // 1. Thử gọi API server local (/api/overtime-adjustment) nếu không phải GitHub Pages
+
+    // 1. Server local API (/api/overtime-adjustment) nếu đang chạy Local/LAN
     const apiPromise = !isGh
       ? safeFetchJson('/api/overtime-adjustment?t=' + bust)
       : Promise.resolve(null);
-    
-    // 2. Thử đọc static files ./overtime_adjustment_latest.json & history
+
+    // 2. GitHub Contents API (tức thời 0s cache, giải quyết triệt để độ trễ GitHub Pages / Raw CDN)
+    const ghApiLatestPromise = safeFetchGitHubApiJson('overtime_adjustment_latest.json', bust);
+    const ghApiHistPromise = safeFetchGitHubApiJson('overtime_adjustment_history.json', bust);
+
+    // 3. Static files cùng origin
     const staticLatestPromise = safeFetchJson('./overtime_adjustment_latest.json?t=' + bust);
     const staticHistPromise = safeFetchJson('./overtime_adjustment_history.json?t=' + bust);
-    
-    // 3. Fallback raw GitHub nếu trên GitHub Pages hoặc static bị miss
+
+    // 4. Fallback Raw GitHub (nếu GitHub API bị rate-limit trên GitHub Pages)
     const rawLatestPromise = isGh
       ? safeFetchJson(RAW_GITHUB_BASE + 'overtime_adjustment_latest.json?t=' + bust)
       : Promise.resolve(null);
@@ -414,84 +482,111 @@
       ? safeFetchJson(RAW_GITHUB_BASE + 'overtime_adjustment_history.json?t=' + bust)
       : Promise.resolve(null);
 
-    const [apiData, staticLatest, staticHist, rawLatest, rawHist] = await Promise.all([
-      apiPromise, staticLatestPromise, staticHistPromise, rawLatestPromise, rawHistPromise
+    const [apiData, ghApiLatest, ghApiHist, staticLatest, staticHist, rawLatest, rawHist] = await Promise.all([
+      apiPromise, ghApiLatestPromise, ghApiHistPromise, staticLatestPromise, staticHistPromise, rawLatestPromise, rawHistPromise
     ]);
 
-    let latestPlan = null;
-    let historyList = [];
-
-    if (apiData && apiData.success) {
-      if (apiData.latestPlan && apiData.latestPlan.id) latestPlan = apiData.latestPlan;
-      if (Array.isArray(apiData.history)) historyList = apiData.history;
+    // Xếp hạng các nguồn theo thời gian completedAt mới nhất để KHÔNG bị nguồn cũ (CDN cache) kéo ngược dữ liệu hoặc hồi sinh lịch sử đã xóa
+    const sources = [];
+    if (apiData && apiData.success && (apiData.latestPlan || (Array.isArray(apiData.history) && apiData.history.length > 0))) {
+      const lp = sanitizePlanRecord(apiData.latestPlan || (apiData.history && apiData.history[0]));
+      const hl = Array.isArray(apiData.history) ? apiData.history.map(sanitizePlanRecord).filter(Boolean) : [];
+      sources.push({ name: 'local_api', priority: isGh ? 1 : 4, latestPlan: lp, history: hl, ts: getPlanTimestampMs(lp) });
+    }
+    if ((ghApiLatest && ghApiLatest.id) || (Array.isArray(ghApiHist) && ghApiHist.length > 0)) {
+      const lp = sanitizePlanRecord(ghApiLatest && ghApiLatest.id ? ghApiLatest : (Array.isArray(ghApiHist) ? ghApiHist[0] : null));
+      const hl = Array.isArray(ghApiHist) ? ghApiHist.map(sanitizePlanRecord).filter(Boolean) : [];
+      sources.push({ name: 'github_api', priority: isGh ? 4 : 3, latestPlan: lp, history: hl, ts: getPlanTimestampMs(lp) });
+    }
+    if ((rawLatest && rawLatest.id) || (Array.isArray(rawHist) && rawHist.length > 0)) {
+      const lp = sanitizePlanRecord(rawLatest && rawLatest.id ? rawLatest : (Array.isArray(rawHist) ? rawHist[0] : null));
+      const hl = Array.isArray(rawHist) ? rawHist.map(sanitizePlanRecord).filter(Boolean) : [];
+      sources.push({ name: 'github_raw', priority: 2, latestPlan: lp, history: hl, ts: getPlanTimestampMs(lp) });
+    }
+    if ((staticLatest && staticLatest.id) || (Array.isArray(staticHist) && staticHist.length > 0)) {
+      const lp = sanitizePlanRecord(staticLatest && staticLatest.id ? staticLatest : (Array.isArray(staticHist) ? staticHist[0] : null));
+      const hl = Array.isArray(staticHist) ? staticHist.map(sanitizePlanRecord).filter(Boolean) : [];
+      sources.push({ name: 'static_file', priority: 1, latestPlan: lp, history: hl, ts: getPlanTimestampMs(lp) });
     }
 
-    const candidates = [latestPlan, staticLatest, rawLatest].filter(p => p && p.id);
-    if (candidates.length > 0) {
-      candidates.sort((a, b) => new Date(b.completedAt || b.createdAt || 0) - new Date(a.completedAt || a.createdAt || 0));
-      latestPlan = candidates[0];
+    if (sources.length === 0) {
+      return { success: false, latestPlan: null, history: [], source: 'none' };
     }
 
+    // Chọn nguồn có completedAt MỚI NHẤT (nếu bằng nhau thì chọn nguồn ưu tiên cao hơn: local_api trên Local, github_api trên GitHub)
+    sources.sort((a, b) => (b.ts - a.ts) || (b.priority - a.priority));
+    const best = sources[0];
+    const latestPlan = best.latestPlan;
+
+    // Lấy danh sách lịch sử chuẩn từ chính nguồn mới nhất đó (không trộn lịch sử cũ từ CDN cache bị trễ)
     const histMap = new Map();
-    [historyList, staticHist, rawHist].forEach(list => {
-      if (Array.isArray(list)) {
-        list.forEach(item => {
-          if (item && item.id) histMap.set(item.id, item);
-        });
-      }
+    const primaryHist = (Array.isArray(best.history) && best.history.length > 0)
+      ? best.history
+      : (sources.find(s => Array.isArray(s.history) && s.history.length > 0)?.history || []);
+    primaryHist.forEach(item => {
+      if (item && item.id) histMap.set(item.id, item);
     });
     if (latestPlan && latestPlan.id) {
       histMap.set(latestPlan.id, latestPlan);
     }
-    const mergedHistory = Array.from(histMap.values()).sort(
-      (a, b) => new Date(b.completedAt || b.createdAt || 0) - new Date(a.completedAt || a.createdAt || 0)
-    );
+    const cleanHistory = Array.from(histMap.values())
+      .sort((a, b) => getPlanTimestampMs(b) - getPlanTimestampMs(a))
+      .slice(0, 30);
 
     return {
       success: !!latestPlan,
       latestPlan,
-      history: mergedHistory
+      history: cleanHistory,
+      source: best.name
     };
   }
 
   function handleIncomingAdjPlan(remotePlan, isManual, optionalHistory) {
-    if (!remotePlan) return;
+    const cleanPlan = sanitizePlanRecord(remotePlan);
+    if (!cleanPlan) return;
     const store = window.AssemblyAdjustmentStore;
 
     // 1. Cập nhật tất cả các công đoạn nếu remotePlan có allStagesOtMap (luôn sanitize khóa ngày chuẩn)
-    if (remotePlan.allStagesOtMap && typeof remotePlan.allStagesOtMap === 'object') {
-      Object.keys(remotePlan.allStagesOtMap).forEach(stg => {
-        const m = remotePlan.allStagesOtMap[stg];
+    if (cleanPlan.allStagesOtMap && typeof cleanPlan.allStagesOtMap === 'object') {
+      Object.keys(cleanPlan.allStagesOtMap).forEach(stg => {
+        const m = cleanPlan.allStagesOtMap[stg];
         if (m && typeof m === 'object') {
           saveStoredOtMap(m, stg);
         }
       });
     }
 
-    const incomingStage = remotePlan.stage || store.selectedStage || DEFAULT_STAGE;
-    let cleanIncomingMap = null;
-    if (remotePlan.otMap && typeof remotePlan.otMap === 'object') {
-      cleanIncomingMap = saveStoredOtMap(remotePlan.otMap, incomingStage);
+    const incomingStage = (cleanPlan.stage && STAGE_CONFIGS[cleanPlan.stage]) ? cleanPlan.stage : (store.selectedStage || DEFAULT_STAGE);
+    let cleanIncomingMap = {};
+    if (cleanPlan.otMap && typeof cleanPlan.otMap === 'object') {
+      cleanIncomingMap = saveStoredOtMap(cleanPlan.otMap, incomingStage);
     }
 
-    // Nếu người dùng đang xem đúng công đoạn này
-    if (store.selectedStage === incomingStage && cleanIncomingMap) {
+    // Khi người dùng chủ động bấm Đồng Bộ Plan: chuyển đúng sang công đoạn của bản kế hoạch mới nhất
+    if (isManual && incomingStage && STAGE_CONFIGS[incomingStage]) {
+      store.selectedStage = incomingStage;
+      try {
+        localStorage.setItem(SELECTED_STAGE_KEY, incomingStage);
+      } catch (e) {}
+    }
+
+    if (store.selectedStage === incomingStage) {
       store.otMap = { ...cleanIncomingMap };
     } else {
       store.otMap = loadStoredOtMap(store.selectedStage);
     }
 
-    if (remotePlan.planner) {
-      store.plannerName = remotePlan.planner;
-      localStorage.setItem(PLANNER_KEY, remotePlan.planner);
+    if (cleanPlan.planner) {
+      store.plannerName = cleanPlan.planner;
+      localStorage.setItem(PLANNER_KEY, cleanPlan.planner);
     }
-    if (remotePlan.planDate) {
-      store.planDate = shortenYear26(remotePlan.planDate);
+    if (cleanPlan.planDate) {
+      store.planDate = shortenYear26(cleanPlan.planDate);
       localStorage.setItem(PLAN_DATE_KEY, store.planDate);
     }
-    if (remotePlan.customFromDate && remotePlan.customToDate && (isManual || (!store.customFromDate && !store.customToDate))) {
-      store.customFromDate = normalizeDateKey(remotePlan.customFromDate);
-      store.customToDate = normalizeDateKey(remotePlan.customToDate);
+    if (cleanPlan.customFromDate && cleanPlan.customToDate && (isManual || (!store.customFromDate && !store.customToDate))) {
+      store.customFromDate = normalizeDateKey(cleanPlan.customFromDate);
+      store.customToDate = normalizeDateKey(cleanPlan.customToDate);
       try {
         localStorage.setItem(FROM_DATE_KEY, store.customFromDate);
         localStorage.setItem(TO_DATE_KEY, store.customToDate);
@@ -500,32 +595,38 @@
 
     // Ghi nhận ID bản remote đã đồng bộ (và cập nhật mốc draft khi người dùng chủ động đồng bộ)
     try {
-      if (remotePlan.id) {
-        localStorage.setItem(LAST_REMOTE_ID_KEY, remotePlan.id);
+      if (cleanPlan.id) {
+        localStorage.setItem(LAST_REMOTE_ID_KEY, cleanPlan.id);
       }
       if (isManual) {
-        const rTs = new Date(remotePlan.completedAt || remotePlan.createdAt || Date.now()).getTime();
-        markLocalDraftModified(Math.max(Date.now(), rTs || 0));
+        const rTs = getPlanTimestampMs(cleanPlan) || Date.now();
+        markLocalDraftModified(Math.max(Date.now(), rTs));
       }
     } catch (e) {}
 
-    // Cập nhật Lịch Sử
+    // Cập nhật Lịch Sử chuẩn xác từ nguồn mới nhất
     if (Array.isArray(optionalHistory) && optionalHistory.length > 0) {
-      store.history = optionalHistory;
+      store.history = optionalHistory.map(sanitizePlanRecord).filter(Boolean).slice(0, 30);
       saveHistoryPlans(store.history);
-    } else if (remotePlan.id) {
+    } else if (cleanPlan.id) {
       if (!Array.isArray(store.history)) store.history = [];
-      if (!store.history.find(h => h.id === remotePlan.id)) {
-        store.history.unshift(remotePlan);
-        if (store.history.length > 30) store.history = store.history.slice(0, 30);
-        saveHistoryPlans(store.history);
+      store.history = [cleanPlan, ...store.history.filter(h => h && h.id !== cleanPlan.id)].slice(0, 30);
+      saveHistoryPlans(store.history);
+    }
+
+    // Khi đồng bộ thủ công, đưa cuộn bảng về đầu để người dùng nhìn thấy đầy đủ từ dòng 1 (không bị trôi ẩn hàng trên)
+    if (isManual) {
+      const wrap = document.querySelector('#datamassAssemblyAdjustmentPlanContainer .assembly-adj-scroll-wrap');
+      if (wrap) {
+        wrap.scrollTop = 0;
+        wrap.scrollLeft = 0;
       }
     }
 
     window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
     if (window.showToast && !isManual) {
       const stageName = STAGE_CONFIGS[incomingStage]?.name || incomingStage;
-      window.showToast('info', `🔔 Đã đồng bộ Kế Hoạch Điều Chỉnh [${stageName}] từ [${remotePlan.planner || 'User'}] (${remotePlan.planDate || ''})!`);
+      window.showToast('info', `🔔 Đã đồng bộ Kế Hoạch Điều Chỉnh [${stageName}] từ [${cleanPlan.planner || 'User'}] (${cleanPlan.planDate || ''})!`);
     }
   }
 
@@ -1800,29 +1901,44 @@
 
     window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
 
-    // Gửi lên Server API /api/overtime-adjustment để lưu file JSON & kích hoạt GitHub Auto-push
+    // Gửi lên Server API /api/overtime-adjustment để lưu file JSON & đẩy thẳng lên GitHub qua GitHub API
     let serverSyncSuccess = false;
-    try {
-      const res = await fetch('/api/overtime-adjustment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan: record })
-      });
-      if (res && res.ok) {
-        serverSyncSuccess = true;
-      }
-    } catch (e) {}
+    let githubPushed = false;
+    let githubErr = '';
+    const isGh = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
+    if (!isGh) {
+      try {
+        const res = await fetch('/api/overtime-adjustment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan: record, history: store.history })
+        });
+        if (res && res.ok) {
+          serverSyncSuccess = true;
+          try {
+            const resJson = await res.json();
+            githubPushed = Boolean(resJson && resJson.githubPushed);
+            githubErr = (resJson && resJson.githubError) ? String(resJson.githubError) : '';
+          } catch (e) {}
+        }
+      } catch (e) {}
+    }
 
     if (window.showToast) {
-      const syncNote = serverSyncSuccess
-        ? ' • Đã lưu lên máy chủ & tự động đồng bộ GitHub cho tất cả User!'
-        : ' • Đã lưu thành công và sẵn sàng đồng bộ cho tất cả User!';
+      let syncNote = ' • Đã lưu thành công trên trình duyệt!';
+      if (githubPushed) {
+        syncNote = ' • 🚀 Đã đẩy thẳng lên GitHub thành công — Web GitHub có thể bấm Đồng Bộ Plan ngay!';
+      } else if (serverSyncSuccess) {
+        syncNote = githubErr
+          ? ` • Đã lưu máy chủ Local (lỗi đẩy GitHub: ${githubErr.slice(0, 80)})`
+          : ' • Đã lưu máy chủ Local (chưa đẩy được lên GitHub, kiểm tra kết nối mạng).';
+      }
       window.showToast('success', `✅ ĐÃ HOÀN THÀNH KẾ HOẠCH ĐIỀU CHỈNH [${record.stageName}]! Người lập: ${record.planner}${syncNote}`);
     }
   };
 
   /**
-   * Đồng Bộ Ngay Lập Tức Kế Hoạch Mới Nhất (Đa Nguồn: Server LAN, Static JSON, GitHub Raw, Cloud)
+   * Đồng Bộ Ngay Lập Tức Kế Hoạch Mới Nhất (Đa Nguồn: Server Local, GitHub API tức thời, Static JSON, GitHub Raw)
    */
   window.handleForceSyncAssemblyAdjPlan = async function() {
     if (window.showToast) {
@@ -1833,10 +1949,31 @@
       const bundle = await fetchRemoteOvertimeBundle();
       if (bundle && bundle.latestPlan) {
         const plan = bundle.latestPlan;
+        const store = window.AssemblyAdjustmentStore;
+        const localLatest = (store.history && store.history[0]) ? store.history[0] : null;
+        const localTs = getPlanTimestampMs(localLatest);
+        const remoteTs = getPlanTimestampMs(plan);
+
+        // Chống trôi ngược về bản cũ nếu bản trên máy cục bộ mới hơn bản trên remote
+        if (localTs > 0 && remoteTs > 0 && remoteTs < localTs) {
+          const confirmRollback = window.confirm(
+            `⚠️ Bản trên server/GitHub (${plan.planner || 'User'} • ${plan.planDate || ''} lúc ${plan.timeStr || ''}) CŨ HƠN bản đang có trên máy bạn (${localLatest.planner || 'User'} • ${localLatest.planDate || ''} lúc ${localLatest.timeStr || ''}).\n\nBạn có chắc chắn muốn tải đè bản cũ hơn không?`
+          );
+          if (!confirmRollback) {
+            if (window.showToast) {
+              window.showToast('info', '🛡️ Đã giữ nguyên kế hoạch mới hơn trên máy bạn (không ghi đè bằng bản cũ).');
+            }
+            return;
+          }
+        }
+
         handleIncomingAdjPlan(plan, true, bundle.history);
         if (window.showToast) {
           const stgName = STAGE_CONFIGS[plan.stage]?.name || plan.stage || 'ASSEMBLY';
-          window.showToast('success', `🔄 ĐÃ ĐỒNG BỘ THÀNH CÔNG: Kế hoạch điều chỉnh [${stgName}] từ [${plan.planner || 'User'}] (${plan.planDate || plan.dateStr || ''} lúc ${plan.timeStr || ''} • ${plan.otCount || 0} ca OT)!`);
+          const rangeText = (plan.customFromDate && plan.customToDate)
+            ? ` • Kỳ ${formatDateDisplay(plan.customFromDate)}→${formatDateDisplay(plan.customToDate)}`
+            : '';
+          window.showToast('success', `🔄 ĐÃ ĐỒNG BỘ THÀNH CÔNG: [${stgName}] từ [${plan.planner || 'User'}] (${plan.planDate || plan.dateStr || ''} lúc ${plan.timeStr || ''} • ${plan.otCount || 0} ca OT${rangeText})!`);
         }
         return;
       }
@@ -1987,14 +2124,26 @@
   };
 
   /**
-   * Xóa 1 bản ghi lịch sử
+   * Xóa 1 bản ghi lịch sử (đồng bộ cả máy chủ Local & GitHub nếu đang chạy Local)
    */
-  window.handleDeleteAssemblyAdjHistory = function(planId) {
+  window.handleDeleteAssemblyAdjHistory = async function(planId) {
     const store = window.AssemblyAdjustmentStore;
     if (!confirm('Bạn có chắc chắn muốn xóa bản ghi lịch sử này?')) return;
     store.history = (store.history || []).filter(h => h.id !== planId);
     saveHistoryPlans(store.history);
     window.handleOpenAssemblyAdjHistoryModal();
+    window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
+
+    const isGh = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
+    if (!isGh) {
+      try {
+        await fetch('/api/overtime-adjustment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'delete_history', id: planId })
+        });
+      } catch (e) {}
+    }
   };
 
   /**
@@ -2170,17 +2319,14 @@
 
         if ((!hasExistingLocalOt && localDraftTs === 0) || (isStrictlyNewerThanDraft && isStrictlyNewerThanLocal && isUnseenRemote)) {
           handleIncomingAdjPlan(remotePlan, false, bundle.history);
-          console.log('[Overtime Auto-Sync] ✅ Đã tự động nạp kế hoạch Overtime mới nhất:', remotePlan.id);
+          console.log('[Overtime Auto-Sync] ✅ Đã tự động nạp kế hoạch Overtime mới nhất:', remotePlan.id, 'từ', bundle.source);
         } else {
-          // Bảo toàn nguyên vẹn bản Lưu Tạm trên máy, chỉ cập nhật danh sách Lịch Sử để tiện tra cứu
-          if (Array.isArray(bundle.history) && bundle.history.length > 0) {
-            const merged = new Map();
-            (store.history || []).forEach(h => { if (h && h.id) merged.set(h.id, h); });
-            bundle.history.forEach(h => { if (h && h.id) merged.set(h.id, h); });
-            store.history = Array.from(merged.values())
-              .sort((a, b) => new Date(b.completedAt || b.createdAt || 0) - new Date(a.completedAt || a.createdAt || 0))
-              .slice(0, 30);
+          // Bảo toàn nguyên vẹn bản Lưu Tạm trên máy; chỉ cập nhật lịch sử khi remote mới hơn hoặc bằng local (tránh hồi sinh bản cũ đã xóa)
+          if (Array.isArray(bundle.history) && bundle.history.length > 0 && remoteTime >= localLatestTime) {
+            store.history = bundle.history.slice(0, 30);
             saveHistoryPlans(store.history);
+            const badge = document.getElementById('adjHistoryBadge');
+            if (badge) badge.textContent = String(store.history.length);
           }
           console.log('[Overtime Auto-Sync] 🛡️ Bảo toàn bản Lưu Tạm local của người dùng (không ghi đè bằng bản remote cũ).');
         }
