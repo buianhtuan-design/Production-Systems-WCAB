@@ -256,7 +256,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
       "plan": 14284.0,
-      "sheetFact": 8089.0,
+      "sheetFact": 8631.0,
       "done": 0,
       "isDone": false
     },
@@ -936,7 +936,7 @@
       "agg": "",
       "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
       "plan": 9569.0,
-      "sheetFact": 5000.0,
+      "sheetFact": 5160.0,
       "done": 0,
       "isDone": false
     },
@@ -1656,7 +1656,7 @@
       "agg": "MotionCam Outdoor",
       "device": "Ajax MotionCam Outdoor (8EU) ASP white датчик руху з камерою",
       "plan": 5950.0,
-      "sheetFact": 3465.0,
+      "sheetFact": 3555.0,
       "done": 0,
       "isDone": false
     },
@@ -1936,7 +1936,7 @@
       "agg": "",
       "device": "Ajax MotionProtect Plus (8EU) ASP white датчик руху",
       "plan": 9755.0,
-      "sheetFact": 3172.0,
+      "sheetFact": 3675.0,
       "done": 0,
       "isDone": false
     },
@@ -2898,7 +2898,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
       "plan": 14284.0,
-      "sheetFact": 8089.0,
+      "sheetFact": 8631.0,
       "done": 0,
       "isDone": false
     },
@@ -3578,7 +3578,7 @@
       "agg": "",
       "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
       "plan": 9569.0,
-      "sheetFact": 5000.0,
+      "sheetFact": 5160.0,
       "done": 0,
       "isDone": false
     },
@@ -4298,7 +4298,7 @@
       "agg": "MotionCam Outdoor",
       "device": "Ajax MotionCam Outdoor (8EU) ASP white датчик руху з камерою",
       "plan": 5950.0,
-      "sheetFact": 3465.0,
+      "sheetFact": 3555.0,
       "done": 0,
       "isDone": false
     },
@@ -4578,7 +4578,7 @@
       "agg": "",
       "device": "Ajax MotionProtect Plus (8EU) ASP white датчик руху",
       "plan": 9755.0,
-      "sheetFact": 3172.0,
+      "sheetFact": 3675.0,
       "done": 0,
       "isDone": false
     },
@@ -5290,7 +5290,7 @@
   "clipAllPlant": "56.4%",
   "clipAllPlantPct": 56.4,
   "totalPlan": 485822.0,
-  "totalSheetFact": 265120.0,
+  "totalSheetFact": 266415.0,
   "hasPlanCount": 219,
   "gt90Count": 149,
   "lt90Count": 115,
@@ -9587,10 +9587,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-18 18:51:30",
+        "archivedAt": "2026-11-18 19:54:16",
         "totalItems": 264,
         "totalPlan": 485822.0,
-        "totalSheetFact": 265120.0,
+        "totalSheetFact": 266415.0,
         "qtyAllDevice": 264,
         "qtyDoneDevice": 149,
         "qtyNotDoneDevice": 115,
@@ -9852,7 +9852,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
             "plan": 14284.0,
-            "sheetFact": 8089.0,
+            "sheetFact": 8631.0,
             "done": 0,
             "isDone": false
           },
@@ -10532,7 +10532,7 @@
             "agg": "",
             "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
             "plan": 9569.0,
-            "sheetFact": 5000.0,
+            "sheetFact": 5160.0,
             "done": 0,
             "isDone": false
           },
@@ -11252,7 +11252,7 @@
             "agg": "MotionCam Outdoor",
             "device": "Ajax MotionCam Outdoor (8EU) ASP white датчик руху з камерою",
             "plan": 5950.0,
-            "sheetFact": 3465.0,
+            "sheetFact": 3555.0,
             "done": 0,
             "isDone": false
           },
@@ -11532,7 +11532,7 @@
             "agg": "",
             "device": "Ajax MotionProtect Plus (8EU) ASP white датчик руху",
             "plan": 9755.0,
-            "sheetFact": 3172.0,
+            "sheetFact": 3675.0,
             "done": 0,
             "isDone": false
           },
@@ -12494,7 +12494,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
             "plan": 14284.0,
-            "sheetFact": 8089.0,
+            "sheetFact": 8631.0,
             "done": 0,
             "isDone": false
           },
@@ -13174,7 +13174,7 @@
             "agg": "",
             "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
             "plan": 9569.0,
-            "sheetFact": 5000.0,
+            "sheetFact": 5160.0,
             "done": 0,
             "isDone": false
           },
@@ -13894,7 +13894,7 @@
             "agg": "MotionCam Outdoor",
             "device": "Ajax MotionCam Outdoor (8EU) ASP white датчик руху з камерою",
             "plan": 5950.0,
-            "sheetFact": 3465.0,
+            "sheetFact": 3555.0,
             "done": 0,
             "isDone": false
           },
@@ -14174,7 +14174,7 @@
             "agg": "",
             "device": "Ajax MotionProtect Plus (8EU) ASP white датчик руху",
             "plan": 9755.0,
-            "sheetFact": 3172.0,
+            "sheetFact": 3675.0,
             "done": 0,
             "isDone": false
           },
