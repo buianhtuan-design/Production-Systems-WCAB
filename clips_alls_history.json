@@ -4291,14 +4291,14 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-18 15:45:53",
+      "archivedAt": "2026-11-18 15:47:02",
       "totalItems": 264,
       "totalPlan": 485822.0,
-      "totalSheetFact": 256585.0,
+      "totalSheetFact": 265120.0,
       "qtyAllDevice": 264,
-      "qtyDoneDevice": 147,
-      "qtyNotDoneDevice": 117,
-      "clipAllPlant": "55.7%",
+      "qtyDoneDevice": 149,
+      "qtyNotDoneDevice": 115,
+      "clipAllPlant": "56.4%",
       "items": [
         {
           "category": "Comfort and productivity",
@@ -4846,7 +4846,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke) (8EU) ASP white сповіщувач пожежний димовий",
           "plan": 16298.0,
-          "sheetFact": 3720.0,
+          "sheetFact": 4395.0,
           "done": 0,
           "isDone": false
         },
@@ -4896,7 +4896,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8EU) ASP white сповіщувач пожежний димовий зі звуковим оповіщувачем",
           "plan": 10769.0,
-          "sheetFact": 3530.0,
+          "sheetFact": 4204.0,
           "done": 0,
           "isDone": false
         },
@@ -4976,7 +4976,7 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Red) (8EU) ASP ручний пожежний сповіщувач",
           "plan": 11170.0,
-          "sheetFact": 10950.0,
+          "sheetFact": 11024.0,
           "done": 1,
           "isDone": true
         },
@@ -5026,9 +5026,9 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Red) (9NA) ручний пожежний сповіщувач",
           "plan": 153.0,
-          "sheetFact": 0.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 148.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -5036,7 +5036,7 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Red) (9SA) ручний пожежний сповіщувач",
           "plan": 422.0,
-          "sheetFact": 2.0,
+          "sheetFact": 341.0,
           "done": 0,
           "isDone": false
         },
@@ -5376,7 +5376,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (8EU/ECG) ASP white охоронна централь",
           "plan": 3680.0,
-          "sheetFact": 2471.0,
+          "sheetFact": 2730.0,
           "done": 0,
           "isDone": false
         },
@@ -5556,7 +5556,7 @@
           "agg": "",
           "device": "Ajax Hub 4G (9NA/ULA) white охоронна централь",
           "plan": 384.0,
-          "sheetFact": 369.0,
+          "sheetFact": 378.0,
           "done": 1,
           "isDone": true
         },
@@ -5686,7 +5686,7 @@
           "agg": "",
           "device": "Ajax MultiTransmitter (8EU) Incert white трансміттер",
           "plan": 1627.0,
-          "sheetFact": 650.0,
+          "sheetFact": 925.0,
           "done": 0,
           "isDone": false
         },
@@ -5706,9 +5706,9 @@
           "agg": "",
           "device": "Ajax MultiTransmitter (8IN) white трансміттер",
           "plan": 105.0,
-          "sheetFact": 23.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 104.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -5796,7 +5796,7 @@
           "agg": "",
           "device": "Ajax KeyPad TouchScreen (8EU) ASP white клавіатура",
           "plan": 5397.0,
-          "sheetFact": 2791.0,
+          "sheetFact": 2915.0,
           "done": 0,
           "isDone": false
         },
@@ -5806,7 +5806,7 @@
           "agg": "",
           "device": "Ajax KeyPad TouchScreen (9AU) white клавіатура",
           "plan": 332.0,
-          "sheetFact": 16.0,
+          "sheetFact": 18.0,
           "done": 0,
           "isDone": false
         },
@@ -5946,7 +5946,7 @@
           "agg": "",
           "device": "Ajax MotionCam HDR (PhOD) Jeweller (8EU) ASP white датчик руху з камерою",
           "plan": 12585.0,
-          "sheetFact": 7488.0,
+          "sheetFact": 8871.0,
           "done": 0,
           "isDone": false
         },
@@ -5956,7 +5956,7 @@
           "agg": "MotionCam Outdoor",
           "device": "Ajax MotionCam Outdoor (8EU) ASP white датчик руху з камерою",
           "plan": 5950.0,
-          "sheetFact": 2371.0,
+          "sheetFact": 3465.0,
           "done": 0,
           "isDone": false
         },
@@ -5986,7 +5986,7 @@
           "agg": "",
           "device": "Ajax MotionCam Outdoor (9AU) white датчик руху з камерою",
           "plan": 117.0,
-          "sheetFact": 20.0,
+          "sheetFact": 92.0,
           "done": 0,
           "isDone": false
         },
@@ -6276,7 +6276,7 @@
           "agg": "",
           "device": "Ajax DoorProtect (8EU) ASP white датчик відкриття",
           "plan": 48485.0,
-          "sheetFact": 11267.0,
+          "sheetFact": 14592.0,
           "done": 0,
           "isDone": false
         },
@@ -6816,7 +6816,7 @@
           "agg": "",
           "device": "Ajax TurretCam (5 Mp/2.8 mm) ASP white відеокамера спостереження",
           "plan": 1675.0,
-          "sheetFact": 548.0,
+          "sheetFact": 549.0,
           "done": 0,
           "isDone": false
         },
@@ -7488,7 +7488,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke) (8EU) ASP white сповіщувач пожежний димовий",
           "plan": 16298.0,
-          "sheetFact": 3720.0,
+          "sheetFact": 4395.0,
           "done": 0,
           "isDone": false
         },
@@ -7538,7 +7538,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8EU) ASP white сповіщувач пожежний димовий зі звуковим оповіщувачем",
           "plan": 10769.0,
-          "sheetFact": 3530.0,
+          "sheetFact": 4204.0,
           "done": 0,
           "isDone": false
         },
@@ -7618,7 +7618,7 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Red) (8EU) ASP ручний пожежний сповіщувач",
           "plan": 11170.0,
-          "sheetFact": 10950.0,
+          "sheetFact": 11024.0,
           "done": 1,
           "isDone": true
         },
@@ -7668,9 +7668,9 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Red) (9NA) ручний пожежний сповіщувач",
           "plan": 153.0,
-          "sheetFact": 0.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 148.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax Manual Call Point (Red) (9SA) ручний пожежний сповіщувач": {
           "category": "",
@@ -7678,7 +7678,7 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Red) (9SA) ручний пожежний сповіщувач",
           "plan": 422.0,
-          "sheetFact": 2.0,
+          "sheetFact": 341.0,
           "done": 0,
           "isDone": false
         },
@@ -8018,7 +8018,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (8EU/ECG) ASP white охоронна централь",
           "plan": 3680.0,
-          "sheetFact": 2471.0,
+          "sheetFact": 2730.0,
           "done": 0,
           "isDone": false
         },
@@ -8198,7 +8198,7 @@
           "agg": "",
           "device": "Ajax Hub 4G (9NA/ULA) white охоронна централь",
           "plan": 384.0,
-          "sheetFact": 369.0,
+          "sheetFact": 378.0,
           "done": 1,
           "isDone": true
         },
@@ -8328,7 +8328,7 @@
           "agg": "",
           "device": "Ajax MultiTransmitter (8EU) Incert white трансміттер",
           "plan": 1627.0,
-          "sheetFact": 650.0,
+          "sheetFact": 925.0,
           "done": 0,
           "isDone": false
         },
@@ -8348,9 +8348,9 @@
           "agg": "",
           "device": "Ajax MultiTransmitter (8IN) white трансміттер",
           "plan": 105.0,
-          "sheetFact": 23.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 104.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax MultiTransmitter (8MA) black трансміттер": {
           "category": "",
@@ -8438,7 +8438,7 @@
           "agg": "",
           "device": "Ajax KeyPad TouchScreen (8EU) ASP white клавіатура",
           "plan": 5397.0,
-          "sheetFact": 2791.0,
+          "sheetFact": 2915.0,
           "done": 0,
           "isDone": false
         },
@@ -8448,7 +8448,7 @@
           "agg": "",
           "device": "Ajax KeyPad TouchScreen (9AU) white клавіатура",
           "plan": 332.0,
-          "sheetFact": 16.0,
+          "sheetFact": 18.0,
           "done": 0,
           "isDone": false
         },
@@ -8588,7 +8588,7 @@
           "agg": "",
           "device": "Ajax MotionCam HDR (PhOD) Jeweller (8EU) ASP white датчик руху з камерою",
           "plan": 12585.0,
-          "sheetFact": 7488.0,
+          "sheetFact": 8871.0,
           "done": 0,
           "isDone": false
         },
@@ -8598,7 +8598,7 @@
           "agg": "MotionCam Outdoor",
           "device": "Ajax MotionCam Outdoor (8EU) ASP white датчик руху з камерою",
           "plan": 5950.0,
-          "sheetFact": 2371.0,
+          "sheetFact": 3465.0,
           "done": 0,
           "isDone": false
         },
@@ -8628,7 +8628,7 @@
           "agg": "",
           "device": "Ajax MotionCam Outdoor (9AU) white датчик руху з камерою",
           "plan": 117.0,
-          "sheetFact": 20.0,
+          "sheetFact": 92.0,
           "done": 0,
           "isDone": false
         },
@@ -8918,7 +8918,7 @@
           "agg": "",
           "device": "Ajax DoorProtect (8EU) ASP white датчик відкриття",
           "plan": 48485.0,
-          "sheetFact": 11267.0,
+          "sheetFact": 14592.0,
           "done": 0,
           "isDone": false
         },
@@ -9458,7 +9458,7 @@
           "agg": "",
           "device": "Ajax TurretCam (5 Mp/2.8 mm) ASP white відеокамера спостереження",
           "plan": 1675.0,
-          "sheetFact": 548.0,
+          "sheetFact": 549.0,
           "done": 0,
           "isDone": false
         },
