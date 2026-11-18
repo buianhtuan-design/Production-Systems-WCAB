@@ -1976,7 +1976,7 @@
       "agg": "",
       "device": "Ajax DoorProtect (8EU) ASP white датчик відкриття",
       "plan": 48485.0,
-      "sheetFact": 14592.0,
+      "sheetFact": 17350.0,
       "done": 0,
       "isDone": false
     },
@@ -4618,7 +4618,7 @@
       "agg": "",
       "device": "Ajax DoorProtect (8EU) ASP white датчик відкриття",
       "plan": 48485.0,
-      "sheetFact": 14592.0,
+      "sheetFact": 17350.0,
       "done": 0,
       "isDone": false
     },
@@ -5290,7 +5290,7 @@
   "clipAllPlant": "56.4%",
   "clipAllPlantPct": 56.4,
   "totalPlan": 485822.0,
-  "totalSheetFact": 266415.0,
+  "totalSheetFact": 269173.0,
   "hasPlanCount": 219,
   "gt90Count": 149,
   "lt90Count": 115,
@@ -9587,10 +9587,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-18 21:29:32",
+        "archivedAt": "2026-11-18 22:04:20",
         "totalItems": 264,
         "totalPlan": 485822.0,
-        "totalSheetFact": 266415.0,
+        "totalSheetFact": 269173.0,
         "qtyAllDevice": 264,
         "qtyDoneDevice": 149,
         "qtyNotDoneDevice": 115,
@@ -11572,7 +11572,7 @@
             "agg": "",
             "device": "Ajax DoorProtect (8EU) ASP white датчик відкриття",
             "plan": 48485.0,
-            "sheetFact": 14592.0,
+            "sheetFact": 17350.0,
             "done": 0,
             "isDone": false
           },
@@ -14214,7 +14214,7 @@
             "agg": "",
             "device": "Ajax DoorProtect (8EU) ASP white датчик відкриття",
             "plan": 48485.0,
-            "sheetFact": 14592.0,
+            "sheetFact": 17350.0,
             "done": 0,
             "isDone": false
           },
