@@ -157,6 +157,36 @@
   const LATEST_SYNC_KEY = 'AJAX_ASSEMBLY_ADJ_LATEST_SYNC';
   const DRAFT_TS_KEY = 'AJAX_ASSEMBLY_ADJ_DRAFT_TS';
   const LAST_REMOTE_ID_KEY = 'AJAX_ASSEMBLY_ADJ_LAST_REMOTE_ID';
+  const FROM_DATE_KEY = 'AJAX_OVERTIME_ADJ_FROM_DATE';
+  const TO_DATE_KEY = 'AJAX_OVERTIME_ADJ_TO_DATE';
+
+  function shortenYear26(str) {
+    if (str === null || str === undefined) return '';
+    return String(str).replace(/\/20(\d{2})\b/g, '/$1').replace(/\b20(\d{2})-/g, '$1-');
+  }
+
+  function generateDateRange(fromIso, toIso) {
+    const startNorm = normalizeDateKey(fromIso);
+    const endNorm = normalizeDateKey(toIso);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(startNorm) || !/^\d{4}-\d{2}-\d{2}$/.test(endNorm)) return [];
+    const sp = startNorm.split('-').map(Number);
+    const ep = endNorm.split('-').map(Number);
+    const dStart = new Date(sp[0], sp[1] - 1, sp[2]);
+    const dEnd = new Date(ep[0], ep[1] - 1, ep[2]);
+    if (isNaN(dStart.getTime()) || isNaN(dEnd.getTime()) || dStart > dEnd) return [];
+    const out = [];
+    const cur = new Date(dStart.getTime());
+    let guard = 0;
+    while (cur <= dEnd && guard < 62) {
+      const y = cur.getFullYear();
+      const m = String(cur.getMonth() + 1).padStart(2, '0');
+      const d = String(cur.getDate()).padStart(2, '0');
+      out.push(`${y}-${m}-${d}`);
+      cur.setDate(cur.getDate() + 1);
+      guard++;
+    }
+    return out;
+  }
 
   function markLocalDraftModified(ts) {
     try {
@@ -247,8 +277,8 @@
     const d = new Date();
     const dd = String(d.getDate()).padStart(2, '0');
     const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const yyyy = d.getFullYear();
-    return `${dd}/${mm}/${yyyy}`;
+    const yy = String(d.getFullYear()).slice(-2);
+    return `${dd}/${mm}/${yy}`;
   }
 
   function getStageStorageKey(stage) {
@@ -319,8 +349,10 @@
     otMap: loadStoredOtMap(validStage),
     isCollapsed: localStorage.getItem(COLLAPSED_KEY) === 'true',
     dateViewMode: localStorage.getItem(DATE_VIEW_KEY) || 'ACTIVE_SCHEDULE',
+    customFromDate: localStorage.getItem(FROM_DATE_KEY) || '',
+    customToDate: localStorage.getItem(TO_DATE_KEY) || '',
     plannerName: localStorage.getItem(PLANNER_KEY) || (window.AppStore?.simPlannerName || 'Lê Ngọc Duy GLD'),
-    planDate: localStorage.getItem(PLAN_DATE_KEY) || getTodayFormatted(),
+    planDate: shortenYear26(localStorage.getItem(PLAN_DATE_KEY) || getTodayFormatted()),
     history: loadHistoryPlans()
   };
 
@@ -454,8 +486,16 @@
       localStorage.setItem(PLANNER_KEY, remotePlan.planner);
     }
     if (remotePlan.planDate) {
-      store.planDate = remotePlan.planDate;
-      localStorage.setItem(PLAN_DATE_KEY, remotePlan.planDate);
+      store.planDate = shortenYear26(remotePlan.planDate);
+      localStorage.setItem(PLAN_DATE_KEY, store.planDate);
+    }
+    if (remotePlan.customFromDate && remotePlan.customToDate && (isManual || (!store.customFromDate && !store.customToDate))) {
+      store.customFromDate = normalizeDateKey(remotePlan.customFromDate);
+      store.customToDate = normalizeDateKey(remotePlan.customToDate);
+      try {
+        localStorage.setItem(FROM_DATE_KEY, store.customFromDate);
+        localStorage.setItem(TO_DATE_KEY, store.customToDate);
+      } catch (e) {}
     }
 
     // Ghi nhận ID bản remote đã đồng bộ (và cập nhật mốc draft khi người dùng chủ động đồng bộ)
@@ -575,16 +615,17 @@
   }
 
   /**
-   * Định dạng ngày hiển thị DD/MM/YYYY
+   * Định dạng ngày hiển thị gọn DD/MM/YY (rút gọn 2026 -> 26 tiết kiệm không gian)
    */
   function formatDateDisplay(dateStr) {
     if (!dateStr) return '';
     const norm = normalizeDateKey(dateStr);
     const parts = norm.split('-');
     if (parts.length === 3) {
-      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+      const yy = parts[0].length === 4 ? parts[0].slice(-2) : parts[0];
+      return `${parts[2]}/${parts[1]}/${yy}`;
     }
-    return dateStr;
+    return shortenYear26(dateStr);
   }
 
   function escapeHtml(str) {
@@ -982,9 +1023,20 @@
 
   /**
    * Xác định danh sách ngày cần hiển thị trong bảng điều chỉnh
+   * Ưu tiên tuyệt đối khoảng thời gian người dùng đã chọn riêng (customFromDate -> customToDate),
+   * giữ nguyên vẹn 100% không bị đổi lại khi web refresh / auto-sync.
    */
   function resolveAdjustmentDates(schedule) {
     const store = window.AssemblyAdjustmentStore;
+
+    // 1. Ưu tiên tuyệt đối khoảng thời gian riêng đã chọn & lưu trong localStorage
+    if (store.customFromDate && store.customToDate) {
+      const customRange = generateDateRange(store.customFromDate, store.customToDate);
+      if (customRange.length > 0) {
+        return customRange;
+      }
+    }
+
     const mode = store.dateViewMode || 'ACTIVE_SCHEDULE';
 
     if (mode === 'ACTIVE_SCHEDULE') {
@@ -998,13 +1050,13 @@
 
     if (mode === 'CONCEPT_WEEK') {
       return [
-        '11/17/2026',
-        '11/18/2026',
-        '11/19/2026',
-        '11/20/2026',
-        '11/21/2026',
-        '11/22/2026',
-        '11/23/2026'
+        '2026-11-17',
+        '2026-11-18',
+        '2026-11-19',
+        '2026-11-20',
+        '2026-11-21',
+        '2026-11-22',
+        '2026-11-23'
       ];
     }
 
@@ -1012,15 +1064,55 @@
       return schedule.selectedDates;
     }
     return [
-      '11/17/2026',
-      '11/18/2026',
-      '11/19/2026',
-      '11/20/2026',
-      '11/21/2026',
-      '11/22/2026',
-      '11/23/2026'
+      '2026-11-17',
+      '2026-11-18',
+      '2026-11-19',
+      '2026-11-20',
+      '2026-11-21',
+      '2026-11-22',
+      '2026-11-23'
     ];
   }
+
+  /**
+   * Thay đổi & cố định khoảng thời gian riêng cho Kế Hoạch Điều Chỉnh Overtime
+   */
+  window.handleAdjustmentDateRangeChange = function(fromVal, toVal) {
+    const store = window.AssemblyAdjustmentStore;
+    let fNorm = normalizeDateKey(fromVal);
+    let tNorm = normalizeDateKey(toVal);
+
+    if (!fNorm && !tNorm) {
+      store.customFromDate = '';
+      store.customToDate = '';
+      try {
+        localStorage.removeItem(FROM_DATE_KEY);
+        localStorage.removeItem(TO_DATE_KEY);
+      } catch (e) {}
+      window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
+      return;
+    }
+
+    if (fNorm && !tNorm) tNorm = fNorm;
+    if (!fNorm && tNorm) fNorm = tNorm;
+    if (fNorm > tNorm) {
+      const tmp = fNorm;
+      fNorm = tNorm;
+      tNorm = tmp;
+    }
+
+    store.customFromDate = fNorm;
+    store.customToDate = tNorm;
+    try {
+      localStorage.setItem(FROM_DATE_KEY, fNorm);
+      localStorage.setItem(TO_DATE_KEY, tNorm);
+    } catch (e) {}
+
+    window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
+    if (window.showToast) {
+      window.showToast('success', `📅 Đã cố định khoảng thời gian Overtime: ${formatDateDisplay(fNorm)} → ${formatDateDisplay(tNorm)} (giữ nguyên khi tải lại trang)!`);
+    }
+  };
 
   /**
    * Chuyển đổi công đoạn cần lập kế hoạch điều chỉnh
@@ -1133,17 +1225,19 @@
     });
 
     const historyCount = (store.history || []).length;
+    const activeFromIso = store.customFromDate || (dates.length > 0 ? normalizeDateKey(dates[0]) : '');
+    const activeToIso = store.customToDate || (dates.length > 0 ? normalizeDateKey(dates[dates.length - 1]) : '');
 
     let html = `
       <div class="section-card assembly-adjustment-card" id="assemblyAdjustmentSectionCard" style="border: 1px solid rgba(245, 158, 11, 0.35); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);">
-        <!-- Header Row: Tiêu đề sửa thành KẾ HOẠCH ĐIỀU CHỈNH OVERTIME + Chọn công đoạn bên cạnh -->
+        <!-- Header Row: Tiêu đề + Chọn công đoạn + Chọn khoảng ngày cố định + Thu gọn -->
         <div class="section-header-row" style="flex-wrap: wrap; gap: 0.65rem; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08)); padding-bottom: 0.75rem;">
           <div class="section-title-wrap" style="display: flex; align-items: center; gap: 0.65rem;">
             <div class="section-icon-badge" style="background: rgba(245, 158, 11, 0.18); border-color: rgba(245, 158, 11, 0.45); color: #fbbf24; font-size: 1.25rem;">
               ⚡
             </div>
             <div>
-              <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 0.55rem; flex-wrap: wrap;">
                 <h2 style="font-size: 1.05rem; font-weight: 800; color: #f8fafc; margin: 0; letter-spacing: -0.01em;">
                   📋 KẾ HOẠCH ĐIỀU CHỈNH OVERTIME
                 </h2>
@@ -1156,6 +1250,19 @@
                       <option value="${stKey}" ${stKey === activeStageId ? 'selected' : ''}>${STAGE_CONFIGS[stKey].name}</option>
                     `).join('')}
                   </select>
+                </div>
+
+                <!-- BỘ CHỌN KHOẢNG NGÀY RIÊNG (CỐ ĐỊNH KHÔNG ĐỔI KHI WEB REFRESH) -->
+                <div class="adj-date-range-picker" style="display: inline-flex; align-items: center; gap: 0.35rem; background: rgba(15, 23, 42, 0.9); padding: 0.18rem 0.55rem; border-radius: 8px; border: 1px solid rgba(96, 165, 250, 0.4); font-size: 0.75rem; color: #e2e8f0;" title="Chọn khoảng thời gian riêng cho Kế Hoạch Điều Chỉnh Overtime — giữ nguyên cố định khi web refresh">
+                  <span style="font-weight: 800; color: #60a5fa;">📅 Ngày:</span>
+                  <span style="font-weight: 600; color: #cbd5e1;">Từ</span>
+                  <input type="date" id="adjFromDateInput" value="${activeFromIso}"
+                         onchange="window.handleAdjustmentDateRangeChange(this.value, document.getElementById('adjToDateInput')?.value)"
+                         style="padding: 0.16rem 0.45rem; font-size: 0.75rem; font-weight: 700; border-radius: 6px; background: #0f172a; border: 1px solid rgba(148, 163, 184, 0.45); color: #f8fafc; cursor: pointer; outline: none; color-scheme: dark;" />
+                  <span style="font-weight: 600; color: #cbd5e1;">Đến</span>
+                  <input type="date" id="adjToDateInput" value="${activeToIso}"
+                         onchange="window.handleAdjustmentDateRangeChange(document.getElementById('adjFromDateInput')?.value, this.value)"
+                         style="padding: 0.16rem 0.45rem; font-size: 0.75rem; font-weight: 700; border-radius: 6px; background: #0f172a; border: 1px solid rgba(148, 163, 184, 0.45); color: #f8fafc; cursor: pointer; outline: none; color-scheme: dark;" />
                 </div>
 
                 <button type="button" class="btn-filter-toggle" onclick="window.toggleAssemblyAdjustmentCollapse()" style="font-size: 0.75rem; padding: 0.2rem 0.6rem;" title="Thu gọn hoặc Mở rộng Bảng Điều Chỉnh">
@@ -1175,7 +1282,7 @@
 
             <!-- Ngày lập Plan -->
             <button type="button" class="btn btn-secondary" onclick="window.handleEditAssemblyAdjPlanDate()" style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 6px; background: rgba(15, 23, 42, 0.8); cursor: pointer;" title="Bấm để chỉnh sửa Ngày lập Plan">
-              <span>📅 Ngày lập: <strong id="adjPlanDateBadge" style="color: #38bdf8;">${escapeHtml(store.planDate)}</strong></span>
+              <span>📅 Ngày lập: <strong id="adjPlanDateBadge" style="color: #38bdf8;">${escapeHtml(shortenYear26(store.planDate))}</strong></span>
               <span style="font-size: 0.65rem; opacity: 0.8;">✏️</span>
             </button>
 
@@ -1232,20 +1339,22 @@
           <div class="table-container assembly-adj-scroll-wrap" style="overflow: auto; max-height: 620px; border: 1px solid var(--border-glass, #334155); border-radius: 8px;">
             <table class="data-table assembly-adj-table" id="assemblyAdjustmentTable" style="width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.8rem;">
               <thead>
-                <!-- HEADER DUY NHẤT GỘP NGÀY - CA - KÍP & ĐÓNG BĂNG CỐ ĐỊNH Ở ĐỈNH BẢNG (top: 0) -->
+                <!-- HEADER DUY NHẤT GỘP 2 DÒNG GỌN (DD/MM/26 + Day/Night - Kíp) & ĐÓNG BĂNG CỐ ĐỊNH Ở ĐỈNH BẢNG (top: 0) -->
                 <tr class="adj-header-shift-row" style="background: var(--bg-card-solid, #1e293b);">
-                  <th class="sticky-col-header" style="position: sticky; top: 0; left: 0; z-index: 35; background: var(--bg-card-solid, #1e293b); color: #f8fafc; font-weight: 800; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); text-align: left; padding: 0.45rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; height: 36px; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: none;">
+                  <th class="sticky-col-header" style="position: sticky; top: 0; left: 0; z-index: 35; background: var(--bg-card-solid, #1e293b); color: #f8fafc; font-weight: 800; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); text-align: left; padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; height: 42px; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: none;">
                     📅 CA SẢN XUẤT
                   </th>
                   <!-- CỘT TỔNG CỘNG: CỐ ĐỊNH BÊN TRÁI CẠNH CỘT 1 -->
-                  <th class="sticky-col-summary-header" style="position: sticky; top: 0; left: 220px; z-index: 34; background: #0f172a; color: #fbbf24; font-weight: 900; font-size: 0.72rem; text-align: center; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.4rem 0.25rem; min-width: 75px; max-width: 75px; width: 75px; height: 36px; box-sizing: border-box; box-shadow: 4px 0 10px rgba(0,0,0,0.25); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: none;">
-                    TỔNG (${colsData.length})
+                  <th class="sticky-col-summary-header" style="position: sticky; top: 0; left: 220px; z-index: 34; background: #0f172a; color: #fbbf24; font-weight: 900; font-size: 0.72rem; text-align: center; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.3rem 0.2rem; min-width: 75px; max-width: 75px; width: 75px; height: 42px; box-sizing: border-box; box-shadow: 4px 0 10px rgba(0,0,0,0.25); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: none;">
+                    <div style="line-height: 1.25;">TỔNG</div>
+                    <div style="line-height: 1.25; font-size: 0.68rem;">(${colsData.length} ca)</div>
                   </th>
                   ${colsData.map(cd => {
                     const isDay = cd.shift === 'Day';
                     return `
-                      <th style="position: sticky; top: 0; z-index: 25; background: var(--bg-card-solid, #1e293b); color: #f8fafc; font-weight: 800; font-size: 0.75rem; text-align: center; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.4rem 0.5rem; min-width: 122px; height: 36px; box-sizing: border-box; white-space: nowrap; text-transform: none;" title="Ngày ${formatDateDisplay(cd.dateStr)} • Ca ${cd.shift} • Kíp ${cd.kip}">
-                        <span>${formatDateDisplay(cd.dateStr)}</span> - <span style="color: ${isDay ? '#fbbf24' : '#c084fc'};">${cd.shift}</span> - <span style="color: #fde047;">${cd.kip}</span>
+                      <th style="position: sticky; top: 0; z-index: 25; background: var(--bg-card-solid, #1e293b); color: #f8fafc; font-weight: 800; font-size: 0.73rem; text-align: center; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.25rem 0.3rem; min-width: 68px; height: 42px; box-sizing: border-box; white-space: nowrap; text-transform: none; line-height: 1.25;" title="Ngày ${formatDateDisplay(cd.dateStr)} • Ca ${cd.shift} • Kíp ${cd.kip}">
+                        <div style="line-height: 1.25;">${formatDateDisplay(cd.dateStr)}</div>
+                        <div style="line-height: 1.25;"><span style="color: ${isDay ? '#fbbf24' : '#c084fc'};">${cd.shift}</span> - <span style="color: #fde047;">${cd.kip}</span></div>
                       </th>
                     `;
                   }).join('')}
@@ -1557,11 +1666,11 @@
    */
   window.handleEditAssemblyAdjPlanDate = function() {
     const store = window.AssemblyAdjustmentStore;
-    const current = store.planDate || getTodayFormatted();
-    const newDate = window.prompt('Nhập Ngày lập Plan (DD/MM/YYYY):', current);
+    const current = shortenYear26(store.planDate || getTodayFormatted());
+    const newDate = window.prompt('Nhập Ngày lập Plan (DD/MM/YY):', current);
     if (newDate !== null) {
       const clean = newDate.trim();
-      const finalDate = clean || getTodayFormatted();
+      const finalDate = shortenYear26(clean || getTodayFormatted());
       store.planDate = finalDate;
       localStorage.setItem(PLAN_DATE_KEY, finalDate);
       window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
@@ -1572,7 +1681,7 @@
   };
 
   /**
-   * Lưu Tạm Kế Hoạch Điều Chỉnh (bảo toàn 100% khi web refresh / F5)
+   * Lưu Tạm Kế Hoạch Điều Chỉnh (bảo toàn 100% cả OT lẫn khoảng ngày khi web refresh / F5)
    */
   window.handleSaveAssemblyAdjDraft = function() {
     const store = window.AssemblyAdjustmentStore;
@@ -1580,7 +1689,20 @@
     store.otMap = saveStoredOtMap(store.otMap, currentStage);
     localStorage.setItem(SELECTED_STAGE_KEY, currentStage);
     localStorage.setItem(PLANNER_KEY, store.plannerName || 'Lê Ngọc Duy GLD');
-    localStorage.setItem(PLAN_DATE_KEY, store.planDate || getTodayFormatted());
+    localStorage.setItem(PLAN_DATE_KEY, shortenYear26(store.planDate || getTodayFormatted()));
+
+    const activeDates = resolveAdjustmentDates(window.__LATEST_SCHEDULE__);
+    const saveFrom = store.customFromDate || (activeDates.length > 0 ? normalizeDateKey(activeDates[0]) : '');
+    const saveTo = store.customToDate || (activeDates.length > 0 ? normalizeDateKey(activeDates[activeDates.length - 1]) : '');
+    if (saveFrom && saveTo) {
+      store.customFromDate = saveFrom;
+      store.customToDate = saveTo;
+      try {
+        localStorage.setItem(FROM_DATE_KEY, saveFrom);
+        localStorage.setItem(TO_DATE_KEY, saveTo);
+      } catch (e) {}
+    }
+
     markLocalDraftModified();
 
     let draftOtCount = 0;
@@ -1626,15 +1748,29 @@
       if (Array.isArray(arr)) otCount += arr.length;
     });
 
+    const activeDates = resolveAdjustmentDates(window.__LATEST_SCHEDULE__);
+    const saveFrom = store.customFromDate || (activeDates.length > 0 ? normalizeDateKey(activeDates[0]) : '');
+    const saveTo = store.customToDate || (activeDates.length > 0 ? normalizeDateKey(activeDates[activeDates.length - 1]) : '');
+    if (saveFrom && saveTo) {
+      store.customFromDate = saveFrom;
+      store.customToDate = saveTo;
+      try {
+        localStorage.setItem(FROM_DATE_KEY, saveFrom);
+        localStorage.setItem(TO_DATE_KEY, saveTo);
+      } catch (e) {}
+    }
+
     const record = {
       id: planId,
       stage: currentStage,
       stageName: STAGE_CONFIGS[currentStage]?.name || currentStage,
       planner: store.plannerName || 'Lê Ngọc Duy GLD',
-      planDate: store.planDate || getTodayFormatted(),
+      planDate: shortenYear26(store.planDate || getTodayFormatted()),
+      customFromDate: saveFrom,
+      customToDate: saveTo,
       completedAt: now.toISOString(),
       timeStr: now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
-      dateStr: now.toLocaleDateString('vi-VN'),
+      dateStr: shortenYear26(now.toLocaleDateString('vi-VN')),
       otCount,
       otMap: JSON.parse(JSON.stringify(store.otMap || {})),
       allStagesOtMap,
@@ -1775,7 +1911,7 @@
                       <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-weight: 800; font-size: 0.72rem;">#${history.length - idx}</span>
                       <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; font-weight: 700; font-size: 0.72rem;">${escapeHtml(h.stageName || h.stage || 'ASSEMBLY')}</span>
                       <strong style="color: #fbbf24; font-size: 0.88rem;">👤 ${escapeHtml(h.planner || 'User')}</strong>
-                      <span style="color: var(--text-muted); font-size: 0.78rem;">📅 ${escapeHtml(h.planDate || h.dateStr)} lúc ${h.timeStr || ''}</span>
+                      <span style="color: var(--text-muted); font-size: 0.78rem;">📅 ${escapeHtml(shortenYear26(h.planDate || h.dateStr))} lúc ${h.timeStr || ''}</span>
                     </div>
                     <div style="font-size: 0.78rem; color: #94a3b8; margin-top: 0.25rem;">
                       ⚡ Tổng cộng: <strong style="color: #fde047;">${h.otCount || 0} ca OT</strong> đã bố trí
@@ -1808,7 +1944,7 @@
     const found = (store.history || []).find(h => h.id === planId);
     if (!found) return;
 
-    if (!confirm(`Bạn có chắc chắn muốn khôi phục bản kế hoạch của [${found.planner}] lập ngày ${found.planDate || found.dateStr}?`)) return;
+    if (!confirm(`Bạn có chắc chắn muốn khôi phục bản kế hoạch của [${found.planner}] lập ngày ${shortenYear26(found.planDate || found.dateStr)}?`)) return;
 
     const restoredStage = found.stage || DEFAULT_STAGE;
     store.selectedStage = restoredStage;
@@ -1829,8 +1965,16 @@
     store.plannerName = found.planner;
     localStorage.setItem(PLANNER_KEY, found.planner);
     if (found.planDate) {
-      store.planDate = found.planDate;
-      localStorage.setItem(PLAN_DATE_KEY, found.planDate);
+      store.planDate = shortenYear26(found.planDate);
+      localStorage.setItem(PLAN_DATE_KEY, store.planDate);
+    }
+    if (found.customFromDate && found.customToDate) {
+      store.customFromDate = normalizeDateKey(found.customFromDate);
+      store.customToDate = normalizeDateKey(found.customToDate);
+      try {
+        localStorage.setItem(FROM_DATE_KEY, store.customFromDate);
+        localStorage.setItem(TO_DATE_KEY, store.customToDate);
+      } catch (e) {}
     }
 
     const modal = document.getElementById('assemblyAdjHistoryModal');

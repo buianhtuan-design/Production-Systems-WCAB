@@ -878,7 +878,7 @@ window.updateFilterCompactSummary = function() {
 
   summaryElem.innerHTML = `
     <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
-      <span class="badge badge-blue">📅 ${from} → ${to}</span>
+      <span class="badge badge-blue">📅 ${String(from).replace(/\/20(\d{2})\b/g, '/$1').replace(/\b20(\d{2})-/g, '$1-')} → ${String(to).replace(/\/20(\d{2})\b/g, '/$1').replace(/\b20(\d{2})-/g, '$1-')}</span>
       <span class="badge badge-purple">${stageText}</span>
       <span class="badge badge-amber">${shiftText}</span>
     </div>
@@ -2044,7 +2044,7 @@ function renderDataMassView() {
               ${rot.day}/${rot.night}
             </span>
           </div>
-          <span class="day-date" style="${isWeekend ? 'color: #fde68a; font-weight: 700;' : ''}">${dateStr}</span>
+          <span class="day-date" style="${isWeekend ? 'color: #fde68a; font-weight: 700;' : ''}">${String(dateStr).replace(/\/20(\d{2})\b/g, '/$1').replace(/\b20(\d{2})-/g, '$1-')}</span>
         </label>
       </th>
     `;
