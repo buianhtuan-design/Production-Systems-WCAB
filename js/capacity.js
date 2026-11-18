@@ -1203,6 +1203,70 @@
     return (a.group || '').localeCompare(b.group || '');
   }
 
+  /**
+   * Sắp xếp hiển thị gom theo dòng Group Model (giữ nguyên tầng ưu tiên Âm luỹ kế -> Ngày hiện tại -> Khác)
+   * Mục đích: Gom các model cùng Group Model nằm liền nhau để dễ sắp xếp kế hoạch sản xuất chung chuyền/TB.
+   */
+  function compareGroupModelDisplayRows(
+    aGroup, aGap, aPlanMeta, aPlanQty, aModel1c, aTieNum,
+    bGroup, bGap, bPlanMeta, bPlanQty, bModel1c, bTieNum
+  ) {
+    const aTier = getPlanningPriorityTier(aGap, aPlanMeta);
+    const bTier = getPlanningPriorityTier(bGap, bPlanMeta);
+    if (aTier !== bTier) return aTier - bTier;
+
+    const gA = String(aGroup || '').trim();
+    const gB = String(bGroup || '').trim();
+    const gCmp = gA.localeCompare(gB, 'vi', { sensitivity: 'base', numeric: true });
+    if (gCmp !== 0) return gCmp;
+
+    if (aGap < 0 && bGap < 0 && aGap !== bGap) {
+      return aGap - bGap;
+    }
+    if (bPlanQty !== aPlanQty) {
+      return bPlanQty - aPlanQty;
+    }
+    const mCmp = String(aModel1c || '').trim().localeCompare(String(bModel1c || '').trim(), 'vi', { sensitivity: 'base', numeric: true });
+    if (mCmp !== 0) return mCmp;
+    return aTieNum - bTieNum;
+  }
+
+  function compareAssemblyDisplayByGroupModel(a, b) {
+    const aIt = a.it || a;
+    const bIt = b.it || b;
+    return compareGroupModelDisplayRows(
+      aIt.model || '',
+      Number(aIt.cumGapQty || 0),
+      a.planMeta || a._prePlanMeta,
+      Number(aIt.cumPlanQty || 0),
+      aIt.productName1C || '',
+      a.idx || 0,
+      bIt.model || '',
+      Number(bIt.cumGapQty || 0),
+      b.planMeta || b._prePlanMeta,
+      Number(bIt.cumPlanQty || 0),
+      bIt.productName1C || '',
+      b.idx || 0
+    );
+  }
+
+  function compareHardtestDisplayByGroupModel(a, b) {
+    return compareGroupModelDisplayRows(
+      a.normGroup || a.group || '',
+      Number(a.gapQty || 0),
+      a.planMeta,
+      Number(a.planQty || 0),
+      a.model1c || '',
+      a.idx || 0,
+      b.normGroup || b.group || '',
+      Number(b.gapQty || 0),
+      b.planMeta,
+      Number(b.planQty || 0),
+      b.model1c || '',
+      b.idx || 0
+    );
+  }
+
   function hasLiveManualPlanOverride(rowKey, moduleType) {
     if (!window.AppStore) return false;
     if (moduleType === 'TOTAL_HARDTEST') {
@@ -2490,6 +2554,12 @@
       if (r.nightAvailHours) grandNightAvailHours += r.nightAvailHours;
       if (r.planNight) grandPlanNight += r.planNight;
       if (r.finalShortage) grandFinalShortage += r.finalShortage;
+    });
+
+    // Sắp xếp hiển thị gom các model cùng Group Model liền nhau (giữ nguyên ưu tiên Âm luỹ kế & bảo toàn 100% số liệu đã tính)
+    processedRows.sort(compareAssemblyDisplayByGroupModel);
+    processedRows.forEach((r, newIdx) => {
+      r.idx = newIdx;
     });
 
     // Cache processed rows for Google Sheets export and Sequence modal
@@ -4133,8 +4203,8 @@
       );
     }
 
-    // 6. Sorting: Ưu tiên Model Âm luỹ kế lên đầu, tiếp theo đến các Model thiếu hụt ngày hiện tại (âm nhiều nhất lên trước)
-    filteredRows.sort(compareHardtestPriorityRows);
+    // 6. Sorting: Ưu tiên Model Âm luỹ kế lên đầu, gom nhóm theo Group Model (cùng dòng xếp liền nhau) để dễ lập kế hoạch sản xuất
+    filteredRows.sort(compareHardtestDisplayByGroupModel);
 
     // 7. Re-index STT & accumulate grand totals for filtered rows
     let grandPlan = 0;
