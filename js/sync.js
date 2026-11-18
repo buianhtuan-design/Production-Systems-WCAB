@@ -9,6 +9,7 @@ const DEFAULT_CONFIG = {
   htGid: '136756709',   // HT Form (Hoan Thien & Packaging)
   fttGid: '954480354',  // FTT & Quality Testing
   dataMassGid: '1404131818', // Data_Mass Master Production Schedule
+  manpowerGid: '1491986705', // Man-SFPD Live Manpower
   autoSyncMinutes: 2,   // 2 mins continuous auto-sync
   autoSyncEnabled: true,
   configVersion: 2
@@ -195,6 +196,15 @@ window.SyncService = {
     if (window.AppStore && window.ASSEMBLY_CAPACITY_DATA) {
       window.AppStore.assemblyCapacity = window.ASSEMBLY_CAPACITY_DATA;
     }
+    try {
+      const mpRes = await fetch('manpower_data.json?t=' + Date.now(), { cache: 'no-store' });
+      if (mpRes && mpRes.ok) {
+        const mpJson = await mpRes.json();
+        if (mpJson && mpJson.A && Array.isArray(mpJson.A.lines) && mpJson.A.lines.length > 0) {
+          window.MANPOWER_MASTER_DATA = mpJson;
+        }
+      }
+    } catch (e) {}
     return results[0];
   },
 
@@ -417,7 +427,23 @@ window.SyncService = {
         console.warn('Data_Mass sync error:', dmErr);
       }
 
-      if (!parsedDataMass && !parsedAsData && !parsedHtData && !parsedFttData) {
+      // Fetch Man-SFPD Live Manpower (Shift A/B/C/D theo kíp & Hành chính theo Line hành chính)
+      let parsedManpower = null;
+      try {
+        const mpGid = this.config.manpowerGid || DEFAULT_CONFIG.manpowerGid;
+        if (mpGid) {
+          const mpCSV = await this.fetchSheetCSV(mpGid);
+          const mpRows = this.parseCSV(mpCSV);
+          parsedManpower = this.parseManpowerSFPD(mpRows);
+          if (parsedManpower && parsedManpower.A && Array.isArray(parsedManpower.A.lines) && parsedManpower.A.lines.length > 0) {
+            window.MANPOWER_MASTER_DATA = parsedManpower;
+          }
+        }
+      } catch (mpErr) {
+        console.warn('Man-SFPD live sync error:', mpErr);
+      }
+
+      if (!parsedDataMass && !parsedAsData && !parsedHtData && !parsedFttData && !parsedManpower) {
         throw new Error('Không thể tải dữ liệu trực tiếp từ Google Sheets');
       }
 
@@ -431,12 +457,16 @@ window.SyncService = {
         fttStats: parsedFttData,
         dataMass: parsedDataMass
       });
+      if (parsedManpower && window.AppStore && typeof window.AppStore.notify === 'function') {
+        window.AppStore.notify();
+      }
       this.refreshVisibleModulesAfterSync();
 
       this.updateStatusUI('online', `Đã đồng bộ ${this.formatTime(this.lastSyncTime)}`);
       if (!silent && window.showToast) {
         const dmCount = parsedDataMass && Array.isArray(parsedDataMass.items) ? parsedDataMass.items.length : 0;
-        window.showToast('success', dmCount > 0 ? `Đồng bộ trực tiếp Google Sheets thành công (${dmCount} models)!` : 'Đồng bộ Google Sheets thành công!');
+        const mpNote = parsedManpower ? ' + Man-SFPD' : '';
+        window.showToast('success', dmCount > 0 ? `Đồng bộ trực tiếp Google Sheets thành công (${dmCount} models${mpNote})!` : `Đồng bộ Google Sheets${mpNote} thành công!`);
       }
     } catch (err) {
       console.warn('Sync error:', err);
@@ -447,6 +477,139 @@ window.SyncService = {
     } finally {
       this.isSyncing = false;
     }
+  },
+
+  // Parse Man-SFPD (Live Manpower by Shift A/B/C/D and Hành Chính HC)
+  parseManpowerSFPD(rows) {
+    if (!rows || rows.length < 10) return null;
+    const parseNum = (v) => {
+      if (v === null || v === undefined || v === '') return 0;
+      const n = parseFloat(String(v).trim().replace(/,/g, ''));
+      return isNaN(n) ? 0 : n;
+    };
+
+    const rowsByLabel = {};
+    let rowLine = null;
+    for (let i = 0; i < rows.length; i++) {
+      const r = rows[i] || [];
+      for (let c = 0; c < Math.min(5, r.length); c++) {
+        const lbl = (r[c] || '').trim();
+        if (lbl) {
+          if (lbl === 'Line' && !rowLine) rowLine = r;
+          if (!rowsByLabel[lbl]) rowsByLabel[lbl] = r;
+        }
+      }
+    }
+    if (!rowLine) return null;
+
+    const rowDirect = rowsByLabel['Nhân Lực Trực Tiếp'] || [];
+    const rowTotal  = rowsByLabel['TOTAL'] || [];
+    const rowLeader = rowsByLabel['SFPD Line Leader'] || [];
+    const rowFeeder = rowsByLabel['Line Feeder'] || [];
+    const rowCr     = rowsByLabel['Cleanroom Operator'] || [];
+    const rowHtOp   = rowsByLabel['Hard Test Operator'] || [];
+
+    const makeShift = (code, name, extra) => Object.assign({
+      shift: code,
+      name,
+      lines: [],
+      assyDirect: 0,
+      assyTotal: 0,
+      assyLinesDirect: {},
+      assyLinesTotal: {},
+      htDirect: 0,
+      htTotal: 0,
+      htBreakdown: { cleanroom: 0, operator: 0, feeder: 0, leader: 0 }
+    }, extra || {});
+
+    const result = {
+      A: makeShift('A', 'Shift A'),
+      B: makeShift('B', 'Shift B'),
+      C: makeShift('C', 'Shift C'),
+      D: makeShift('D', 'Shift D'),
+      HC: makeShift('HC', 'Hành Chính', { workShift: 'Day', workingDays: 'Mon-Fri' })
+    };
+
+    let currentSection = 'A';
+    for (let colIdx = 2; colIdx < rowLine.length; colIdx++) {
+      const header = (rowLine[colIdx] || '').trim();
+      const headerClean = header.replace(/\s+/g, ' ').toLowerCase();
+
+      if (headerClean.includes('shift a') || headerClean.includes('kíp a')) {
+        currentSection = 'B';
+        continue;
+      } else if (headerClean.includes('shift b') || headerClean.includes('kíp b')) {
+        currentSection = 'C';
+        continue;
+      } else if (headerClean.includes('shift c') || headerClean.includes('kíp c')) {
+        currentSection = 'D';
+        continue;
+      } else if (headerClean.includes('shift d') || headerClean.includes('kíp d')) {
+        currentSection = 'HC';
+        continue;
+      } else if (headerClean.includes('hành chính') || headerClean === 'hc') {
+        currentSection = 'HC';
+        const dVal = parseNum(rowDirect[colIdx]);
+        const tVal = parseNum(rowTotal[colIdx]);
+        if (dVal > 0 || tVal > 0) {
+          result.HC.assyDirect = dVal;
+          result.HC.assyTotal = tVal;
+          if (!result.HC.lines.includes('HC')) result.HC.lines.push('HC');
+          result.HC.assyLinesDirect.HC = dVal;
+          result.HC.assyLinesTotal.HC = tVal;
+        }
+        continue;
+      }
+
+      if (!header) continue;
+
+      const dVal = parseNum(rowDirect[colIdx]);
+      const tVal = parseNum(rowTotal[colIdx]);
+
+      if (headerClean.includes('hard test')) {
+        if (['A', 'B', 'C', 'D'].includes(currentSection)) {
+          result[currentSection].htDirect = dVal;
+          result[currentSection].htTotal = tVal;
+          result[currentSection].htBreakdown = {
+            cleanroom: parseNum(rowCr[colIdx]),
+            operator: parseNum(rowHtOp[colIdx]),
+            feeder: parseNum(rowFeeder[colIdx]),
+            leader: parseNum(rowLeader[colIdx])
+          };
+        }
+        continue;
+      }
+
+      if (headerClean.includes('assembly') || headerClean.includes('line')) {
+        const parts = header.split(/\s+/);
+        const lineId = (parts.length > 0 ? parts[parts.length - 1] : header).toUpperCase();
+        let targetShift = currentSection;
+        if (currentSection === 'HC' || headerClean.includes('hành chính') || headerClean.includes('hc')) {
+          targetShift = 'HC';
+        } else if (lineId.endsWith('A') && currentSection === 'A') {
+          targetShift = 'A';
+        } else if (lineId.endsWith('B') && currentSection === 'B') {
+          targetShift = 'B';
+        } else if (lineId.endsWith('C') && currentSection === 'C') {
+          targetShift = 'C';
+        } else if (lineId.endsWith('D') && currentSection === 'D') {
+          targetShift = 'D';
+        }
+
+        if (result[targetShift]) {
+          if (!result[targetShift].lines.includes(lineId)) {
+            result[targetShift].lines.push(lineId);
+          }
+          result[targetShift].assyLinesDirect[lineId] = dVal;
+          result[targetShift].assyLinesTotal[lineId] = tVal;
+          result[targetShift].assyDirect += dVal;
+          result[targetShift].assyTotal += tVal;
+        }
+      }
+    }
+
+    if (!result.A.lines.length) return null;
+    return result;
   },
 
   // Parse Master Schedule (Data_Mass)

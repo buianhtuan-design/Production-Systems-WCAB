@@ -1160,11 +1160,11 @@ const OFFICIAL_MODELS_1022 = [
 
 // Global Master Data & Shift Rotation Logic
 window.MANPOWER_MASTER_DATA = window.MANPOWER_MASTER_DATA || {
-  'A': { shift: 'A', name: 'Shift A', assyDirect: 43, assyTotal: 58, htDirect: 21, htTotal: 23, assyLinesDirect: { '1A': 15, '2A': 14, '3A': 14 }, assyLinesTotal: { '1A': 20, '2A': 19, '3A': 19 }, htBreakdown: { cleanroom: 3, operator: 18, feeder: 1, leader: 1 } },
-  'B': { shift: 'B', name: 'Shift B', assyDirect: 29, assyTotal: 39, htDirect: 23, htTotal: 25, assyLinesDirect: { '1B': 14, '2B': 15 }, assyLinesTotal: { '1B': 19, '2B': 20 }, htBreakdown: { cleanroom: 4, operator: 19, feeder: 1, leader: 1 } },
-  'C': { shift: 'C', name: 'Shift C', assyDirect: 41, assyTotal: 56, htDirect: 23, htTotal: 25, assyLinesDirect: { '1C': 14, '2C': 14, '3C': 13 }, assyLinesTotal: { '1C': 19, '2C': 19, '3C': 18 }, htBreakdown: { cleanroom: 2, operator: 21, feeder: 1, leader: 1 } },
-  'D': { shift: 'D', name: 'Shift D', assyDirect: 27, assyTotal: 37, htDirect: 23, htTotal: 25, assyLinesDirect: { '1D': 14, '2D': 13 }, assyLinesTotal: { '1D': 19, '2D': 18 }, htBreakdown: { cleanroom: 4, operator: 19, feeder: 1, leader: 1 } },
-  'HC': { shift: 'HC', name: 'Hành Chính', lines: ['3D'], assyDirect: 11, assyTotal: 16, htDirect: 0, htTotal: 0, assyLinesDirect: { '3D': 11 }, assyLinesTotal: { '3D': 16 }, htBreakdown: { cleanroom: 0, operator: 0, feeder: 0, leader: 0 }, workShift: 'Day', workingDays: 'Mon-Fri' }
+  'A': { shift: 'A', name: 'Shift A', assyDirect: 42.0, assyTotal: 57.0, htDirect: 24.0, htTotal: 26.0, assyLinesDirect: { '1A': 14.0, '2A': 14.0, '3A': 14.0 }, assyLinesTotal: { '1A': 19.0, '2A': 19.0, '3A': 19.0 }, htBreakdown: { cleanroom: 3.0, operator: 20.0, feeder: 2.0, leader: 1.0 } },
+  'B': { shift: 'B', name: 'Shift B', assyDirect: 42.0, assyTotal: 57.0, htDirect: 25.0, htTotal: 27.0, assyLinesDirect: { '1B': 14.0, '2B': 14.0, '3B': 14.0 }, assyLinesTotal: { '1B': 19.0, '2B': 19.0, '3B': 19.0 }, htBreakdown: { cleanroom: 4.0, operator: 21.0, feeder: 1.0, leader: 1.0 } },
+  'C': { shift: 'C', name: 'Shift C', assyDirect: 42.0, assyTotal: 57.0, htDirect: 26.0, htTotal: 28.0, assyLinesDirect: { '1C': 14.0, '2C': 14.0, '3C': 14.0 }, assyLinesTotal: { '1C': 19.0, '2C': 19.0, '3C': 19.0 }, htBreakdown: { cleanroom: 2.0, operator: 24.0, feeder: 1.0, leader: 1.0 } },
+  'D': { shift: 'D', name: 'Shift D', assyDirect: 42.0, assyTotal: 57.0, htDirect: 23.0, htTotal: 25.0, assyLinesDirect: { '1D': 14.0, '2D': 14.0, '3D': 14.0 }, assyLinesTotal: { '1D': 19.0, '2D': 19.0, '3D': 19.0 }, htBreakdown: { cleanroom: 4.0, operator: 19.0, feeder: 1.0, leader: 1.0 } },
+  'HC': { shift: 'HC', name: 'Hành Chính', lines: [], assyDirect: 0.0, assyTotal: 0.0, htDirect: 0.0, htTotal: 0.0, assyLinesDirect: {}, assyLinesTotal: {}, htBreakdown: { cleanroom: 0.0, operator: 0.0, feeder: 0.0, leader: 0.0 }, workShift: 'Day', workingDays: 'Mon-Fri' }
 };
 
 // Nạp cấu hình Kíp Line tuỳ chỉnh đã lưu từ localStorage nếu có
@@ -1966,11 +1966,11 @@ class Store {
       : { day: 'A', night: 'B', off: ['C', 'D'] };
 
     const defaultMp = {
-      'A': { assyDirect: 43, assyTotal: 58, htDirect: 21, htTotal: 23, assyLinesDirect: { '1A': 15, '2A': 14, '3A': 14 }, htBreakdown: { cleanroom: 3, operator: 18, feeder: 1, leader: 1 } },
-      'B': { assyDirect: 29, assyTotal: 39, htDirect: 23, htTotal: 25, assyLinesDirect: { '1B': 14, '2B': 15 }, htBreakdown: { cleanroom: 4, operator: 19, feeder: 1, leader: 1 } },
-      'C': { assyDirect: 41, assyTotal: 56, htDirect: 23, htTotal: 25, assyLinesDirect: { '1C': 14, '2C': 14, '3C': 13 }, htBreakdown: { cleanroom: 2, operator: 21, feeder: 1, leader: 1 } },
-      'D': { assyDirect: 27, assyTotal: 37, htDirect: 23, htTotal: 25, assyLinesDirect: { '1D': 14, '2D': 13 }, htBreakdown: { cleanroom: 4, operator: 19, feeder: 1, leader: 1 } },
-      'HC': { assyDirect: 11, assyTotal: 16, htDirect: 0, htTotal: 0, assyLinesDirect: { '3D': 11 }, assyLinesTotal: { '3D': 16 }, lines: ['3D'], workShift: 'Day', workingDays: 'Mon-Fri' }
+      'A': { assyDirect: 42.0, assyTotal: 57.0, htDirect: 24.0, htTotal: 26.0, assyLinesDirect: { '1A': 14.0, '2A': 14.0, '3A': 14.0 }, htBreakdown: { cleanroom: 3.0, operator: 20.0, feeder: 2.0, leader: 1.0 } },
+      'B': { assyDirect: 42.0, assyTotal: 57.0, htDirect: 25.0, htTotal: 27.0, assyLinesDirect: { '1B': 14.0, '2B': 14.0, '3B': 14.0 }, htBreakdown: { cleanroom: 4.0, operator: 21.0, feeder: 1.0, leader: 1.0 } },
+      'C': { assyDirect: 42.0, assyTotal: 57.0, htDirect: 26.0, htTotal: 28.0, assyLinesDirect: { '1C': 14.0, '2C': 14.0, '3C': 14.0 }, htBreakdown: { cleanroom: 2.0, operator: 24.0, feeder: 1.0, leader: 1.0 } },
+      'D': { assyDirect: 42.0, assyTotal: 57.0, htDirect: 23.0, htTotal: 25.0, assyLinesDirect: { '1D': 14.0, '2D': 14.0, '3D': 14.0 }, htBreakdown: { cleanroom: 4.0, operator: 19.0, feeder: 1.0, leader: 1.0 } },
+      'HC': { assyDirect: 0.0, assyTotal: 0.0, htDirect: 0, htTotal: 0, assyLinesDirect: {}, assyLinesTotal: {}, lines: [], workShift: 'Day', workingDays: 'Mon-Fri' }
     };
 
     const hasLiveMp = window.MANPOWER_MASTER_DATA && Object.keys(window.MANPOWER_MASTER_DATA).length > 0 && window.MANPOWER_MASTER_DATA['A'];
@@ -1987,10 +1987,10 @@ class Store {
     }
     const isWeekday = targetDate && !isNaN(targetDate.getTime()) && (targetDate.getDay() >= 1 && targetDate.getDay() <= 5);
 
-    // Nhóm Hành Chính: Line 3D (Trực tiếp: 11, Gross: 16) - Chỉ làm Ca Ngày từ Thứ 2 đến Thứ 6
+    // Nhóm Hành Chính: Line Hành Chính - Chỉ làm Ca Ngày từ Thứ 2 đến Thứ 6 nếu có định biên
     const hcShift = mpData['HC'] || defaultMp['HC'];
-    const hcDirectVal = (hcShift && typeof hcShift.assyDirect === 'number') ? hcShift.assyDirect : 11;
-    const hcTotalVal = (hcShift && typeof hcShift.assyTotal === 'number') ? hcShift.assyTotal : 16;
+    const hcDirectVal = (hcShift && typeof hcShift.assyDirect === 'number') ? hcShift.assyDirect : 0.0;
+    const hcTotalVal = (hcShift && typeof hcShift.assyTotal === 'number') ? hcShift.assyTotal : 0.0;
     const hcVal = mode === 'total' ? hcTotalVal : hcDirectVal;
 
     const getShiftVal = (shiftLetter, isDayShift = false) => {
@@ -1998,8 +1998,8 @@ class Store {
       if (!s) return 0;
       if (stageKey === 'assembly') {
         const base = mode === 'total' ? (s.assyTotal || 0) : (s.assyDirect || 0);
-        // Ca Ngày các ngày Thứ 2 đến Thứ 6: cộng thêm Line 3D Hành chính
-        return (isDayShift && isWeekday) ? (base + hcVal) : base;
+        // Ca Ngày các ngày Thứ 2 đến Thứ 6: cộng thêm Line Hành chính nếu có nhân sự (>0)
+        return (isDayShift && isWeekday && hcVal > 0) ? (base + hcVal) : base;
       }
       // Nhân lực Hard Test: Đưa toàn bộ vào Tổng Hard Test (Shift A: 21, Shift B: 23, Shift C: 23, Shift D: 23)
       if (stageKey === 'hardtest_total') {
@@ -2011,7 +2011,7 @@ class Store {
       }
       if (stageKey === 'major_composite' || stageKey === 'all' || stageKey === 'tong_toan_nha_may__all_' || stageKey.includes('tong') || stageKey.includes('composite')) {
         let aVal = mode === 'total' ? (s.assyTotal || 0) : (s.assyDirect || 0);
-        if (isDayShift && isWeekday) {
+        if (isDayShift && isWeekday && hcVal > 0) {
           aVal += hcVal;
         }
         const hVal = mode === 'total' ? (s.htTotal || 0) : (s.htDirect || 0);
@@ -2077,13 +2077,14 @@ class Store {
     }
     const isWeekday = targetDate && !isNaN(targetDate.getTime()) && (targetDate.getDay() >= 1 && targetDate.getDay() <= 5);
 
-    const hcShift = mpData['HC'] || { assyDirect: 11, assyTotal: 16 };
-    const hcDirect = hcShift.assyDirect || 11;
-    const hcTotal = hcShift.assyTotal || 16;
+    const hcShift = mpData['HC'] || { assyDirect: 0, assyTotal: 0, lines: [] };
+    const hcDirect = hcShift.assyDirect || 0;
+    const hcTotal = hcShift.assyTotal || 0;
+    const hcLines = (hcShift.lines && hcShift.lines.length > 0) ? hcShift.lines.join(', ') : '';
 
     if (!s) {
-      if (stageKey === 'assembly' && isWeekday && (shift === 'Day' || shift === 'ALL')) {
-        return `Kíp ${shiftLetter} + Line 3D Hành Chính (${hcDirect} ng)`;
+      if (stageKey === 'assembly' && isWeekday && (shift === 'Day' || shift === 'ALL') && hcDirect > 0) {
+        return `Kíp ${shiftLetter} + Line Hành Chính [${hcLines}] (${hcDirect} ng)`;
       }
       return `Kíp ${shiftLetter}`;
     }
@@ -2091,18 +2092,18 @@ class Store {
     if (stageKey === 'assembly') {
       const lineDetails = s.assyLinesDirect ? Object.entries(s.assyLinesDirect).map(([k, v]) => `Line ${k}: ${v} ng`).join(', ') : '';
       if (shift === 'Day') {
-        if (isWeekday) {
-          return `Ca Ngày [Kíp ${shiftLetter} trực]: ${lineDetails} (${s.assyDirect} ng) + [Hành Chính]: Line 3D (${hcDirect} ng) ➜ Tổng trực tiếp = ${s.assyDirect + hcDirect} ng (Gross: ${s.assyTotal + hcTotal} ng)`;
+        if (isWeekday && hcDirect > 0) {
+          return `Ca Ngày [Kíp ${shiftLetter} trực]: ${lineDetails} (${s.assyDirect} ng) + [Hành Chính]: Line ${hcLines} (${hcDirect} ng) ➜ Tổng trực tiếp = ${s.assyDirect + hcDirect} ng (Gross: ${s.assyTotal + hcTotal} ng)`;
         } else {
-          return `Ca Ngày [Kíp ${shiftLetter} trực]: ${lineDetails} (Tổng trực tiếp = ${s.assyDirect} ng | Gross = ${s.assyTotal} ng) • [Hành Chính nghỉ T7-CN]`;
+          return `Ca Ngày [Kíp ${shiftLetter} trực]: ${lineDetails} (Tổng trực tiếp = ${s.assyDirect} ng | Gross = ${s.assyTotal} ng)`;
         }
       } else if (shift === 'Night') {
         return `Ca Đêm [Kíp ${shiftLetter} trực]: ${lineDetails} (Tổng trực tiếp = ${s.assyDirect} ng | Gross = ${s.assyTotal} ng)`;
       } else {
-        if (isWeekday) {
-          return `Cả Ngày [Ngày Kíp ${rot.day} + Line 3D Hành Chính (${hcDirect} ng) | Đêm Kíp ${rot.night}]: Tổng trực tiếp = ${(s.assyDirect || 0) + hcDirect} ng`;
+        if (isWeekday && hcDirect > 0) {
+          return `Cả Ngày [Ngày Kíp ${rot.day} + Line Hành Chính (${hcDirect} ng) | Đêm Kíp ${rot.night}]: Tổng trực tiếp = ${(s.assyDirect || 0) + hcDirect} ng`;
         } else {
-          return `Cả Ngày [Ngày Kíp ${rot.day} | Đêm Kíp ${rot.night}]: Tổng trực tiếp = ${s.assyDirect || 0} ng • [Hành Chính nghỉ T7-CN]`;
+          return `Cả Ngày [Ngày Kíp ${rot.day} | Đêm Kíp ${rot.night}]: Tổng trực tiếp = ${s.assyDirect || 0} ng`;
         }
       }
     }

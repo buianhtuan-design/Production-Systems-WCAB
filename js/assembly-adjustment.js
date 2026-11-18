@@ -43,8 +43,8 @@
       ],
       standardStaffing: 14.0,
       standardTotal: 19.0,
-      hasHcLine: true,
-      hcLineId: '3D'
+      hasHcLine: false,
+      hcLineId: null
     },
     'HARD TEST': {
       id: 'HARD TEST',
@@ -155,6 +155,93 @@
   const PLAN_DATE_KEY = 'AJAX_ASSEMBLY_ADJ_DATE';
   const HISTORY_KEY = 'AJAX_ASSEMBLY_ADJ_HISTORY';
   const LATEST_SYNC_KEY = 'AJAX_ASSEMBLY_ADJ_LATEST_SYNC';
+  const DRAFT_TS_KEY = 'AJAX_ASSEMBLY_ADJ_DRAFT_TS';
+  const LAST_REMOTE_ID_KEY = 'AJAX_ASSEMBLY_ADJ_LAST_REMOTE_ID';
+
+  function markLocalDraftModified(ts) {
+    try {
+      localStorage.setItem(DRAFT_TS_KEY, String(ts || Date.now()));
+    } catch (e) {}
+  }
+
+  function getLocalDraftTimestamp() {
+    try {
+      const raw = localStorage.getItem(DRAFT_TS_KEY);
+      return raw ? (parseInt(raw, 10) || 0) : 0;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  /**
+   * Chuẩn hóa khóa ngày dạng YYYY-MM-DD (hỗ trợ cả YYYY-MM-DD, MM/DD/YYYY và DD/MM/YYYY)
+   */
+  function normalizeDateKey(dateStr) {
+    if (!dateStr) return '';
+    const s = String(dateStr).trim();
+    if (s.includes('/')) {
+      const parts = s.split('/');
+      if (parts.length === 3) {
+        const p0 = parts[0].trim();
+        const p1 = parts[1].trim();
+        const p2 = parts[2].trim();
+        let y, m, d;
+        if (p0.length === 4) {
+          y = p0; m = p1; d = p2;
+        } else {
+          y = p2.padStart(4, '20');
+          const n0 = parseInt(p0, 10);
+          const n1 = parseInt(p1, 10);
+          if (n0 > 12 && n1 >= 1 && n1 <= 12) {
+            d = p0; m = p1;
+          } else {
+            m = p0; d = p1;
+          }
+        }
+        return `${y}-${String(parseInt(m, 10)).padStart(2, '0')}-${String(parseInt(d, 10)).padStart(2, '0')}`;
+      }
+    }
+    if (s.includes('-')) {
+      const parts = s.split('-');
+      if (parts.length === 3 && parts[0].length === 4) {
+        return `${parts[0]}-${String(parseInt(parts[1], 10)).padStart(2, '0')}-${String(parseInt(parts[2], 10)).padStart(2, '0')}`;
+      }
+    }
+    return s;
+  }
+
+  /**
+   * Chuẩn hóa toàn bộ otMap về 1 khóa duy nhất YYYY-MM-DD_Day hoặc YYYY-MM-DD_Night
+   * Loại bỏ khóa trùng lặp dạng MM/DD/YYYY_Shift gây lỗi nhảy OT hoặc đếm trùng khi web refresh
+   */
+  function sanitizeOtMap(rawMap) {
+    const clean = {};
+    if (!rawMap || typeof rawMap !== 'object') return clean;
+    const entries = Object.entries(rawMap);
+    const canonicalKeysPresent = new Set();
+    entries.forEach(([k]) => {
+      if (/^\d{4}-\d{2}-\d{2}_(Day|Night)$/.test(k)) {
+        canonicalKeysPresent.add(k);
+      }
+    });
+    entries.forEach(([k, val]) => {
+      if (!Array.isArray(val)) return;
+      const lastIdx = k.lastIndexOf('_');
+      if (lastIdx <= 0) return;
+      const datePart = k.slice(0, lastIdx);
+      const shiftPart = k.slice(lastIdx + 1);
+      if (shiftPart !== 'Day' && shiftPart !== 'Night') return;
+      const normKey = `${normalizeDateKey(datePart)}_${shiftPart}`;
+      if (k !== normKey && canonicalKeysPresent.has(normKey)) {
+        return;
+      }
+      const dedup = Array.from(new Set(val.filter(Boolean).map(v => String(v).trim())));
+      if (dedup.length > 0) {
+        clean[normKey] = dedup;
+      }
+    });
+    return clean;
+  }
 
   function getTodayFormatted() {
     const d = new Date();
@@ -169,16 +256,13 @@
     return (s === 'ASSEMBLY') ? 'AJAX_ASSEMBLY_ADJUSTMENT_PLAN' : `AJAX_OVERTIME_ADJ_${s}`;
   }
 
-  // Dữ liệu mẫu khởi tạo ban đầu cho Assembly khớp 100% Concept người dùng (17/11 - 19/11/2026)
+  // Dữ liệu mẫu khởi tạo ban đầu cho Assembly (chỉ dùng khóa chuẩn duy nhất YYYY-MM-DD_Shift)
   function getSampleDefaultOtMap(stage) {
     const s = stage || DEFAULT_STAGE;
     if (s === 'ASSEMBLY') {
       return {
-        '11/18/2026_Night': ['1C', '3C'],
         '2026-11-18_Night': ['1C', '3C'],
-        '11/19/2026_Day': ['1D', '2D'],
         '2026-11-19_Day': ['1D', '2D'],
-        '11/19/2026_Night': ['2C'],
         '2026-11-19_Night': ['2C']
       };
     }
@@ -192,7 +276,7 @@
       const saved = localStorage.getItem(key);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed && typeof parsed === 'object') return parsed;
+        if (parsed && typeof parsed === 'object') return sanitizeOtMap(parsed);
       }
     } catch (e) {}
     return getSampleDefaultOtMap(s);
@@ -201,9 +285,11 @@
   function saveStoredOtMap(map, stage) {
     const s = stage || window.AssemblyAdjustmentStore?.selectedStage || DEFAULT_STAGE;
     const key = getStageStorageKey(s);
+    const clean = sanitizeOtMap(map);
     try {
-      localStorage.setItem(key, JSON.stringify(map));
+      localStorage.setItem(key, JSON.stringify(clean));
     } catch (e) {}
+    return clean;
   }
 
   function loadHistoryPlans() {
@@ -340,7 +426,7 @@
     if (!remotePlan) return;
     const store = window.AssemblyAdjustmentStore;
 
-    // 1. Cập nhật tất cả các công đoạn nếu remotePlan có allStagesOtMap
+    // 1. Cập nhật tất cả các công đoạn nếu remotePlan có allStagesOtMap (luôn sanitize khóa ngày chuẩn)
     if (remotePlan.allStagesOtMap && typeof remotePlan.allStagesOtMap === 'object') {
       Object.keys(remotePlan.allStagesOtMap).forEach(stg => {
         const m = remotePlan.allStagesOtMap[stg];
@@ -351,13 +437,14 @@
     }
 
     const incomingStage = remotePlan.stage || store.selectedStage || DEFAULT_STAGE;
+    let cleanIncomingMap = null;
     if (remotePlan.otMap && typeof remotePlan.otMap === 'object') {
-      saveStoredOtMap(remotePlan.otMap, incomingStage);
+      cleanIncomingMap = saveStoredOtMap(remotePlan.otMap, incomingStage);
     }
 
     // Nếu người dùng đang xem đúng công đoạn này
-    if (store.selectedStage === incomingStage && remotePlan.otMap) {
-      store.otMap = { ...remotePlan.otMap };
+    if (store.selectedStage === incomingStage && cleanIncomingMap) {
+      store.otMap = { ...cleanIncomingMap };
     } else {
       store.otMap = loadStoredOtMap(store.selectedStage);
     }
@@ -370,6 +457,17 @@
       store.planDate = remotePlan.planDate;
       localStorage.setItem(PLAN_DATE_KEY, remotePlan.planDate);
     }
+
+    // Ghi nhận ID bản remote đã đồng bộ (và cập nhật mốc draft khi người dùng chủ động đồng bộ)
+    try {
+      if (remotePlan.id) {
+        localStorage.setItem(LAST_REMOTE_ID_KEY, remotePlan.id);
+      }
+      if (isManual) {
+        const rTs = new Date(remotePlan.completedAt || remotePlan.createdAt || Date.now()).getTime();
+        markLocalDraftModified(Math.max(Date.now(), rTs || 0));
+      }
+    } catch (e) {}
 
     // Cập nhật Lịch Sử
     if (Array.isArray(optionalHistory) && optionalHistory.length > 0) {
@@ -442,10 +540,10 @@
       let owningKip = 'A';
       if (lineName.endsWith('B')) owningKip = 'B';
       else if (lineName.endsWith('C')) owningKip = 'C';
-      else if (lineName.endsWith('D')) owningKip = (lineName === '3D') ? 'HC' : 'D';
+      else if (lineName.endsWith('D')) owningKip = 'D';
 
-      const defaultDirect = (lineName === '3D') ? 13.0 : 14.0;
-      const defaultTotal = (lineName === '3D') ? 18.0 : 19.0;
+      const defaultDirect = 14.0;
+      const defaultTotal = 19.0;
       return { owningKip, direct: defaultDirect, total: defaultTotal };
     }
 
@@ -474,23 +572,6 @@
     const d = cfg.standardStaffing || 3.0;
     const t = cfg.standardTotal || (d + 1.0);
     return { owningKip, direct: d, total: t };
-  }
-
-  /**
-   * Chuẩn hóa khóa ngày dạng YYYY-MM-DD
-   */
-  function normalizeDateKey(dateStr) {
-    if (!dateStr) return '';
-    const s = String(dateStr).trim();
-    if (s.includes('/')) {
-      const parts = s.split('/');
-      if (parts.length === 3) {
-        let [m, d, y] = parts;
-        if (m.length === 4) { [y, m, d] = parts; }
-        return `${y.padStart(4, '20')}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
-      }
-    }
-    return s;
   }
 
   /**
@@ -556,14 +637,14 @@
         workingLines = [...kipConfig.lines];
       } else {
         if (kip === 'A') workingLines = ['1A', '2A', '3A'];
-        else if (kip === 'B') workingLines = ['1B', '2B'];
+        else if (kip === 'B') workingLines = ['1B', '2B', '3B'];
         else if (kip === 'C') workingLines = ['1C', '2C', '3C'];
-        else if (kip === 'D') workingLines = ['1D', '2D'];
+        else if (kip === 'D') workingLines = ['1D', '2D', '3D'];
       }
 
-      // 2. Line Hành Chính (HC, mặc định Line 3D):
+      // 2. Line Hành Chính (HC) — lấy động hoàn toàn từ sheet Man-SFPD (không hardcode 3D)
       const hcConfig = master.HC || {};
-      const hcLines = (hcConfig.assyLinesDirect ? Object.keys(hcConfig.assyLinesDirect) : (hcConfig.lines || ['3D']));
+      const hcLines = (hcConfig.assyLinesDirect ? Object.keys(hcConfig.assyLinesDirect) : (Array.isArray(hcConfig.lines) ? hcConfig.lines : []));
       const hcShift = hcConfig.workShift || 'Day';
       const hcDays = hcConfig.workingDays || 'Mon-Fri';
 
@@ -602,16 +683,29 @@
    */
   function getAssignedOtLines(dateStr, shift, stage, customOtMap) {
     const store = window.AssemblyAdjustmentStore;
-    const stageId = stage || store.selectedStage || DEFAULT_STAGE;
     const map = customOtMap || store.otMap || {};
     const norm = normalizeDateKey(dateStr);
-    const raw = String(dateStr).trim();
-    
     const key1 = `${norm}_${shift}`;
+
+    if (Object.prototype.hasOwnProperty.call(map, key1)) {
+      return Array.isArray(map[key1]) ? [...map[key1]] : [];
+    }
+
+    const raw = String(dateStr).trim();
     const key2 = `${raw}_${shift}`;
-    
-    const list = map[key1] || map[key2] || [];
-    return Array.isArray(list) ? [...list] : [];
+    if (Object.prototype.hasOwnProperty.call(map, key2)) {
+      return Array.isArray(map[key2]) ? [...map[key2]] : [];
+    }
+
+    // Fallback kiểm tra nếu map chưa được sanitize (ví dụ khóa dạng MM/DD/YYYY_Shift trong bản cũ)
+    for (const [k, v] of Object.entries(map)) {
+      if (!k.endsWith(`_${shift}`)) continue;
+      const dPart = k.slice(0, k.lastIndexOf('_'));
+      if (normalizeDateKey(dPart) === norm) {
+        return Array.isArray(v) ? [...v] : [];
+      }
+    }
+    return [];
   }
 
   /**
@@ -1424,21 +1518,24 @@
     const store = window.AssemblyAdjustmentStore;
     const currentStage = store.selectedStage || DEFAULT_STAGE;
     const norm = normalizeDateKey(dateStr);
-    const raw = String(dateStr).trim();
-    
     const key = `${norm}_${shift}`;
-    const rawKey = `${raw}_${shift}`;
 
-    let currentList = store.otMap[key] || store.otMap[rawKey] || [];
-    if (!Array.isArray(currentList)) currentList = [];
+    // Luôn chuẩn hóa otMap trước khi thao tác để loại bỏ hoàn toàn mọi khóa trùng lặp (MM/DD/YYYY vs YYYY-MM-DD)
+    store.otMap = sanitizeOtMap(store.otMap);
+
+    let currentList = Array.isArray(store.otMap[key]) ? [...store.otMap[key]] : [];
 
     const existingIdx = currentList.indexOf(lineName);
     if (existingIdx !== -1) {
       // HỦY CHỌN OT: Không bao giờ vi phạm an toàn vì số ngày liên tục giảm xuống
       currentList.splice(existingIdx, 1);
-      store.otMap[key] = currentList;
-      if (rawKey !== key) delete store.otMap[rawKey];
-      saveStoredOtMap(store.otMap, currentStage);
+      if (currentList.length > 0) {
+        store.otMap[key] = currentList;
+      } else {
+        delete store.otMap[key];
+      }
+      store.otMap = saveStoredOtMap(store.otMap, currentStage);
+      markLocalDraftModified();
       window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
       if (window.showToast) {
         window.showToast('info', `🗑️ Đã hủy Line ${lineName} làm thêm cho ${shift === 'Day' ? 'Ca Ngày' : 'Ca Đêm'} ${formatDateDisplay(dateStr)}!`);
@@ -1458,8 +1555,8 @@
 
       currentList.push(lineName);
       store.otMap[key] = currentList;
-      if (rawKey !== key) delete store.otMap[rawKey];
-      saveStoredOtMap(store.otMap, currentStage);
+      store.otMap = saveStoredOtMap(store.otMap, currentStage);
+      markLocalDraftModified();
       window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
       const lineStaff = getLineStaffingConfig(lineName, currentStage);
       if (window.showToast) {
@@ -1507,15 +1604,24 @@
   };
 
   /**
-   * Lưu Tạm Kế Hoạch Điều Chỉnh
+   * Lưu Tạm Kế Hoạch Điều Chỉnh (bảo toàn 100% khi web refresh / F5)
    */
   window.handleSaveAssemblyAdjDraft = function() {
     const store = window.AssemblyAdjustmentStore;
-    saveStoredOtMap(store.otMap, store.selectedStage);
+    const currentStage = store.selectedStage || DEFAULT_STAGE;
+    store.otMap = saveStoredOtMap(store.otMap, currentStage);
+    localStorage.setItem(SELECTED_STAGE_KEY, currentStage);
     localStorage.setItem(PLANNER_KEY, store.plannerName || 'Lê Ngọc Duy GLD');
     localStorage.setItem(PLAN_DATE_KEY, store.planDate || getTodayFormatted());
+    markLocalDraftModified();
+
+    let draftOtCount = 0;
+    Object.values(store.otMap || {}).forEach(arr => {
+      if (Array.isArray(arr)) draftOtCount += arr.length;
+    });
+
     if (window.showToast) {
-      window.showToast('success', '💾 Đã lưu tạm thành công Kế Hoạch Điều Chỉnh Line OT!');
+      window.showToast('success', `💾 Đã lưu tạm thành công Kế Hoạch Điều Chỉnh Line OT (${draftOtCount} ca OT) — an toàn khi tải lại trang!`);
     }
   };
 
@@ -1528,14 +1634,14 @@
     const now = new Date();
     const planId = 'ADJ_' + now.getTime();
     
-    // 1. Lưu lại map của công đoạn hiện tại vào storage
-    saveStoredOtMap(store.otMap, currentStage);
+    // 1. Chuẩn hóa & lưu lại map của công đoạn hiện tại vào storage
+    store.otMap = saveStoredOtMap(store.otMap, currentStage);
 
-    // 2. Thu thập toàn bộ OT map của TẤT CẢ các công đoạn
+    // 2. Thu thập toàn bộ OT map đã chuẩn hóa của TẤT CẢ các công đoạn
     const allStagesOtMap = {};
     let totalOtCountAllStages = 0;
     Object.keys(STAGE_CONFIGS).forEach(stgKey => {
-      const map = (stgKey === currentStage) ? (store.otMap || {}) : loadStoredOtMap(stgKey);
+      const map = sanitizeOtMap((stgKey === currentStage) ? (store.otMap || {}) : loadStoredOtMap(stgKey));
       let count = 0;
       Object.values(map || {}).forEach(arr => {
         if (Array.isArray(arr)) count += arr.length;
@@ -1546,7 +1652,7 @@
       }
     });
 
-    // Đếm tổng số ca OT công đoạn hiện tại
+    // Đếm tổng số ca OT công đoạn hiện tại (đã loại trùng khóa ngày)
     let otCount = 0;
     Object.values(store.otMap || {}).forEach(arr => {
       if (Array.isArray(arr)) otCount += arr.length;
@@ -1571,6 +1677,12 @@
     store.history.unshift(record);
     if (store.history.length > 30) store.history = store.history.slice(0, 30);
     saveHistoryPlans(store.history);
+
+    // Ghi nhận mốc hoàn thành & ID để auto-sync không ghi đè ngược
+    markLocalDraftModified(now.getTime());
+    try {
+      localStorage.setItem(LAST_REMOTE_ID_KEY, planId);
+    } catch (e) {}
 
     // Phát broadcast đồng bộ tới tất cả tabs & browsers trên cùng máy
     if (adjSyncChannel) {
@@ -1744,8 +1856,8 @@
       });
     }
 
-    store.otMap = JSON.parse(JSON.stringify(found.otMap || {}));
-    saveStoredOtMap(store.otMap, restoredStage);
+    store.otMap = saveStoredOtMap(found.otMap || {}, restoredStage);
+    markLocalDraftModified();
     store.plannerName = found.planner;
     localStorage.setItem(PLANNER_KEY, found.planner);
     if (found.planDate) {
@@ -1797,8 +1909,8 @@
     const currentStage = store.selectedStage || DEFAULT_STAGE;
     const stageName = STAGE_CONFIGS[currentStage]?.name || currentStage;
     if (!confirm(`Bạn có chắc chắn muốn đặt lại tất cả Line Overtime của công đoạn [${stageName}] về mặc định ban đầu không?`)) return;
-    store.otMap = getSampleDefaultOtMap(currentStage);
-    saveStoredOtMap(store.otMap, currentStage);
+    store.otMap = saveStoredOtMap(getSampleDefaultOtMap(currentStage), currentStage);
+    markLocalDraftModified();
     window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
     if (window.showToast) {
       window.showToast('success', `Đã đặt lại Kế Hoạch Điều Chỉnh Overtime công đoạn [${stageName}] về mặc định!`);
@@ -1924,6 +2036,7 @@
   };
 
   // Tự động kiểm tra và đồng bộ kế hoạch Overtime mới nhất khi khởi động trang
+  // BẢO VỆ 100% BẢN LƯU TẠM (DRAFT): KHÔNG bao giờ ghi đè bản người dùng đã sửa / ấn Lưu Tạm bằng bản remote cũ!
   async function initOvertimeSyncOnLoad() {
     try {
       const bundle = await fetchRemoteOvertimeBundle();
@@ -1934,11 +2047,30 @@
         const localLatestTime = (store.history && store.history[0] && store.history[0].completedAt)
           ? new Date(store.history[0].completedAt).getTime()
           : 0;
+        const localDraftTs = getLocalDraftTimestamp();
+        const lastSyncedRemoteId = localStorage.getItem(LAST_REMOTE_ID_KEY) || '';
+        const hasExistingLocalOt = !!localStorage.getItem(getStageStorageKey(store.selectedStage || DEFAULT_STAGE));
         const remoteTime = new Date(remotePlan.completedAt || remotePlan.createdAt || 0).getTime();
 
-        if (remoteTime >= localLatestTime || !store.history || store.history.length === 0) {
+        const isStrictlyNewerThanDraft = remoteTime > localDraftTs;
+        const isStrictlyNewerThanLocal = remoteTime > localLatestTime;
+        const isUnseenRemote = !remotePlan.id || (remotePlan.id !== lastSyncedRemoteId);
+
+        if ((!hasExistingLocalOt && localDraftTs === 0) || (isStrictlyNewerThanDraft && isStrictlyNewerThanLocal && isUnseenRemote)) {
           handleIncomingAdjPlan(remotePlan, false, bundle.history);
           console.log('[Overtime Auto-Sync] ✅ Đã tự động nạp kế hoạch Overtime mới nhất:', remotePlan.id);
+        } else {
+          // Bảo toàn nguyên vẹn bản Lưu Tạm trên máy, chỉ cập nhật danh sách Lịch Sử để tiện tra cứu
+          if (Array.isArray(bundle.history) && bundle.history.length > 0) {
+            const merged = new Map();
+            (store.history || []).forEach(h => { if (h && h.id) merged.set(h.id, h); });
+            bundle.history.forEach(h => { if (h && h.id) merged.set(h.id, h); });
+            store.history = Array.from(merged.values())
+              .sort((a, b) => new Date(b.completedAt || b.createdAt || 0) - new Date(a.completedAt || a.createdAt || 0))
+              .slice(0, 30);
+            saveHistoryPlans(store.history);
+          }
+          console.log('[Overtime Auto-Sync] 🛡️ Bảo toàn bản Lưu Tạm local của người dùng (không ghi đè bằng bản remote cũ).');
         }
       }
     } catch (e) {

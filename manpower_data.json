@@ -2,6 +2,11 @@
   "A": {
     "shift": "A",
     "name": "Shift A",
+    "lines": [
+      "1A",
+      "2A",
+      "3A"
+    ],
     "assyDirect": 42.0,
     "assyTotal": 57.0,
     "assyLinesDirect": {
@@ -26,15 +31,22 @@
   "B": {
     "shift": "B",
     "name": "Shift B",
-    "assyDirect": 28.0,
-    "assyTotal": 38.0,
+    "lines": [
+      "1B",
+      "2B",
+      "3B"
+    ],
+    "assyDirect": 42.0,
+    "assyTotal": 57.0,
     "assyLinesDirect": {
       "1B": 14.0,
-      "2B": 14.0
+      "2B": 14.0,
+      "3B": 14.0
     },
     "assyLinesTotal": {
       "1B": 19.0,
-      "2B": 19.0
+      "2B": 19.0,
+      "3B": 19.0
     },
     "htDirect": 25.0,
     "htTotal": 27.0,
@@ -48,6 +60,11 @@
   "C": {
     "shift": "C",
     "name": "Shift C",
+    "lines": [
+      "1C",
+      "2C",
+      "3C"
+    ],
     "assyDirect": 42.0,
     "assyTotal": 57.0,
     "assyLinesDirect": {
@@ -72,15 +89,22 @@
   "D": {
     "shift": "D",
     "name": "Shift D",
-    "assyDirect": 28.0,
-    "assyTotal": 38.0,
+    "lines": [
+      "1D",
+      "2D",
+      "3D"
+    ],
+    "assyDirect": 42.0,
+    "assyTotal": 57.0,
     "assyLinesDirect": {
       "1D": 14.0,
-      "2D": 14.0
+      "2D": 14.0,
+      "3D": 14.0
     },
     "assyLinesTotal": {
       "1D": 19.0,
-      "2D": 19.0
+      "2D": 19.0,
+      "3D": 19.0
     },
     "htDirect": 23.0,
     "htTotal": 25.0,
@@ -94,17 +118,11 @@
   "HC": {
     "shift": "HC",
     "name": "Hành Chính",
-    "lines": [
-      "3D"
-    ],
-    "assyDirect": 11.0,
-    "assyTotal": 16.0,
-    "assyLinesDirect": {
-      "3D": 11.0
-    },
-    "assyLinesTotal": {
-      "3D": 16.0
-    },
+    "lines": [],
+    "assyDirect": 0.0,
+    "assyTotal": 0.0,
+    "assyLinesDirect": {},
+    "assyLinesTotal": {},
     "htDirect": 0.0,
     "htTotal": 0.0,
     "htBreakdown": {

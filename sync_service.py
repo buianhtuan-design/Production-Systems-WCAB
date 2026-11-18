@@ -39,31 +39,57 @@ STATUS_FILE = os.path.join(WORKSPACE_DIR, 'sync_status.json')
 
 def fetch_and_parse_manpower(ctx):
     """
-    Tải và bóc tách dữ liệu nhân lực theo từng kíp A, B, C, D từ sheet Manpower.
-    - Assy Shift = Tổng các Line trong ca (ví dụ Shift A = 1A + 2A + 3A).
-    - Hard Test = Tổng nhân lực Hard Test của từng shift.
+    Tải và bóc tách dữ liệu nhân lực theo thời gian thực từ sheet 'Man-SFPD'.
+    - Bóc tách ĐỘNG (Dynamic Header Scanning): Tự động quét dòng 'Line' để nhận diện các Line và Kíp A/B/C/D.
+    - Quy tắc: Nếu cột thuộc Shift A/B/C/D -> đi theo kíp (Assembly & Hard Test của kíp đó).
+              Nếu cột thuộc phần Hành chính -> tính là Line hành chính (HC).
+    - Tự động lấy nhân lực trực tiếp từ dòng 'Nhân Lực Trực Tiếp' và tổng gross từ dòng 'TOTAL'.
     """
-    url = f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&gid={MANPOWER_GID}'
-    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'})
-    with urllib.request.urlopen(req, context=ctx, timeout=30) as resp:
-        content = resp.read().decode('utf-8', errors='ignore')
+    urls = [
+        f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid={MANPOWER_GID}',
+        f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&gid={MANPOWER_GID}'
+    ]
+    content = None
+    for url in urls:
+        for attempt in range(2):
+            try:
+                req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'})
+                with urllib.request.urlopen(req, context=ctx, timeout=25) as resp:
+                    content = resp.read().decode('utf-8', errors='ignore')
+                    if content and len(content.splitlines()) >= 10:
+                        break
+            except Exception as e:
+                pass
+        if content and len(content.splitlines()) >= 10:
+            break
 
-    reader = list(csv.reader(content.splitlines()))
-    if len(reader) < 15:
+    if not content or len(content.splitlines()) < 10:
+        if os.path.exists(MANPOWER_JSON_FILE):
+            with open(MANPOWER_JSON_FILE, 'r', encoding='utf-8') as mf:
+                return json.load(mf)
         return {}
 
-    rows_by_label = {}
-    for r in reader:
-        if len(r) > 1 and r[1].strip():
-            label = r[1].strip()
-            if label not in rows_by_label:
-                rows_by_label[label] = r
+    reader = list(csv.reader(content.splitlines()))
 
     def parse_num(v):
+        if not v:
+            return 0.0
         try:
-            return float(v.strip().replace(',', ''))
+            return float(str(v).strip().replace(',', ''))
         except:
             return 0.0
+
+    # 1. Tìm các hàng trọng yếu theo nhãn
+    rows_by_label = {}
+    row_line = None
+    for r in reader:
+        for col_idx in range(min(5, len(r))):
+            lbl = r[col_idx].strip()
+            if lbl:
+                if lbl == 'Line' and not row_line:
+                    row_line = r
+                if lbl not in rows_by_label:
+                    rows_by_label[lbl] = r
 
     row_direct = rows_by_label.get('Nhân Lực Trực Tiếp', [])
     row_total  = rows_by_label.get('TOTAL', [])
@@ -72,76 +98,106 @@ def fetch_and_parse_manpower(ctx):
     row_cr     = rows_by_label.get('Cleanroom Operator', [])
     row_ht_op  = rows_by_label.get('Hard Test Operator', [])
 
-    shift_configs = {
-        'A': {'name': 'Shift A', 'lines': ['1A', '2A', '3A'], 'assy_cols': [2, 3, 4], 'ht_col': 5, 'total_col': 6},
-        'B': {'name': 'Shift B', 'lines': ['1B', '2B'], 'assy_cols': [7, 8], 'ht_col': 10, 'total_col': 11},
-        'C': {'name': 'Shift C', 'lines': ['1C', '2C', '3C'], 'assy_cols': [12, 13, 14], 'ht_col': 15, 'total_col': 16},
-        'D': {'name': 'Shift D', 'lines': ['1D', '2D'], 'assy_cols': [17, 18], 'ht_col': 20, 'total_col': 21},
+    if not row_line:
+        if os.path.exists(MANPOWER_JSON_FILE):
+            with open(MANPOWER_JSON_FILE, 'r', encoding='utf-8') as mf:
+                return json.load(mf)
+        return {}
+
+    result = {
+        'A': {'shift': 'A', 'name': 'Shift A', 'lines': [], 'assyDirect': 0.0, 'assyTotal': 0.0, 'assyLinesDirect': {}, 'assyLinesTotal': {}, 'htDirect': 0.0, 'htTotal': 0.0, 'htBreakdown': {'cleanroom': 0.0, 'operator': 0.0, 'feeder': 0.0, 'leader': 0.0}},
+        'B': {'shift': 'B', 'name': 'Shift B', 'lines': [], 'assyDirect': 0.0, 'assyTotal': 0.0, 'assyLinesDirect': {}, 'assyLinesTotal': {}, 'htDirect': 0.0, 'htTotal': 0.0, 'htBreakdown': {'cleanroom': 0.0, 'operator': 0.0, 'feeder': 0.0, 'leader': 0.0}},
+        'C': {'shift': 'C', 'name': 'Shift C', 'lines': [], 'assyDirect': 0.0, 'assyTotal': 0.0, 'assyLinesDirect': {}, 'assyLinesTotal': {}, 'htDirect': 0.0, 'htTotal': 0.0, 'htBreakdown': {'cleanroom': 0.0, 'operator': 0.0, 'feeder': 0.0, 'leader': 0.0}},
+        'D': {'shift': 'D', 'name': 'Shift D', 'lines': [], 'assyDirect': 0.0, 'assyTotal': 0.0, 'assyLinesDirect': {}, 'assyLinesTotal': {}, 'htDirect': 0.0, 'htTotal': 0.0, 'htBreakdown': {'cleanroom': 0.0, 'operator': 0.0, 'feeder': 0.0, 'leader': 0.0}},
+        'HC': {'shift': 'HC', 'name': 'Hành Chính', 'lines': [], 'assyDirect': 0.0, 'assyTotal': 0.0, 'assyLinesDirect': {}, 'assyLinesTotal': {}, 'htDirect': 0.0, 'htTotal': 0.0, 'htBreakdown': {'cleanroom': 0.0, 'operator': 0.0, 'feeder': 0.0, 'leader': 0.0}, 'workShift': 'Day', 'workingDays': 'Mon-Fri'}
     }
 
-    result = {}
-    for s_code, cfg in shift_configs.items():
-        direct_assy_lines = {}
-        total_assy_lines = {}
-        for idx, col_idx in enumerate(cfg['assy_cols']):
-            line_name = cfg['lines'][idx]
+    current_section = 'A'
+    for col_idx in range(2, len(row_line)):
+        header = row_line[col_idx].strip()
+        header_clean = ' '.join(header.split()).lower()
+        
+        # Nhận diện mốc chuyển Section ca
+        if 'shift a' in header_clean or 'kíp a' in header_clean:
+            current_section = 'B'
+            continue
+        elif 'shift b' in header_clean or 'kíp b' in header_clean:
+            current_section = 'C'
+            continue
+        elif 'shift c' in header_clean or 'kíp c' in header_clean:
+            current_section = 'D'
+            continue
+        elif 'shift d' in header_clean or 'kíp d' in header_clean:
+            current_section = 'HC'
+            continue
+        elif 'hành chính' in header_clean or header_clean == 'hc':
+            current_section = 'HC'
             d_val = parse_num(row_direct[col_idx]) if col_idx < len(row_direct) else 0.0
             t_val = parse_num(row_total[col_idx]) if col_idx < len(row_total) else 0.0
-            direct_assy_lines[line_name] = d_val
-            total_assy_lines[line_name] = t_val
+            if d_val > 0 or t_val > 0:
+                result['HC']['assyDirect'] = d_val
+                result['HC']['assyTotal'] = t_val
+                if 'HC' not in result['HC']['lines']:
+                    result['HC']['lines'].append('HC')
+                result['HC']['assyLinesDirect']['HC'] = d_val
+                result['HC']['assyLinesTotal']['HC'] = t_val
+            continue
 
-        ht_direct = parse_num(row_direct[cfg['ht_col']]) if cfg['ht_col'] < len(row_direct) else 0.0
-        ht_total = parse_num(row_total[cfg['ht_col']]) if cfg['ht_col'] < len(row_total) else 0.0
-        
-        cr = parse_num(row_cr[cfg['ht_col']]) if cfg['ht_col'] < len(row_cr) else 0.0
-        ht_op = parse_num(row_ht_op[cfg['ht_col']]) if cfg['ht_col'] < len(row_ht_op) else 0.0
-        ht_feeder = parse_num(row_feeder[cfg['ht_col']]) if cfg['ht_col'] < len(row_feeder) else 0.0
-        ht_leader = parse_num(row_leader[cfg['ht_col']]) if cfg['ht_col'] < len(row_leader) else 0.0
+        if not header:
+            continue
 
-        result[s_code] = {
-            'shift': s_code,
-            'name': cfg['name'],
-            'assyDirect': sum(direct_assy_lines.values()),
-            'assyTotal': sum(total_assy_lines.values()),
-            'assyLinesDirect': direct_assy_lines,
-            'assyLinesTotal': total_assy_lines,
-            'htDirect': ht_direct,
-            'htTotal': ht_total,
-            'htBreakdown': {
-                'cleanroom': cr,
-                'operator': ht_op,
-                'feeder': ht_feeder,
-                'leader': ht_leader
-            }
-        }
+        d_val = parse_num(row_direct[col_idx]) if col_idx < len(row_direct) else 0.0
+        t_val = parse_num(row_total[col_idx]) if col_idx < len(row_total) else 0.0
 
-    # Bổ sung nhóm Hành Chính (Line 3D: Direct 11, Total 16 - làm việc Ca Ngày T2-T6)
-    hc_direct = parse_num(row_direct[22]) if 22 < len(row_direct) else 11.0
-    hc_total  = parse_num(row_total[22]) if 22 < len(row_total) else 16.0
-    if hc_direct <= 0:
-        hc_direct = 11.0
-    if hc_total <= 0:
-        hc_total = 16.0
+        # Kiểm tra nếu là cột Hard Test
+        if 'hard test' in header_clean:
+            target_shift = current_section
+            if target_shift in ['A', 'B', 'C', 'D']:
+                result[target_shift]['htDirect'] = d_val
+                result[target_shift]['htTotal'] = t_val
+                result[target_shift]['htBreakdown'] = {
+                    'cleanroom': parse_num(row_cr[col_idx]) if col_idx < len(row_cr) else 0.0,
+                    'operator': parse_num(row_ht_op[col_idx]) if col_idx < len(row_ht_op) else 0.0,
+                    'feeder': parse_num(row_feeder[col_idx]) if col_idx < len(row_feeder) else 0.0,
+                    'leader': parse_num(row_leader[col_idx]) if col_idx < len(row_leader) else 0.0
+                }
+            continue
 
-    result['HC'] = {
-        'shift': 'HC',
-        'name': 'Hành Chính',
-        'lines': ['3D'],
-        'assyDirect': hc_direct,
-        'assyTotal': hc_total,
-        'assyLinesDirect': {'3D': hc_direct},
-        'assyLinesTotal': {'3D': hc_total},
-        'htDirect': 0.0,
-        'htTotal': 0.0,
-        'htBreakdown': {
-            'cleanroom': 0.0,
-            'operator': 0.0,
-            'feeder': 0.0,
-            'leader': 0.0
-        },
-        'workShift': 'Day',
-        'workingDays': 'Mon-Fri'
-    }
+        # Kiểm tra nếu là cột Assembly
+        if 'assembly' in header_clean or 'line' in header_clean:
+            parts = header.split()
+            line_id = parts[-1].upper() if parts else header.upper()
+            
+            # Phân loại Kíp hay Hành Chính:
+            # "Nếu là Shift A/B/C/D là đi theo kíp , Nếu bên phần Hành chính thì tính là Line hành chính"
+            if current_section == 'HC' or 'hành chính' in header_clean or 'hc' in header_clean:
+                target_shift = 'HC'
+            elif line_id.endswith('A') and current_section == 'A':
+                target_shift = 'A'
+            elif line_id.endswith('B') and current_section == 'B':
+                target_shift = 'B'
+            elif line_id.endswith('C') and current_section == 'C':
+                target_shift = 'C'
+            elif line_id.endswith('D') and current_section == 'D':
+                target_shift = 'D'
+            else:
+                target_shift = current_section
+
+            if target_shift in result:
+                if line_id not in result[target_shift]['lines']:
+                    result[target_shift]['lines'].append(line_id)
+                result[target_shift]['assyLinesDirect'][line_id] = d_val
+                result[target_shift]['assyLinesTotal'][line_id] = t_val
+                result[target_shift]['assyDirect'] += d_val
+                result[target_shift]['assyTotal'] += t_val
+
+    # Đảm bảo dữ liệu hợp lệ (nếu bất kỳ shift nào bị rỗng, giữ fallback an toàn)
+    if not result['A']['lines']:
+        if os.path.exists(MANPOWER_JSON_FILE):
+            with open(MANPOWER_JSON_FILE, 'r', encoding='utf-8') as mf:
+                return json.load(mf)
+
+    return result
 
     return result
 
