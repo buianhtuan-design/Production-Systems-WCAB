@@ -878,7 +878,7 @@ window.updateFilterCompactSummary = function() {
 
   summaryElem.innerHTML = `
     <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
-      <span class="badge badge-blue">📅 ${from} → ${to}</span>
+      <span class="badge badge-blue">📅 ${String(from).replace(/\/20(\d{2})\b/g, '/$1').replace(/\b20(\d{2})-/g, '$1-')} → ${String(to).replace(/\/20(\d{2})\b/g, '/$1').replace(/\b20(\d{2})-/g, '$1-')}</span>
       <span class="badge badge-purple">${stageText}</span>
       <span class="badge badge-amber">${shiftText}</span>
     </div>
@@ -970,11 +970,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.restoreSectionCollapseStates();
   }
 
-  // Load live manpower json if available
-  fetch('manpower_data.json')
+  // Load live manpower json if available (cache-busted để luôn nhận dữ liệu mới nhất từ Man-SFPD)
+  fetch('manpower_data.json?t=' + Date.now(), { cache: 'no-store' })
     .then(r => r.ok ? r.json() : null)
     .then(mpJson => {
-      if (mpJson && mpJson.A) {
+      if (mpJson && mpJson.A && Array.isArray(mpJson.A.lines) && mpJson.A.lines.length > 0) {
         window.MANPOWER_MASTER_DATA = mpJson;
         if (window.AppStore && typeof window.AppStore.notify === 'function') {
           window.AppStore.notify();
@@ -2044,7 +2044,7 @@ function renderDataMassView() {
               ${rot.day}/${rot.night}
             </span>
           </div>
-          <span class="day-date" style="${isWeekend ? 'color: #fde68a; font-weight: 700;' : ''}">${dateStr}</span>
+          <span class="day-date" style="${isWeekend ? 'color: #fde68a; font-weight: 700;' : ''}">${String(dateStr).replace(/\/20(\d{2})\b/g, '/$1').replace(/\b20(\d{2})-/g, '$1-')}</span>
         </label>
       </th>
     `;
@@ -2714,19 +2714,26 @@ function renderDataMassView() {
               </span>
             `;
           };
-          const hc = mp['HC'] || { assyDirect: 11, assyTotal: 16, lines: ['3D'] };
-          const hcDirect = hc.assyDirect || 11;
-          const hcTotal = hc.assyTotal || 16;
-          const hcLines = hc.lines ? hc.lines.join(', ') : '3D';
+          const hc = mp['HC'] || { assyDirect: 0, assyTotal: 0, lines: [] };
+          const hcDirect = hc.assyDirect || 0;
+          const hcTotal = hc.assyTotal || 0;
+          const hcLines = (hc.lines && hc.lines.length > 0) ? hc.lines.join(', ') : '';
+          const hcTag = hcDirect > 0 ? `
+              <span class="mp-tag" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.08);" title="Line ${hcLines}: Trực tiếp ${hcDirect} ng, Gross ${hcTotal} ng. Làm việc Ca Ngày từ Thứ 2 đến Thứ 6. Tự động nghỉ T7-CN.">
+                <span class="badge-shift-pill" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);">🏢 Hành Chính</span> Line <strong>${hcLines}</strong> (<strong>${hcDirect}</strong> ng) • Ca Ngày (T2-T6)
+              </span>
+          ` : `
+              <span class="mp-tag" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.08);" title="Hiện không bố trí Line lắp ráp cố định thuộc khối Hành chính (0 ng trực tiếp).">
+                <span class="badge-shift-pill" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);">🏢 Hành Chính</span> <strong>0</strong> Line (0 ng) • Ca Ngày (T2-T6)
+              </span>
+          `;
           return `
             <div class="manpower-shift-tags">
               ${getTag('A', 'shift-a')}
               ${getTag('B', 'shift-b')}
               ${getTag('C', 'shift-c')}
               ${getTag('D', 'shift-d')}
-              <span class="mp-tag" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.08);" title="Line ${hcLines}: Trực tiếp ${hcDirect} ng, Gross ${hcTotal} ng. Làm việc Ca Ngày từ Thứ 2 đến Thứ 6. Tự động nghỉ T7-CN.">
-                <span class="badge-shift-pill" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);">🏢 Hành Chính</span> Line <strong>${hcLines}</strong> (<strong>${hcDirect}</strong> ng) • Ca Ngày (T2-T6)
-              </span>
+              ${hcTag}
             </div>
           `;
         })()}
@@ -7618,42 +7625,42 @@ window.getStandardManpowerDefaults = function() {
   return {
     'A': {
       shift: 'A', name: 'Shift A',
-      assyDirect: 43.0, assyTotal: 58.0,
-      assyLinesDirect: { '1A': 15.0, '2A': 14.0, '3A': 14.0 },
-      assyLinesTotal: { '1A': 20.0, '2A': 19.0, '3A': 19.0 },
-      htDirect: 21.0, htTotal: 23.0,
-      htBreakdown: { cleanroom: 3.0, operator: 18.0, feeder: 1.0, leader: 1.0 }
+      assyDirect: 42.0, assyTotal: 57.0,
+      assyLinesDirect: { '1A': 14.0, '2A': 14.0, '3A': 14.0 },
+      assyLinesTotal: { '1A': 19.0, '2A': 19.0, '3A': 19.0 },
+      htDirect: 24.0, htTotal: 26.0,
+      htBreakdown: { cleanroom: 3.0, operator: 20.0, feeder: 2.0, leader: 1.0 }
     },
     'B': {
       shift: 'B', name: 'Shift B',
-      assyDirect: 29.0, assyTotal: 39.0,
-      assyLinesDirect: { '1B': 14.0, '2B': 15.0 },
-      assyLinesTotal: { '1B': 19.0, '2B': 20.0 },
-      htDirect: 23.0, htTotal: 25.0,
-      htBreakdown: { cleanroom: 4.0, operator: 19.0, feeder: 1.0, leader: 1.0 }
+      assyDirect: 42.0, assyTotal: 57.0,
+      assyLinesDirect: { '1B': 14.0, '2B': 14.0, '3B': 14.0 },
+      assyLinesTotal: { '1B': 19.0, '2B': 19.0, '3B': 19.0 },
+      htDirect: 25.0, htTotal: 27.0,
+      htBreakdown: { cleanroom: 4.0, operator: 21.0, feeder: 1.0, leader: 1.0 }
     },
     'C': {
       shift: 'C', name: 'Shift C',
-      assyDirect: 41.0, assyTotal: 56.0,
-      assyLinesDirect: { '1C': 14.0, '2C': 14.0, '3C': 13.0 },
-      assyLinesTotal: { '1C': 19.0, '2C': 19.0, '3C': 18.0 },
-      htDirect: 23.0, htTotal: 25.0,
-      htBreakdown: { cleanroom: 2.0, operator: 21.0, feeder: 1.0, leader: 1.0 }
+      assyDirect: 42.0, assyTotal: 57.0,
+      assyLinesDirect: { '1C': 14.0, '2C': 14.0, '3C': 14.0 },
+      assyLinesTotal: { '1C': 19.0, '2C': 19.0, '3C': 19.0 },
+      htDirect: 26.0, htTotal: 28.0,
+      htBreakdown: { cleanroom: 2.0, operator: 24.0, feeder: 1.0, leader: 1.0 }
     },
     'D': {
       shift: 'D', name: 'Shift D',
-      assyDirect: 27.0, assyTotal: 37.0,
-      assyLinesDirect: { '1D': 14.0, '2D': 13.0 },
-      assyLinesTotal: { '1D': 19.0, '2D': 18.0 },
+      assyDirect: 42.0, assyTotal: 57.0,
+      assyLinesDirect: { '1D': 14.0, '2D': 14.0, '3D': 14.0 },
+      assyLinesTotal: { '1D': 19.0, '2D': 19.0, '3D': 19.0 },
       htDirect: 23.0, htTotal: 25.0,
       htBreakdown: { cleanroom: 4.0, operator: 19.0, feeder: 1.0, leader: 1.0 }
     },
     'HC': {
       shift: 'HC', name: 'Hành Chính',
-      lines: ['3D'],
-      assyDirect: 11.0, assyTotal: 16.0,
-      assyLinesDirect: { '3D': 11.0 },
-      assyLinesTotal: { '3D': 16.0 },
+      lines: [],
+      assyDirect: 0.0, assyTotal: 0.0,
+      assyLinesDirect: {},
+      assyLinesTotal: {},
       htDirect: 0.0, htTotal: 0.0,
       htBreakdown: { cleanroom: 0.0, operator: 0.0, feeder: 0.0, leader: 0.0 },
       workShift: 'Day',
@@ -7709,8 +7716,8 @@ window.renderKipConfigTab = function(kipCode) {
     // ==========================================
     // TAB HÀNH CHÍNH
     // ==========================================
-    const directMap = k.assyLinesDirect || { '3D': 11.0 };
-    const totalMap = k.assyLinesTotal || { '3D': 16.0 };
+    const directMap = k.assyLinesDirect || {};
+    const totalMap = k.assyLinesTotal || {};
     const lineEntries = Object.keys(directMap);
 
     container.innerHTML = `

@@ -43,8 +43,8 @@
       ],
       standardStaffing: 14.0,
       standardTotal: 19.0,
-      hasHcLine: true,
-      hcLineId: '3D'
+      hasHcLine: false,
+      hcLineId: null
     },
     'HARD TEST': {
       id: 'HARD TEST',
@@ -155,13 +155,130 @@
   const PLAN_DATE_KEY = 'AJAX_ASSEMBLY_ADJ_DATE';
   const HISTORY_KEY = 'AJAX_ASSEMBLY_ADJ_HISTORY';
   const LATEST_SYNC_KEY = 'AJAX_ASSEMBLY_ADJ_LATEST_SYNC';
+  const DRAFT_TS_KEY = 'AJAX_ASSEMBLY_ADJ_DRAFT_TS';
+  const LAST_REMOTE_ID_KEY = 'AJAX_ASSEMBLY_ADJ_LAST_REMOTE_ID';
+  const FROM_DATE_KEY = 'AJAX_OVERTIME_ADJ_FROM_DATE';
+  const TO_DATE_KEY = 'AJAX_OVERTIME_ADJ_TO_DATE';
+
+  function shortenYear26(str) {
+    if (str === null || str === undefined) return '';
+    return String(str).replace(/\/20(\d{2})\b/g, '/$1').replace(/\b20(\d{2})-/g, '$1-');
+  }
+
+  function generateDateRange(fromIso, toIso) {
+    const startNorm = normalizeDateKey(fromIso);
+    const endNorm = normalizeDateKey(toIso);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(startNorm) || !/^\d{4}-\d{2}-\d{2}$/.test(endNorm)) return [];
+    const sp = startNorm.split('-').map(Number);
+    const ep = endNorm.split('-').map(Number);
+    const dStart = new Date(sp[0], sp[1] - 1, sp[2]);
+    const dEnd = new Date(ep[0], ep[1] - 1, ep[2]);
+    if (isNaN(dStart.getTime()) || isNaN(dEnd.getTime()) || dStart > dEnd) return [];
+    const out = [];
+    const cur = new Date(dStart.getTime());
+    let guard = 0;
+    while (cur <= dEnd && guard < 62) {
+      const y = cur.getFullYear();
+      const m = String(cur.getMonth() + 1).padStart(2, '0');
+      const d = String(cur.getDate()).padStart(2, '0');
+      out.push(`${y}-${m}-${d}`);
+      cur.setDate(cur.getDate() + 1);
+      guard++;
+    }
+    return out;
+  }
+
+  function markLocalDraftModified(ts) {
+    try {
+      localStorage.setItem(DRAFT_TS_KEY, String(ts || Date.now()));
+    } catch (e) {}
+  }
+
+  function getLocalDraftTimestamp() {
+    try {
+      const raw = localStorage.getItem(DRAFT_TS_KEY);
+      return raw ? (parseInt(raw, 10) || 0) : 0;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  /**
+   * Chuẩn hóa khóa ngày dạng YYYY-MM-DD (hỗ trợ cả YYYY-MM-DD, MM/DD/YYYY và DD/MM/YYYY)
+   */
+  function normalizeDateKey(dateStr) {
+    if (!dateStr) return '';
+    const s = String(dateStr).trim();
+    if (s.includes('/')) {
+      const parts = s.split('/');
+      if (parts.length === 3) {
+        const p0 = parts[0].trim();
+        const p1 = parts[1].trim();
+        const p2 = parts[2].trim();
+        let y, m, d;
+        if (p0.length === 4) {
+          y = p0; m = p1; d = p2;
+        } else {
+          y = p2.padStart(4, '20');
+          const n0 = parseInt(p0, 10);
+          const n1 = parseInt(p1, 10);
+          if (n0 > 12 && n1 >= 1 && n1 <= 12) {
+            d = p0; m = p1;
+          } else {
+            m = p0; d = p1;
+          }
+        }
+        return `${y}-${String(parseInt(m, 10)).padStart(2, '0')}-${String(parseInt(d, 10)).padStart(2, '0')}`;
+      }
+    }
+    if (s.includes('-')) {
+      const parts = s.split('-');
+      if (parts.length === 3 && parts[0].length === 4) {
+        return `${parts[0]}-${String(parseInt(parts[1], 10)).padStart(2, '0')}-${String(parseInt(parts[2], 10)).padStart(2, '0')}`;
+      }
+    }
+    return s;
+  }
+
+  /**
+   * Chuẩn hóa toàn bộ otMap về 1 khóa duy nhất YYYY-MM-DD_Day hoặc YYYY-MM-DD_Night
+   * Loại bỏ khóa trùng lặp dạng MM/DD/YYYY_Shift gây lỗi nhảy OT hoặc đếm trùng khi web refresh
+   */
+  function sanitizeOtMap(rawMap) {
+    const clean = {};
+    if (!rawMap || typeof rawMap !== 'object') return clean;
+    const entries = Object.entries(rawMap);
+    const canonicalKeysPresent = new Set();
+    entries.forEach(([k]) => {
+      if (/^\d{4}-\d{2}-\d{2}_(Day|Night)$/.test(k)) {
+        canonicalKeysPresent.add(k);
+      }
+    });
+    entries.forEach(([k, val]) => {
+      if (!Array.isArray(val)) return;
+      const lastIdx = k.lastIndexOf('_');
+      if (lastIdx <= 0) return;
+      const datePart = k.slice(0, lastIdx);
+      const shiftPart = k.slice(lastIdx + 1);
+      if (shiftPart !== 'Day' && shiftPart !== 'Night') return;
+      const normKey = `${normalizeDateKey(datePart)}_${shiftPart}`;
+      if (k !== normKey && canonicalKeysPresent.has(normKey)) {
+        return;
+      }
+      const dedup = Array.from(new Set(val.filter(Boolean).map(v => String(v).trim())));
+      if (dedup.length > 0) {
+        clean[normKey] = dedup;
+      }
+    });
+    return clean;
+  }
 
   function getTodayFormatted() {
     const d = new Date();
     const dd = String(d.getDate()).padStart(2, '0');
     const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const yyyy = d.getFullYear();
-    return `${dd}/${mm}/${yyyy}`;
+    const yy = String(d.getFullYear()).slice(-2);
+    return `${dd}/${mm}/${yy}`;
   }
 
   function getStageStorageKey(stage) {
@@ -169,16 +286,13 @@
     return (s === 'ASSEMBLY') ? 'AJAX_ASSEMBLY_ADJUSTMENT_PLAN' : `AJAX_OVERTIME_ADJ_${s}`;
   }
 
-  // Dữ liệu mẫu khởi tạo ban đầu cho Assembly khớp 100% Concept người dùng (17/11 - 19/11/2026)
+  // Dữ liệu mẫu khởi tạo ban đầu cho Assembly (chỉ dùng khóa chuẩn duy nhất YYYY-MM-DD_Shift)
   function getSampleDefaultOtMap(stage) {
     const s = stage || DEFAULT_STAGE;
     if (s === 'ASSEMBLY') {
       return {
-        '11/18/2026_Night': ['1C', '3C'],
         '2026-11-18_Night': ['1C', '3C'],
-        '11/19/2026_Day': ['1D', '2D'],
         '2026-11-19_Day': ['1D', '2D'],
-        '11/19/2026_Night': ['2C'],
         '2026-11-19_Night': ['2C']
       };
     }
@@ -192,7 +306,7 @@
       const saved = localStorage.getItem(key);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed && typeof parsed === 'object') return parsed;
+        if (parsed && typeof parsed === 'object') return sanitizeOtMap(parsed);
       }
     } catch (e) {}
     return getSampleDefaultOtMap(s);
@@ -201,9 +315,11 @@
   function saveStoredOtMap(map, stage) {
     const s = stage || window.AssemblyAdjustmentStore?.selectedStage || DEFAULT_STAGE;
     const key = getStageStorageKey(s);
+    const clean = sanitizeOtMap(map);
     try {
-      localStorage.setItem(key, JSON.stringify(map));
+      localStorage.setItem(key, JSON.stringify(clean));
     } catch (e) {}
+    return clean;
   }
 
   function loadHistoryPlans() {
@@ -233,8 +349,10 @@
     otMap: loadStoredOtMap(validStage),
     isCollapsed: localStorage.getItem(COLLAPSED_KEY) === 'true',
     dateViewMode: localStorage.getItem(DATE_VIEW_KEY) || 'ACTIVE_SCHEDULE',
+    customFromDate: localStorage.getItem(FROM_DATE_KEY) || '',
+    customToDate: localStorage.getItem(TO_DATE_KEY) || '',
     plannerName: localStorage.getItem(PLANNER_KEY) || (window.AppStore?.simPlannerName || 'Lê Ngọc Duy GLD'),
-    planDate: localStorage.getItem(PLAN_DATE_KEY) || getTodayFormatted(),
+    planDate: shortenYear26(localStorage.getItem(PLAN_DATE_KEY) || getTodayFormatted()),
     history: loadHistoryPlans()
   };
 
@@ -264,6 +382,42 @@
   });
 
   const RAW_GITHUB_BASE = 'https://raw.githubusercontent.com/buianhtuan-design/Production-Systems-WCAB/main/';
+  const GITHUB_API_CONTENTS_BASE = 'https://api.github.com/repos/buianhtuan-design/Production-Systems-WCAB/contents/';
+
+  function sanitizePlanRecord(plan) {
+    if (!plan || typeof plan !== 'object') return null;
+    const copy = JSON.parse(JSON.stringify(plan));
+    if (copy.otMap && typeof copy.otMap === 'object') {
+      copy.otMap = sanitizeOtMap(copy.otMap);
+      let cnt = 0;
+      Object.values(copy.otMap).forEach(arr => {
+        if (Array.isArray(arr)) cnt += arr.length;
+      });
+      copy.otCount = cnt;
+    }
+    if (copy.allStagesOtMap && typeof copy.allStagesOtMap === 'object') {
+      const cleanAll = {};
+      let totalCnt = 0;
+      Object.keys(copy.allStagesOtMap).forEach(stg => {
+        const cleanM = sanitizeOtMap(copy.allStagesOtMap[stg]);
+        cleanAll[stg] = cleanM;
+        Object.values(cleanM).forEach(arr => {
+          if (Array.isArray(arr)) totalCnt += arr.length;
+        });
+      });
+      copy.allStagesOtMap = cleanAll;
+      copy.totalOtCountAllStages = totalCnt;
+    }
+    if (copy.planDate) copy.planDate = shortenYear26(copy.planDate);
+    if (copy.dateStr) copy.dateStr = shortenYear26(copy.dateStr);
+    return copy;
+  }
+
+  function getPlanTimestampMs(plan) {
+    if (!plan || typeof plan !== 'object') return 0;
+    const t = new Date(plan.completedAt || plan.createdAt || 0).getTime();
+    return Number.isFinite(t) ? t : 0;
+  }
 
   async function safeFetchJson(url) {
     try {
@@ -275,20 +429,52 @@
     }
   }
 
+  /**
+   * Đọc trực tiếp file JSON mới nhất từ GitHub Contents API (KHÔNG bị delay cache 5 phút như raw.githubusercontent.com)
+   */
+  async function safeFetchGitHubApiJson(filename, bust) {
+    try {
+      const url = `${GITHUB_API_CONTENTS_BASE}${encodeURIComponent(filename)}?ref=main&t=${bust}`;
+      const res = await fetch(url, {
+        cache: 'no-store',
+        headers: { 'Accept': 'application/vnd.github+json' }
+      });
+      if (!res || !res.ok) return null;
+      const meta = await res.json();
+      if (!meta || !meta.content) return null;
+      const b64 = String(meta.content).replace(/\s+/g, '');
+      const binStr = atob(b64);
+      const bytes = new Uint8Array(binStr.length);
+      for (let i = 0; i < binStr.length; i++) {
+        bytes[i] = binStr.charCodeAt(i);
+      }
+      const utf8Text = (typeof TextDecoder !== 'undefined')
+        ? new TextDecoder('utf-8').decode(bytes)
+        : decodeURIComponent(escape(binStr));
+      return JSON.parse(utf8Text);
+    } catch (e) {
+      return null;
+    }
+  }
+
   async function fetchRemoteOvertimeBundle() {
     const bust = Date.now();
     const isGh = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
-    
-    // 1. Thử gọi API server local (/api/overtime-adjustment) nếu không phải GitHub Pages
+
+    // 1. Server local API (/api/overtime-adjustment) nếu đang chạy Local/LAN
     const apiPromise = !isGh
       ? safeFetchJson('/api/overtime-adjustment?t=' + bust)
       : Promise.resolve(null);
-    
-    // 2. Thử đọc static files ./overtime_adjustment_latest.json & history
+
+    // 2. GitHub Contents API (tức thời 0s cache, giải quyết triệt để độ trễ GitHub Pages / Raw CDN)
+    const ghApiLatestPromise = safeFetchGitHubApiJson('overtime_adjustment_latest.json', bust);
+    const ghApiHistPromise = safeFetchGitHubApiJson('overtime_adjustment_history.json', bust);
+
+    // 3. Static files cùng origin
     const staticLatestPromise = safeFetchJson('./overtime_adjustment_latest.json?t=' + bust);
     const staticHistPromise = safeFetchJson('./overtime_adjustment_history.json?t=' + bust);
-    
-    // 3. Fallback raw GitHub nếu trên GitHub Pages hoặc static bị miss
+
+    // 4. Fallback Raw GitHub (nếu GitHub API bị rate-limit trên GitHub Pages)
     const rawLatestPromise = isGh
       ? safeFetchJson(RAW_GITHUB_BASE + 'overtime_adjustment_latest.json?t=' + bust)
       : Promise.resolve(null);
@@ -296,98 +482,151 @@
       ? safeFetchJson(RAW_GITHUB_BASE + 'overtime_adjustment_history.json?t=' + bust)
       : Promise.resolve(null);
 
-    const [apiData, staticLatest, staticHist, rawLatest, rawHist] = await Promise.all([
-      apiPromise, staticLatestPromise, staticHistPromise, rawLatestPromise, rawHistPromise
+    const [apiData, ghApiLatest, ghApiHist, staticLatest, staticHist, rawLatest, rawHist] = await Promise.all([
+      apiPromise, ghApiLatestPromise, ghApiHistPromise, staticLatestPromise, staticHistPromise, rawLatestPromise, rawHistPromise
     ]);
 
-    let latestPlan = null;
-    let historyList = [];
-
-    if (apiData && apiData.success) {
-      if (apiData.latestPlan && apiData.latestPlan.id) latestPlan = apiData.latestPlan;
-      if (Array.isArray(apiData.history)) historyList = apiData.history;
+    // Xếp hạng các nguồn theo thời gian completedAt mới nhất để KHÔNG bị nguồn cũ (CDN cache) kéo ngược dữ liệu hoặc hồi sinh lịch sử đã xóa
+    const sources = [];
+    if (apiData && apiData.success && (apiData.latestPlan || (Array.isArray(apiData.history) && apiData.history.length > 0))) {
+      const lp = sanitizePlanRecord(apiData.latestPlan || (apiData.history && apiData.history[0]));
+      const hl = Array.isArray(apiData.history) ? apiData.history.map(sanitizePlanRecord).filter(Boolean) : [];
+      sources.push({ name: 'local_api', priority: isGh ? 1 : 4, latestPlan: lp, history: hl, ts: getPlanTimestampMs(lp) });
+    }
+    if ((ghApiLatest && ghApiLatest.id) || (Array.isArray(ghApiHist) && ghApiHist.length > 0)) {
+      const lp = sanitizePlanRecord(ghApiLatest && ghApiLatest.id ? ghApiLatest : (Array.isArray(ghApiHist) ? ghApiHist[0] : null));
+      const hl = Array.isArray(ghApiHist) ? ghApiHist.map(sanitizePlanRecord).filter(Boolean) : [];
+      sources.push({ name: 'github_api', priority: isGh ? 4 : 3, latestPlan: lp, history: hl, ts: getPlanTimestampMs(lp) });
+    }
+    if ((rawLatest && rawLatest.id) || (Array.isArray(rawHist) && rawHist.length > 0)) {
+      const lp = sanitizePlanRecord(rawLatest && rawLatest.id ? rawLatest : (Array.isArray(rawHist) ? rawHist[0] : null));
+      const hl = Array.isArray(rawHist) ? rawHist.map(sanitizePlanRecord).filter(Boolean) : [];
+      sources.push({ name: 'github_raw', priority: 2, latestPlan: lp, history: hl, ts: getPlanTimestampMs(lp) });
+    }
+    if ((staticLatest && staticLatest.id) || (Array.isArray(staticHist) && staticHist.length > 0)) {
+      const lp = sanitizePlanRecord(staticLatest && staticLatest.id ? staticLatest : (Array.isArray(staticHist) ? staticHist[0] : null));
+      const hl = Array.isArray(staticHist) ? staticHist.map(sanitizePlanRecord).filter(Boolean) : [];
+      sources.push({ name: 'static_file', priority: 1, latestPlan: lp, history: hl, ts: getPlanTimestampMs(lp) });
     }
 
-    const candidates = [latestPlan, staticLatest, rawLatest].filter(p => p && p.id);
-    if (candidates.length > 0) {
-      candidates.sort((a, b) => new Date(b.completedAt || b.createdAt || 0) - new Date(a.completedAt || a.createdAt || 0));
-      latestPlan = candidates[0];
+    if (sources.length === 0) {
+      return { success: false, latestPlan: null, history: [], source: 'none' };
     }
 
+    // Chọn nguồn có completedAt MỚI NHẤT (nếu bằng nhau thì chọn nguồn ưu tiên cao hơn: local_api trên Local, github_api trên GitHub)
+    sources.sort((a, b) => (b.ts - a.ts) || (b.priority - a.priority));
+    const best = sources[0];
+    const latestPlan = best.latestPlan;
+
+    // Lấy danh sách lịch sử chuẩn từ chính nguồn mới nhất đó (không trộn lịch sử cũ từ CDN cache bị trễ)
     const histMap = new Map();
-    [historyList, staticHist, rawHist].forEach(list => {
-      if (Array.isArray(list)) {
-        list.forEach(item => {
-          if (item && item.id) histMap.set(item.id, item);
-        });
-      }
+    const primaryHist = (Array.isArray(best.history) && best.history.length > 0)
+      ? best.history
+      : (sources.find(s => Array.isArray(s.history) && s.history.length > 0)?.history || []);
+    primaryHist.forEach(item => {
+      if (item && item.id) histMap.set(item.id, item);
     });
     if (latestPlan && latestPlan.id) {
       histMap.set(latestPlan.id, latestPlan);
     }
-    const mergedHistory = Array.from(histMap.values()).sort(
-      (a, b) => new Date(b.completedAt || b.createdAt || 0) - new Date(a.completedAt || a.createdAt || 0)
-    );
+    const cleanHistory = Array.from(histMap.values())
+      .sort((a, b) => getPlanTimestampMs(b) - getPlanTimestampMs(a))
+      .slice(0, 30);
 
     return {
       success: !!latestPlan,
       latestPlan,
-      history: mergedHistory
+      history: cleanHistory,
+      source: best.name
     };
   }
 
   function handleIncomingAdjPlan(remotePlan, isManual, optionalHistory) {
-    if (!remotePlan) return;
+    const cleanPlan = sanitizePlanRecord(remotePlan);
+    if (!cleanPlan) return;
     const store = window.AssemblyAdjustmentStore;
 
-    // 1. Cập nhật tất cả các công đoạn nếu remotePlan có allStagesOtMap
-    if (remotePlan.allStagesOtMap && typeof remotePlan.allStagesOtMap === 'object') {
-      Object.keys(remotePlan.allStagesOtMap).forEach(stg => {
-        const m = remotePlan.allStagesOtMap[stg];
+    // 1. Cập nhật tất cả các công đoạn nếu remotePlan có allStagesOtMap (luôn sanitize khóa ngày chuẩn)
+    if (cleanPlan.allStagesOtMap && typeof cleanPlan.allStagesOtMap === 'object') {
+      Object.keys(cleanPlan.allStagesOtMap).forEach(stg => {
+        const m = cleanPlan.allStagesOtMap[stg];
         if (m && typeof m === 'object') {
           saveStoredOtMap(m, stg);
         }
       });
     }
 
-    const incomingStage = remotePlan.stage || store.selectedStage || DEFAULT_STAGE;
-    if (remotePlan.otMap && typeof remotePlan.otMap === 'object') {
-      saveStoredOtMap(remotePlan.otMap, incomingStage);
+    const incomingStage = (cleanPlan.stage && STAGE_CONFIGS[cleanPlan.stage]) ? cleanPlan.stage : (store.selectedStage || DEFAULT_STAGE);
+    let cleanIncomingMap = {};
+    if (cleanPlan.otMap && typeof cleanPlan.otMap === 'object') {
+      cleanIncomingMap = saveStoredOtMap(cleanPlan.otMap, incomingStage);
     }
 
-    // Nếu người dùng đang xem đúng công đoạn này
-    if (store.selectedStage === incomingStage && remotePlan.otMap) {
-      store.otMap = { ...remotePlan.otMap };
+    // Khi người dùng chủ động bấm Đồng Bộ Plan: chuyển đúng sang công đoạn của bản kế hoạch mới nhất
+    if (isManual && incomingStage && STAGE_CONFIGS[incomingStage]) {
+      store.selectedStage = incomingStage;
+      try {
+        localStorage.setItem(SELECTED_STAGE_KEY, incomingStage);
+      } catch (e) {}
+    }
+
+    if (store.selectedStage === incomingStage) {
+      store.otMap = { ...cleanIncomingMap };
     } else {
       store.otMap = loadStoredOtMap(store.selectedStage);
     }
 
-    if (remotePlan.planner) {
-      store.plannerName = remotePlan.planner;
-      localStorage.setItem(PLANNER_KEY, remotePlan.planner);
+    if (cleanPlan.planner) {
+      store.plannerName = cleanPlan.planner;
+      localStorage.setItem(PLANNER_KEY, cleanPlan.planner);
     }
-    if (remotePlan.planDate) {
-      store.planDate = remotePlan.planDate;
-      localStorage.setItem(PLAN_DATE_KEY, remotePlan.planDate);
+    if (cleanPlan.planDate) {
+      store.planDate = shortenYear26(cleanPlan.planDate);
+      localStorage.setItem(PLAN_DATE_KEY, store.planDate);
+    }
+    if (cleanPlan.customFromDate && cleanPlan.customToDate && (isManual || (!store.customFromDate && !store.customToDate))) {
+      store.customFromDate = normalizeDateKey(cleanPlan.customFromDate);
+      store.customToDate = normalizeDateKey(cleanPlan.customToDate);
+      try {
+        localStorage.setItem(FROM_DATE_KEY, store.customFromDate);
+        localStorage.setItem(TO_DATE_KEY, store.customToDate);
+      } catch (e) {}
     }
 
-    // Cập nhật Lịch Sử
+    // Ghi nhận ID bản remote đã đồng bộ (và cập nhật mốc draft khi người dùng chủ động đồng bộ)
+    try {
+      if (cleanPlan.id) {
+        localStorage.setItem(LAST_REMOTE_ID_KEY, cleanPlan.id);
+      }
+      if (isManual) {
+        const rTs = getPlanTimestampMs(cleanPlan) || Date.now();
+        markLocalDraftModified(Math.max(Date.now(), rTs));
+      }
+    } catch (e) {}
+
+    // Cập nhật Lịch Sử chuẩn xác từ nguồn mới nhất
     if (Array.isArray(optionalHistory) && optionalHistory.length > 0) {
-      store.history = optionalHistory;
+      store.history = optionalHistory.map(sanitizePlanRecord).filter(Boolean).slice(0, 30);
       saveHistoryPlans(store.history);
-    } else if (remotePlan.id) {
+    } else if (cleanPlan.id) {
       if (!Array.isArray(store.history)) store.history = [];
-      if (!store.history.find(h => h.id === remotePlan.id)) {
-        store.history.unshift(remotePlan);
-        if (store.history.length > 30) store.history = store.history.slice(0, 30);
-        saveHistoryPlans(store.history);
+      store.history = [cleanPlan, ...store.history.filter(h => h && h.id !== cleanPlan.id)].slice(0, 30);
+      saveHistoryPlans(store.history);
+    }
+
+    // Khi đồng bộ thủ công, đưa cuộn bảng về đầu để người dùng nhìn thấy đầy đủ từ dòng 1 (không bị trôi ẩn hàng trên)
+    if (isManual) {
+      const wrap = document.querySelector('#datamassAssemblyAdjustmentPlanContainer .assembly-adj-scroll-wrap');
+      if (wrap) {
+        wrap.scrollTop = 0;
+        wrap.scrollLeft = 0;
       }
     }
 
     window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
     if (window.showToast && !isManual) {
       const stageName = STAGE_CONFIGS[incomingStage]?.name || incomingStage;
-      window.showToast('info', `🔔 Đã đồng bộ Kế Hoạch Điều Chỉnh [${stageName}] từ [${remotePlan.planner || 'User'}] (${remotePlan.planDate || ''})!`);
+      window.showToast('info', `🔔 Đã đồng bộ Kế Hoạch Điều Chỉnh [${stageName}] từ [${cleanPlan.planner || 'User'}] (${cleanPlan.planDate || ''})!`);
     }
   }
 
@@ -442,10 +681,10 @@
       let owningKip = 'A';
       if (lineName.endsWith('B')) owningKip = 'B';
       else if (lineName.endsWith('C')) owningKip = 'C';
-      else if (lineName.endsWith('D')) owningKip = (lineName === '3D') ? 'HC' : 'D';
+      else if (lineName.endsWith('D')) owningKip = 'D';
 
-      const defaultDirect = (lineName === '3D') ? 13.0 : 14.0;
-      const defaultTotal = (lineName === '3D') ? 18.0 : 19.0;
+      const defaultDirect = 14.0;
+      const defaultTotal = 19.0;
       return { owningKip, direct: defaultDirect, total: defaultTotal };
     }
 
@@ -477,33 +716,17 @@
   }
 
   /**
-   * Chuẩn hóa khóa ngày dạng YYYY-MM-DD
-   */
-  function normalizeDateKey(dateStr) {
-    if (!dateStr) return '';
-    const s = String(dateStr).trim();
-    if (s.includes('/')) {
-      const parts = s.split('/');
-      if (parts.length === 3) {
-        let [m, d, y] = parts;
-        if (m.length === 4) { [y, m, d] = parts; }
-        return `${y.padStart(4, '20')}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
-      }
-    }
-    return s;
-  }
-
-  /**
-   * Định dạng ngày hiển thị DD/MM/YYYY
+   * Định dạng ngày hiển thị gọn DD/MM/YY (rút gọn 2026 -> 26 tiết kiệm không gian)
    */
   function formatDateDisplay(dateStr) {
     if (!dateStr) return '';
     const norm = normalizeDateKey(dateStr);
     const parts = norm.split('-');
     if (parts.length === 3) {
-      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+      const yy = parts[0].length === 4 ? parts[0].slice(-2) : parts[0];
+      return `${parts[2]}/${parts[1]}/${yy}`;
     }
-    return dateStr;
+    return shortenYear26(dateStr);
   }
 
   function escapeHtml(str) {
@@ -556,14 +779,14 @@
         workingLines = [...kipConfig.lines];
       } else {
         if (kip === 'A') workingLines = ['1A', '2A', '3A'];
-        else if (kip === 'B') workingLines = ['1B', '2B'];
+        else if (kip === 'B') workingLines = ['1B', '2B', '3B'];
         else if (kip === 'C') workingLines = ['1C', '2C', '3C'];
-        else if (kip === 'D') workingLines = ['1D', '2D'];
+        else if (kip === 'D') workingLines = ['1D', '2D', '3D'];
       }
 
-      // 2. Line Hành Chính (HC, mặc định Line 3D):
+      // 2. Line Hành Chính (HC) — lấy động hoàn toàn từ sheet Man-SFPD (không hardcode 3D)
       const hcConfig = master.HC || {};
-      const hcLines = (hcConfig.assyLinesDirect ? Object.keys(hcConfig.assyLinesDirect) : (hcConfig.lines || ['3D']));
+      const hcLines = (hcConfig.assyLinesDirect ? Object.keys(hcConfig.assyLinesDirect) : (Array.isArray(hcConfig.lines) ? hcConfig.lines : []));
       const hcShift = hcConfig.workShift || 'Day';
       const hcDays = hcConfig.workingDays || 'Mon-Fri';
 
@@ -602,16 +825,29 @@
    */
   function getAssignedOtLines(dateStr, shift, stage, customOtMap) {
     const store = window.AssemblyAdjustmentStore;
-    const stageId = stage || store.selectedStage || DEFAULT_STAGE;
     const map = customOtMap || store.otMap || {};
     const norm = normalizeDateKey(dateStr);
-    const raw = String(dateStr).trim();
-    
     const key1 = `${norm}_${shift}`;
+
+    if (Object.prototype.hasOwnProperty.call(map, key1)) {
+      return Array.isArray(map[key1]) ? [...map[key1]] : [];
+    }
+
+    const raw = String(dateStr).trim();
     const key2 = `${raw}_${shift}`;
-    
-    const list = map[key1] || map[key2] || [];
-    return Array.isArray(list) ? [...list] : [];
+    if (Object.prototype.hasOwnProperty.call(map, key2)) {
+      return Array.isArray(map[key2]) ? [...map[key2]] : [];
+    }
+
+    // Fallback kiểm tra nếu map chưa được sanitize (ví dụ khóa dạng MM/DD/YYYY_Shift trong bản cũ)
+    for (const [k, v] of Object.entries(map)) {
+      if (!k.endsWith(`_${shift}`)) continue;
+      const dPart = k.slice(0, k.lastIndexOf('_'));
+      if (normalizeDateKey(dPart) === norm) {
+        return Array.isArray(v) ? [...v] : [];
+      }
+    }
+    return [];
   }
 
   /**
@@ -888,9 +1124,20 @@
 
   /**
    * Xác định danh sách ngày cần hiển thị trong bảng điều chỉnh
+   * Ưu tiên tuyệt đối khoảng thời gian người dùng đã chọn riêng (customFromDate -> customToDate),
+   * giữ nguyên vẹn 100% không bị đổi lại khi web refresh / auto-sync.
    */
   function resolveAdjustmentDates(schedule) {
     const store = window.AssemblyAdjustmentStore;
+
+    // 1. Ưu tiên tuyệt đối khoảng thời gian riêng đã chọn & lưu trong localStorage
+    if (store.customFromDate && store.customToDate) {
+      const customRange = generateDateRange(store.customFromDate, store.customToDate);
+      if (customRange.length > 0) {
+        return customRange;
+      }
+    }
+
     const mode = store.dateViewMode || 'ACTIVE_SCHEDULE';
 
     if (mode === 'ACTIVE_SCHEDULE') {
@@ -904,13 +1151,13 @@
 
     if (mode === 'CONCEPT_WEEK') {
       return [
-        '11/17/2026',
-        '11/18/2026',
-        '11/19/2026',
-        '11/20/2026',
-        '11/21/2026',
-        '11/22/2026',
-        '11/23/2026'
+        '2026-11-17',
+        '2026-11-18',
+        '2026-11-19',
+        '2026-11-20',
+        '2026-11-21',
+        '2026-11-22',
+        '2026-11-23'
       ];
     }
 
@@ -918,15 +1165,55 @@
       return schedule.selectedDates;
     }
     return [
-      '11/17/2026',
-      '11/18/2026',
-      '11/19/2026',
-      '11/20/2026',
-      '11/21/2026',
-      '11/22/2026',
-      '11/23/2026'
+      '2026-11-17',
+      '2026-11-18',
+      '2026-11-19',
+      '2026-11-20',
+      '2026-11-21',
+      '2026-11-22',
+      '2026-11-23'
     ];
   }
+
+  /**
+   * Thay đổi & cố định khoảng thời gian riêng cho Kế Hoạch Điều Chỉnh Overtime
+   */
+  window.handleAdjustmentDateRangeChange = function(fromVal, toVal) {
+    const store = window.AssemblyAdjustmentStore;
+    let fNorm = normalizeDateKey(fromVal);
+    let tNorm = normalizeDateKey(toVal);
+
+    if (!fNorm && !tNorm) {
+      store.customFromDate = '';
+      store.customToDate = '';
+      try {
+        localStorage.removeItem(FROM_DATE_KEY);
+        localStorage.removeItem(TO_DATE_KEY);
+      } catch (e) {}
+      window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
+      return;
+    }
+
+    if (fNorm && !tNorm) tNorm = fNorm;
+    if (!fNorm && tNorm) fNorm = tNorm;
+    if (fNorm > tNorm) {
+      const tmp = fNorm;
+      fNorm = tNorm;
+      tNorm = tmp;
+    }
+
+    store.customFromDate = fNorm;
+    store.customToDate = tNorm;
+    try {
+      localStorage.setItem(FROM_DATE_KEY, fNorm);
+      localStorage.setItem(TO_DATE_KEY, tNorm);
+    } catch (e) {}
+
+    window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
+    if (window.showToast) {
+      window.showToast('success', `📅 Đã cố định khoảng thời gian Overtime: ${formatDateDisplay(fNorm)} → ${formatDateDisplay(tNorm)} (giữ nguyên khi tải lại trang)!`);
+    }
+  };
 
   /**
    * Chuyển đổi công đoạn cần lập kế hoạch điều chỉnh
@@ -1039,17 +1326,19 @@
     });
 
     const historyCount = (store.history || []).length;
+    const activeFromIso = store.customFromDate || (dates.length > 0 ? normalizeDateKey(dates[0]) : '');
+    const activeToIso = store.customToDate || (dates.length > 0 ? normalizeDateKey(dates[dates.length - 1]) : '');
 
     let html = `
       <div class="section-card assembly-adjustment-card" id="assemblyAdjustmentSectionCard" style="border: 1px solid rgba(245, 158, 11, 0.35); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);">
-        <!-- Header Row: Tiêu đề sửa thành KẾ HOẠCH ĐIỀU CHỈNH OVERTIME + Chọn công đoạn bên cạnh -->
+        <!-- Header Row: Tiêu đề + Chọn công đoạn + Chọn khoảng ngày cố định + Thu gọn -->
         <div class="section-header-row" style="flex-wrap: wrap; gap: 0.65rem; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08)); padding-bottom: 0.75rem;">
           <div class="section-title-wrap" style="display: flex; align-items: center; gap: 0.65rem;">
             <div class="section-icon-badge" style="background: rgba(245, 158, 11, 0.18); border-color: rgba(245, 158, 11, 0.45); color: #fbbf24; font-size: 1.25rem;">
               ⚡
             </div>
             <div>
-              <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 0.55rem; flex-wrap: wrap;">
                 <h2 style="font-size: 1.05rem; font-weight: 800; color: #f8fafc; margin: 0; letter-spacing: -0.01em;">
                   📋 KẾ HOẠCH ĐIỀU CHỈNH OVERTIME
                 </h2>
@@ -1062,6 +1351,19 @@
                       <option value="${stKey}" ${stKey === activeStageId ? 'selected' : ''}>${STAGE_CONFIGS[stKey].name}</option>
                     `).join('')}
                   </select>
+                </div>
+
+                <!-- BỘ CHỌN KHOẢNG NGÀY RIÊNG (CỐ ĐỊNH KHÔNG ĐỔI KHI WEB REFRESH) -->
+                <div class="adj-date-range-picker" style="display: inline-flex; align-items: center; gap: 0.35rem; background: rgba(15, 23, 42, 0.9); padding: 0.18rem 0.55rem; border-radius: 8px; border: 1px solid rgba(96, 165, 250, 0.4); font-size: 0.75rem; color: #e2e8f0;" title="Chọn khoảng thời gian riêng cho Kế Hoạch Điều Chỉnh Overtime — giữ nguyên cố định khi web refresh">
+                  <span style="font-weight: 800; color: #60a5fa;">📅 Ngày:</span>
+                  <span style="font-weight: 600; color: #cbd5e1;">Từ</span>
+                  <input type="date" id="adjFromDateInput" value="${activeFromIso}"
+                         onchange="window.handleAdjustmentDateRangeChange(this.value, document.getElementById('adjToDateInput')?.value)"
+                         style="padding: 0.16rem 0.45rem; font-size: 0.75rem; font-weight: 700; border-radius: 6px; background: #0f172a; border: 1px solid rgba(148, 163, 184, 0.45); color: #f8fafc; cursor: pointer; outline: none; color-scheme: dark;" />
+                  <span style="font-weight: 600; color: #cbd5e1;">Đến</span>
+                  <input type="date" id="adjToDateInput" value="${activeToIso}"
+                         onchange="window.handleAdjustmentDateRangeChange(document.getElementById('adjFromDateInput')?.value, this.value)"
+                         style="padding: 0.16rem 0.45rem; font-size: 0.75rem; font-weight: 700; border-radius: 6px; background: #0f172a; border: 1px solid rgba(148, 163, 184, 0.45); color: #f8fafc; cursor: pointer; outline: none; color-scheme: dark;" />
                 </div>
 
                 <button type="button" class="btn-filter-toggle" onclick="window.toggleAssemblyAdjustmentCollapse()" style="font-size: 0.75rem; padding: 0.2rem 0.6rem;" title="Thu gọn hoặc Mở rộng Bảng Điều Chỉnh">
@@ -1081,7 +1383,7 @@
 
             <!-- Ngày lập Plan -->
             <button type="button" class="btn btn-secondary" onclick="window.handleEditAssemblyAdjPlanDate()" style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 6px; background: rgba(15, 23, 42, 0.8); cursor: pointer;" title="Bấm để chỉnh sửa Ngày lập Plan">
-              <span>📅 Ngày lập: <strong id="adjPlanDateBadge" style="color: #38bdf8;">${escapeHtml(store.planDate)}</strong></span>
+              <span>📅 Ngày lập: <strong id="adjPlanDateBadge" style="color: #38bdf8;">${escapeHtml(shortenYear26(store.planDate))}</strong></span>
               <span style="font-size: 0.65rem; opacity: 0.8;">✏️</span>
             </button>
 
@@ -1135,55 +1437,25 @@
 
         <!-- Body Container (Hỗ trợ thu gọn/mở rộng) -->
         <div id="assemblyAdjustmentTableBodyWrap" style="${isCollapsed ? 'display: none;' : 'margin-top: 0.75rem;'}">
-          <div class="table-container assembly-adj-scroll-wrap" style="overflow-x: auto; max-height: 720px; border: 1px solid var(--border-glass, #334155); border-radius: 8px;">
+          <div class="table-container assembly-adj-scroll-wrap" style="overflow: auto; max-height: 620px; border: 1px solid var(--border-glass, #334155); border-radius: 8px;">
             <table class="data-table assembly-adj-table" id="assemblyAdjustmentTable" style="width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.8rem;">
               <thead>
-                <!-- TẦNG HEADER 1: KÍP (Nền vàng nổi bật chuẩn Concept) -->
-                <tr class="adj-header-kip-row" style="background: #fde047;">
-                  <th class="sticky-col-header" style="position: sticky; left: 0; z-index: 15; background: #fde047; color: #000000; font-weight: 900; border-right: 1px solid rgba(0,0,0,0.2); border-bottom: 1px solid rgba(0,0,0,0.2); text-align: left; padding: 0.4rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; height: 34px; box-sizing: border-box;">
-                    KÍP
+                <!-- HEADER DUY NHẤT GỘP 2 DÒNG GỌN (DD/MM/26 + Day/Night - Kíp) & ĐÓNG BĂNG CỐ ĐỊNH Ở ĐỈNH BẢNG (top: 0) -->
+                <tr class="adj-header-shift-row" style="background: var(--bg-card-solid, #1e293b);">
+                  <th class="sticky-col-header" style="position: sticky; top: 0; left: 0; z-index: 35; background: var(--bg-card-solid, #1e293b); color: #f8fafc; font-weight: 800; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); text-align: left; padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; height: 42px; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: none;">
+                    📅 CA SẢN XUẤT
                   </th>
                   <!-- CỘT TỔNG CỘNG: CỐ ĐỊNH BÊN TRÁI CẠNH CỘT 1 -->
-                  <th class="sticky-col-summary-header" style="position: sticky; left: 220px; z-index: 14; background: #fde047; color: #000000; font-weight: 900; font-size: 0.88rem; text-align: center; border-right: 2px solid rgba(0,0,0,0.3); border-bottom: 1px solid rgba(0,0,0,0.2); padding: 0.4rem 0.45rem; min-width: 75px; max-width: 75px; width: 75px; height: 34px; box-sizing: border-box; box-shadow: 4px 0 10px rgba(0,0,0,0.25);">
-                    TỔNG
-                  </th>
-                  ${colsData.map(cd => `
-                    <th style="background: #fde047; color: #000000; font-weight: 900; font-size: 0.95rem; text-align: center; border-right: 1px solid rgba(0,0,0,0.15); border-bottom: 1px solid rgba(0,0,0,0.2); padding: 0.4rem 0.5rem; min-width: 80px; height: 34px; box-sizing: border-box;">
-                      ${cd.kip}
-                    </th>
-                  `).join('')}
-                </tr>
-
-                <!-- TẦNG HEADER 2: NGÀY (DATE) -->
-                <tr class="adj-header-date-row" style="background: var(--bg-card-header, #0f172a);">
-                  <th class="sticky-col-header" style="position: sticky; left: 0; z-index: 15; background: var(--bg-card-header, #0f172a); color: var(--text-primary, #f8fafc); font-weight: 700; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); text-align: left; padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; height: 28px; box-sizing: border-box;">
-                    NGÀY
-                  </th>
-                  <!-- CỘT TỔNG CỘNG: HEADER 2 -->
-                  <th class="sticky-col-summary-header" style="position: sticky; left: 220px; z-index: 14; background: #1e293b; color: #fbbf24; font-weight: 800; font-size: 0.76rem; text-align: center; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.45rem; min-width: 75px; max-width: 75px; width: 75px; height: 28px; box-sizing: border-box; box-shadow: 4px 0 10px rgba(0,0,0,0.25); white-space: nowrap;">
-                    KỲ CHỌN
-                  </th>
-                  ${colsData.map(cd => `
-                    <th style="background: var(--bg-card-header, #0f172a); color: var(--text-primary, #f8fafc); font-weight: 700; font-size: 0.78rem; text-align: center; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.45rem; white-space: nowrap; height: 28px; box-sizing: border-box;">
-                      ${formatDateDisplay(cd.dateStr)}
-                    </th>
-                  `).join('')}
-                </tr>
-
-                <!-- TẦNG HEADER 3: CA (SHIFT: DAY / NIGHT) - ĐÓNG BĂNG TỪ HÀNG CA -->
-                <tr class="adj-header-shift-row" style="background: var(--bg-card-solid, #1e293b);">
-                  <th class="sticky-col-header" style="position: sticky; top: 0; left: 0; z-index: 35; background: var(--bg-card-solid, #1e293b); color: var(--text-secondary, #cbd5e1); font-weight: 700; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); text-align: left; padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; height: 28px; box-sizing: border-box;">
-                    CA
-                  </th>
-                  <!-- CỘT TỔNG CỘNG: HEADER 3 -->
-                  <th class="sticky-col-summary-header" style="position: sticky; top: 0; left: 220px; z-index: 34; background: #0f172a; color: #f8fafc; font-weight: 800; font-size: 0.76rem; text-align: center; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.35rem 0.45rem; min-width: 75px; max-width: 75px; width: 75px; height: 28px; box-sizing: border-box; box-shadow: 4px 0 10px rgba(0,0,0,0.25);">
-                    ${colsData.length} CA
+                  <th class="sticky-col-summary-header" style="position: sticky; top: 0; left: 220px; z-index: 34; background: #0f172a; color: #fbbf24; font-weight: 900; font-size: 0.72rem; text-align: center; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.3rem 0.2rem; min-width: 75px; max-width: 75px; width: 75px; height: 42px; box-sizing: border-box; box-shadow: 4px 0 10px rgba(0,0,0,0.25); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: none;">
+                    <div style="line-height: 1.25;">TỔNG</div>
+                    <div style="line-height: 1.25; font-size: 0.68rem;">(${colsData.length} ca)</div>
                   </th>
                   ${colsData.map(cd => {
                     const isDay = cd.shift === 'Day';
                     return `
-                      <th style="position: sticky; top: 0; z-index: 20; background: var(--bg-card-solid, #1e293b); color: ${isDay ? '#fbbf24' : '#c084fc'}; font-weight: 800; font-size: 0.78rem; text-align: center; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.35rem 0.45rem; height: 28px; box-sizing: border-box;">
-                        ${cd.shift}
+                      <th style="position: sticky; top: 0; z-index: 25; background: var(--bg-card-solid, #1e293b); color: #f8fafc; font-weight: 800; font-size: 0.73rem; text-align: center; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.25rem 0.3rem; min-width: 68px; height: 42px; box-sizing: border-box; white-space: nowrap; text-transform: none; line-height: 1.25;" title="Ngày ${formatDateDisplay(cd.dateStr)} • Ca ${cd.shift} • Kíp ${cd.kip}">
+                        <div style="line-height: 1.25;">${formatDateDisplay(cd.dateStr)}</div>
+                        <div style="line-height: 1.25;"><span style="color: ${isDay ? '#fbbf24' : '#c084fc'};">${cd.shift}</span> - <span style="color: #fde047;">${cd.kip}</span></div>
                       </th>
                     `;
                   }).join('')}
@@ -1424,21 +1696,24 @@
     const store = window.AssemblyAdjustmentStore;
     const currentStage = store.selectedStage || DEFAULT_STAGE;
     const norm = normalizeDateKey(dateStr);
-    const raw = String(dateStr).trim();
-    
     const key = `${norm}_${shift}`;
-    const rawKey = `${raw}_${shift}`;
 
-    let currentList = store.otMap[key] || store.otMap[rawKey] || [];
-    if (!Array.isArray(currentList)) currentList = [];
+    // Luôn chuẩn hóa otMap trước khi thao tác để loại bỏ hoàn toàn mọi khóa trùng lặp (MM/DD/YYYY vs YYYY-MM-DD)
+    store.otMap = sanitizeOtMap(store.otMap);
+
+    let currentList = Array.isArray(store.otMap[key]) ? [...store.otMap[key]] : [];
 
     const existingIdx = currentList.indexOf(lineName);
     if (existingIdx !== -1) {
       // HỦY CHỌN OT: Không bao giờ vi phạm an toàn vì số ngày liên tục giảm xuống
       currentList.splice(existingIdx, 1);
-      store.otMap[key] = currentList;
-      if (rawKey !== key) delete store.otMap[rawKey];
-      saveStoredOtMap(store.otMap, currentStage);
+      if (currentList.length > 0) {
+        store.otMap[key] = currentList;
+      } else {
+        delete store.otMap[key];
+      }
+      store.otMap = saveStoredOtMap(store.otMap, currentStage);
+      markLocalDraftModified();
       window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
       if (window.showToast) {
         window.showToast('info', `🗑️ Đã hủy Line ${lineName} làm thêm cho ${shift === 'Day' ? 'Ca Ngày' : 'Ca Đêm'} ${formatDateDisplay(dateStr)}!`);
@@ -1458,8 +1733,8 @@
 
       currentList.push(lineName);
       store.otMap[key] = currentList;
-      if (rawKey !== key) delete store.otMap[rawKey];
-      saveStoredOtMap(store.otMap, currentStage);
+      store.otMap = saveStoredOtMap(store.otMap, currentStage);
+      markLocalDraftModified();
       window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
       const lineStaff = getLineStaffingConfig(lineName, currentStage);
       if (window.showToast) {
@@ -1492,11 +1767,11 @@
    */
   window.handleEditAssemblyAdjPlanDate = function() {
     const store = window.AssemblyAdjustmentStore;
-    const current = store.planDate || getTodayFormatted();
-    const newDate = window.prompt('Nhập Ngày lập Plan (DD/MM/YYYY):', current);
+    const current = shortenYear26(store.planDate || getTodayFormatted());
+    const newDate = window.prompt('Nhập Ngày lập Plan (DD/MM/YY):', current);
     if (newDate !== null) {
       const clean = newDate.trim();
-      const finalDate = clean || getTodayFormatted();
+      const finalDate = shortenYear26(clean || getTodayFormatted());
       store.planDate = finalDate;
       localStorage.setItem(PLAN_DATE_KEY, finalDate);
       window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
@@ -1507,15 +1782,37 @@
   };
 
   /**
-   * Lưu Tạm Kế Hoạch Điều Chỉnh
+   * Lưu Tạm Kế Hoạch Điều Chỉnh (bảo toàn 100% cả OT lẫn khoảng ngày khi web refresh / F5)
    */
   window.handleSaveAssemblyAdjDraft = function() {
     const store = window.AssemblyAdjustmentStore;
-    saveStoredOtMap(store.otMap, store.selectedStage);
+    const currentStage = store.selectedStage || DEFAULT_STAGE;
+    store.otMap = saveStoredOtMap(store.otMap, currentStage);
+    localStorage.setItem(SELECTED_STAGE_KEY, currentStage);
     localStorage.setItem(PLANNER_KEY, store.plannerName || 'Lê Ngọc Duy GLD');
-    localStorage.setItem(PLAN_DATE_KEY, store.planDate || getTodayFormatted());
+    localStorage.setItem(PLAN_DATE_KEY, shortenYear26(store.planDate || getTodayFormatted()));
+
+    const activeDates = resolveAdjustmentDates(window.__LATEST_SCHEDULE__);
+    const saveFrom = store.customFromDate || (activeDates.length > 0 ? normalizeDateKey(activeDates[0]) : '');
+    const saveTo = store.customToDate || (activeDates.length > 0 ? normalizeDateKey(activeDates[activeDates.length - 1]) : '');
+    if (saveFrom && saveTo) {
+      store.customFromDate = saveFrom;
+      store.customToDate = saveTo;
+      try {
+        localStorage.setItem(FROM_DATE_KEY, saveFrom);
+        localStorage.setItem(TO_DATE_KEY, saveTo);
+      } catch (e) {}
+    }
+
+    markLocalDraftModified();
+
+    let draftOtCount = 0;
+    Object.values(store.otMap || {}).forEach(arr => {
+      if (Array.isArray(arr)) draftOtCount += arr.length;
+    });
+
     if (window.showToast) {
-      window.showToast('success', '💾 Đã lưu tạm thành công Kế Hoạch Điều Chỉnh Line OT!');
+      window.showToast('success', `💾 Đã lưu tạm thành công Kế Hoạch Điều Chỉnh Line OT (${draftOtCount} ca OT) — an toàn khi tải lại trang!`);
     }
   };
 
@@ -1528,14 +1825,14 @@
     const now = new Date();
     const planId = 'ADJ_' + now.getTime();
     
-    // 1. Lưu lại map của công đoạn hiện tại vào storage
-    saveStoredOtMap(store.otMap, currentStage);
+    // 1. Chuẩn hóa & lưu lại map của công đoạn hiện tại vào storage
+    store.otMap = saveStoredOtMap(store.otMap, currentStage);
 
-    // 2. Thu thập toàn bộ OT map của TẤT CẢ các công đoạn
+    // 2. Thu thập toàn bộ OT map đã chuẩn hóa của TẤT CẢ các công đoạn
     const allStagesOtMap = {};
     let totalOtCountAllStages = 0;
     Object.keys(STAGE_CONFIGS).forEach(stgKey => {
-      const map = (stgKey === currentStage) ? (store.otMap || {}) : loadStoredOtMap(stgKey);
+      const map = sanitizeOtMap((stgKey === currentStage) ? (store.otMap || {}) : loadStoredOtMap(stgKey));
       let count = 0;
       Object.values(map || {}).forEach(arr => {
         if (Array.isArray(arr)) count += arr.length;
@@ -1546,21 +1843,35 @@
       }
     });
 
-    // Đếm tổng số ca OT công đoạn hiện tại
+    // Đếm tổng số ca OT công đoạn hiện tại (đã loại trùng khóa ngày)
     let otCount = 0;
     Object.values(store.otMap || {}).forEach(arr => {
       if (Array.isArray(arr)) otCount += arr.length;
     });
+
+    const activeDates = resolveAdjustmentDates(window.__LATEST_SCHEDULE__);
+    const saveFrom = store.customFromDate || (activeDates.length > 0 ? normalizeDateKey(activeDates[0]) : '');
+    const saveTo = store.customToDate || (activeDates.length > 0 ? normalizeDateKey(activeDates[activeDates.length - 1]) : '');
+    if (saveFrom && saveTo) {
+      store.customFromDate = saveFrom;
+      store.customToDate = saveTo;
+      try {
+        localStorage.setItem(FROM_DATE_KEY, saveFrom);
+        localStorage.setItem(TO_DATE_KEY, saveTo);
+      } catch (e) {}
+    }
 
     const record = {
       id: planId,
       stage: currentStage,
       stageName: STAGE_CONFIGS[currentStage]?.name || currentStage,
       planner: store.plannerName || 'Lê Ngọc Duy GLD',
-      planDate: store.planDate || getTodayFormatted(),
+      planDate: shortenYear26(store.planDate || getTodayFormatted()),
+      customFromDate: saveFrom,
+      customToDate: saveTo,
       completedAt: now.toISOString(),
       timeStr: now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
-      dateStr: now.toLocaleDateString('vi-VN'),
+      dateStr: shortenYear26(now.toLocaleDateString('vi-VN')),
       otCount,
       otMap: JSON.parse(JSON.stringify(store.otMap || {})),
       allStagesOtMap,
@@ -1571,6 +1882,12 @@
     store.history.unshift(record);
     if (store.history.length > 30) store.history = store.history.slice(0, 30);
     saveHistoryPlans(store.history);
+
+    // Ghi nhận mốc hoàn thành & ID để auto-sync không ghi đè ngược
+    markLocalDraftModified(now.getTime());
+    try {
+      localStorage.setItem(LAST_REMOTE_ID_KEY, planId);
+    } catch (e) {}
 
     // Phát broadcast đồng bộ tới tất cả tabs & browsers trên cùng máy
     if (adjSyncChannel) {
@@ -1584,29 +1901,44 @@
 
     window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
 
-    // Gửi lên Server API /api/overtime-adjustment để lưu file JSON & kích hoạt GitHub Auto-push
+    // Gửi lên Server API /api/overtime-adjustment để lưu file JSON & đẩy thẳng lên GitHub qua GitHub API
     let serverSyncSuccess = false;
-    try {
-      const res = await fetch('/api/overtime-adjustment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan: record })
-      });
-      if (res && res.ok) {
-        serverSyncSuccess = true;
-      }
-    } catch (e) {}
+    let githubPushed = false;
+    let githubErr = '';
+    const isGh = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
+    if (!isGh) {
+      try {
+        const res = await fetch('/api/overtime-adjustment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan: record, history: store.history })
+        });
+        if (res && res.ok) {
+          serverSyncSuccess = true;
+          try {
+            const resJson = await res.json();
+            githubPushed = Boolean(resJson && resJson.githubPushed);
+            githubErr = (resJson && resJson.githubError) ? String(resJson.githubError) : '';
+          } catch (e) {}
+        }
+      } catch (e) {}
+    }
 
     if (window.showToast) {
-      const syncNote = serverSyncSuccess
-        ? ' • Đã lưu lên máy chủ & tự động đồng bộ GitHub cho tất cả User!'
-        : ' • Đã lưu thành công và sẵn sàng đồng bộ cho tất cả User!';
+      let syncNote = ' • Đã lưu thành công trên trình duyệt!';
+      if (githubPushed) {
+        syncNote = ' • 🚀 Đã đẩy thẳng lên GitHub thành công — Web GitHub có thể bấm Đồng Bộ Plan ngay!';
+      } else if (serverSyncSuccess) {
+        syncNote = githubErr
+          ? ` • Đã lưu máy chủ Local (lỗi đẩy GitHub: ${githubErr.slice(0, 80)})`
+          : ' • Đã lưu máy chủ Local (chưa đẩy được lên GitHub, kiểm tra kết nối mạng).';
+      }
       window.showToast('success', `✅ ĐÃ HOÀN THÀNH KẾ HOẠCH ĐIỀU CHỈNH [${record.stageName}]! Người lập: ${record.planner}${syncNote}`);
     }
   };
 
   /**
-   * Đồng Bộ Ngay Lập Tức Kế Hoạch Mới Nhất (Đa Nguồn: Server LAN, Static JSON, GitHub Raw, Cloud)
+   * Đồng Bộ Ngay Lập Tức Kế Hoạch Mới Nhất (Đa Nguồn: Server Local, GitHub API tức thời, Static JSON, GitHub Raw)
    */
   window.handleForceSyncAssemblyAdjPlan = async function() {
     if (window.showToast) {
@@ -1617,10 +1949,31 @@
       const bundle = await fetchRemoteOvertimeBundle();
       if (bundle && bundle.latestPlan) {
         const plan = bundle.latestPlan;
+        const store = window.AssemblyAdjustmentStore;
+        const localLatest = (store.history && store.history[0]) ? store.history[0] : null;
+        const localTs = getPlanTimestampMs(localLatest);
+        const remoteTs = getPlanTimestampMs(plan);
+
+        // Chống trôi ngược về bản cũ nếu bản trên máy cục bộ mới hơn bản trên remote
+        if (localTs > 0 && remoteTs > 0 && remoteTs < localTs) {
+          const confirmRollback = window.confirm(
+            `⚠️ Bản trên server/GitHub (${plan.planner || 'User'} • ${plan.planDate || ''} lúc ${plan.timeStr || ''}) CŨ HƠN bản đang có trên máy bạn (${localLatest.planner || 'User'} • ${localLatest.planDate || ''} lúc ${localLatest.timeStr || ''}).\n\nBạn có chắc chắn muốn tải đè bản cũ hơn không?`
+          );
+          if (!confirmRollback) {
+            if (window.showToast) {
+              window.showToast('info', '🛡️ Đã giữ nguyên kế hoạch mới hơn trên máy bạn (không ghi đè bằng bản cũ).');
+            }
+            return;
+          }
+        }
+
         handleIncomingAdjPlan(plan, true, bundle.history);
         if (window.showToast) {
           const stgName = STAGE_CONFIGS[plan.stage]?.name || plan.stage || 'ASSEMBLY';
-          window.showToast('success', `🔄 ĐÃ ĐỒNG BỘ THÀNH CÔNG: Kế hoạch điều chỉnh [${stgName}] từ [${plan.planner || 'User'}] (${plan.planDate || plan.dateStr || ''} lúc ${plan.timeStr || ''} • ${plan.otCount || 0} ca OT)!`);
+          const rangeText = (plan.customFromDate && plan.customToDate)
+            ? ` • Kỳ ${formatDateDisplay(plan.customFromDate)}→${formatDateDisplay(plan.customToDate)}`
+            : '';
+          window.showToast('success', `🔄 ĐÃ ĐỒNG BỘ THÀNH CÔNG: [${stgName}] từ [${plan.planner || 'User'}] (${plan.planDate || plan.dateStr || ''} lúc ${plan.timeStr || ''} • ${plan.otCount || 0} ca OT${rangeText})!`);
         }
         return;
       }
@@ -1695,7 +2048,7 @@
                       <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-weight: 800; font-size: 0.72rem;">#${history.length - idx}</span>
                       <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; font-weight: 700; font-size: 0.72rem;">${escapeHtml(h.stageName || h.stage || 'ASSEMBLY')}</span>
                       <strong style="color: #fbbf24; font-size: 0.88rem;">👤 ${escapeHtml(h.planner || 'User')}</strong>
-                      <span style="color: var(--text-muted); font-size: 0.78rem;">📅 ${escapeHtml(h.planDate || h.dateStr)} lúc ${h.timeStr || ''}</span>
+                      <span style="color: var(--text-muted); font-size: 0.78rem;">📅 ${escapeHtml(shortenYear26(h.planDate || h.dateStr))} lúc ${h.timeStr || ''}</span>
                     </div>
                     <div style="font-size: 0.78rem; color: #94a3b8; margin-top: 0.25rem;">
                       ⚡ Tổng cộng: <strong style="color: #fde047;">${h.otCount || 0} ca OT</strong> đã bố trí
@@ -1728,7 +2081,7 @@
     const found = (store.history || []).find(h => h.id === planId);
     if (!found) return;
 
-    if (!confirm(`Bạn có chắc chắn muốn khôi phục bản kế hoạch của [${found.planner}] lập ngày ${found.planDate || found.dateStr}?`)) return;
+    if (!confirm(`Bạn có chắc chắn muốn khôi phục bản kế hoạch của [${found.planner}] lập ngày ${shortenYear26(found.planDate || found.dateStr)}?`)) return;
 
     const restoredStage = found.stage || DEFAULT_STAGE;
     store.selectedStage = restoredStage;
@@ -1744,13 +2097,21 @@
       });
     }
 
-    store.otMap = JSON.parse(JSON.stringify(found.otMap || {}));
-    saveStoredOtMap(store.otMap, restoredStage);
+    store.otMap = saveStoredOtMap(found.otMap || {}, restoredStage);
+    markLocalDraftModified();
     store.plannerName = found.planner;
     localStorage.setItem(PLANNER_KEY, found.planner);
     if (found.planDate) {
-      store.planDate = found.planDate;
-      localStorage.setItem(PLAN_DATE_KEY, found.planDate);
+      store.planDate = shortenYear26(found.planDate);
+      localStorage.setItem(PLAN_DATE_KEY, store.planDate);
+    }
+    if (found.customFromDate && found.customToDate) {
+      store.customFromDate = normalizeDateKey(found.customFromDate);
+      store.customToDate = normalizeDateKey(found.customToDate);
+      try {
+        localStorage.setItem(FROM_DATE_KEY, store.customFromDate);
+        localStorage.setItem(TO_DATE_KEY, store.customToDate);
+      } catch (e) {}
     }
 
     const modal = document.getElementById('assemblyAdjHistoryModal');
@@ -1763,14 +2124,26 @@
   };
 
   /**
-   * Xóa 1 bản ghi lịch sử
+   * Xóa 1 bản ghi lịch sử (đồng bộ cả máy chủ Local & GitHub nếu đang chạy Local)
    */
-  window.handleDeleteAssemblyAdjHistory = function(planId) {
+  window.handleDeleteAssemblyAdjHistory = async function(planId) {
     const store = window.AssemblyAdjustmentStore;
     if (!confirm('Bạn có chắc chắn muốn xóa bản ghi lịch sử này?')) return;
     store.history = (store.history || []).filter(h => h.id !== planId);
     saveHistoryPlans(store.history);
     window.handleOpenAssemblyAdjHistoryModal();
+    window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
+
+    const isGh = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
+    if (!isGh) {
+      try {
+        await fetch('/api/overtime-adjustment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'delete_history', id: planId })
+        });
+      } catch (e) {}
+    }
   };
 
   /**
@@ -1797,8 +2170,8 @@
     const currentStage = store.selectedStage || DEFAULT_STAGE;
     const stageName = STAGE_CONFIGS[currentStage]?.name || currentStage;
     if (!confirm(`Bạn có chắc chắn muốn đặt lại tất cả Line Overtime của công đoạn [${stageName}] về mặc định ban đầu không?`)) return;
-    store.otMap = getSampleDefaultOtMap(currentStage);
-    saveStoredOtMap(store.otMap, currentStage);
+    store.otMap = saveStoredOtMap(getSampleDefaultOtMap(currentStage), currentStage);
+    markLocalDraftModified();
     window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
     if (window.showToast) {
       window.showToast('success', `Đã đặt lại Kế Hoạch Điều Chỉnh Overtime công đoạn [${stageName}] về mặc định!`);
@@ -1924,6 +2297,7 @@
   };
 
   // Tự động kiểm tra và đồng bộ kế hoạch Overtime mới nhất khi khởi động trang
+  // BẢO VỆ 100% BẢN LƯU TẠM (DRAFT): KHÔNG bao giờ ghi đè bản người dùng đã sửa / ấn Lưu Tạm bằng bản remote cũ!
   async function initOvertimeSyncOnLoad() {
     try {
       const bundle = await fetchRemoteOvertimeBundle();
@@ -1934,11 +2308,27 @@
         const localLatestTime = (store.history && store.history[0] && store.history[0].completedAt)
           ? new Date(store.history[0].completedAt).getTime()
           : 0;
+        const localDraftTs = getLocalDraftTimestamp();
+        const lastSyncedRemoteId = localStorage.getItem(LAST_REMOTE_ID_KEY) || '';
+        const hasExistingLocalOt = !!localStorage.getItem(getStageStorageKey(store.selectedStage || DEFAULT_STAGE));
         const remoteTime = new Date(remotePlan.completedAt || remotePlan.createdAt || 0).getTime();
 
-        if (remoteTime >= localLatestTime || !store.history || store.history.length === 0) {
+        const isStrictlyNewerThanDraft = remoteTime > localDraftTs;
+        const isStrictlyNewerThanLocal = remoteTime > localLatestTime;
+        const isUnseenRemote = !remotePlan.id || (remotePlan.id !== lastSyncedRemoteId);
+
+        if ((!hasExistingLocalOt && localDraftTs === 0) || (isStrictlyNewerThanDraft && isStrictlyNewerThanLocal && isUnseenRemote)) {
           handleIncomingAdjPlan(remotePlan, false, bundle.history);
-          console.log('[Overtime Auto-Sync] ✅ Đã tự động nạp kế hoạch Overtime mới nhất:', remotePlan.id);
+          console.log('[Overtime Auto-Sync] ✅ Đã tự động nạp kế hoạch Overtime mới nhất:', remotePlan.id, 'từ', bundle.source);
+        } else {
+          // Bảo toàn nguyên vẹn bản Lưu Tạm trên máy; chỉ cập nhật lịch sử khi remote mới hơn hoặc bằng local (tránh hồi sinh bản cũ đã xóa)
+          if (Array.isArray(bundle.history) && bundle.history.length > 0 && remoteTime >= localLatestTime) {
+            store.history = bundle.history.slice(0, 30);
+            saveHistoryPlans(store.history);
+            const badge = document.getElementById('adjHistoryBadge');
+            if (badge) badge.textContent = String(store.history.length);
+          }
+          console.log('[Overtime Auto-Sync] 🛡️ Bảo toàn bản Lưu Tạm local của người dùng (không ghi đè bằng bản remote cũ).');
         }
       }
     } catch (e) {
