@@ -19,11 +19,11 @@
       "2A": 19.0,
       "3A": 19.0
     },
-    "htDirect": 24.0,
-    "htTotal": 26.0,
+    "htDirect": 26.0,
+    "htTotal": 28.0,
     "htBreakdown": {
       "cleanroom": 3.0,
-      "operator": 20.0,
+      "operator": 22.0,
       "feeder": 2.0,
       "leader": 1.0
     }
