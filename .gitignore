@@ -14,3 +14,9 @@ __pycache__/
 # Local credentials
 sync_credentials.json
 
+# Local UI customization & work-in-progress themes (chưa đồng bộ lên GitHub)
+css/app-local-theme.css
+js/tab-theme-customizer.js
+js/visual-element-styler.js
+
+

@@ -16,7 +16,19 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Core Stylesheet -->
-  <link rel="stylesheet" href="css/app.css?v=20261116_surplus_v2">
+  <link rel="stylesheet" id="app-core-stylesheet" href="css/app.css?v=20261119_gh_dark_v1">
+  <script>
+    (function() {
+      // Phân định giao diện Local vs GitHub:
+      // - GitHub (*.github.io): Dùng giao diện gốc ổn định (css/app.css)
+      // - Local (localhost / 127.0.0.1): Dùng giao diện mới đang tinh chỉnh hoàn thiện (css/app-local-theme.css)
+      var isGh = typeof window !== 'undefined' && window.location && /\.github\.io$/i.test(window.location.hostname || '');
+      if (!isGh) {
+        var el = document.getElementById('app-core-stylesheet');
+        if (el) el.href = 'css/app-local-theme.css?v=' + Date.now();
+      }
+    })();
+  </script>
 </head>
 <body>
 
