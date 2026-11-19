@@ -351467,6 +351467,1086 @@
       }
     ]
   },
+  "63893": {
+    "productCode": "63893",
+    "specCode": "63893",
+    "productName": "Ajax Hub 2 4G (8EU/ECG) AE white (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000147236",
+        "nomenclature": "Ajax, HB2.006.MBR.001v0_HB2_66A_ECG_8EU_white_HRD",
+        "spec": "Ajax, HB2.006.MBR.001v0_HB2_66A_ECG_8EU_white_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000128721",
+        "nomenclature": "Ajax, HB2.001.PWB.001v4_(UL)_HRD",
+        "spec": "Ajax, HB2.001.PWB.001v4_(UL)_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007254",
+        "nomenclature": "Ajax, Hub_V4_holder_board with components",
+        "spec": "Ajax, Hub_V4_holder_board with components",
+        "quantity": 2.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000020661",
+        "nomenclature": "PCB HB2.002.ANT.001v3 LTE",
+        "spec": "PCB HB2.002.ANT.001v3 LTE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000019055",
+        "nomenclature": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "spec": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130432",
+        "nomenclature": "Hub_case_frontside_white_v9",
+        "spec": "Hub_case_frontside_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000147841",
+        "nomenclature": "MiniHUB_case_backside_white_v9 (Double SIM card hole)",
+        "spec": "MiniHUB_case_backside_white_v9 (Double SIM card hole)",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000129738",
+        "nomenclature": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "spec": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130436",
+        "nomenclature": "HUB_case_button_white_v9",
+        "spec": "HUB_case_button_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000083995",
+        "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "Die cut part acrylic 9mm x 30mm",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130441",
+        "nomenclature": "MiniHUB_case_light_v5",
+        "spec": "MiniHUB_case_light_v5",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000183847",
+        "nomenclature": "[Sticker]_H2J(4G)_AE_VN_CE_EU_v1",
+        "spec": "[Sticker]_H2J(4G)_AE_VN_CE_EU_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000084722",
+        "nomenclature": "[Sticker]_Hub_Battery_replacement_UL",
+        "spec": "[Sticker]_Hub_Battery_replacement_UL",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "000063893": {
+    "productCode": "63893",
+    "specCode": "63893",
+    "productName": "Ajax Hub 2 4G (8EU/ECG) AE white (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000147236",
+        "nomenclature": "Ajax, HB2.006.MBR.001v0_HB2_66A_ECG_8EU_white_HRD",
+        "spec": "Ajax, HB2.006.MBR.001v0_HB2_66A_ECG_8EU_white_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000128721",
+        "nomenclature": "Ajax, HB2.001.PWB.001v4_(UL)_HRD",
+        "spec": "Ajax, HB2.001.PWB.001v4_(UL)_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007254",
+        "nomenclature": "Ajax, Hub_V4_holder_board with components",
+        "spec": "Ajax, Hub_V4_holder_board with components",
+        "quantity": 2.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000020661",
+        "nomenclature": "PCB HB2.002.ANT.001v3 LTE",
+        "spec": "PCB HB2.002.ANT.001v3 LTE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000019055",
+        "nomenclature": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "spec": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130432",
+        "nomenclature": "Hub_case_frontside_white_v9",
+        "spec": "Hub_case_frontside_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000147841",
+        "nomenclature": "MiniHUB_case_backside_white_v9 (Double SIM card hole)",
+        "spec": "MiniHUB_case_backside_white_v9 (Double SIM card hole)",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000129738",
+        "nomenclature": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "spec": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130436",
+        "nomenclature": "HUB_case_button_white_v9",
+        "spec": "HUB_case_button_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000083995",
+        "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "Die cut part acrylic 9mm x 30mm",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130441",
+        "nomenclature": "MiniHUB_case_light_v5",
+        "spec": "MiniHUB_case_light_v5",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000183847",
+        "nomenclature": "[Sticker]_H2J(4G)_AE_VN_CE_EU_v1",
+        "spec": "[Sticker]_H2J(4G)_AE_VN_CE_EU_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000084722",
+        "nomenclature": "[Sticker]_Hub_Battery_replacement_UL",
+        "spec": "[Sticker]_Hub_Battery_replacement_UL",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "27023": {
+    "productCode": "27023",
+    "specCode": "27023",
+    "productName": "Ajax, Монтажний комплект v.6 (MiniHub Black) (плівка)",
+    "stage": "Com PKG",
+    "process": "Com PKG",
+    "materials": [
+      {
+        "materialCode": "000114938",
+        "nomenclature": "HUB_CableHolder_Plastic_v2_Black_IMM",
+        "spec": "HUB_CableHolder_Plastic_v2_Black_IMM",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 5.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000005790",
+        "nomenclature": "Screw un. 3.0/30 tai p/r CP",
+        "spec": "Screw un. 3.0/30 tai p/r CP",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000003989",
+        "nomenclature": "Dowel 6x30 nylon UPA/100/.",
+        "spec": "Dowel 6x30 nylon UPA/100/.",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000059460",
+        "nomenclature": "Film EXTRAFOL PB 52*180",
+        "spec": "Film EXTRAFOL PB 52*180",
+        "quantity": 0.001,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      }
+    ]
+  },
+  "000027023": {
+    "productCode": "27023",
+    "specCode": "27023",
+    "productName": "Ajax, Монтажний комплект v.6 (MiniHub Black) (плівка)",
+    "stage": "Com PKG",
+    "process": "Com PKG",
+    "materials": [
+      {
+        "materialCode": "000114938",
+        "nomenclature": "HUB_CableHolder_Plastic_v2_Black_IMM",
+        "spec": "HUB_CableHolder_Plastic_v2_Black_IMM",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 5.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000005790",
+        "nomenclature": "Screw un. 3.0/30 tai p/r CP",
+        "spec": "Screw un. 3.0/30 tai p/r CP",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000003989",
+        "nomenclature": "Dowel 6x30 nylon UPA/100/.",
+        "spec": "Dowel 6x30 nylon UPA/100/.",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000059460",
+        "nomenclature": "Film EXTRAFOL PB 52*180",
+        "spec": "Film EXTRAFOL PB 52*180",
+        "quantity": 0.001,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      }
+    ]
+  },
+  "63894": {
+    "productCode": "63894",
+    "specCode": "63894",
+    "productName": "Ajax Hub 2 4G (8EU/ECG) AE white охоронна централь",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000114794",
+        "nomenclature": "Ajax Hub 2 4G (8EU/ECG) AE white (напівфабрикат)",
+        "spec": "Ajax Hub 2 4G (8EU/ECG) AE white (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170889",
+        "nomenclature": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "spec": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171026",
+        "nomenclature": "Ajax, Монтажний комплект Cables Kit Type G Vietnam White",
+        "spec": "Ajax, Монтажний комплект Cables Kit Type G Vietnam White",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166881",
+        "nomenclature": "[Sticker]_100x150_finger_en_v1",
+        "spec": "[Sticker]_100x150_finger_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166880",
+        "nomenclature": "[Sticker]_100x150_robot_en_v1",
+        "spec": "[Sticker]_100x150_robot_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000143739",
+        "nomenclature": "[Package]_H2J_(4G)_CE_FCC_white_v1",
+        "spec": "[Package]_H2J_(4G)_CE_FCC_white_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019467",
+        "nomenclature": "BritishHub package liner for Controler",
+        "spec": "BritishHub package liner for Controler",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019469",
+        "nomenclature": "BritishHub package liner Vstavka",
+        "spec": "BritishHub package liner Vstavka",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000010548",
+        "nomenclature": "EPE Package 180*250 mm",
+        "spec": "EPE Package 180*250 mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000007238",
+        "nomenclature": "MiniHUB_case_bracket_WHITE",
+        "spec": "MiniHUB_case_bracket_WHITE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000114655",
+        "nomenclature": "[Manual]_H2J_(4G)_AE_CE_v1",
+        "spec": "[Manual]_H2J_(4G)_AE_CE_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063894": {
+    "productCode": "63894",
+    "specCode": "63894",
+    "productName": "Ajax Hub 2 4G (8EU/ECG) AE white охоронна централь",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000114794",
+        "nomenclature": "Ajax Hub 2 4G (8EU/ECG) AE white (напівфабрикат)",
+        "spec": "Ajax Hub 2 4G (8EU/ECG) AE white (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170889",
+        "nomenclature": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "spec": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171026",
+        "nomenclature": "Ajax, Монтажний комплект Cables Kit Type G Vietnam White",
+        "spec": "Ajax, Монтажний комплект Cables Kit Type G Vietnam White",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166881",
+        "nomenclature": "[Sticker]_100x150_finger_en_v1",
+        "spec": "[Sticker]_100x150_finger_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166880",
+        "nomenclature": "[Sticker]_100x150_robot_en_v1",
+        "spec": "[Sticker]_100x150_robot_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000143739",
+        "nomenclature": "[Package]_H2J_(4G)_CE_FCC_white_v1",
+        "spec": "[Package]_H2J_(4G)_CE_FCC_white_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019467",
+        "nomenclature": "BritishHub package liner for Controler",
+        "spec": "BritishHub package liner for Controler",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019469",
+        "nomenclature": "BritishHub package liner Vstavka",
+        "spec": "BritishHub package liner Vstavka",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000010548",
+        "nomenclature": "EPE Package 180*250 mm",
+        "spec": "EPE Package 180*250 mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000007238",
+        "nomenclature": "MiniHUB_case_bracket_WHITE",
+        "spec": "MiniHUB_case_bracket_WHITE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000114655",
+        "nomenclature": "[Manual]_H2J_(4G)_AE_CE_v1",
+        "spec": "[Manual]_H2J_(4G)_AE_CE_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "63812": {
+    "productCode": "63812",
+    "specCode": "63812",
+    "productName": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) BR white датчик руху з камерою",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000046380",
+        "nomenclature": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) white (напівфабрикат)",
+        "spec": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) white (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170909",
+        "nomenclature": "Ajax, Монтажний комплект (MCO Vietnam) (плівка)",
+        "spec": "Ajax, Монтажний комплект (MCO Vietnam) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000074360",
+        "nomenclature": "[Package]_MCOJ_(PhOD)_CE_white_v3",
+        "spec": "[Package]_MCOJ_(PhOD)_CE_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000028165",
+        "nomenclature": "Cardboard packaging MotionCam Outdoor",
+        "spec": "Cardboard packaging MotionCam Outdoor",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000125037",
+        "nomenclature": "[Manual]_MCOJ_(PhOD)_CE_GPSR_v1",
+        "spec": "[Manual]_MCOJ_(PhOD)_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000026214",
+        "nomenclature": "CPE package 155x375 white matte for MCO",
+        "spec": "CPE package 155x375 white matte for MCO",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000024999",
+        "nomenclature": "MotionCam_Outdoor_Bracket white",
+        "spec": "MotionCam_Outdoor_Bracket white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000012923",
+        "nomenclature": "Cable tie 4.8x300mm, nylon, white",
+        "spec": "Cable tie 4.8x300mm, nylon, white",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000025000",
+        "nomenclature": "MotionCam_Outdoor_Hood_white",
+        "spec": "MotionCam_Outdoor_Hood_white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000133041",
+        "nomenclature": "[Sticker]_MCOJ_(PhOD)_Anatel_v1",
+        "spec": "[Sticker]_MCOJ_(PhOD)_Anatel_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063812": {
+    "productCode": "63812",
+    "specCode": "63812",
+    "productName": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) BR white датчик руху з камерою",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000046380",
+        "nomenclature": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) white (напівфабрикат)",
+        "spec": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) white (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170909",
+        "nomenclature": "Ajax, Монтажний комплект (MCO Vietnam) (плівка)",
+        "spec": "Ajax, Монтажний комплект (MCO Vietnam) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000074360",
+        "nomenclature": "[Package]_MCOJ_(PhOD)_CE_white_v3",
+        "spec": "[Package]_MCOJ_(PhOD)_CE_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000028165",
+        "nomenclature": "Cardboard packaging MotionCam Outdoor",
+        "spec": "Cardboard packaging MotionCam Outdoor",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000125037",
+        "nomenclature": "[Manual]_MCOJ_(PhOD)_CE_GPSR_v1",
+        "spec": "[Manual]_MCOJ_(PhOD)_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000026214",
+        "nomenclature": "CPE package 155x375 white matte for MCO",
+        "spec": "CPE package 155x375 white matte for MCO",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000024999",
+        "nomenclature": "MotionCam_Outdoor_Bracket white",
+        "spec": "MotionCam_Outdoor_Bracket white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000012923",
+        "nomenclature": "Cable tie 4.8x300mm, nylon, white",
+        "spec": "Cable tie 4.8x300mm, nylon, white",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000025000",
+        "nomenclature": "MotionCam_Outdoor_Hood_white",
+        "spec": "MotionCam_Outdoor_Hood_white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000133041",
+        "nomenclature": "[Sticker]_MCOJ_(PhOD)_Anatel_v1",
+        "spec": "[Sticker]_MCOJ_(PhOD)_Anatel_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "21396": {
+    "productCode": "21396",
+    "specCode": "21396",
+    "productName": "Ajax, Монтажний комплект Cables Kit Type G Black",
+    "stage": "Com PKG",
+    "process": "Com PKG",
+    "materials": [
+      {
+        "materialCode": "000007272",
+        "nomenclature": "Patch Cord 1m GC 1507B bl",
+        "spec": "Patch Cord 1m GC 1507B bl",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000015021",
+        "nomenclature": "Cable OS13/ST2 H03VVH2-F 2X0 to BS1363 UK bl",
+        "spec": "Cable OS13/ST2 H03VVH2-F 2X0 to BS1363 UK bl",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000019468",
+        "nomenclature": "BritishHub package liner for Cables",
+        "spec": "BritishHub package liner for Cables",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      }
+    ]
+  },
+  "000021396": {
+    "productCode": "21396",
+    "specCode": "21396",
+    "productName": "Ajax, Монтажний комплект Cables Kit Type G Black",
+    "stage": "Com PKG",
+    "process": "Com PKG",
+    "materials": [
+      {
+        "materialCode": "000007272",
+        "nomenclature": "Patch Cord 1m GC 1507B bl",
+        "spec": "Patch Cord 1m GC 1507B bl",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000015021",
+        "nomenclature": "Cable OS13/ST2 H03VVH2-F 2X0 to BS1363 UK bl",
+        "spec": "Cable OS13/ST2 H03VVH2-F 2X0 to BS1363 UK bl",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000019468",
+        "nomenclature": "BritishHub package liner for Cables",
+        "spec": "BritishHub package liner for Cables",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      }
+    ]
+  },
+  "63936": {
+    "productCode": "63936",
+    "specCode": "63936",
+    "productName": "Ajax Hub 2 Plus (9AU/AUX) plug type A white охоронна централь",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000030916",
+        "nomenclature": "Ajax Hub 2 Plus (9AU/AUX) white",
+        "spec": "Ajax Hub 2 Plus (9AU/AUX) white",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170889",
+        "nomenclature": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "spec": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171022",
+        "nomenclature": "Ajax, Монтажний комплект Cables Kit Type A White",
+        "spec": "Ajax, Монтажний комплект Cables Kit Type A White",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166881",
+        "nomenclature": "[Sticker]_100x150_finger_en_v1",
+        "spec": "[Sticker]_100x150_finger_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166880",
+        "nomenclature": "[Sticker]_100x150_robot_en_v1",
+        "spec": "[Sticker]_100x150_robot_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000074331",
+        "nomenclature": "[Package]_HP2J_CE_white_v3",
+        "spec": "[Package]_HP2J_CE_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019467",
+        "nomenclature": "BritishHub package liner for Controler",
+        "spec": "BritishHub package liner for Controler",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019469",
+        "nomenclature": "BritishHub package liner Vstavka",
+        "spec": "BritishHub package liner Vstavka",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000010548",
+        "nomenclature": "EPE Package 180*250 mm",
+        "spec": "EPE Package 180*250 mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000127826",
+        "nomenclature": "[Manual]_HP2J_CE_GPSR_v1",
+        "spec": "[Manual]_HP2J_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000007238",
+        "nomenclature": "MiniHUB_case_bracket_WHITE",
+        "spec": "MiniHUB_case_bracket_WHITE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063936": {
+    "productCode": "63936",
+    "specCode": "63936",
+    "productName": "Ajax Hub 2 Plus (9AU/AUX) plug type A white охоронна централь",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000030916",
+        "nomenclature": "Ajax Hub 2 Plus (9AU/AUX) white",
+        "spec": "Ajax Hub 2 Plus (9AU/AUX) white",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170889",
+        "nomenclature": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "spec": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171022",
+        "nomenclature": "Ajax, Монтажний комплект Cables Kit Type A White",
+        "spec": "Ajax, Монтажний комплект Cables Kit Type A White",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166881",
+        "nomenclature": "[Sticker]_100x150_finger_en_v1",
+        "spec": "[Sticker]_100x150_finger_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166880",
+        "nomenclature": "[Sticker]_100x150_robot_en_v1",
+        "spec": "[Sticker]_100x150_robot_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000074331",
+        "nomenclature": "[Package]_HP2J_CE_white_v3",
+        "spec": "[Package]_HP2J_CE_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019467",
+        "nomenclature": "BritishHub package liner for Controler",
+        "spec": "BritishHub package liner for Controler",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019469",
+        "nomenclature": "BritishHub package liner Vstavka",
+        "spec": "BritishHub package liner Vstavka",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000010548",
+        "nomenclature": "EPE Package 180*250 mm",
+        "spec": "EPE Package 180*250 mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000127826",
+        "nomenclature": "[Manual]_HP2J_CE_GPSR_v1",
+        "spec": "[Manual]_HP2J_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000007238",
+        "nomenclature": "MiniHUB_case_bracket_WHITE",
+        "spec": "MiniHUB_case_bracket_WHITE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
   "63399": {
     "productCode": "63399",
     "specCode": "63399",
@@ -352842,206 +353922,6 @@
       {
         "materialCode": "000025000",
         "nomenclature": "MotionCam_Outdoor_Hood_white",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      }
-    ],
-    "source": "BOM"
-  },
-  "63812": {
-    "productCode": "63812",
-    "specCode": "63812",
-    "productName": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) BR white датчик руху з камерою",
-    "stage": "PKG",
-    "process": "PKG",
-    "materials": [
-      {
-        "materialCode": "000046380",
-        "nomenclature": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) white (напівфабрикат)",
-        "spec": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) white (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000170909",
-        "nomenclature": "Ajax, Монтажний комплект (MCO Vietnam) (плівка)",
-        "spec": "Ajax, Монтажний комплект (MCO Vietnam) (плівка)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000074360",
-        "nomenclature": "[Package]_MCOJ_(PhOD)_CE_white_v3",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000028165",
-        "nomenclature": "Cardboard packaging MotionCam Outdoor",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000125037",
-        "nomenclature": "[Manual]_MCOJ_(PhOD)_CE_GPSR_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000026214",
-        "nomenclature": "CPE package 155x375 white matte for MCO",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000024999",
-        "nomenclature": "MotionCam_Outdoor_Bracket white",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000012923",
-        "nomenclature": "Cable tie 4.8x300mm, nylon, white",
-        "spec": "",
-        "quantity": 3.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000025000",
-        "nomenclature": "MotionCam_Outdoor_Hood_white",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000133041",
-        "nomenclature": "[Sticker]_MCOJ_(PhOD)_Anatel_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      }
-    ],
-    "source": "BOM"
-  },
-  "000063812": {
-    "productCode": "63812",
-    "specCode": "63812",
-    "productName": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) BR white датчик руху з камерою",
-    "stage": "PKG",
-    "process": "PKG",
-    "materials": [
-      {
-        "materialCode": "000046380",
-        "nomenclature": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) white (напівфабрикат)",
-        "spec": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) white (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000170909",
-        "nomenclature": "Ajax, Монтажний комплект (MCO Vietnam) (плівка)",
-        "spec": "Ajax, Монтажний комплект (MCO Vietnam) (плівка)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000074360",
-        "nomenclature": "[Package]_MCOJ_(PhOD)_CE_white_v3",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000028165",
-        "nomenclature": "Cardboard packaging MotionCam Outdoor",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000125037",
-        "nomenclature": "[Manual]_MCOJ_(PhOD)_CE_GPSR_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000026214",
-        "nomenclature": "CPE package 155x375 white matte for MCO",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000024999",
-        "nomenclature": "MotionCam_Outdoor_Bracket white",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000012923",
-        "nomenclature": "Cable tie 4.8x300mm, nylon, white",
-        "spec": "",
-        "quantity": 3.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000025000",
-        "nomenclature": "MotionCam_Outdoor_Hood_white",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000133041",
-        "nomenclature": "[Sticker]_MCOJ_(PhOD)_Anatel_v1",
         "spec": "",
         "quantity": 1.0,
         "category": "Material",
