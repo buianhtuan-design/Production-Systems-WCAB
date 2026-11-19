@@ -351071,6 +351071,132 @@
       }
     ]
   },
+  "63464": {
+    "productCode": "63464",
+    "specCode": "63464",
+    "productName": "Ajax CombiProtect (8EU) Ekingen Elektronik black датчик руху та розбиття",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000019149",
+        "nomenclature": "Ajax CombiProtect black EU (напівфабрикат)",
+        "spec": "Ajax CombiProtect black EU (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171044",
+        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000005317",
+        "nomenclature": "MotionProtect_case_bracket_black",
+        "spec": "MotionProtect_case_bracket_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000133285",
+        "nomenclature": "[Package]_CPJ_CE_FCC_black_v1",
+        "spec": "[Package]_CPJ_CE_FCC_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000031246",
+        "nomenclature": "MotionProtect Fibra package liner",
+        "spec": "MotionProtect Fibra package liner",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000125372",
+        "nomenclature": "[Manual]_CPJ_CE_GPSR_v1",
+        "spec": "[Manual]_CPJ_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063464": {
+    "productCode": "63464",
+    "specCode": "63464",
+    "productName": "Ajax CombiProtect (8EU) Ekingen Elektronik black датчик руху та розбиття",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000019149",
+        "nomenclature": "Ajax CombiProtect black EU (напівфабрикат)",
+        "spec": "Ajax CombiProtect black EU (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171044",
+        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000005317",
+        "nomenclature": "MotionProtect_case_bracket_black",
+        "spec": "MotionProtect_case_bracket_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000133285",
+        "nomenclature": "[Package]_CPJ_CE_FCC_black_v1",
+        "spec": "[Package]_CPJ_CE_FCC_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000031246",
+        "nomenclature": "MotionProtect Fibra package liner",
+        "spec": "MotionProtect Fibra package liner",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000125372",
+        "nomenclature": "[Manual]_CPJ_CE_GPSR_v1",
+        "spec": "[Manual]_CPJ_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
   "63399": {
     "productCode": "63399",
     "specCode": "63399",
@@ -351392,134 +351518,6 @@
       {
         "materialCode": "000087247",
         "nomenclature": "[Sticker for package]_UL_logo",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      }
-    ],
-    "source": "BOM"
-  },
-  "63464": {
-    "productCode": "63464",
-    "specCode": "63464",
-    "productName": "Ajax CombiProtect (8EU) Ekingen Elektronik black датчик руху та розбиття",
-    "stage": "PKG",
-    "process": "PKG",
-    "materials": [
-      {
-        "materialCode": "000019149",
-        "nomenclature": "Ajax CombiProtect black EU (напівфабрикат)",
-        "spec": "Ajax CombiProtect black EU (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000171044",
-        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
-        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000005317",
-        "nomenclature": "MotionProtect_case_bracket_black",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000133285",
-        "nomenclature": "[Package]_CPJ_CE_FCC_black_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000031246",
-        "nomenclature": "MotionProtect Fibra package liner",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000125372",
-        "nomenclature": "[Manual]_CPJ_CE_GPSR_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      }
-    ],
-    "source": "BOM"
-  },
-  "000063464": {
-    "productCode": "63464",
-    "specCode": "63464",
-    "productName": "Ajax CombiProtect (8EU) Ekingen Elektronik black датчик руху та розбиття",
-    "stage": "PKG",
-    "process": "PKG",
-    "materials": [
-      {
-        "materialCode": "000019149",
-        "nomenclature": "Ajax CombiProtect black EU (напівфабрикат)",
-        "spec": "Ajax CombiProtect black EU (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000171044",
-        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
-        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000005317",
-        "nomenclature": "MotionProtect_case_bracket_black",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000133285",
-        "nomenclature": "[Package]_CPJ_CE_FCC_black_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000031246",
-        "nomenclature": "MotionProtect Fibra package liner",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000125372",
-        "nomenclature": "[Manual]_CPJ_CE_GPSR_v1",
         "spec": "",
         "quantity": 1.0,
         "category": "Material",
