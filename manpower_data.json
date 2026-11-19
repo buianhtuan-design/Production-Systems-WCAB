@@ -36,17 +36,17 @@
       "2B",
       "3B"
     ],
-    "assyDirect": 42.0,
-    "assyTotal": 57.0,
+    "assyDirect": 41.0,
+    "assyTotal": 56.0,
     "assyLinesDirect": {
       "1B": 14.0,
       "2B": 14.0,
-      "3B": 14.0
+      "3B": 13.0
     },
     "assyLinesTotal": {
       "1B": 19.0,
       "2B": 19.0,
-      "3B": 19.0
+      "3B": 18.0
     },
     "htDirect": 25.0,
     "htTotal": 27.0,
