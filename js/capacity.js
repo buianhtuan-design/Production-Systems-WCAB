@@ -1203,6 +1203,70 @@
     return (a.group || '').localeCompare(b.group || '');
   }
 
+  /**
+   * Sắp xếp hiển thị gom theo dòng Group Model (giữ nguyên tầng ưu tiên Âm luỹ kế -> Ngày hiện tại -> Khác)
+   * Mục đích: Gom các model cùng Group Model nằm liền nhau để dễ sắp xếp kế hoạch sản xuất chung chuyền/TB.
+   */
+  function compareGroupModelDisplayRows(
+    aGroup, aGap, aPlanMeta, aPlanQty, aModel1c, aTieNum,
+    bGroup, bGap, bPlanMeta, bPlanQty, bModel1c, bTieNum
+  ) {
+    const aTier = getPlanningPriorityTier(aGap, aPlanMeta);
+    const bTier = getPlanningPriorityTier(bGap, bPlanMeta);
+    if (aTier !== bTier) return aTier - bTier;
+
+    const gA = String(aGroup || '').trim();
+    const gB = String(bGroup || '').trim();
+    const gCmp = gA.localeCompare(gB, 'vi', { sensitivity: 'base', numeric: true });
+    if (gCmp !== 0) return gCmp;
+
+    if (aGap < 0 && bGap < 0 && aGap !== bGap) {
+      return aGap - bGap;
+    }
+    if (bPlanQty !== aPlanQty) {
+      return bPlanQty - aPlanQty;
+    }
+    const mCmp = String(aModel1c || '').trim().localeCompare(String(bModel1c || '').trim(), 'vi', { sensitivity: 'base', numeric: true });
+    if (mCmp !== 0) return mCmp;
+    return aTieNum - bTieNum;
+  }
+
+  function compareAssemblyDisplayByGroupModel(a, b) {
+    const aIt = a.it || a;
+    const bIt = b.it || b;
+    return compareGroupModelDisplayRows(
+      aIt.model || '',
+      Number(aIt.cumGapQty || 0),
+      a.planMeta || a._prePlanMeta,
+      Number(aIt.cumPlanQty || 0),
+      aIt.productName1C || '',
+      a.idx || 0,
+      bIt.model || '',
+      Number(bIt.cumGapQty || 0),
+      b.planMeta || b._prePlanMeta,
+      Number(bIt.cumPlanQty || 0),
+      bIt.productName1C || '',
+      b.idx || 0
+    );
+  }
+
+  function compareHardtestDisplayByGroupModel(a, b) {
+    return compareGroupModelDisplayRows(
+      a.normGroup || a.group || '',
+      Number(a.gapQty || 0),
+      a.planMeta,
+      Number(a.planQty || 0),
+      a.model1c || '',
+      a.idx || 0,
+      b.normGroup || b.group || '',
+      Number(b.gapQty || 0),
+      b.planMeta,
+      Number(b.planQty || 0),
+      b.model1c || '',
+      b.idx || 0
+    );
+  }
+
   function hasLiveManualPlanOverride(rowKey, moduleType) {
     if (!window.AppStore) return false;
     if (moduleType === 'TOTAL_HARDTEST') {
@@ -1374,10 +1438,11 @@
   }
 
   function assertCumNegPriorityUnlocked(rowKey, moduleType) {
+    const baseKey = (rowKey || '').split('___sub_')[0];
     const stateMap = window.AppStore && window.AppStore._cumNegGateState;
     const gate = stateMap && stateMap[moduleType];
     if (!gate || !gate.isBlocked) return true;
-    if (gate.cumNegKeySet && gate.cumNegKeySet.has(rowKey)) return true;
+    if (gate.cumNegKeySet && (gate.cumNegKeySet.has(rowKey) || gate.cumNegKeySet.has(baseKey))) return true;
 
     const sampleNames = (gate.pendingRows || [])
       .slice(0, 2)
@@ -1824,7 +1889,8 @@
           const asmDicts = [
             'simManualLinesDay', 'simManualLinesNight', 'simLineOverridesDay', 'simLineOverridesNight',
             'simLineOverrides', 'simManualSeqsDay', 'simManualSeqsNight', 'simManualPfDay', 'simManualPfNight',
-            'simManualPlanDay', 'simManualPlanNight', 'simManualShifts', 'simManualNotes'
+            'simManualPlanDay', 'simManualPlanNight', 'simManualShifts', 'simManualNotes',
+            'simManualFactDay', 'simManualFactNight', 'simSubLines'
           ];
           asmDicts.forEach(k => {
             if (draft[k] && (!window.AppStore[k] || Object.keys(window.AppStore[k]).length === 0)) {
@@ -2064,10 +2130,12 @@
     let grandActualHoursDay = 0;
     let grandDayAvailHours = 0;
     let grandPlanDay = 0;
+    let grandFactDay = 0;
     let grandNightShortage = 0;
     let grandActualHoursNight = 0;
     let grandNightAvailHours = 0;
     let grandPlanNight = 0;
+    let grandFactNight = 0;
     let grandFinalShortage = 0;
     const plannerName = (window.AppStore.simPlannerName !== undefined && window.AppStore.simPlannerName !== null)
       ? window.AppStore.simPlannerName
@@ -2083,6 +2151,8 @@
     if (!window.AppStore.simManualPfNight) window.AppStore.simManualPfNight = {};
     if (!window.AppStore.simManualPlanDay) window.AppStore.simManualPlanDay = {};
     if (!window.AppStore.simManualPlanNight) window.AppStore.simManualPlanNight = {};
+    if (!window.AppStore.simManualFactDay) window.AppStore.simManualFactDay = {};
+    if (!window.AppStore.simManualFactNight) window.AppStore.simManualFactNight = {};
 
     const todayPlanRef = getTodayPlanReference();
 
@@ -2284,6 +2354,45 @@
 
       const manualPlanNight = window.AppStore.simManualPlanNight && window.AppStore.simManualPlanNight[rowKey];
 
+      // Fact Ca Ngày & Ca Đêm (Cố định lấy từ Sheet Data Mass)
+      let factDayFromData = null;
+      let factNightFromData = null;
+      const targetDateIso = (window.AppStore && window.AppStore.toISODate) ? window.AppStore.toISODate(simTargetDate) : simTargetDate;
+      const todayIso = (todayPlanRef && todayPlanRef.todayIso) || targetDateIso;
+
+      if (Array.isArray(it.daily) && it.daily.length > 0) {
+        const matchEntry = it.daily.find(d => {
+          const dIso = (window.AppStore && window.AppStore.toISODate) ? window.AppStore.toISODate(d.date) : d.date;
+          return dIso === targetDateIso || dIso === todayIso;
+        }) || (simScope === 'SINGLE' ? it.daily[0] : null);
+
+        if (matchEntry) {
+          if (matchEntry.factDay !== undefined && matchEntry.factDay !== null) factDayFromData = Number(matchEntry.factDay);
+          if (matchEntry.factNight !== undefined && matchEntry.factNight !== null) factNightFromData = Number(matchEntry.factNight);
+        }
+      }
+
+      if (factDayFromData === null && it.factDay && typeof it.factDay === 'object') {
+        const dKey = Object.keys(it.factDay).find(k => {
+          const kIso = (window.AppStore && window.AppStore.toISODate) ? window.AppStore.toISODate(k) : k;
+          return kIso === targetDateIso || kIso === todayIso;
+        });
+        if (dKey && it.factDay[dKey] !== undefined) factDayFromData = Number(it.factDay[dKey]);
+      }
+      if (factNightFromData === null && it.factNight && typeof it.factNight === 'object') {
+        const dKey = Object.keys(it.factNight).find(k => {
+          const kIso = (window.AppStore && window.AppStore.toISODate) ? window.AppStore.toISODate(k) : k;
+          return kIso === targetDateIso || kIso === todayIso;
+        });
+        if (dKey && it.factNight[dKey] !== undefined) factNightFromData = Number(it.factNight[dKey]);
+      }
+
+      // Fact cố định lấy theo Sheet Data Mass
+      const factDay = (factDayFromData !== null && !isNaN(factDayFromData)) ? factDayFromData : null;
+      const factNight = (factNightFromData !== null && !isNaN(factNightFromData)) ? factNightFromData : null;
+      const manualFactDay = null;
+      const manualFactNight = null;
+
       const planMeta = resolvePlanDateAndShiftMeta(it, it.cumGapQty || 0, todayPlanRef, shiftFilter);
       const cumNegOriginMeta = planMeta.isCumNegative
         ? resolveAccumulatedNegativeOrigin(it, shiftFilter)
@@ -2311,6 +2420,8 @@
         manualPlanDay,
         dayAvailHours: null,
         planDay: 0,
+        factDay,
+        manualFactDay,
         nightShortage: 0,
         assignedNightLineId,
         seqNight,
@@ -2321,6 +2432,8 @@
         manualPlanNight,
         nightAvailHours: null,
         planNight: 0,
+        factNight,
+        manualFactNight,
         finalShortage: 0,
         shiftTextDay: (shortage > 0 || assignedDayLineId) ? 'Ca Ngày' : '',
         shiftTextNight: (shortage > 0 || assignedNightLineId) ? 'Ca Đêm' : '',
@@ -2485,15 +2598,310 @@
       }
       if (r.dayAvailHours) grandDayAvailHours += r.dayAvailHours;
       if (r.planDay) grandPlanDay += r.planDay;
+      if (r.factDay !== null && !isNaN(r.factDay) && r.factDay > 0) grandFactDay += r.factDay;
       if (r.nightShortage) grandNightShortage += r.nightShortage;
       if (r.actualHoursNight) grandActualHoursNight += r.actualHoursNight;
       if (r.nightAvailHours) grandNightAvailHours += r.nightAvailHours;
       if (r.planNight) grandPlanNight += r.planNight;
+      if (r.factNight !== null && !isNaN(r.factNight) && r.factNight > 0) grandFactNight += r.factNight;
       if (r.finalShortage) grandFinalShortage += r.finalShortage;
     });
 
+    // -----------------------------------------------------------------------------------------
+    // BƯỚC BỔ SUNG: XỬ LÝ DÒNG PHỤ "➕ THÊM CHUYỀN" (SUB-ROW MULTI-LINE)
+    // Cho phép chạy song song nhiều Line (>2 Line) để bù hết lượng thiếu hụt lớn của Model
+    // -----------------------------------------------------------------------------------------
+    // 1. Tính toán hạn ngạch giờ còn lại của từng Line sau lượt Main Rows
+    const remDayQuotaByLine = {};
+    activeAssemblyLines.forEach(lid => {
+      let usedDay = 0;
+      processedRows.forEach(r => {
+        if (r.assignedDayLineId === lid) {
+          usedDay += (r.dayAvailHours || 0);
+        }
+      });
+      remDayQuotaByLine[lid] = Math.max(0, Math.round((10.83 - usedDay) * 1000) / 1000);
+    });
+
+    const remNightQuotaByLine = {};
+    activeAssemblyLines.forEach(lid => {
+      let usedNight = 0;
+      processedRows.forEach(r => {
+        if (r.assignedNightLineId === lid) {
+          usedNight += (r.nightAvailHours || 0);
+        }
+      });
+      remNightQuotaByLine[lid] = Math.max(0, Math.round((10.58 - usedNight) * 1000) / 1000);
+    });
+
+    // 2. Tạo và phân bổ năng lực cho Sub-Rows
+    processedRows.forEach(r => {
+      r.subRows = [];
+      const subCount = (window.AppStore.simSubLines && window.AppStore.simSubLines[r.rowKey]) || 0;
+      if (subCount <= 0) return;
+
+      let prevShortage = r.finalShortage;
+      for (let sIdx = 1; sIdx <= subCount; sIdx++) {
+        const subRowKey = `${r.rowKey}___sub_${sIdx}`;
+        const manualDayLine = (window.AppStore.simManualLinesDay && window.AppStore.simManualLinesDay[subRowKey]) ||
+                              (window.AppStore.simLineOverridesDay && window.AppStore.simLineOverridesDay[subRowKey]) ||
+                              (window.AppStore.simLineOverrides && window.AppStore.simLineOverrides[subRowKey]);
+        let assignedDayLineId = '';
+        if (manualDayLine && manualDayLine !== 'NONE') {
+          assignedDayLineId = manualDayLine;
+        }
+        const seqDay = (window.AppStore.simManualSeqsDay && window.AppStore.simManualSeqsDay[subRowKey]) || '';
+        const mSeqDay = (seqDay || '').match(/\d+/);
+        const seqDayNum = mSeqDay ? parseInt(mSeqDay[0], 10) : Infinity;
+
+        let perfPctDay = null;
+        let actualCtDay = r.norm;
+        const manualPfDay = window.AppStore.simManualPfDay && window.AppStore.simManualPfDay[subRowKey];
+        if (manualPfDay !== undefined && !isNaN(manualPfDay) && manualPfDay > 0) {
+          perfPctDay = manualPfDay;
+          actualCtDay = r.norm / (perfPctDay / 100);
+        } else if (assignedDayLineId) {
+          const clDay = r.capInfo.capableLines.find(c => c.lineId.toLowerCase() === assignedDayLineId.toLowerCase());
+          if (clDay) {
+            perfPctDay = clDay.perfPct;
+            actualCtDay = clDay.actualCt || (r.norm / (clDay.perfPct / 100));
+          } else {
+            perfPctDay = 100;
+            actualCtDay = r.norm;
+          }
+        }
+
+        const subShortage = prevShortage;
+        const actualHoursDay = (subShortage > 0 && (assignedDayLineId || manualPfDay !== undefined))
+          ? (subShortage * actualCtDay) / 3600
+          : null;
+
+        const manualPlanDay = window.AppStore.simManualPlanDay && window.AppStore.simManualPlanDay[subRowKey];
+        let dayAvailHours = null;
+        let planDay = 0;
+
+        if (assignedDayLineId) {
+          const remDay = remDayQuotaByLine[assignedDayLineId] !== undefined ? remDayQuotaByLine[assignedDayLineId] : 10.83;
+          if (manualPlanDay !== undefined && !isNaN(manualPlanDay) && manualPlanDay >= 0) {
+            planDay = manualPlanDay;
+            dayAvailHours = (planDay * actualCtDay) / 3600;
+            remDayQuotaByLine[assignedDayLineId] = Math.max(0, Math.round((remDay - dayAvailHours) * 1000) / 1000);
+          } else if (subShortage > 0) {
+            if (actualHoursDay > remDay) {
+              dayAvailHours = remDay;
+              planDay = Math.min(subShortage, Math.floor((dayAvailHours * 3600) / actualCtDay));
+              remDayQuotaByLine[assignedDayLineId] = 0;
+            } else {
+              dayAvailHours = actualHoursDay;
+              planDay = subShortage;
+              remDayQuotaByLine[assignedDayLineId] = Math.max(0, Math.round((remDay - dayAvailHours) * 1000) / 1000);
+            }
+          } else {
+            dayAvailHours = 0;
+            planDay = 0;
+          }
+        } else {
+          if (manualPlanDay !== undefined && !isNaN(manualPlanDay) && manualPlanDay >= 0) {
+            planDay = manualPlanDay;
+            dayAvailHours = (planDay * actualCtDay) / 3600;
+          } else {
+            planDay = 0;
+            dayAvailHours = null;
+          }
+        }
+
+        // Ca Đêm của Sub-Row
+        const subNightShortage = Math.max(0, subShortage - planDay);
+
+        const manualNightLine = (window.AppStore.simManualLinesNight && window.AppStore.simManualLinesNight[subRowKey]) ||
+                                (window.AppStore.simLineOverridesNight && window.AppStore.simLineOverridesNight[subRowKey]);
+        let assignedNightLineId = '';
+        if (manualNightLine && manualNightLine !== 'NONE') {
+          assignedNightLineId = manualNightLine;
+        }
+        const seqNight = (window.AppStore.simManualSeqsNight && window.AppStore.simManualSeqsNight[subRowKey]) || '';
+        const mSeqNight = (seqNight || '').match(/\d+/);
+        const seqNightNum = mSeqNight ? parseInt(mSeqNight[0], 10) : Infinity;
+
+        let perfPctNight = null;
+        let actualCtNight = r.norm;
+        const manualPfNight = window.AppStore.simManualPfNight && window.AppStore.simManualPfNight[subRowKey];
+        if (manualPfNight !== undefined && !isNaN(manualPfNight) && manualPfNight > 0) {
+          perfPctNight = manualPfNight;
+          actualCtNight = r.norm / (perfPctNight / 100);
+        } else if (assignedNightLineId) {
+          const clNight = r.capInfo.capableLines.find(c => c.lineId.toLowerCase() === assignedNightLineId.toLowerCase());
+          if (clNight) {
+            perfPctNight = clNight.perfPct;
+            actualCtNight = clNight.actualCt || (r.norm / (clNight.perfPct / 100));
+          } else {
+            perfPctNight = 100;
+            actualCtNight = r.norm;
+          }
+        }
+
+        const actualHoursNight = (subNightShortage > 0 && (assignedNightLineId || manualPfNight !== undefined))
+          ? (subNightShortage * actualCtNight) / 3600
+          : null;
+
+        const manualPlanNight = window.AppStore.simManualPlanNight && window.AppStore.simManualPlanNight[subRowKey];
+        let nightAvailHours = null;
+        let planNight = 0;
+
+        if (assignedNightLineId) {
+          const remNight = remNightQuotaByLine[assignedNightLineId] !== undefined ? remNightQuotaByLine[assignedNightLineId] : 10.58;
+          if (manualPlanNight !== undefined && !isNaN(manualPlanNight) && manualPlanNight >= 0) {
+            planNight = manualPlanNight;
+            nightAvailHours = (planNight * actualCtNight) / 3600;
+            remNightQuotaByLine[assignedNightLineId] = Math.max(0, Math.round((remNight - nightAvailHours) * 1000) / 1000);
+          } else if (subNightShortage > 0) {
+            if (actualHoursNight > remNight) {
+              nightAvailHours = remNight;
+              planNight = Math.min(subNightShortage, Math.floor((nightAvailHours * 3600) / actualCtNight));
+              remNightQuotaByLine[assignedNightLineId] = 0;
+            } else {
+              nightAvailHours = actualHoursNight;
+              planNight = subNightShortage;
+              remNightQuotaByLine[assignedNightLineId] = Math.max(0, Math.round((remNight - nightAvailHours) * 1000) / 1000);
+            }
+          } else {
+            nightAvailHours = 0;
+            planNight = 0;
+          }
+        } else {
+          if (manualPlanNight !== undefined && !isNaN(manualPlanNight) && manualPlanNight >= 0) {
+            planNight = manualPlanNight;
+            nightAvailHours = (planNight * actualCtNight) / 3600;
+          } else {
+            planNight = 0;
+            nightAvailHours = null;
+          }
+        }
+
+        const subFinalShortage = Math.max(0, subNightShortage - planNight);
+        prevShortage = subFinalShortage;
+
+        // Sub-Row là nhánh phụ chia tải chạy song song, Fact từ Sheet Data Mass được ghi nhận cho dòng Model chính
+        const factDay = null;
+        const factNight = null;
+        const manualFactDay = null;
+        const manualFactNight = null;
+
+        const subRowObj = {
+          it: r.it,
+          idx: r.idx,
+          subIdx: sIdx,
+          isSubRow: true,
+          parentRowKey: r.rowKey,
+          rowKey: subRowKey,
+          capInfo: r.capInfo,
+          shortage: subShortage,
+          planMeta: r.planMeta,
+          datePlanLabel: r.datePlanLabel,
+          shiftPlanLabel: r.shiftPlanLabel,
+          cumNegOriginMeta: r.cumNegOriginMeta,
+          cumNegOriginLabel: r.cumNegOriginLabel,
+          norm: r.norm,
+          stdHours: subShortage > 0 ? (subShortage * r.norm) / 3600 : 0,
+          assignedDayLineId,
+          seqDay,
+          seqDayNum,
+          perfPctDay,
+          actualCtDay,
+          actualHoursDay,
+          manualPlanDay,
+          dayAvailHours,
+          planDay,
+          factDay,
+          manualFactDay,
+          nightShortage: subNightShortage,
+          assignedNightLineId,
+          seqNight,
+          seqNightNum,
+          perfPctNight,
+          actualCtNight,
+          actualHoursNight,
+          manualPlanNight,
+          nightAvailHours,
+          planNight,
+          factNight,
+          manualFactNight,
+          finalShortage: subFinalShortage,
+          shiftTextDay: (subShortage > 0 || assignedDayLineId) ? 'Ca Ngày' : '',
+          shiftTextNight: (subShortage > 0 || assignedNightLineId) ? 'Ca Đêm' : '',
+          assignedLineId: assignedDayLineId,
+          perfPct: perfPctDay,
+          actualCt: actualCtDay,
+          actualHours: actualHoursDay,
+          shiftCode: subNightShortage > 0 ? 'BOTH' : 'DAY',
+          shiftText: (subShortage > 0 || assignedDayLineId) ? 'Ca Ngày' : ''
+        };
+
+        r.subRows.push(subRowObj);
+
+        // Cộng dồn Grand Totals từ Sub-Row
+        if (actualHoursDay) {
+          grandActualHoursDay += actualHoursDay;
+          grandActualHours += actualHoursDay;
+        }
+        if (dayAvailHours) grandDayAvailHours += dayAvailHours;
+        if (planDay) grandPlanDay += planDay;
+        if (factDay !== null && !isNaN(factDay) && factDay > 0) grandFactDay += factDay;
+
+        if (actualHoursNight) grandActualHoursNight += actualHoursNight;
+        if (nightAvailHours) grandNightAvailHours += nightAvailHours;
+        if (planNight) grandPlanNight += planNight;
+        if (factNight !== null && !isNaN(factNight) && factNight > 0) grandFactNight += factNight;
+
+        // Cộng workload cho Chuyền gán Sub-Row
+        if (dayAvailHours > 0 && assignedDayLineId && lineWorkloads[assignedDayLineId]) {
+          lineWorkloads[assignedDayLineId].dayHours += dayAvailHours;
+          lineWorkloads[assignedDayLineId].hours += dayAvailHours;
+          lineWorkloads[assignedDayLineId].qty += planDay;
+          lineWorkloads[assignedDayLineId].dayQty += planDay;
+        }
+        if (nightAvailHours > 0 && assignedNightLineId && lineWorkloads[assignedNightLineId]) {
+          lineWorkloads[assignedNightLineId].nightHours += nightAvailHours;
+          lineWorkloads[assignedNightLineId].hours += nightAvailHours;
+          lineWorkloads[assignedNightLineId].qty += planNight;
+          lineWorkloads[assignedNightLineId].nightQty += planNight;
+        }
+      }
+    });
+
+    // 3. Tính lại Grand Final Shortage chính xác: Lấy mắt xích cuối cùng của mỗi model
+    grandFinalShortage = 0;
+    processedRows.forEach(r => {
+      if (r.subRows && r.subRows.length > 0) {
+        grandFinalShortage += r.subRows[r.subRows.length - 1].finalShortage;
+      } else {
+        grandFinalShortage += (r.finalShortage || 0);
+      }
+    });
+
+    // Sắp xếp hiển thị gom các model cùng Group Model liền nhau (giữ nguyên ưu tiên Âm luỹ kế & bảo toàn 100% số liệu đã tính)
+    processedRows.sort(compareAssemblyDisplayByGroupModel);
+
+    // Xây dựng danh sách dòng đầy đủ (gồm Main row và các Sub-row liền sau)
+    const allProcessedDisplayRows = [];
+    processedRows.forEach((r, newIdx) => {
+      r.idx = newIdx;
+      r.sttDisplay = `${newIdx + 1}`;
+      r.isSubRow = false;
+      allProcessedDisplayRows.push(r);
+      if (r.subRows && r.subRows.length > 0) {
+        r.subRows.forEach((sub, sIdx) => {
+          sub.sttDisplay = `${newIdx + 1}.${sIdx + 1}`;
+          sub.isSubRow = true;
+          sub.subIdx = sIdx + 1;
+          sub.parentRowKey = r.rowKey;
+          allProcessedDisplayRows.push(sub);
+        });
+      }
+    });
+
     // Cache processed rows for Google Sheets export and Sequence modal
-    window.AppStore.lastProcessedSimRows = processedRows;
+    window.AppStore.lastProcessedSimRows = allProcessedDisplayRows;
 
     // Evaluate Âm luỹ kế priority gatekeeper across current Assembly scope (even if filtered)
     const isUnfilteredAsmStage = groupFilter === 'ALL' && !searchVal && (planStatusFilter === 'GAP_NEGATIVE' || planStatusFilter === 'ALL');
@@ -2551,7 +2959,7 @@
     const nightLineHoursMap = {};
     activeAssemblyLines.forEach(lid => { nightLineHoursMap[lid] = 0; });
 
-    processedRows.forEach(r => {
+    allProcessedDisplayRows.forEach(r => {
       if (r.assignedDayLineId && dayLineHoursMap[r.assignedDayLineId] !== undefined) {
         dayLineHoursMap[r.assignedDayLineId] = Math.round((dayLineHoursMap[r.assignedDayLineId] + (r.dayAvailHours || 0)) * 100) / 100;
       }
@@ -2933,8 +3341,8 @@
       `;
     }
 
-    // Hiển thị tất cả model theo yêu cầu người dùng (không phân trang)
-    const pagedRows = processedRows;
+    // Hiển thị tất cả model theo yêu cầu người dùng (không phân trang, gồm Main rows và Sub-rows song song)
+    const pagedRows = allProcessedDisplayRows;
 
     // Active lines with assigned shortage models
     const activeLinesCount = Object.values(lineWorkloads).filter(w => w.models > 0).length;
@@ -2957,6 +3365,7 @@
         actualHoursDay,
         dayAvailHours,
         planDay,
+        factDay,
         nightShortage,
         assignedNightLineId,
         seqNight,
@@ -2964,8 +3373,14 @@
         actualHoursNight,
         nightAvailHours,
         planNight,
+        factNight,
         finalShortage
       } = r;
+
+      const isSubRow = !!r.isSubRow;
+      const subIdx = r.subIdx || 1;
+      const parentRowKey = r.parentRowKey || '';
+      const sttDisplay = r.sttDisplay || (idx + 1);
 
       const gapColor = it.cumGapQty < 0 ? 'color: var(--danger);' : it.cumGapQty > 0 ? 'color: var(--success);' : 'color: var(--text-muted);';
       const encodedRowKey = encodeSimRowKey(rowKey);
@@ -3008,27 +3423,48 @@
       const shiftNightText = 'Ca Đêm';
 
       return `
-        <tr class="hover-row${isAsmRowCumNeg ? ' sim-row-cumneg-priority' : ''}${isAsmRowLocked ? ' sim-row-locked-current-day' : ''}" data-row-key="${encodedRowKey}" data-is-cumneg="${isAsmRowCumNeg ? '1' : '0'}" data-row-locked="${isAsmRowLocked ? '1' : '0'}">
-          <td class="sticky-sim-stt" style="color: var(--text-muted); font-size: 0.8rem; text-align: center;">${idx + 1}</td>
+        <tr class="hover-row${isSubRow ? ' sim-subline-row' : ''}${isAsmRowCumNeg ? ' sim-row-cumneg-priority' : ''}${isAsmRowLocked ? ' sim-row-locked-current-day' : ''}" data-row-key="${encodedRowKey}" data-is-cumneg="${isAsmRowCumNeg ? '1' : '0'}" data-row-locked="${isAsmRowLocked ? '1' : '0'}" data-is-subline="${isSubRow ? '1' : '0'}">
+          <td class="sticky-sim-stt" style="color: ${isSubRow ? '#38bdf8' : 'var(--text-muted)'}; font-size: 0.8rem; text-align: center; font-weight: ${isSubRow ? '800' : 'normal'};">
+            ${sttDisplay}
+          </td>
           <td class="sticky-sim-stage" style="text-align: center; white-space: nowrap; font-size: 0.8rem; font-weight: 700; color: #f8fafc;">
-            ${it.stage || 'ASSEMBLY'}
+            ${isSubRow ? '<span style="opacity: 0.45; font-size: 0.85rem;" title="Chuyền phụ kế thừa công đoạn ASSEMBLY">↳</span>' : (it.stage || 'ASSEMBLY')}
           </td>
           <td class="sticky-sim-group" style="white-space: nowrap; font-size: 0.825rem; font-weight: 700; color: #f8fafc;">
-            ${it.model || '--'}
+            ${isSubRow ? '<span style="opacity: 0.45; font-size: 0.85rem;" title="Chuyền phụ kế thừa Group Model">↳</span>' : (it.model || '--')}
           </td>
           <td class="sticky-sim-model">
-            <div style="font-family: Arial, sans-serif; font-size: 0.825rem; font-weight: 600; color: #f1f5f9; word-break: break-word; line-height: 1.35;">
-              ${it.productName1C}
-            </div>
+            ${isSubRow ? `
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.45rem; padding: 0.1rem 0;">
+                <span class="sim-subline-badge font-mono" style="font-size: 0.75rem; font-weight: 800; color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.45); border-radius: 5px; padding: 0.15rem 0.45rem; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.25rem;">
+                  <span>↳ Chuyền ${subIdx + 1} (Song song)</span>
+                </span>
+                <button type="button" class="btn btn-xs btn-remove-subline" onclick="handleRemoveSubLine(decodeURIComponent('${encodeSimRowKey(parentRowKey)}'), ${subIdx})" style="padding: 0.12rem 0.45rem; font-size: 0.7rem; font-weight: 700; color: #f87171; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 4px; cursor: pointer; white-space: nowrap;" title="Hủy Chuyền song song này">
+                  ❌ Hủy
+                </button>
+              </div>
+            ` : `
+              <div style="font-family: Arial, sans-serif; font-size: 0.825rem; font-weight: 600; color: #f1f5f9; word-break: break-word; line-height: 1.35;">
+                ${it.productName1C}
+              </div>
+              <div style="margin-top: 0.25rem;">
+                <button type="button" class="btn btn-xs btn-add-subline" onclick="handleAddSubLine(decodeURIComponent('${encodedRowKey}'))" style="padding: 0.12rem 0.45rem; font-size: 0.7rem; font-weight: 700; color: #38bdf8; background: rgba(56, 189, 248, 0.1); border: 1px dashed rgba(56, 189, 248, 0.55); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.25rem;" title="Bố trí thêm Chuyền sản xuất song song cho Model này">
+                  <span>➕ Thêm Chuyền</span>
+                </button>
+              </div>
+            `}
           </td>
           <td class="font-mono" style="text-align: right; font-weight: 700; color: #60a5fa; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
-            ${(it.cumPlanQty || 0).toLocaleString('vi-VN')}
+            ${isSubRow ? '<span style="color: var(--text-muted); opacity: 0.5;">--</span>' : (it.cumPlanQty || 0).toLocaleString('vi-VN')}
           </td>
           <td class="font-mono" style="text-align: right; font-weight: 700; color: #34d399; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
-            ${(it.cumFactQty || 0).toLocaleString('vi-VN')}
+            ${isSubRow ? '<span style="color: var(--text-muted); opacity: 0.5;">--</span>' : (it.cumFactQty || 0).toLocaleString('vi-VN')}
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 800; font-size: 0.825rem; padding: 0.35rem 0.45rem; ${gapColor}">
-            ${it.cumGapQty !== 0 ? (it.cumGapQty > 0 ? '+' : '') + it.cumGapQty.toLocaleString('vi-VN') : '0'}
+          <td class="font-mono" style="text-align: right; font-weight: 800; font-size: 0.825rem; padding: 0.35rem 0.45rem; ${isSubRow ? (shortage > 0 ? 'color: var(--danger);' : 'color: var(--text-muted);') : gapColor}">
+            ${isSubRow 
+              ? (shortage > 0 ? '-' + shortage.toLocaleString('vi-VN') : '0') 
+              : (it.cumGapQty !== 0 ? (it.cumGapQty > 0 ? '+' : '') + it.cumGapQty.toLocaleString('vi-VN') : '0')
+            }
           </td>
           ${renderPlanDateAndShiftCellsHtml(planMeta || resolvePlanDateAndShiftMeta(it, it.cumGapQty || 0, todayPlanRef, shiftFilter))}
           <td class="font-mono" style="text-align: center; font-weight: 600; color: #cbd5e1; font-size: 0.825rem; padding: 0.35rem 0.35rem;">
@@ -3061,6 +3497,9 @@
           <td class="font-mono" style="text-align: right; white-space: nowrap; padding: 0.25rem 0.25rem;">
             <input type="text" class="sim-table-plan-input${asmLockClass} font-mono" ${asmLockAttr} value="${planDay > 0 ? planDay.toLocaleString('vi-VN') : (shortage > 0 && assignedDayLineId ? '0' : '')}" placeholder="0" onchange="handleTablePlanDayChange(decodeURIComponent('${encodedRowKey}'), this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 68px; padding: 0.15rem 0.3rem; font-size: 0.8rem; font-weight: 800; color: #38bdf8; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 6px; outline: none; text-align: right;" title="Nhập Plan sản xuất Ca Ngày${asmLockTitleSuffix}">
           </td>
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: #34d399; font-size: 0.825rem; padding: 0.35rem 0.45rem;" title="${factDay !== null && planDay > 0 ? `Fact Thực Tế Ca Ngày (Từ Sheet Data Mass) - Chênh lệch: ${(factDay - planDay) > 0 ? '+' : ''}${(factDay - planDay).toLocaleString('vi-VN')}` : 'Fact Thực Tế Ca Ngày (Cố định từ Sheet Data Mass)'}">
+            ${isSubRow ? '<span style="color: var(--text-muted); opacity: 0.45;">--</span>' : ((factDay !== null && !isNaN(factDay)) ? (factDay > 0 ? factDay.toLocaleString('vi-VN') : '0') : '<span style="color: var(--text-muted); opacity: 0.45;">--</span>')}
+          </td>
           <td class="font-mono" style="text-align: right; font-weight: 800; color: #f87171; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
             ${nightShortage > 0 ? '-' + nightShortage.toLocaleString('vi-VN') : ''}
           </td>
@@ -3087,6 +3526,9 @@
           </td>
           <td class="font-mono" style="text-align: right; white-space: nowrap; padding: 0.25rem 0.25rem;">
             <input type="text" class="sim-table-plan-input${asmLockClass} font-mono" ${asmLockAttr} value="${planNight > 0 ? planNight.toLocaleString('vi-VN') : (nightShortage > 0 && assignedNightLineId ? '0' : '')}" placeholder="0" onchange="handleTablePlanNightChange(decodeURIComponent('${encodedRowKey}'), this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 68px; padding: 0.15rem 0.3rem; font-size: 0.8rem; font-weight: 800; color: #c084fc; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(192, 132, 252, 0.35); border-radius: 6px; outline: none; text-align: right;" title="Nhập Plan sản xuất Ca Đêm${asmLockTitleSuffix}">
+          </td>
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: #34d399; font-size: 0.825rem; padding: 0.35rem 0.45rem;" title="${factNight !== null && planNight > 0 ? `Fact Thực Tế Ca Đêm (Từ Sheet Data Mass) - Chênh lệch: ${(factNight - planNight) > 0 ? '+' : ''}${(factNight - planNight).toLocaleString('vi-VN')}` : 'Fact Thực Tế Ca Đêm (Cố định từ Sheet Data Mass)'}">
+            ${isSubRow ? '<span style="color: var(--text-muted); opacity: 0.45;">--</span>' : ((factNight !== null && !isNaN(factNight)) ? (factNight > 0 ? factNight.toLocaleString('vi-VN') : '0') : '<span style="color: var(--text-muted); opacity: 0.45;">--</span>')}
           </td>
           <td class="font-mono" style="text-align: right; font-weight: 800; color: #f87171; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
             ${finalShortage > 0 ? '-' + finalShortage.toLocaleString('vi-VN') : ''}
@@ -3516,6 +3958,9 @@
                   <th class="font-mono" style="text-align: right; color: #38bdf8; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
                     ${grandPlanDay > 0 ? grandPlanDay.toLocaleString('vi-VN') : ''}
                   </th>
+                  <th class="font-mono" style="text-align: right; color: #34d399; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;" title="Tổng Fact Thực Tế Ca Ngày">
+                    ${grandFactDay > 0 ? grandFactDay.toLocaleString('vi-VN') : (grandPlanDay > 0 ? '0' : '')}
+                  </th>
                   <th class="font-mono" style="text-align: right; color: #f87171; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
                     ${grandNightShortage > 0 ? '-' + grandNightShortage.toLocaleString('vi-VN') : ''}
                   </th>
@@ -3533,6 +3978,9 @@
                   <th class="font-mono" style="text-align: right; color: #c084fc; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
                     ${grandPlanNight > 0 ? grandPlanNight.toLocaleString('vi-VN') : ''}
                   </th>
+                  <th class="font-mono" style="text-align: right; color: #34d399; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;" title="Tổng Fact Thực Tế Ca Đêm">
+                    ${grandFactNight > 0 ? grandFactNight.toLocaleString('vi-VN') : (grandPlanNight > 0 ? '0' : '')}
+                  </th>
                   <th class="font-mono" style="text-align: right; color: #f87171; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
                     ${grandFinalShortage > 0 ? '-' + grandFinalShortage.toLocaleString('vi-VN') : ''}
                   </th>
@@ -3541,7 +3989,7 @@
                   <th style="padding: 0.35rem 0.25rem;"></th>
                 </tr>
 
-                <!-- HÀNG 1: TIÊU ĐỀ 30 CỘT (STICKY TOP: 36px) VỚI TEXT WRAPPING GỌN GÀNG -->
+                <!-- HÀNG 1: TIÊU ĐỀ 32 CỘT (STICKY TOP: 36px) VỚI TEXT WRAPPING GỌN GÀNG -->
                 <tr class="sim-header-titles">
                   <th class="sticky-sim-stt" style="text-align: center; width: 45px;">STT</th>
                   <th class="sticky-sim-stage" style="text-align: center; width: 95px;">Công Đoạn</th>
@@ -3562,6 +4010,7 @@
                   <th style="text-align: right; min-width: 80px; color: #38bdf8; padding: 0.35rem 0.25rem;">Tổng TG Cần<br>Thực Tế 1</th>
                   <th style="text-align: right; min-width: 75px; color: #fbbf24; padding: 0.35rem 0.25rem;">Tổng TG Có<br>Ca Ngày</th>
                   <th style="text-align: right; min-width: 78px; color: #38bdf8; padding: 0.35rem 0.25rem;">Plan<br>Ca Ngày</th>
+                  <th style="text-align: right; min-width: 78px; color: #34d399; padding: 0.35rem 0.25rem;">Fact<br>Ca Ngày</th>
                   <th style="text-align: right; min-width: 85px; color: #f87171; padding: 0.35rem 0.25rem;">Kế hoạch Còn<br>Thiếu Ca Đêm</th>
                   <!-- Cụm Ca Đêm -->
                   <th style="text-align: center; min-width: 60px; color: #c084fc; padding: 0.35rem 0.25rem;">Ca Làm<br>Việc</th>
@@ -3571,6 +4020,7 @@
                   <th style="text-align: right; min-width: 80px; color: #c084fc; padding: 0.35rem 0.25rem;">Tổng TG Cần<br>Thực Tế 2</th>
                   <th style="text-align: right; min-width: 75px; color: #fbbf24; padding: 0.35rem 0.25rem;">Tổng TG Có<br>Ca Đêm</th>
                   <th style="text-align: right; min-width: 78px; color: #c084fc; padding: 0.35rem 0.25rem;">Plan<br>Ca Đêm</th>
+                  <th style="text-align: right; min-width: 78px; color: #34d399; padding: 0.35rem 0.25rem;">Fact<br>Ca Đêm</th>
                   <th style="text-align: right; min-width: 85px; color: #f87171; padding: 0.35rem 0.25rem;">Kế hoạch Còn<br>Thiếu Tổng</th>
                   <th style="text-align: left; min-width: 140px; color: #e2e8f0; padding: 0.35rem 0.35rem;">Ghi Chú</th>
                   <th style="text-align: center; min-width: 132px; color: #fbbf24; padding: 0.35rem 0.35rem;" title="Truy xuất ngày và ca sản xuất (Ngày / Đêm) bắt đầu bị âm cho các Model Âm luỹ kế">Âm Từ<br>Ngày / Ca</th>
@@ -3580,7 +4030,7 @@
               <tbody>
                 ${tableRowsHtml.length > 0 ? tableRowsHtml : `
                   <tr>
-                    <td colspan="30" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                    <td colspan="32" style="text-align: center; padding: 3rem; color: var(--text-muted);">
                       <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔍</div>
                       <div style="font-weight: 700; color: #f8fafc;">Không tìm thấy Model nào theo tiêu chí lọc hiện tại</div>
                     </td>
@@ -4133,8 +4583,8 @@
       );
     }
 
-    // 6. Sorting: Ưu tiên Model Âm luỹ kế lên đầu, tiếp theo đến các Model thiếu hụt ngày hiện tại (âm nhiều nhất lên trước)
-    filteredRows.sort(compareHardtestPriorityRows);
+    // 6. Sorting: Ưu tiên Model Âm luỹ kế lên đầu, gom nhóm theo Group Model (cùng dòng xếp liền nhau) để dễ lập kế hoạch sản xuất
+    filteredRows.sort(compareHardtestDisplayByGroupModel);
 
     // 7. Re-index STT & accumulate grand totals for filtered rows
     let grandPlan = 0;
@@ -5649,6 +6099,40 @@
     }
   };
 
+  window.handleTableFactDayChange = function(rowKey, val) {
+    if (!assertCumNegPriorityUnlocked(rowKey, 'ASSEMBLY')) return;
+    if (!window.AppStore.simManualFactDay) window.AppStore.simManualFactDay = {};
+    const raw = (val || '').toString().replace(/\./g, '').replace(/,/g, '').trim();
+    const num = parseInt(raw, 10);
+    if (isNaN(num) || num < 0 || raw === '') {
+      delete window.AppStore.simManualFactDay[rowKey];
+    } else {
+      window.AppStore.simManualFactDay[rowKey] = num;
+    }
+    if (window.handleSaveSimPlanDraft) window.handleSaveSimPlanDraft(true);
+    window.renderCapacityView();
+    if (window.showToast) {
+      window.showToast('info', !isNaN(num) && num >= 0 ? `Đã cập nhật Fact Ca Ngày: ${num.toLocaleString('vi-VN')}` : 'Đã khôi phục Fact Ca Ngày mặc định');
+    }
+  };
+
+  window.handleTableFactNightChange = function(rowKey, val) {
+    if (!assertCumNegPriorityUnlocked(rowKey, 'ASSEMBLY')) return;
+    if (!window.AppStore.simManualFactNight) window.AppStore.simManualFactNight = {};
+    const raw = (val || '').toString().replace(/\./g, '').replace(/,/g, '').trim();
+    const num = parseInt(raw, 10);
+    if (isNaN(num) || num < 0 || raw === '') {
+      delete window.AppStore.simManualFactNight[rowKey];
+    } else {
+      window.AppStore.simManualFactNight[rowKey] = num;
+    }
+    if (window.handleSaveSimPlanDraft) window.handleSaveSimPlanDraft(true);
+    window.renderCapacityView();
+    if (window.showToast) {
+      window.showToast('info', !isNaN(num) && num >= 0 ? `Đã cập nhật Fact Ca Đêm: ${num.toLocaleString('vi-VN')}` : 'Đã khôi phục Fact Ca Đêm mặc định');
+    }
+  };
+
   window.handleEditPlannerName = function() {
     const currentName = (window.AppStore.simPlannerName !== undefined && window.AppStore.simPlannerName !== null)
       ? window.AppStore.simPlannerName
@@ -5674,6 +6158,47 @@
 
   // Backward compatibility alias
   window.handleTableLineChange = window.handleTableLineDayChange;
+
+  // Assembly Sub-Row Multi-Line Handlers (Thêm / Hủy Chuyền sản xuất song song)
+  window.handleAddSubLine = function(rowKey) {
+    if (!assertCumNegPriorityUnlocked(rowKey, 'ASSEMBLY')) return;
+    if (!window.AppStore.simSubLines) window.AppStore.simSubLines = {};
+    const cur = window.AppStore.simSubLines[rowKey] || 0;
+    window.AppStore.simSubLines[rowKey] = cur + 1;
+    if (window.handleSaveSimPlanDraft) window.handleSaveSimPlanDraft(true);
+    renderCapacityViewPreservingScroll();
+    if (window.showToast) {
+      window.showToast('success', `➕ Đã thêm Chuyền phụ ${cur + 1} (Song song)! Bạn có thể chọn Chuyền Ca Ngày / Ca Đêm để cùng sản xuất.`);
+    }
+  };
+
+  window.handleRemoveSubLine = function(rowKey, subIdx) {
+    if (!window.AppStore.simSubLines) return;
+    const subRowKey = `${rowKey}___sub_${subIdx}`;
+    // Xóa toàn bộ manual inputs của Chuyền phụ này
+    const dicts = [
+      'simManualLinesDay', 'simManualLinesNight', 'simLineOverridesDay', 'simLineOverridesNight',
+      'simLineOverrides', 'simManualSeqsDay', 'simManualSeqsNight', 'simManualPfDay', 'simManualPfNight',
+      'simManualPlanDay', 'simManualPlanNight', 'simManualFactDay', 'simManualFactNight', 'simManualNotes'
+    ];
+    dicts.forEach(d => {
+      if (window.AppStore[d] && window.AppStore[d][subRowKey] !== undefined) {
+        delete window.AppStore[d][subRowKey];
+      }
+    });
+
+    const cur = window.AppStore.simSubLines[rowKey] || 0;
+    if (cur <= 1) {
+      delete window.AppStore.simSubLines[rowKey];
+    } else {
+      window.AppStore.simSubLines[rowKey] = cur - 1;
+    }
+    if (window.handleSaveSimPlanDraft) window.handleSaveSimPlanDraft(true);
+    renderCapacityViewPreservingScroll();
+    if (window.showToast) {
+      window.showToast('info', `🗑️ Đã hủy Chuyền phụ ${subIdx}.`);
+    }
+  };
 
   window.handleTableShiftChange = function(rowKey, shift) {
     if (!assertCumNegPriorityUnlocked(rowKey, 'ASSEMBLY')) return;
@@ -6286,10 +6811,12 @@
     let grandActualHoursDay = 0;
     let grandDayAvailHours = 0;
     let grandPlanDay = 0;
+    let grandFactDay = 0;
     let grandNightShortage = 0;
     let grandActualHoursNight = 0;
     let grandNightAvailHours = 0;
     let grandPlanNight = 0;
+    let grandFactNight = 0;
     let grandFinalShortage = 0;
 
     rows.forEach(r => {
@@ -6300,10 +6827,12 @@
       grandActualHoursDay += (r.actualHoursDay || 0);
       grandDayAvailHours += (r.dayAvailHours || 0);
       grandPlanDay += (r.planDay || 0);
+      if (r.factDay !== null && !isNaN(r.factDay) && r.factDay > 0) grandFactDay += r.factDay;
       grandNightShortage += (r.nightShortage || 0);
       grandActualHoursNight += (r.actualHoursNight || 0);
       grandNightAvailHours += (r.nightAvailHours || 0);
       grandPlanNight += (r.planNight || 0);
+      if (r.factNight !== null && !isNaN(r.factNight) && r.factNight > 0) grandFactNight += r.factNight;
       grandFinalShortage += (r.finalShortage || 0);
     });
 
@@ -6332,6 +6861,7 @@
       grandActualHoursDay > 0 ? grandActualHoursDay.toFixed(1) : '',
       grandDayAvailHours > 0 ? grandDayAvailHours.toFixed(2) : '',
       grandPlanDay > 0 ? grandPlanDay : '',
+      grandFactDay > 0 ? grandFactDay : '',
       grandNightShortage > 0 ? `-${grandNightShortage}` : '',
       '',
       '',
@@ -6340,13 +6870,14 @@
       grandActualHoursNight > 0 ? grandActualHoursNight.toFixed(1) : '',
       grandNightAvailHours > 0 ? grandNightAvailHours.toFixed(2) : '',
       grandPlanNight > 0 ? grandPlanNight : '',
+      grandFactNight > 0 ? grandFactNight : '',
       grandFinalShortage > 0 ? `-${grandFinalShortage}` : '',
       '',
       ''
     ];
     csv += totalRow.map(v => typeof v === 'number' ? v : `"${v}"`).join(',') + '\n';
 
-    // Row 1: Headers 28 cột
+    // Row 1: Headers 30 cột
     const headers = [
       'STT',
       'Công Đoạn',
@@ -6366,6 +6897,7 @@
       'Tổng TG Cần Thực Tế 1',
       'Tổng TG Có Ca Ngày',
       'Plan Ca Ngày',
+      'Fact Ca Ngày',
       'Kế hoạch Còn Thiếu Ca Đêm',
       'Ca Làm Việc',
       'Line SX',
@@ -6374,6 +6906,7 @@
       'Tổng TG Cần Thực Tế 2',
       'Tổng TG Có Ca Đêm',
       'Plan Ca Đêm',
+      'Fact Ca Đêm',
       'Kế hoạch Còn Thiếu Tổng',
       'Ghi Chú',
       'Âm Từ Ngày / Ca'
@@ -6418,6 +6951,7 @@
         actHDayStr,
         dayAvailHStr,
         r.planDay > 0 ? r.planDay : '',
+        (r.factDay !== null && !isNaN(r.factDay) && r.factDay > 0) ? r.factDay : '',
         nightShortageStr,
         r.shiftTextNight || 'Ca Đêm',
         r.assignedNightLineId || '',
@@ -6426,6 +6960,7 @@
         actHNightStr,
         nightAvailHStr,
         r.planNight > 0 ? r.planNight : '',
+        (r.factNight !== null && !isNaN(r.factNight) && r.factNight > 0) ? r.factNight : '',
         finalShortageStr,
         cleanNote,
         r.cumNegOriginLabel || '--'
@@ -6464,10 +6999,12 @@
     let grandActualHoursDay = 0;
     let grandDayAvailHours = 0;
     let grandPlanDay = 0;
+    let grandFactDay = 0;
     let grandNightShortage = 0;
     let grandActualHoursNight = 0;
     let grandNightAvailHours = 0;
     let grandPlanNight = 0;
+    let grandFactNight = 0;
     let grandFinalShortage = 0;
 
     rows.forEach(r => {
@@ -6478,10 +7015,12 @@
       grandActualHoursDay += (r.actualHoursDay || 0);
       grandDayAvailHours += (r.dayAvailHours || 0);
       grandPlanDay += (r.planDay || 0);
+      if (r.factDay !== null && !isNaN(r.factDay) && r.factDay > 0) grandFactDay += r.factDay;
       grandNightShortage += (r.nightShortage || 0);
       grandActualHoursNight += (r.actualHoursNight || 0);
       grandNightAvailHours += (r.nightAvailHours || 0);
       grandPlanNight += (r.planNight || 0);
+      if (r.factNight !== null && !isNaN(r.factNight) && r.factNight > 0) grandFactNight += r.factNight;
       grandFinalShortage += (r.finalShortage || 0);
     });
 
@@ -6504,6 +7043,7 @@
       'Tổng TG Cần Thực Tế 1',
       'Tổng TG Có Ca Ngày',
       'Plan Ca Ngày',
+      'Fact Ca Ngày',
       'Kế hoạch Còn Thiếu Ca Đêm',
       'Ca Làm Việc',
       'Line SX',
@@ -6512,6 +7052,7 @@
       'Tổng TG Cần Thực Tế 2',
       'Tổng TG Có Ca Đêm',
       'Plan Ca Đêm',
+      'Fact Ca Đêm',
       'Kế hoạch Còn Thiếu Tổng',
       'Ghi Chú',
       'Âm Từ Ngày / Ca'
@@ -6538,6 +7079,7 @@
       grandActualHoursDay > 0 ? grandActualHoursDay.toFixed(1) : '',
       grandDayAvailHours > 0 ? grandDayAvailHours.toFixed(2) : '',
       grandPlanDay > 0 ? grandPlanDay : '',
+      grandFactDay > 0 ? grandFactDay : '',
       grandNightShortage > 0 ? `-${grandNightShortage}` : '',
       '',
       '',
@@ -6546,6 +7088,7 @@
       grandActualHoursNight > 0 ? grandActualHoursNight.toFixed(1) : '',
       grandNightAvailHours > 0 ? grandNightAvailHours.toFixed(2) : '',
       grandPlanNight > 0 ? grandPlanNight : '',
+      grandFactNight > 0 ? grandFactNight : '',
       grandFinalShortage > 0 ? `-${grandFinalShortage}` : '',
       '',
       ''
@@ -6591,6 +7134,7 @@
         actHDayStr,
         dayAvailHStr,
         r.planDay > 0 ? r.planDay : '',
+        (r.factDay !== null && !isNaN(r.factDay) && r.factDay > 0) ? r.factDay : '',
         nightShortageStr,
         r.shiftTextNight || 'Ca Đêm',
         r.assignedNightLineId || '',
@@ -6599,6 +7143,7 @@
         actHNightStr,
         nightAvailHStr,
         r.planNight > 0 ? r.planNight : '',
+        (r.factNight !== null && !isNaN(r.factNight) && r.factNight > 0) ? r.factNight : '',
         finalShortageStr,
         cleanNote,
         r.cumNegOriginLabel || '--'
@@ -7507,6 +8052,9 @@
         simManualPfNight: { ...(window.AppStore.simManualPfNight || {}) },
         simManualPlanDay: { ...(window.AppStore.simManualPlanDay || {}) },
         simManualPlanNight: { ...(window.AppStore.simManualPlanNight || {}) },
+        simManualFactDay: { ...(window.AppStore.simManualFactDay || {}) },
+        simManualFactNight: { ...(window.AppStore.simManualFactNight || {}) },
+        simSubLines: { ...(window.AppStore.simSubLines || {}) },
         simManualShifts: { ...(window.AppStore.simManualShifts || {}) },
         simManualNotes: { ...(window.AppStore.simManualNotes || {}) },
         hardtestState: buildHardtestDraftState()
@@ -7569,6 +8117,9 @@
     window.AppStore.simManualPfNight = {};
     window.AppStore.simManualPlanDay = {};
     window.AppStore.simManualPlanNight = {};
+    window.AppStore.simManualFactDay = {};
+    window.AppStore.simManualFactNight = {};
+    window.AppStore.simSubLines = {};
     window.AppStore.simManualShifts = {};
     window.AppStore.simManualNotes = {};
 
@@ -8057,6 +8608,9 @@
     window.AppStore.simManualPfNight = { ...(s.simManualPfNight || {}) };
     window.AppStore.simManualPlanDay = { ...(s.simManualPlanDay || {}) };
     window.AppStore.simManualPlanNight = { ...(s.simManualPlanNight || {}) };
+    window.AppStore.simManualFactDay = { ...(s.simManualFactDay || {}) };
+    window.AppStore.simManualFactNight = { ...(s.simManualFactNight || {}) };
+    window.AppStore.simSubLines = { ...(s.simSubLines || {}) };
     if (s.simManualShifts) window.AppStore.simManualShifts = { ...(s.simManualShifts || {}) };
     if (s.simManualNotes) window.AppStore.simManualNotes = { ...(s.simManualNotes || {}) };
     if (s.hardtestState) {
@@ -8204,6 +8758,9 @@
         simManualPfNight: { ...(window.AppStore.simManualPfNight || {}) },
         simManualPlanDay: { ...(window.AppStore.simManualPlanDay || {}) },
         simManualPlanNight: { ...(window.AppStore.simManualPlanNight || {}) },
+        simManualFactDay: { ...(window.AppStore.simManualFactDay || {}) },
+        simManualFactNight: { ...(window.AppStore.simManualFactNight || {}) },
+        simSubLines: { ...(window.AppStore.simSubLines || {}) },
         simManualShifts: { ...(window.AppStore.simManualShifts || {}) },
         simManualNotes: { ...(window.AppStore.simManualNotes || {}) },
         hardtestState: buildHardtestDraftState()
@@ -8563,6 +9120,9 @@
     window.AppStore.simManualPfNight = { ...(s.simManualPfNight || {}) };
     window.AppStore.simManualPlanDay = { ...(s.simManualPlanDay || {}) };
     window.AppStore.simManualPlanNight = { ...(s.simManualPlanNight || {}) };
+    window.AppStore.simManualFactDay = { ...(s.simManualFactDay || {}) };
+    window.AppStore.simManualFactNight = { ...(s.simManualFactNight || {}) };
+    window.AppStore.simSubLines = { ...(s.simSubLines || {}) };
     if (s.simManualShifts) window.AppStore.simManualShifts = { ...(s.simManualShifts || {}) };
     if (s.simManualNotes) window.AppStore.simManualNotes = { ...(s.simManualNotes || {}) };
     if (s.hardtestState) {
