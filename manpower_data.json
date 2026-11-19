@@ -26,15 +26,15 @@
   "B": {
     "shift": "B",
     "name": "Shift B",
-    "assyDirect": 29.0,
-    "assyTotal": 39.0,
+    "assyDirect": 28.0,
+    "assyTotal": 38.0,
     "assyLinesDirect": {
       "1B": 14.0,
-      "2B": 15.0
+      "2B": 14.0
     },
     "assyLinesTotal": {
       "1B": 19.0,
-      "2B": 20.0
+      "2B": 19.0
     },
     "htDirect": 25.0,
     "htTotal": 27.0,
@@ -48,16 +48,16 @@
   "C": {
     "shift": "C",
     "name": "Shift C",
-    "assyDirect": 42.0,
-    "assyTotal": 57.0,
+    "assyDirect": 43.0,
+    "assyTotal": 58.0,
     "assyLinesDirect": {
       "1C": 14.0,
-      "2C": 14.0,
+      "2C": 15.0,
       "3C": 14.0
     },
     "assyLinesTotal": {
       "1C": 19.0,
-      "2C": 19.0,
+      "2C": 20.0,
       "3C": 19.0
     },
     "htDirect": 26.0,
@@ -97,13 +97,13 @@
     "lines": [
       "3D"
     ],
-    "assyDirect": 14.0,
-    "assyTotal": 19.0,
+    "assyDirect": 11.0,
+    "assyTotal": 16.0,
     "assyLinesDirect": {
-      "3D": 14.0
+      "3D": 11.0
     },
     "assyLinesTotal": {
-      "3D": 19.0
+      "3D": 16.0
     },
     "htDirect": 0.0,
     "htTotal": 0.0,
