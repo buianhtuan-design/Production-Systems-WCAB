@@ -351071,6 +351071,4848 @@
       }
     ]
   },
+  "63464": {
+    "productCode": "63464",
+    "specCode": "63464",
+    "productName": "Ajax CombiProtect (8EU) Ekingen Elektronik black датчик руху та розбиття",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000019149",
+        "nomenclature": "Ajax CombiProtect black EU (напівфабрикат)",
+        "spec": "Ajax CombiProtect black EU (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171044",
+        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000005317",
+        "nomenclature": "MotionProtect_case_bracket_black",
+        "spec": "MotionProtect_case_bracket_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000133285",
+        "nomenclature": "[Package]_CPJ_CE_FCC_black_v1",
+        "spec": "[Package]_CPJ_CE_FCC_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000031246",
+        "nomenclature": "MotionProtect Fibra package liner",
+        "spec": "MotionProtect Fibra package liner",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000125372",
+        "nomenclature": "[Manual]_CPJ_CE_GPSR_v1",
+        "spec": "[Manual]_CPJ_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063464": {
+    "productCode": "63464",
+    "specCode": "63464",
+    "productName": "Ajax CombiProtect (8EU) Ekingen Elektronik black датчик руху та розбиття",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000019149",
+        "nomenclature": "Ajax CombiProtect black EU (напівфабрикат)",
+        "spec": "Ajax CombiProtect black EU (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171044",
+        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000005317",
+        "nomenclature": "MotionProtect_case_bracket_black",
+        "spec": "MotionProtect_case_bracket_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000133285",
+        "nomenclature": "[Package]_CPJ_CE_FCC_black_v1",
+        "spec": "[Package]_CPJ_CE_FCC_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000031246",
+        "nomenclature": "MotionProtect Fibra package liner",
+        "spec": "MotionProtect Fibra package liner",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000125372",
+        "nomenclature": "[Manual]_CPJ_CE_GPSR_v1",
+        "spec": "[Manual]_CPJ_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "63466": {
+    "productCode": "63466",
+    "specCode": "63466",
+    "productName": "Ajax CombiProtect (8IN) black датчик руху та розбиття",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000025785",
+        "nomenclature": "Ajax CombiProtect (8IN) black (напівфабрикат)",
+        "spec": "Ajax CombiProtect (8IN) black (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171044",
+        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000005317",
+        "nomenclature": "MotionProtect_case_bracket_black",
+        "spec": "MotionProtect_case_bracket_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000133285",
+        "nomenclature": "[Package]_CPJ_CE_FCC_black_v1",
+        "spec": "[Package]_CPJ_CE_FCC_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000031246",
+        "nomenclature": "MotionProtect Fibra package liner",
+        "spec": "MotionProtect Fibra package liner",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000125372",
+        "nomenclature": "[Manual]_CPJ_CE_GPSR_v1",
+        "spec": "[Manual]_CPJ_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063466": {
+    "productCode": "63466",
+    "specCode": "63466",
+    "productName": "Ajax CombiProtect (8IN) black датчик руху та розбиття",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000025785",
+        "nomenclature": "Ajax CombiProtect (8IN) black (напівфабрикат)",
+        "spec": "Ajax CombiProtect (8IN) black (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171044",
+        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000005317",
+        "nomenclature": "MotionProtect_case_bracket_black",
+        "spec": "MotionProtect_case_bracket_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000133285",
+        "nomenclature": "[Package]_CPJ_CE_FCC_black_v1",
+        "spec": "[Package]_CPJ_CE_FCC_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000031246",
+        "nomenclature": "MotionProtect Fibra package liner",
+        "spec": "MotionProtect Fibra package liner",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000125372",
+        "nomenclature": "[Manual]_CPJ_CE_GPSR_v1",
+        "spec": "[Manual]_CPJ_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "63480": {
+    "productCode": "63480",
+    "specCode": "63480",
+    "productName": "Ajax CombiProtect U Jeweller (8EU) ASP white датчик руху та розбиття",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000130382",
+        "nomenclature": "Ajax CombiProtect U Jeweller (8EU) white (напівфабрикат)",
+        "spec": "Ajax CombiProtect U Jeweller (8EU) white (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171044",
+        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000059495",
+        "nomenclature": "MPS_plastic_Bracket_white_v2",
+        "spec": "MPS_plastic_Bracket_white_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000133578",
+        "nomenclature": "[Manual]_CPJ_U_CE_GPSR_v1",
+        "spec": "[Manual]_CPJ_U_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000135879",
+        "nomenclature": "[Package]_CPJ_U_CE_white_v2",
+        "spec": "[Package]_CPJ_U_CE_white_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000031246",
+        "nomenclature": "MotionProtect Fibra package liner",
+        "spec": "MotionProtect Fibra package liner",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000047439",
+        "nomenclature": "Screw M3x12 PH1 DIN965",
+        "spec": "Screw M3x12 PH1 DIN965",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063480": {
+    "productCode": "63480",
+    "specCode": "63480",
+    "productName": "Ajax CombiProtect U Jeweller (8EU) ASP white датчик руху та розбиття",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000130382",
+        "nomenclature": "Ajax CombiProtect U Jeweller (8EU) white (напівфабрикат)",
+        "spec": "Ajax CombiProtect U Jeweller (8EU) white (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171044",
+        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000059495",
+        "nomenclature": "MPS_plastic_Bracket_white_v2",
+        "spec": "MPS_plastic_Bracket_white_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000133578",
+        "nomenclature": "[Manual]_CPJ_U_CE_GPSR_v1",
+        "spec": "[Manual]_CPJ_U_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000135879",
+        "nomenclature": "[Package]_CPJ_U_CE_white_v2",
+        "spec": "[Package]_CPJ_U_CE_white_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000031246",
+        "nomenclature": "MotionProtect Fibra package liner",
+        "spec": "MotionProtect Fibra package liner",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000047439",
+        "nomenclature": "Screw M3x12 PH1 DIN965",
+        "spec": "Screw M3x12 PH1 DIN965",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "63893": {
+    "productCode": "63893",
+    "specCode": "63893",
+    "productName": "Ajax Hub 2 4G (8EU/ECG) AE white (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000147236",
+        "nomenclature": "Ajax, HB2.006.MBR.001v0_HB2_66A_ECG_8EU_white_HRD",
+        "spec": "Ajax, HB2.006.MBR.001v0_HB2_66A_ECG_8EU_white_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000128721",
+        "nomenclature": "Ajax, HB2.001.PWB.001v4_(UL)_HRD",
+        "spec": "Ajax, HB2.001.PWB.001v4_(UL)_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007254",
+        "nomenclature": "Ajax, Hub_V4_holder_board with components",
+        "spec": "Ajax, Hub_V4_holder_board with components",
+        "quantity": 2.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000020661",
+        "nomenclature": "PCB HB2.002.ANT.001v3 LTE",
+        "spec": "PCB HB2.002.ANT.001v3 LTE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000019055",
+        "nomenclature": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "spec": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130432",
+        "nomenclature": "Hub_case_frontside_white_v9",
+        "spec": "Hub_case_frontside_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000147841",
+        "nomenclature": "MiniHUB_case_backside_white_v9 (Double SIM card hole)",
+        "spec": "MiniHUB_case_backside_white_v9 (Double SIM card hole)",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000129738",
+        "nomenclature": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "spec": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130436",
+        "nomenclature": "HUB_case_button_white_v9",
+        "spec": "HUB_case_button_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000083995",
+        "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "Die cut part acrylic 9mm x 30mm",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130441",
+        "nomenclature": "MiniHUB_case_light_v5",
+        "spec": "MiniHUB_case_light_v5",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000183847",
+        "nomenclature": "[Sticker]_H2J(4G)_AE_VN_CE_EU_v1",
+        "spec": "[Sticker]_H2J(4G)_AE_VN_CE_EU_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000084722",
+        "nomenclature": "[Sticker]_Hub_Battery_replacement_UL",
+        "spec": "[Sticker]_Hub_Battery_replacement_UL",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "000063893": {
+    "productCode": "63893",
+    "specCode": "63893",
+    "productName": "Ajax Hub 2 4G (8EU/ECG) AE white (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000147236",
+        "nomenclature": "Ajax, HB2.006.MBR.001v0_HB2_66A_ECG_8EU_white_HRD",
+        "spec": "Ajax, HB2.006.MBR.001v0_HB2_66A_ECG_8EU_white_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000128721",
+        "nomenclature": "Ajax, HB2.001.PWB.001v4_(UL)_HRD",
+        "spec": "Ajax, HB2.001.PWB.001v4_(UL)_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007254",
+        "nomenclature": "Ajax, Hub_V4_holder_board with components",
+        "spec": "Ajax, Hub_V4_holder_board with components",
+        "quantity": 2.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000020661",
+        "nomenclature": "PCB HB2.002.ANT.001v3 LTE",
+        "spec": "PCB HB2.002.ANT.001v3 LTE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000019055",
+        "nomenclature": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "spec": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130432",
+        "nomenclature": "Hub_case_frontside_white_v9",
+        "spec": "Hub_case_frontside_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000147841",
+        "nomenclature": "MiniHUB_case_backside_white_v9 (Double SIM card hole)",
+        "spec": "MiniHUB_case_backside_white_v9 (Double SIM card hole)",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000129738",
+        "nomenclature": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "spec": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130436",
+        "nomenclature": "HUB_case_button_white_v9",
+        "spec": "HUB_case_button_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000083995",
+        "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "Die cut part acrylic 9mm x 30mm",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130441",
+        "nomenclature": "MiniHUB_case_light_v5",
+        "spec": "MiniHUB_case_light_v5",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000183847",
+        "nomenclature": "[Sticker]_H2J(4G)_AE_VN_CE_EU_v1",
+        "spec": "[Sticker]_H2J(4G)_AE_VN_CE_EU_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000084722",
+        "nomenclature": "[Sticker]_Hub_Battery_replacement_UL",
+        "spec": "[Sticker]_Hub_Battery_replacement_UL",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "27023": {
+    "productCode": "27023",
+    "specCode": "27023",
+    "productName": "Ajax, Монтажний комплект v.6 (MiniHub Black) (плівка)",
+    "stage": "Com PKG",
+    "process": "Com PKG",
+    "materials": [
+      {
+        "materialCode": "000114938",
+        "nomenclature": "HUB_CableHolder_Plastic_v2_Black_IMM",
+        "spec": "HUB_CableHolder_Plastic_v2_Black_IMM",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 5.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000005790",
+        "nomenclature": "Screw un. 3.0/30 tai p/r CP",
+        "spec": "Screw un. 3.0/30 tai p/r CP",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000003989",
+        "nomenclature": "Dowel 6x30 nylon UPA/100/.",
+        "spec": "Dowel 6x30 nylon UPA/100/.",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000059460",
+        "nomenclature": "Film EXTRAFOL PB 52*180",
+        "spec": "Film EXTRAFOL PB 52*180",
+        "quantity": 0.001,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      }
+    ]
+  },
+  "000027023": {
+    "productCode": "27023",
+    "specCode": "27023",
+    "productName": "Ajax, Монтажний комплект v.6 (MiniHub Black) (плівка)",
+    "stage": "Com PKG",
+    "process": "Com PKG",
+    "materials": [
+      {
+        "materialCode": "000114938",
+        "nomenclature": "HUB_CableHolder_Plastic_v2_Black_IMM",
+        "spec": "HUB_CableHolder_Plastic_v2_Black_IMM",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 5.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000005790",
+        "nomenclature": "Screw un. 3.0/30 tai p/r CP",
+        "spec": "Screw un. 3.0/30 tai p/r CP",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000003989",
+        "nomenclature": "Dowel 6x30 nylon UPA/100/.",
+        "spec": "Dowel 6x30 nylon UPA/100/.",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000059460",
+        "nomenclature": "Film EXTRAFOL PB 52*180",
+        "spec": "Film EXTRAFOL PB 52*180",
+        "quantity": 0.001,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      }
+    ]
+  },
+  "63894": {
+    "productCode": "63894",
+    "specCode": "63894",
+    "productName": "Ajax Hub 2 4G (8EU/ECG) AE white охоронна централь",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000114794",
+        "nomenclature": "Ajax Hub 2 4G (8EU/ECG) AE white (напівфабрикат)",
+        "spec": "Ajax Hub 2 4G (8EU/ECG) AE white (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170889",
+        "nomenclature": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "spec": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171026",
+        "nomenclature": "Ajax, Монтажний комплект Cables Kit Type G Vietnam White",
+        "spec": "Ajax, Монтажний комплект Cables Kit Type G Vietnam White",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166881",
+        "nomenclature": "[Sticker]_100x150_finger_en_v1",
+        "spec": "[Sticker]_100x150_finger_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166880",
+        "nomenclature": "[Sticker]_100x150_robot_en_v1",
+        "spec": "[Sticker]_100x150_robot_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000143739",
+        "nomenclature": "[Package]_H2J_(4G)_CE_FCC_white_v1",
+        "spec": "[Package]_H2J_(4G)_CE_FCC_white_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019467",
+        "nomenclature": "BritishHub package liner for Controler",
+        "spec": "BritishHub package liner for Controler",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019469",
+        "nomenclature": "BritishHub package liner Vstavka",
+        "spec": "BritishHub package liner Vstavka",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000010548",
+        "nomenclature": "EPE Package 180*250 mm",
+        "spec": "EPE Package 180*250 mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000007238",
+        "nomenclature": "MiniHUB_case_bracket_WHITE",
+        "spec": "MiniHUB_case_bracket_WHITE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000114655",
+        "nomenclature": "[Manual]_H2J_(4G)_AE_CE_v1",
+        "spec": "[Manual]_H2J_(4G)_AE_CE_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063894": {
+    "productCode": "63894",
+    "specCode": "63894",
+    "productName": "Ajax Hub 2 4G (8EU/ECG) AE white охоронна централь",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000114794",
+        "nomenclature": "Ajax Hub 2 4G (8EU/ECG) AE white (напівфабрикат)",
+        "spec": "Ajax Hub 2 4G (8EU/ECG) AE white (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170889",
+        "nomenclature": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "spec": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171026",
+        "nomenclature": "Ajax, Монтажний комплект Cables Kit Type G Vietnam White",
+        "spec": "Ajax, Монтажний комплект Cables Kit Type G Vietnam White",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166881",
+        "nomenclature": "[Sticker]_100x150_finger_en_v1",
+        "spec": "[Sticker]_100x150_finger_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166880",
+        "nomenclature": "[Sticker]_100x150_robot_en_v1",
+        "spec": "[Sticker]_100x150_robot_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000143739",
+        "nomenclature": "[Package]_H2J_(4G)_CE_FCC_white_v1",
+        "spec": "[Package]_H2J_(4G)_CE_FCC_white_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019467",
+        "nomenclature": "BritishHub package liner for Controler",
+        "spec": "BritishHub package liner for Controler",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019469",
+        "nomenclature": "BritishHub package liner Vstavka",
+        "spec": "BritishHub package liner Vstavka",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000010548",
+        "nomenclature": "EPE Package 180*250 mm",
+        "spec": "EPE Package 180*250 mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000007238",
+        "nomenclature": "MiniHUB_case_bracket_WHITE",
+        "spec": "MiniHUB_case_bracket_WHITE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000114655",
+        "nomenclature": "[Manual]_H2J_(4G)_AE_CE_v1",
+        "spec": "[Manual]_H2J_(4G)_AE_CE_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "63812": {
+    "productCode": "63812",
+    "specCode": "63812",
+    "productName": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) BR white датчик руху з камерою",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000046380",
+        "nomenclature": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) white (напівфабрикат)",
+        "spec": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) white (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170909",
+        "nomenclature": "Ajax, Монтажний комплект (MCO Vietnam) (плівка)",
+        "spec": "Ajax, Монтажний комплект (MCO Vietnam) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000074360",
+        "nomenclature": "[Package]_MCOJ_(PhOD)_CE_white_v3",
+        "spec": "[Package]_MCOJ_(PhOD)_CE_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000028165",
+        "nomenclature": "Cardboard packaging MotionCam Outdoor",
+        "spec": "Cardboard packaging MotionCam Outdoor",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000125037",
+        "nomenclature": "[Manual]_MCOJ_(PhOD)_CE_GPSR_v1",
+        "spec": "[Manual]_MCOJ_(PhOD)_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000026214",
+        "nomenclature": "CPE package 155x375 white matte for MCO",
+        "spec": "CPE package 155x375 white matte for MCO",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000024999",
+        "nomenclature": "MotionCam_Outdoor_Bracket white",
+        "spec": "MotionCam_Outdoor_Bracket white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000012923",
+        "nomenclature": "Cable tie 4.8x300mm, nylon, white",
+        "spec": "Cable tie 4.8x300mm, nylon, white",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000025000",
+        "nomenclature": "MotionCam_Outdoor_Hood_white",
+        "spec": "MotionCam_Outdoor_Hood_white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000133041",
+        "nomenclature": "[Sticker]_MCOJ_(PhOD)_Anatel_v1",
+        "spec": "[Sticker]_MCOJ_(PhOD)_Anatel_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063812": {
+    "productCode": "63812",
+    "specCode": "63812",
+    "productName": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) BR white датчик руху з камерою",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000046380",
+        "nomenclature": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) white (напівфабрикат)",
+        "spec": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) white (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170909",
+        "nomenclature": "Ajax, Монтажний комплект (MCO Vietnam) (плівка)",
+        "spec": "Ajax, Монтажний комплект (MCO Vietnam) (плівка)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000074360",
+        "nomenclature": "[Package]_MCOJ_(PhOD)_CE_white_v3",
+        "spec": "[Package]_MCOJ_(PhOD)_CE_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000028165",
+        "nomenclature": "Cardboard packaging MotionCam Outdoor",
+        "spec": "Cardboard packaging MotionCam Outdoor",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000125037",
+        "nomenclature": "[Manual]_MCOJ_(PhOD)_CE_GPSR_v1",
+        "spec": "[Manual]_MCOJ_(PhOD)_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000026214",
+        "nomenclature": "CPE package 155x375 white matte for MCO",
+        "spec": "CPE package 155x375 white matte for MCO",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000024999",
+        "nomenclature": "MotionCam_Outdoor_Bracket white",
+        "spec": "MotionCam_Outdoor_Bracket white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000012923",
+        "nomenclature": "Cable tie 4.8x300mm, nylon, white",
+        "spec": "Cable tie 4.8x300mm, nylon, white",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000025000",
+        "nomenclature": "MotionCam_Outdoor_Hood_white",
+        "spec": "MotionCam_Outdoor_Hood_white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000133041",
+        "nomenclature": "[Sticker]_MCOJ_(PhOD)_Anatel_v1",
+        "spec": "[Sticker]_MCOJ_(PhOD)_Anatel_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "21396": {
+    "productCode": "21396",
+    "specCode": "21396",
+    "productName": "Ajax, Монтажний комплект Cables Kit Type G Black",
+    "stage": "Com PKG",
+    "process": "Com PKG",
+    "materials": [
+      {
+        "materialCode": "000007272",
+        "nomenclature": "Patch Cord 1m GC 1507B bl",
+        "spec": "Patch Cord 1m GC 1507B bl",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000015021",
+        "nomenclature": "Cable OS13/ST2 H03VVH2-F 2X0 to BS1363 UK bl",
+        "spec": "Cable OS13/ST2 H03VVH2-F 2X0 to BS1363 UK bl",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000019468",
+        "nomenclature": "BritishHub package liner for Cables",
+        "spec": "BritishHub package liner for Cables",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      }
+    ]
+  },
+  "000021396": {
+    "productCode": "21396",
+    "specCode": "21396",
+    "productName": "Ajax, Монтажний комплект Cables Kit Type G Black",
+    "stage": "Com PKG",
+    "process": "Com PKG",
+    "materials": [
+      {
+        "materialCode": "000007272",
+        "nomenclature": "Patch Cord 1m GC 1507B bl",
+        "spec": "Patch Cord 1m GC 1507B bl",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000015021",
+        "nomenclature": "Cable OS13/ST2 H03VVH2-F 2X0 to BS1363 UK bl",
+        "spec": "Cable OS13/ST2 H03VVH2-F 2X0 to BS1363 UK bl",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      },
+      {
+        "materialCode": "000019468",
+        "nomenclature": "BritishHub package liner for Cables",
+        "spec": "BritishHub package liner for Cables",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "Com PKG",
+        "stage": "Com PKG"
+      }
+    ]
+  },
+  "63936": {
+    "productCode": "63936",
+    "specCode": "63936",
+    "productName": "Ajax Hub 2 Plus (9AU/AUX) plug type A white охоронна централь",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000030916",
+        "nomenclature": "Ajax Hub 2 Plus (9AU/AUX) white",
+        "spec": "Ajax Hub 2 Plus (9AU/AUX) white",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170889",
+        "nomenclature": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "spec": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171022",
+        "nomenclature": "Ajax, Монтажний комплект Cables Kit Type A White",
+        "spec": "Ajax, Монтажний комплект Cables Kit Type A White",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166881",
+        "nomenclature": "[Sticker]_100x150_finger_en_v1",
+        "spec": "[Sticker]_100x150_finger_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166880",
+        "nomenclature": "[Sticker]_100x150_robot_en_v1",
+        "spec": "[Sticker]_100x150_robot_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000074331",
+        "nomenclature": "[Package]_HP2J_CE_white_v3",
+        "spec": "[Package]_HP2J_CE_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019467",
+        "nomenclature": "BritishHub package liner for Controler",
+        "spec": "BritishHub package liner for Controler",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019469",
+        "nomenclature": "BritishHub package liner Vstavka",
+        "spec": "BritishHub package liner Vstavka",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000010548",
+        "nomenclature": "EPE Package 180*250 mm",
+        "spec": "EPE Package 180*250 mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000127826",
+        "nomenclature": "[Manual]_HP2J_CE_GPSR_v1",
+        "spec": "[Manual]_HP2J_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000007238",
+        "nomenclature": "MiniHUB_case_bracket_WHITE",
+        "spec": "MiniHUB_case_bracket_WHITE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063936": {
+    "productCode": "63936",
+    "specCode": "63936",
+    "productName": "Ajax Hub 2 Plus (9AU/AUX) plug type A white охоронна централь",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000030916",
+        "nomenclature": "Ajax Hub 2 Plus (9AU/AUX) white",
+        "spec": "Ajax Hub 2 Plus (9AU/AUX) white",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170889",
+        "nomenclature": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "spec": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171022",
+        "nomenclature": "Ajax, Монтажний комплект Cables Kit Type A White",
+        "spec": "Ajax, Монтажний комплект Cables Kit Type A White",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166881",
+        "nomenclature": "[Sticker]_100x150_finger_en_v1",
+        "spec": "[Sticker]_100x150_finger_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166880",
+        "nomenclature": "[Sticker]_100x150_robot_en_v1",
+        "spec": "[Sticker]_100x150_robot_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000074331",
+        "nomenclature": "[Package]_HP2J_CE_white_v3",
+        "spec": "[Package]_HP2J_CE_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019467",
+        "nomenclature": "BritishHub package liner for Controler",
+        "spec": "BritishHub package liner for Controler",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019469",
+        "nomenclature": "BritishHub package liner Vstavka",
+        "spec": "BritishHub package liner Vstavka",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000010548",
+        "nomenclature": "EPE Package 180*250 mm",
+        "spec": "EPE Package 180*250 mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000127826",
+        "nomenclature": "[Manual]_HP2J_CE_GPSR_v1",
+        "spec": "[Manual]_HP2J_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000007238",
+        "nomenclature": "MiniHUB_case_bracket_WHITE",
+        "spec": "MiniHUB_case_bracket_WHITE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "80282": {
+    "productCode": "80282",
+    "specCode": "80282",
+    "productName": "Ajax, HB2.006.MBR.001v0[9XX-AUX-PSG]_плата з компонентами",
+    "stage": "SMD",
+    "process": "SMD",
+    "materials": [
+      {
+        "materialCode": "000043643",
+        "nomenclature": "PCB HB2.006.MBR.001v0",
+        "spec": "PCB HB2.006.MBR.001v0",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000020467",
+        "nomenclature": "10nF 50V X7R 5% 0402 CC0402JRX7R9BB103 Yageo Ceramic Capacitor SMD RoHS",
+        "spec": "10nF 50V X7R 5% 0402 CC0402JRX7R9BB103 Yageo Ceramic Capacitor SMD RoHS",
+        "quantity": 9.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000013771",
+        "nomenclature": "Capacitor CL05A105KQ5NNNC",
+        "spec": "Capacitor CL05A105KQ5NNNC",
+        "quantity": 10.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000024481",
+        "nomenclature": "100nF 25V X7R 10% 0402  GRM155R71E104KE14J Ceramic Capacitor SMD RoHS",
+        "spec": "100nF 25V X7R 10% 0402  GRM155R71E104KE14J Ceramic Capacitor SMD RoHS",
+        "quantity": 36.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000006280",
+        "nomenclature": "18pF 50V COG 5% 0402 GRM1555C1H180JA01D Murata Ceramic Capacitor SMD RoHS",
+        "spec": "18pF 50V COG 5% 0402 GRM1555C1H180JA01D Murata Ceramic Capacitor SMD RoHS",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000003454",
+        "nomenclature": "22pF COG 5% 0402 Murata GRM1555C1H220JA01D Ceramic Capacitor SMD RoHS",
+        "spec": "22pF COG 5% 0402 Murata GRM1555C1H220JA01D Ceramic Capacitor SMD RoHS",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000020453",
+        "nomenclature": "4.7uF 10V X5R 10% 0603 CL10A475KP8NNNC Samsung Ceramic Capacitor SMD RoHS",
+        "spec": "4.7uF 10V X5R 10% 0603 CL10A475KP8NNNC Samsung Ceramic Capacitor SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000005034",
+        "nomenclature": "6.8pF +/-0.1p 0402 Murata C0G GRM1555C1H6R8BA01D Ceramic Capacitor SMD RoHS",
+        "spec": "6.8pF +/-0.1p 0402 Murata C0G GRM1555C1H6R8BA01D Ceramic Capacitor SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000024472",
+        "nomenclature": "100pF 50V COG 5% 0402 CC0402JPNPO9BN101 Ceramic Capacitor SMD RoHS",
+        "spec": "100pF 50V COG 5% 0402 CC0402JPNPO9BN101 Ceramic Capacitor SMD RoHS",
+        "quantity": 8.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000007916",
+        "nomenclature": "22uF 6.3V X5R 10% 1206 CL31A226KQHNNNE Ceramic Capacitor SMD RoHS",
+        "spec": "22uF 6.3V X5R 10% 1206 CL31A226KQHNNNE Ceramic Capacitor SMD RoHS",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000015372",
+        "nomenclature": "5,5nH ±0.5 nH 800mA 51mOhms 0402 LQW15AN5N5D10D Murata SMD inductor",
+        "spec": "5,5nH ±0.5 nH 800mA 51mOhms 0402 LQW15AN5N5D10D Murata SMD inductor",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000007021",
+        "nomenclature": "1nF 2000V X7R 10% 1206 CC1206KKX7RDBB102 Ceramic Capacitor SMD RoHS",
+        "spec": "1nF 2000V X7R 10% 1206 CC1206KKX7RDBB102 Ceramic Capacitor SMD RoHS",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000009721",
+        "nomenclature": "4.7uF 6.3V X5R 20% 0402 GRM155R60J475ME47D Ceramic Capacitor SMD RoHS",
+        "spec": "4.7uF 6.3V X5R 20% 0402 GRM155R60J475ME47D Ceramic Capacitor SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000002350",
+        "nomenclature": "10uF 16V Х5R 10% 0805 CL21A106KOQNNNE Ceramic Capacitor SMD RoHS",
+        "spec": "10uF 16V Х5R 10% 0805 CL21A106KOQNNNE Ceramic Capacitor SMD RoHS",
+        "quantity": 11.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000007072",
+        "nomenclature": "100uF 6.3В X5R 20% 1206 CL31A107MQHNNNE Samsung Ceramic Capacitor SMD RoHS",
+        "spec": "100uF 6.3В X5R 20% 1206 CL31A107MQHNNNE Samsung Ceramic Capacitor SMD RoHS",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000092944",
+        "nomenclature": "5.1pF 50V C0G 0.25pF 0402 GRM1555C1H5R1CA01D Ceramic Capacitor SMD RoHS",
+        "spec": "5.1pF 50V C0G 0.25pF 0402 GRM1555C1H5R1CA01D Ceramic Capacitor SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000020296",
+        "nomenclature": "33pF 50V 5% C0G 0402 GRM1555C1H330JA01D Murata Ceramic Capacitor SMD RoHS",
+        "spec": "33pF 50V 5% C0G 0402 GRM1555C1H330JA01D Murata Ceramic Capacitor SMD RoHS",
+        "quantity": 8.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000024483",
+        "nomenclature": "220uF 6.3V 10%  size-C TPSC227K006S0125 Tantalum Capacitors SMD RoHS pcs",
+        "spec": "220uF 6.3V 10%  size-C TPSC227K006S0125 Tantalum Capacitors SMD RoHS pcs",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000009740",
+        "nomenclature": "10pF COG 50V 5% 0402 CL05C100JB5NNNC Ceramic Capacitor SMD RoHS",
+        "spec": "10pF COG 50V 5% 0402 CL05C100JB5NNNC Ceramic Capacitor SMD RoHS",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000024209",
+        "nomenclature": "TPS63020DSJR TI Buck-Boost Switching Regulator IC, 14-VFDFN",
+        "spec": "TPS63020DSJR TI Buck-Boost Switching Regulator IC, 14-VFDFN",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000006317",
+        "nomenclature": "AS222-92LF - RF-relay, microchip",
+        "spec": "AS222-92LF - RF-relay, microchip",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000014870",
+        "nomenclature": "XC6210B302MR-G SOT-25 Torex Voltage regulator",
+        "spec": "XC6210B302MR-G SOT-25 Torex Voltage regulator",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000023886",
+        "nomenclature": "FP8102XR-G1 Feeling Tech PMIC Battery Management IC SOP-8",
+        "spec": "FP8102XR-G1 Feeling Tech PMIC Battery Management IC SOP-8",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000005533",
+        "nomenclature": "Hardwired TCP/IP Ethernet controller  W5500 TQFP48_L",
+        "spec": "Hardwired TCP/IP Ethernet controller  W5500 TQFP48_L",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000020198",
+        "nomenclature": "IS25LP128F-JBLE-TR microchip Flash memory 128Mb 8-SOIC, ISSI",
+        "spec": "IS25LP128F-JBLE-TR microchip Flash memory 128Mb 8-SOIC, ISSI",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000019622",
+        "nomenclature": "FSA2567MPX MLP-16 Onsemi, microchip",
+        "spec": "FSA2567MPX MLP-16 Onsemi, microchip",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000019624",
+        "nomenclature": "74LVC1T45Z6-7 SOT-563-6 microchip",
+        "spec": "74LVC1T45Z6-7 SOT-563-6 microchip",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000005529",
+        "nomenclature": "220 Ohm 0805 BLM21PG221SN1D Murata Chip EMIFIL Inductor",
+        "spec": "220 Ohm 0805 BLM21PG221SN1D Murata Chip EMIFIL Inductor",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000007095",
+        "nomenclature": "TY-5050RGB1, LED RGB, 120gr., 5050 PLCC-6, SMD 5.0x5.0x1.6 TOYO Electronics",
+        "spec": "TY-5050RGB1, LED RGB, 120gr., 5050 PLCC-6, SMD 5.0x5.0x1.6 TOYO Electronics",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000010370",
+        "nomenclature": "LTST-C193KRKT-5A RED SMD LED 0603 45mcd 5mA 130deg RoHS pcs",
+        "spec": "LTST-C193KRKT-5A RED SMD LED 0603 45mcd 5mA 130deg RoHS pcs",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000004249",
+        "nomenclature": "Resistor 0402WGJ0000TCE",
+        "spec": "Resistor 0402WGJ0000TCE",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000027917",
+        "nomenclature": "Inductor NRS6028T2R2NMGJ",
+        "spec": "Inductor NRS6028T2R2NMGJ",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000003447",
+        "nomenclature": "10k 5% 0402 Resistors SMD RoHS",
+        "spec": "10k 5% 0402 Resistors SMD RoHS",
+        "quantity": 14.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000005528",
+        "nomenclature": "49.9R 1% 0402 Resistors SMD RoHS",
+        "spec": "49.9R 1% 0402 Resistors SMD RoHS",
+        "quantity": 5.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000002857",
+        "nomenclature": "0R 5% 0603 Resistors SMD RoHS",
+        "spec": "0R 5% 0603 Resistors SMD RoHS",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000004248",
+        "nomenclature": "4.7k 5% 0402 Resistors SMD RoHS",
+        "spec": "4.7k 5% 0402 Resistors SMD RoHS",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000006461",
+        "nomenclature": "120R 1% 0402 Resistors SMD RoHS",
+        "spec": "120R 1% 0402 Resistors SMD RoHS",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000036023",
+        "nomenclature": "Capacitor CC0402CRNPO9BN6R8",
+        "spec": "Capacitor CC0402CRNPO9BN6R8",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000004830",
+        "nomenclature": "22R 5% 0402 Resistors SMD RoHS",
+        "spec": "22R 5% 0402 Resistors SMD RoHS",
+        "quantity": 10.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000006283",
+        "nomenclature": "510R 5% 0402 Resistors SMD RoHS",
+        "spec": "510R 5% 0402 Resistors SMD RoHS",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000007927",
+        "nomenclature": "1M 1% 0402 Resistors SMD RoHS",
+        "spec": "1M 1% 0402 Resistors SMD RoHS",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000007113",
+        "nomenclature": "10R 1% 0402 Resistors SMD RoHS",
+        "spec": "10R 1% 0402 Resistors SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000006762",
+        "nomenclature": "12.4k 1% 0402 Resistors SMD RoHS",
+        "spec": "12.4k 1% 0402 Resistors SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000005517",
+        "nomenclature": "0.22R 5% 0.5W 1206 TE Connectivity RLP73K2BR22JTD (3-2176056-3) Resistor SMD RoHS",
+        "spec": "0.22R 5% 0.5W 1206 TE Connectivity RLP73K2BR22JTD (3-2176056-3) Resistor SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000004251",
+        "nomenclature": "100k 5% 0402 Resistors SMD RoHS",
+        "spec": "100k 5% 0402 Resistors SMD RoHS",
+        "quantity": 6.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000025257",
+        "nomenclature": "5.62k 1% 0402 Resistors SMD RoHS",
+        "spec": "5.62k 1% 0402 Resistors SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000006607",
+        "nomenclature": "Resistor RC0402FR-0768KL",
+        "spec": "Resistor RC0402FR-0768KL",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000004893",
+        "nomenclature": "150k 1% 0402 Resistors SMD RoHS",
+        "spec": "150k 1% 0402 Resistors SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000007763",
+        "nomenclature": "20k 1% 0402 Resistors SMD RoHS",
+        "spec": "20k 1% 0402 Resistors SMD RoHS",
+        "quantity": 6.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000006493",
+        "nomenclature": "2.2k 1% 0402 Resistors SMD RoHS",
+        "spec": "2.2k 1% 0402 Resistors SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000025256",
+        "nomenclature": "102k 1% 0402 Resistors SMD RoHS",
+        "spec": "102k 1% 0402 Resistors SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000009405",
+        "nomenclature": "Resistor 16R 5% 2512",
+        "spec": "Resistor 16R 5% 2512",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000006466",
+        "nomenclature": "220R 1% 0402 Resistors SMD RoHS",
+        "spec": "220R 1% 0402 Resistors SMD RoHS",
+        "quantity": 12.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000001229",
+        "nomenclature": "TSM141AS Tactile Switches 6x6mm KLS",
+        "spec": "TSM141AS Tactile Switches 6x6mm KLS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000134746",
+        "nomenclature": "RFM66W-915S2R-A-Blue (V2.2) HopeRF Sub-Ghz Transceiver Module 915MHz",
+        "spec": "RFM66W-915S2R-A-Blue (V2.2) HopeRF Sub-Ghz Transceiver Module 915MHz",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000033803",
+        "nomenclature": "Microcontroller EC21AUXGR-128-SGNS",
+        "spec": "Microcontroller EC21AUXGR-128-SGNS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000010255",
+        "nomenclature": "1N4148WS diotec SOD-323",
+        "spec": "1N4148WS diotec SOD-323",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000019626",
+        "nomenclature": "NUP4114UCLW1T2G 10V ON Semiconductor TVS Diode SOT-363",
+        "spec": "NUP4114UCLW1T2G 10V ON Semiconductor TVS Diode SOT-363",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000013980",
+        "nomenclature": "ESD5Z3.3T1G 3.3V 11.2A Onsemi TVS Diode SOD-523",
+        "spec": "ESD5Z3.3T1G 3.3V 11.2A Onsemi TVS Diode SOD-523",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000009410",
+        "nomenclature": "Transistor DTC143ZET1G",
+        "spec": "Transistor DTC143ZET1G",
+        "quantity": 9.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000014413",
+        "nomenclature": "Transistor SSM3J338R",
+        "spec": "Transistor SSM3J338R",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000024485",
+        "nomenclature": "DMP1009UFDF-13 transistor",
+        "spec": "DMP1009UFDF-13 transistor",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000021974",
+        "nomenclature": "FDV303N SOT-23-3 MOSFET",
+        "spec": "FDV303N SOT-23-3 MOSFET",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000010592",
+        "nomenclature": "8,0 MHz 10 ppm 18pf 49M-008000-FF6F10. AKER. Кварц",
+        "spec": "8,0 MHz 10 ppm 18pf 49M-008000-FF6F10. AKER. Кварц",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000012761",
+        "nomenclature": "Quartz crystal CXAN-025000-2F10F20 25 MHz",
+        "spec": "Quartz crystal CXAN-025000-2F10F20 25 MHz",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000020286",
+        "nomenclature": "PG2.0-6.5-2.0-1.5-1P single SMD Pogo Pin spring contact, Antenk",
+        "spec": "PG2.0-6.5-2.0-1.5-1P single SMD Pogo Pin spring contact, Antenk",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000170835",
+        "nomenclature": "STM32U585VIT6$2A Microcontroller STMicroelectronics",
+        "spec": "STM32U585VIT6$2A Microcontroller STMicroelectronics",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      }
+    ]
+  },
+  "000080282": {
+    "productCode": "80282",
+    "specCode": "80282",
+    "productName": "Ajax, HB2.006.MBR.001v0[9XX-AUX-PSG]_плата з компонентами",
+    "stage": "SMD",
+    "process": "SMD",
+    "materials": [
+      {
+        "materialCode": "000043643",
+        "nomenclature": "PCB HB2.006.MBR.001v0",
+        "spec": "PCB HB2.006.MBR.001v0",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000020467",
+        "nomenclature": "10nF 50V X7R 5% 0402 CC0402JRX7R9BB103 Yageo Ceramic Capacitor SMD RoHS",
+        "spec": "10nF 50V X7R 5% 0402 CC0402JRX7R9BB103 Yageo Ceramic Capacitor SMD RoHS",
+        "quantity": 9.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000013771",
+        "nomenclature": "Capacitor CL05A105KQ5NNNC",
+        "spec": "Capacitor CL05A105KQ5NNNC",
+        "quantity": 10.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000024481",
+        "nomenclature": "100nF 25V X7R 10% 0402  GRM155R71E104KE14J Ceramic Capacitor SMD RoHS",
+        "spec": "100nF 25V X7R 10% 0402  GRM155R71E104KE14J Ceramic Capacitor SMD RoHS",
+        "quantity": 36.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000006280",
+        "nomenclature": "18pF 50V COG 5% 0402 GRM1555C1H180JA01D Murata Ceramic Capacitor SMD RoHS",
+        "spec": "18pF 50V COG 5% 0402 GRM1555C1H180JA01D Murata Ceramic Capacitor SMD RoHS",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000003454",
+        "nomenclature": "22pF COG 5% 0402 Murata GRM1555C1H220JA01D Ceramic Capacitor SMD RoHS",
+        "spec": "22pF COG 5% 0402 Murata GRM1555C1H220JA01D Ceramic Capacitor SMD RoHS",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000020453",
+        "nomenclature": "4.7uF 10V X5R 10% 0603 CL10A475KP8NNNC Samsung Ceramic Capacitor SMD RoHS",
+        "spec": "4.7uF 10V X5R 10% 0603 CL10A475KP8NNNC Samsung Ceramic Capacitor SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000005034",
+        "nomenclature": "6.8pF +/-0.1p 0402 Murata C0G GRM1555C1H6R8BA01D Ceramic Capacitor SMD RoHS",
+        "spec": "6.8pF +/-0.1p 0402 Murata C0G GRM1555C1H6R8BA01D Ceramic Capacitor SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000024472",
+        "nomenclature": "100pF 50V COG 5% 0402 CC0402JPNPO9BN101 Ceramic Capacitor SMD RoHS",
+        "spec": "100pF 50V COG 5% 0402 CC0402JPNPO9BN101 Ceramic Capacitor SMD RoHS",
+        "quantity": 8.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000007916",
+        "nomenclature": "22uF 6.3V X5R 10% 1206 CL31A226KQHNNNE Ceramic Capacitor SMD RoHS",
+        "spec": "22uF 6.3V X5R 10% 1206 CL31A226KQHNNNE Ceramic Capacitor SMD RoHS",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000015372",
+        "nomenclature": "5,5nH ±0.5 nH 800mA 51mOhms 0402 LQW15AN5N5D10D Murata SMD inductor",
+        "spec": "5,5nH ±0.5 nH 800mA 51mOhms 0402 LQW15AN5N5D10D Murata SMD inductor",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000007021",
+        "nomenclature": "1nF 2000V X7R 10% 1206 CC1206KKX7RDBB102 Ceramic Capacitor SMD RoHS",
+        "spec": "1nF 2000V X7R 10% 1206 CC1206KKX7RDBB102 Ceramic Capacitor SMD RoHS",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000009721",
+        "nomenclature": "4.7uF 6.3V X5R 20% 0402 GRM155R60J475ME47D Ceramic Capacitor SMD RoHS",
+        "spec": "4.7uF 6.3V X5R 20% 0402 GRM155R60J475ME47D Ceramic Capacitor SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000002350",
+        "nomenclature": "10uF 16V Х5R 10% 0805 CL21A106KOQNNNE Ceramic Capacitor SMD RoHS",
+        "spec": "10uF 16V Х5R 10% 0805 CL21A106KOQNNNE Ceramic Capacitor SMD RoHS",
+        "quantity": 11.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000007072",
+        "nomenclature": "100uF 6.3В X5R 20% 1206 CL31A107MQHNNNE Samsung Ceramic Capacitor SMD RoHS",
+        "spec": "100uF 6.3В X5R 20% 1206 CL31A107MQHNNNE Samsung Ceramic Capacitor SMD RoHS",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000092944",
+        "nomenclature": "5.1pF 50V C0G 0.25pF 0402 GRM1555C1H5R1CA01D Ceramic Capacitor SMD RoHS",
+        "spec": "5.1pF 50V C0G 0.25pF 0402 GRM1555C1H5R1CA01D Ceramic Capacitor SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000020296",
+        "nomenclature": "33pF 50V 5% C0G 0402 GRM1555C1H330JA01D Murata Ceramic Capacitor SMD RoHS",
+        "spec": "33pF 50V 5% C0G 0402 GRM1555C1H330JA01D Murata Ceramic Capacitor SMD RoHS",
+        "quantity": 8.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000024483",
+        "nomenclature": "220uF 6.3V 10%  size-C TPSC227K006S0125 Tantalum Capacitors SMD RoHS pcs",
+        "spec": "220uF 6.3V 10%  size-C TPSC227K006S0125 Tantalum Capacitors SMD RoHS pcs",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000009740",
+        "nomenclature": "10pF COG 50V 5% 0402 CL05C100JB5NNNC Ceramic Capacitor SMD RoHS",
+        "spec": "10pF COG 50V 5% 0402 CL05C100JB5NNNC Ceramic Capacitor SMD RoHS",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000024209",
+        "nomenclature": "TPS63020DSJR TI Buck-Boost Switching Regulator IC, 14-VFDFN",
+        "spec": "TPS63020DSJR TI Buck-Boost Switching Regulator IC, 14-VFDFN",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000006317",
+        "nomenclature": "AS222-92LF - RF-relay, microchip",
+        "spec": "AS222-92LF - RF-relay, microchip",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000014870",
+        "nomenclature": "XC6210B302MR-G SOT-25 Torex Voltage regulator",
+        "spec": "XC6210B302MR-G SOT-25 Torex Voltage regulator",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000023886",
+        "nomenclature": "FP8102XR-G1 Feeling Tech PMIC Battery Management IC SOP-8",
+        "spec": "FP8102XR-G1 Feeling Tech PMIC Battery Management IC SOP-8",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000005533",
+        "nomenclature": "Hardwired TCP/IP Ethernet controller  W5500 TQFP48_L",
+        "spec": "Hardwired TCP/IP Ethernet controller  W5500 TQFP48_L",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000020198",
+        "nomenclature": "IS25LP128F-JBLE-TR microchip Flash memory 128Mb 8-SOIC, ISSI",
+        "spec": "IS25LP128F-JBLE-TR microchip Flash memory 128Mb 8-SOIC, ISSI",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000019622",
+        "nomenclature": "FSA2567MPX MLP-16 Onsemi, microchip",
+        "spec": "FSA2567MPX MLP-16 Onsemi, microchip",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000019624",
+        "nomenclature": "74LVC1T45Z6-7 SOT-563-6 microchip",
+        "spec": "74LVC1T45Z6-7 SOT-563-6 microchip",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000005529",
+        "nomenclature": "220 Ohm 0805 BLM21PG221SN1D Murata Chip EMIFIL Inductor",
+        "spec": "220 Ohm 0805 BLM21PG221SN1D Murata Chip EMIFIL Inductor",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000007095",
+        "nomenclature": "TY-5050RGB1, LED RGB, 120gr., 5050 PLCC-6, SMD 5.0x5.0x1.6 TOYO Electronics",
+        "spec": "TY-5050RGB1, LED RGB, 120gr., 5050 PLCC-6, SMD 5.0x5.0x1.6 TOYO Electronics",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000010370",
+        "nomenclature": "LTST-C193KRKT-5A RED SMD LED 0603 45mcd 5mA 130deg RoHS pcs",
+        "spec": "LTST-C193KRKT-5A RED SMD LED 0603 45mcd 5mA 130deg RoHS pcs",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000004249",
+        "nomenclature": "Resistor 0402WGJ0000TCE",
+        "spec": "Resistor 0402WGJ0000TCE",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000027917",
+        "nomenclature": "Inductor NRS6028T2R2NMGJ",
+        "spec": "Inductor NRS6028T2R2NMGJ",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000003447",
+        "nomenclature": "10k 5% 0402 Resistors SMD RoHS",
+        "spec": "10k 5% 0402 Resistors SMD RoHS",
+        "quantity": 14.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000005528",
+        "nomenclature": "49.9R 1% 0402 Resistors SMD RoHS",
+        "spec": "49.9R 1% 0402 Resistors SMD RoHS",
+        "quantity": 5.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000002857",
+        "nomenclature": "0R 5% 0603 Resistors SMD RoHS",
+        "spec": "0R 5% 0603 Resistors SMD RoHS",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000004248",
+        "nomenclature": "4.7k 5% 0402 Resistors SMD RoHS",
+        "spec": "4.7k 5% 0402 Resistors SMD RoHS",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000006461",
+        "nomenclature": "120R 1% 0402 Resistors SMD RoHS",
+        "spec": "120R 1% 0402 Resistors SMD RoHS",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000036023",
+        "nomenclature": "Capacitor CC0402CRNPO9BN6R8",
+        "spec": "Capacitor CC0402CRNPO9BN6R8",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000004830",
+        "nomenclature": "22R 5% 0402 Resistors SMD RoHS",
+        "spec": "22R 5% 0402 Resistors SMD RoHS",
+        "quantity": 10.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000006283",
+        "nomenclature": "510R 5% 0402 Resistors SMD RoHS",
+        "spec": "510R 5% 0402 Resistors SMD RoHS",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000007927",
+        "nomenclature": "1M 1% 0402 Resistors SMD RoHS",
+        "spec": "1M 1% 0402 Resistors SMD RoHS",
+        "quantity": 3.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000007113",
+        "nomenclature": "10R 1% 0402 Resistors SMD RoHS",
+        "spec": "10R 1% 0402 Resistors SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000006762",
+        "nomenclature": "12.4k 1% 0402 Resistors SMD RoHS",
+        "spec": "12.4k 1% 0402 Resistors SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000005517",
+        "nomenclature": "0.22R 5% 0.5W 1206 TE Connectivity RLP73K2BR22JTD (3-2176056-3) Resistor SMD RoHS",
+        "spec": "0.22R 5% 0.5W 1206 TE Connectivity RLP73K2BR22JTD (3-2176056-3) Resistor SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000004251",
+        "nomenclature": "100k 5% 0402 Resistors SMD RoHS",
+        "spec": "100k 5% 0402 Resistors SMD RoHS",
+        "quantity": 6.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000025257",
+        "nomenclature": "5.62k 1% 0402 Resistors SMD RoHS",
+        "spec": "5.62k 1% 0402 Resistors SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000006607",
+        "nomenclature": "Resistor RC0402FR-0768KL",
+        "spec": "Resistor RC0402FR-0768KL",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000004893",
+        "nomenclature": "150k 1% 0402 Resistors SMD RoHS",
+        "spec": "150k 1% 0402 Resistors SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000007763",
+        "nomenclature": "20k 1% 0402 Resistors SMD RoHS",
+        "spec": "20k 1% 0402 Resistors SMD RoHS",
+        "quantity": 6.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000006493",
+        "nomenclature": "2.2k 1% 0402 Resistors SMD RoHS",
+        "spec": "2.2k 1% 0402 Resistors SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000025256",
+        "nomenclature": "102k 1% 0402 Resistors SMD RoHS",
+        "spec": "102k 1% 0402 Resistors SMD RoHS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000009405",
+        "nomenclature": "Resistor 16R 5% 2512",
+        "spec": "Resistor 16R 5% 2512",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000006466",
+        "nomenclature": "220R 1% 0402 Resistors SMD RoHS",
+        "spec": "220R 1% 0402 Resistors SMD RoHS",
+        "quantity": 12.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000001229",
+        "nomenclature": "TSM141AS Tactile Switches 6x6mm KLS",
+        "spec": "TSM141AS Tactile Switches 6x6mm KLS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000134746",
+        "nomenclature": "RFM66W-915S2R-A-Blue (V2.2) HopeRF Sub-Ghz Transceiver Module 915MHz",
+        "spec": "RFM66W-915S2R-A-Blue (V2.2) HopeRF Sub-Ghz Transceiver Module 915MHz",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000033803",
+        "nomenclature": "Microcontroller EC21AUXGR-128-SGNS",
+        "spec": "Microcontroller EC21AUXGR-128-SGNS",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000010255",
+        "nomenclature": "1N4148WS diotec SOD-323",
+        "spec": "1N4148WS diotec SOD-323",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000019626",
+        "nomenclature": "NUP4114UCLW1T2G 10V ON Semiconductor TVS Diode SOT-363",
+        "spec": "NUP4114UCLW1T2G 10V ON Semiconductor TVS Diode SOT-363",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000013980",
+        "nomenclature": "ESD5Z3.3T1G 3.3V 11.2A Onsemi TVS Diode SOD-523",
+        "spec": "ESD5Z3.3T1G 3.3V 11.2A Onsemi TVS Diode SOD-523",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000009410",
+        "nomenclature": "Transistor DTC143ZET1G",
+        "spec": "Transistor DTC143ZET1G",
+        "quantity": 9.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000014413",
+        "nomenclature": "Transistor SSM3J338R",
+        "spec": "Transistor SSM3J338R",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000024485",
+        "nomenclature": "DMP1009UFDF-13 transistor",
+        "spec": "DMP1009UFDF-13 transistor",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000021974",
+        "nomenclature": "FDV303N SOT-23-3 MOSFET",
+        "spec": "FDV303N SOT-23-3 MOSFET",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000010592",
+        "nomenclature": "8,0 MHz 10 ppm 18pf 49M-008000-FF6F10. AKER. Кварц",
+        "spec": "8,0 MHz 10 ppm 18pf 49M-008000-FF6F10. AKER. Кварц",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000012761",
+        "nomenclature": "Quartz crystal CXAN-025000-2F10F20 25 MHz",
+        "spec": "Quartz crystal CXAN-025000-2F10F20 25 MHz",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000020286",
+        "nomenclature": "PG2.0-6.5-2.0-1.5-1P single SMD Pogo Pin spring contact, Antenk",
+        "spec": "PG2.0-6.5-2.0-1.5-1P single SMD Pogo Pin spring contact, Antenk",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      },
+      {
+        "materialCode": "000170835",
+        "nomenclature": "STM32U585VIT6$2A Microcontroller STMicroelectronics",
+        "spec": "STM32U585VIT6$2A Microcontroller STMicroelectronics",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "SMD",
+        "stage": "SMD"
+      }
+    ]
+  },
+  "80283": {
+    "productCode": "80283",
+    "specCode": "80283",
+    "productName": "Ajax, HB2.006.MBR.001v0[9XX-AUX-PSG]_DIP",
+    "stage": "DIP. Selectiv",
+    "process": "DIP. Selectiv",
+    "materials": [
+      {
+        "materialCode": "000056247",
+        "nomenclature": "Ajax, HB2.006.MBR.001v0[9XX-AUX-PSG]_плата з компонентами",
+        "spec": "Ajax, HB2.006.MBR.001v0[9XX-AUX-PSG]_плата з компонентами",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "DIP. Selectiv",
+        "stage": "DIP. Selectiv"
+      },
+      {
+        "materialCode": "000001225",
+        "nomenclature": "Tamper 12х5, 5х6mm 3pin 5mm",
+        "spec": "Tamper 12х5, 5х6mm 3pin 5mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "DIP. Selectiv",
+        "stage": "DIP. Selectiv"
+      },
+      {
+        "materialCode": "000005560",
+        "nomenclature": "TRJ1014AGNL TRXCOM Ethernet Connector",
+        "spec": "TRJ1014AGNL TRXCOM Ethernet Connector",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "DIP. Selectiv",
+        "stage": "DIP. Selectiv"
+      },
+      {
+        "materialCode": "000020650",
+        "nomenclature": "KLS1-XL1-2.00-03-S  Horizontal SMT Wafer Pitch 2.00mm, straight",
+        "spec": "KLS1-XL1-2.00-03-S  Horizontal SMT Wafer Pitch 2.00mm, straight",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "DIP. Selectiv",
+        "stage": "DIP. Selectiv"
+      },
+      {
+        "materialCode": "000029496",
+        "nomenclature": "Connector KLS1-207-1-40-R2 PLS-40R2",
+        "spec": "Connector KLS1-207-1-40-R2 PLS-40R2",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "DIP. Selectiv",
+        "stage": "DIP. Selectiv"
+      },
+      {
+        "materialCode": "000007130",
+        "nomenclature": "KLS1-208B-4.3-1-08-S (PBS2-8) Female Header Connector, PIN:8 , 2.0mm Pitch, Straight, Through hole mount, 2.5mm lenght",
+        "spec": "KLS1-208B-4.3-1-08-S (PBS2-8) Female Header Connector, PIN:8 , 2.0mm Pitch, Straight, Through hole mount, 2.5mm lenght",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "DIP. Selectiv",
+        "stage": "DIP. Selectiv"
+      }
+    ]
+  },
+  "000080283": {
+    "productCode": "80283",
+    "specCode": "80283",
+    "productName": "Ajax, HB2.006.MBR.001v0[9XX-AUX-PSG]_DIP",
+    "stage": "DIP. Selectiv",
+    "process": "DIP. Selectiv",
+    "materials": [
+      {
+        "materialCode": "000056247",
+        "nomenclature": "Ajax, HB2.006.MBR.001v0[9XX-AUX-PSG]_плата з компонентами",
+        "spec": "Ajax, HB2.006.MBR.001v0[9XX-AUX-PSG]_плата з компонентами",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "DIP. Selectiv",
+        "stage": "DIP. Selectiv"
+      },
+      {
+        "materialCode": "000001225",
+        "nomenclature": "Tamper 12х5, 5х6mm 3pin 5mm",
+        "spec": "Tamper 12х5, 5х6mm 3pin 5mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "DIP. Selectiv",
+        "stage": "DIP. Selectiv"
+      },
+      {
+        "materialCode": "000005560",
+        "nomenclature": "TRJ1014AGNL TRXCOM Ethernet Connector",
+        "spec": "TRJ1014AGNL TRXCOM Ethernet Connector",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "DIP. Selectiv",
+        "stage": "DIP. Selectiv"
+      },
+      {
+        "materialCode": "000020650",
+        "nomenclature": "KLS1-XL1-2.00-03-S  Horizontal SMT Wafer Pitch 2.00mm, straight",
+        "spec": "KLS1-XL1-2.00-03-S  Horizontal SMT Wafer Pitch 2.00mm, straight",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "DIP. Selectiv",
+        "stage": "DIP. Selectiv"
+      },
+      {
+        "materialCode": "000029496",
+        "nomenclature": "Connector KLS1-207-1-40-R2 PLS-40R2",
+        "spec": "Connector KLS1-207-1-40-R2 PLS-40R2",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "DIP. Selectiv",
+        "stage": "DIP. Selectiv"
+      },
+      {
+        "materialCode": "000007130",
+        "nomenclature": "KLS1-208B-4.3-1-08-S (PBS2-8) Female Header Connector, PIN:8 , 2.0mm Pitch, Straight, Through hole mount, 2.5mm lenght",
+        "spec": "KLS1-208B-4.3-1-08-S (PBS2-8) Female Header Connector, PIN:8 , 2.0mm Pitch, Straight, Through hole mount, 2.5mm lenght",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "DIP. Selectiv",
+        "stage": "DIP. Selectiv"
+      }
+    ]
+  },
+  "80284": {
+    "productCode": "80284",
+    "specCode": "80284",
+    "productName": "Ajax, HB2.006.MBR.001v0_HB2_AUX_9AU_WL_Prossegur_white_HRD",
+    "stage": "HARD TEST",
+    "process": "HARD TEST",
+    "materials": [
+      {
+        "materialCode": "000056256",
+        "nomenclature": "Ajax, HB2.006.MBR.001v0[9XX-AUX-PSG]_DIP",
+        "spec": "Ajax, HB2.006.MBR.001v0[9XX-AUX-PSG]_DIP",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      },
+      {
+        "materialCode": "000039136",
+        "nomenclature": "Hub 2 Plus QR WL Prosegur sticker white",
+        "spec": "Hub 2 Plus QR WL Prosegur sticker white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      }
+    ]
+  },
+  "000080284": {
+    "productCode": "80284",
+    "specCode": "80284",
+    "productName": "Ajax, HB2.006.MBR.001v0_HB2_AUX_9AU_WL_Prossegur_white_HRD",
+    "stage": "HARD TEST",
+    "process": "HARD TEST",
+    "materials": [
+      {
+        "materialCode": "000056256",
+        "nomenclature": "Ajax, HB2.006.MBR.001v0[9XX-AUX-PSG]_DIP",
+        "spec": "Ajax, HB2.006.MBR.001v0[9XX-AUX-PSG]_DIP",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      },
+      {
+        "materialCode": "000039136",
+        "nomenclature": "Hub 2 Plus QR WL Prosegur sticker white",
+        "spec": "Hub 2 Plus QR WL Prosegur sticker white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      }
+    ]
+  },
+  "80379": {
+    "productCode": "80379",
+    "specCode": "80379",
+    "productName": "Ajax, HB3.002.MBR.001v5_[HB1-8xx-66W-UEU]_8MA_black_HRD",
+    "stage": "HARD TEST",
+    "process": "HARD TEST",
+    "materials": [
+      {
+        "materialCode": "000122415",
+        "nomenclature": "Ajax, HB3.002.MBR.001v5[HB1-8xx-66W-UEU]_DIP",
+        "spec": "Ajax, HB3.002.MBR.001v5[HB1-8xx-66W-UEU]_DIP",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      },
+      {
+        "materialCode": "000091502",
+        "nomenclature": "[Sticker]_HB_4G_CE_QR_EU_black",
+        "spec": "[Sticker]_HB_4G_CE_QR_EU_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      }
+    ]
+  },
+  "000080379": {
+    "productCode": "80379",
+    "specCode": "80379",
+    "productName": "Ajax, HB3.002.MBR.001v5_[HB1-8xx-66W-UEU]_8MA_black_HRD",
+    "stage": "HARD TEST",
+    "process": "HARD TEST",
+    "materials": [
+      {
+        "materialCode": "000122415",
+        "nomenclature": "Ajax, HB3.002.MBR.001v5[HB1-8xx-66W-UEU]_DIP",
+        "spec": "Ajax, HB3.002.MBR.001v5[HB1-8xx-66W-UEU]_DIP",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      },
+      {
+        "materialCode": "000091502",
+        "nomenclature": "[Sticker]_HB_4G_CE_QR_EU_black",
+        "spec": "[Sticker]_HB_4G_CE_QR_EU_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      }
+    ]
+  },
+  "80376": {
+    "productCode": "80376",
+    "specCode": "80376",
+    "productName": "Ajax, HB3.002.MBR.001v5_[HB1-8xx-66W-UEU]_WL_white_HRD",
+    "stage": "HARD TEST",
+    "process": "HARD TEST",
+    "materials": [
+      {
+        "materialCode": "000122415",
+        "nomenclature": "Ajax, HB3.002.MBR.001v5[HB1-8xx-66W-UEU]_DIP",
+        "spec": "Ajax, HB3.002.MBR.001v5[HB1-8xx-66W-UEU]_DIP",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      },
+      {
+        "materialCode": "000091512",
+        "nomenclature": "[Sticker]_HB_4G_CE_QR_WL_white",
+        "spec": "[Sticker]_HB_4G_CE_QR_WL_white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      }
+    ]
+  },
+  "000080376": {
+    "productCode": "80376",
+    "specCode": "80376",
+    "productName": "Ajax, HB3.002.MBR.001v5_[HB1-8xx-66W-UEU]_WL_white_HRD",
+    "stage": "HARD TEST",
+    "process": "HARD TEST",
+    "materials": [
+      {
+        "materialCode": "000122415",
+        "nomenclature": "Ajax, HB3.002.MBR.001v5[HB1-8xx-66W-UEU]_DIP",
+        "spec": "Ajax, HB3.002.MBR.001v5[HB1-8xx-66W-UEU]_DIP",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      },
+      {
+        "materialCode": "000091512",
+        "nomenclature": "[Sticker]_HB_4G_CE_QR_WL_white",
+        "spec": "[Sticker]_HB_4G_CE_QR_WL_white",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      }
+    ]
+  },
+  "63928": {
+    "productCode": "63928",
+    "specCode": "63928",
+    "productName": "Ajax Hub 4G (8PD/UEU) white (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000179300",
+        "nomenclature": "Ajax, HB3.002.MBR.001v5[HB1-8xx-66W-UEU]_8EU_white_HRD",
+        "spec": "Ajax, HB3.002.MBR.001v5[HB1-8xx-66W-UEU]_8EU_white_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000122318",
+        "nomenclature": "Ajax, HB2.001.PWB.001v4_HRD",
+        "spec": "Ajax, HB2.001.PWB.001v4_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007254",
+        "nomenclature": "Ajax, Hub_V4_holder_board with components",
+        "spec": "Ajax, Hub_V4_holder_board with components",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000020661",
+        "nomenclature": "PCB HB2.002.ANT.001v3 LTE",
+        "spec": "PCB HB2.002.ANT.001v3 LTE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130432",
+        "nomenclature": "Hub_case_frontside_white_v9",
+        "spec": "Hub_case_frontside_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000147836",
+        "nomenclature": "MiniHUB_case_backside_white_v9",
+        "spec": "MiniHUB_case_backside_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000129738",
+        "nomenclature": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "spec": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130436",
+        "nomenclature": "HUB_case_button_white_v9",
+        "spec": "HUB_case_button_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130441",
+        "nomenclature": "MiniHUB_case_light_v5",
+        "spec": "MiniHUB_case_light_v5",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000019055",
+        "nomenclature": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "spec": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000083995",
+        "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "Die cut part acrylic 9mm x 30mm",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000119131",
+        "nomenclature": "[Sticker]_HB_4G_CE_EU_v2",
+        "spec": "[Sticker]_HB_4G_CE_EU_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000023716",
+        "nomenclature": "QR code PD sticker",
+        "spec": "QR code PD sticker",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000137531",
+        "nomenclature": "[Sticker]_PD_UKCA_v1",
+        "spec": "[Sticker]_PD_UKCA_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "000063928": {
+    "productCode": "63928",
+    "specCode": "63928",
+    "productName": "Ajax Hub 4G (8PD/UEU) white (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000179300",
+        "nomenclature": "Ajax, HB3.002.MBR.001v5[HB1-8xx-66W-UEU]_8EU_white_HRD",
+        "spec": "Ajax, HB3.002.MBR.001v5[HB1-8xx-66W-UEU]_8EU_white_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000122318",
+        "nomenclature": "Ajax, HB2.001.PWB.001v4_HRD",
+        "spec": "Ajax, HB2.001.PWB.001v4_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007254",
+        "nomenclature": "Ajax, Hub_V4_holder_board with components",
+        "spec": "Ajax, Hub_V4_holder_board with components",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000020661",
+        "nomenclature": "PCB HB2.002.ANT.001v3 LTE",
+        "spec": "PCB HB2.002.ANT.001v3 LTE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130432",
+        "nomenclature": "Hub_case_frontside_white_v9",
+        "spec": "Hub_case_frontside_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000147836",
+        "nomenclature": "MiniHUB_case_backside_white_v9",
+        "spec": "MiniHUB_case_backside_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000129738",
+        "nomenclature": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "spec": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130436",
+        "nomenclature": "HUB_case_button_white_v9",
+        "spec": "HUB_case_button_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130441",
+        "nomenclature": "MiniHUB_case_light_v5",
+        "spec": "MiniHUB_case_light_v5",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000019055",
+        "nomenclature": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "spec": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000083995",
+        "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "Die cut part acrylic 9mm x 30mm",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000119131",
+        "nomenclature": "[Sticker]_HB_4G_CE_EU_v2",
+        "spec": "[Sticker]_HB_4G_CE_EU_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000023716",
+        "nomenclature": "QR code PD sticker",
+        "spec": "QR code PD sticker",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000137531",
+        "nomenclature": "[Sticker]_PD_UKCA_v1",
+        "spec": "[Sticker]_PD_UKCA_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "63830": {
+    "productCode": "63830",
+    "specCode": "63830",
+    "productName": "Ajax Hub 4G (8PD/UEU) black (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000179296",
+        "nomenclature": "Ajax, HB3.002.MBR.001v5_[HB1-8xx-66W-UEU]_8EU_black_HRD",
+        "spec": "Ajax, HB3.002.MBR.001v5_[HB1-8xx-66W-UEU]_8EU_black_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000122318",
+        "nomenclature": "Ajax, HB2.001.PWB.001v4_HRD",
+        "spec": "Ajax, HB2.001.PWB.001v4_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007254",
+        "nomenclature": "Ajax, Hub_V4_holder_board with components",
+        "spec": "Ajax, Hub_V4_holder_board with components",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000020661",
+        "nomenclature": "PCB HB2.002.ANT.001v3 LTE",
+        "spec": "PCB HB2.002.ANT.001v3 LTE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000147837",
+        "nomenclature": "MiniHUB_case_backside_black_v9",
+        "spec": "MiniHUB_case_backside_black_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130437",
+        "nomenclature": "HUB_case_button_black_v9",
+        "spec": "HUB_case_button_black_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130433",
+        "nomenclature": "Hub_case_frontside_black_v9",
+        "spec": "Hub_case_frontside_black_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130441",
+        "nomenclature": "MiniHUB_case_light_v5",
+        "spec": "MiniHUB_case_light_v5",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000129737",
+        "nomenclature": "MiniHUB_case_Holder_for_antennas_black_v3",
+        "spec": "MiniHUB_case_Holder_for_antennas_black_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000019055",
+        "nomenclature": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "spec": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000083995",
+        "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "Die cut part acrylic 9mm x 30mm",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000119131",
+        "nomenclature": "[Sticker]_HB_4G_CE_EU_v2",
+        "spec": "[Sticker]_HB_4G_CE_EU_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000023716",
+        "nomenclature": "QR code PD sticker",
+        "spec": "QR code PD sticker",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000137531",
+        "nomenclature": "[Sticker]_PD_UKCA_v1",
+        "spec": "[Sticker]_PD_UKCA_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "000063830": {
+    "productCode": "63830",
+    "specCode": "63830",
+    "productName": "Ajax Hub 4G (8PD/UEU) black (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000179296",
+        "nomenclature": "Ajax, HB3.002.MBR.001v5_[HB1-8xx-66W-UEU]_8EU_black_HRD",
+        "spec": "Ajax, HB3.002.MBR.001v5_[HB1-8xx-66W-UEU]_8EU_black_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000122318",
+        "nomenclature": "Ajax, HB2.001.PWB.001v4_HRD",
+        "spec": "Ajax, HB2.001.PWB.001v4_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007254",
+        "nomenclature": "Ajax, Hub_V4_holder_board with components",
+        "spec": "Ajax, Hub_V4_holder_board with components",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000020661",
+        "nomenclature": "PCB HB2.002.ANT.001v3 LTE",
+        "spec": "PCB HB2.002.ANT.001v3 LTE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000147837",
+        "nomenclature": "MiniHUB_case_backside_black_v9",
+        "spec": "MiniHUB_case_backside_black_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130437",
+        "nomenclature": "HUB_case_button_black_v9",
+        "spec": "HUB_case_button_black_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130433",
+        "nomenclature": "Hub_case_frontside_black_v9",
+        "spec": "Hub_case_frontside_black_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130441",
+        "nomenclature": "MiniHUB_case_light_v5",
+        "spec": "MiniHUB_case_light_v5",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000129737",
+        "nomenclature": "MiniHUB_case_Holder_for_antennas_black_v3",
+        "spec": "MiniHUB_case_Holder_for_antennas_black_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000019055",
+        "nomenclature": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "spec": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000083995",
+        "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "Die cut part acrylic 9mm x 30mm",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000119131",
+        "nomenclature": "[Sticker]_HB_4G_CE_EU_v2",
+        "spec": "[Sticker]_HB_4G_CE_EU_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000023716",
+        "nomenclature": "QR code PD sticker",
+        "spec": "QR code PD sticker",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000137531",
+        "nomenclature": "[Sticker]_PD_UKCA_v1",
+        "spec": "[Sticker]_PD_UKCA_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "63850": {
+    "productCode": "63850",
+    "specCode": "63850",
+    "productName": "Ajax Hub 2 Plus (8EU/ECG) WL Standard ASP black охоронна централь",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000026870",
+        "nomenclature": "Ajax Hub 2 Plus (8EU/ECG) WL Standard black (напівфабрикат)",
+        "spec": "Ajax Hub 2 Plus (8EU/ECG) WL Standard black (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170923",
+        "nomenclature": "Ajax, Монтажний комплект v.6 (MiniHub Black)",
+        "spec": "Ajax, Монтажний комплект v.6 (MiniHub Black)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171032",
+        "nomenclature": "Ajax, Монтажний комплект Cables Kit Type C Black",
+        "spec": "Ajax, Монтажний комплект Cables Kit Type C Black",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000007447",
+        "nomenclature": "MiniHUB_case_bracket_black",
+        "spec": "MiniHUB_case_bracket_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019467",
+        "nomenclature": "BritishHub package liner for Controler",
+        "spec": "BritishHub package liner for Controler",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000143694",
+        "nomenclature": "[Package]_HP2J_CE_FCC_WL_black_v1",
+        "spec": "[Package]_HP2J_CE_FCC_WL_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000010548",
+        "nomenclature": "EPE Package 180*250 mm",
+        "spec": "EPE Package 180*250 mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000138976",
+        "nomenclature": "[Manual]_HP2J_CE_WL_GPSR_v1",
+        "spec": "[Manual]_HP2J_CE_WL_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019469",
+        "nomenclature": "BritishHub package liner Vstavka",
+        "spec": "BritishHub package liner Vstavka",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000069688",
+        "nomenclature": "T mobile SIM card",
+        "spec": "T mobile SIM card",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063850": {
+    "productCode": "63850",
+    "specCode": "63850",
+    "productName": "Ajax Hub 2 Plus (8EU/ECG) WL Standard ASP black охоронна централь",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000026870",
+        "nomenclature": "Ajax Hub 2 Plus (8EU/ECG) WL Standard black (напівфабрикат)",
+        "spec": "Ajax Hub 2 Plus (8EU/ECG) WL Standard black (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170923",
+        "nomenclature": "Ajax, Монтажний комплект v.6 (MiniHub Black)",
+        "spec": "Ajax, Монтажний комплект v.6 (MiniHub Black)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171032",
+        "nomenclature": "Ajax, Монтажний комплект Cables Kit Type C Black",
+        "spec": "Ajax, Монтажний комплект Cables Kit Type C Black",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000007447",
+        "nomenclature": "MiniHUB_case_bracket_black",
+        "spec": "MiniHUB_case_bracket_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019467",
+        "nomenclature": "BritishHub package liner for Controler",
+        "spec": "BritishHub package liner for Controler",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000143694",
+        "nomenclature": "[Package]_HP2J_CE_FCC_WL_black_v1",
+        "spec": "[Package]_HP2J_CE_FCC_WL_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000010548",
+        "nomenclature": "EPE Package 180*250 mm",
+        "spec": "EPE Package 180*250 mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000138976",
+        "nomenclature": "[Manual]_HP2J_CE_WL_GPSR_v1",
+        "spec": "[Manual]_HP2J_CE_WL_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019469",
+        "nomenclature": "BritishHub package liner Vstavka",
+        "spec": "BritishHub package liner Vstavka",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000069688",
+        "nomenclature": "T mobile SIM card",
+        "spec": "T mobile SIM card",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "63828": {
+    "productCode": "63828",
+    "specCode": "63828",
+    "productName": "Ajax Hub 4G (8MA/UEU) black (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000179297",
+        "nomenclature": "Ajax, HB3.002.MBR.001v5_[HB1-8xx-66W-UEU]_8MA_black_HRD",
+        "spec": "Ajax, HB3.002.MBR.001v5_[HB1-8xx-66W-UEU]_8MA_black_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000122318",
+        "nomenclature": "Ajax, HB2.001.PWB.001v4_HRD",
+        "spec": "Ajax, HB2.001.PWB.001v4_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007254",
+        "nomenclature": "Ajax, Hub_V4_holder_board with components",
+        "spec": "Ajax, Hub_V4_holder_board with components",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000020661",
+        "nomenclature": "PCB HB2.002.ANT.001v3 LTE",
+        "spec": "PCB HB2.002.ANT.001v3 LTE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000147837",
+        "nomenclature": "MiniHUB_case_backside_black_v9",
+        "spec": "MiniHUB_case_backside_black_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130437",
+        "nomenclature": "HUB_case_button_black_v9",
+        "spec": "HUB_case_button_black_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130433",
+        "nomenclature": "Hub_case_frontside_black_v9",
+        "spec": "Hub_case_frontside_black_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130441",
+        "nomenclature": "MiniHUB_case_light_v5",
+        "spec": "MiniHUB_case_light_v5",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000129737",
+        "nomenclature": "MiniHUB_case_Holder_for_antennas_black_v3",
+        "spec": "MiniHUB_case_Holder_for_antennas_black_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000019055",
+        "nomenclature": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "spec": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000083995",
+        "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "Die cut part acrylic 9mm x 30mm",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000088722",
+        "nomenclature": "[Sticker]_HB_4G_CE_MA_v1",
+        "spec": "[Sticker]_HB_4G_CE_MA_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "000063828": {
+    "productCode": "63828",
+    "specCode": "63828",
+    "productName": "Ajax Hub 4G (8MA/UEU) black (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000179297",
+        "nomenclature": "Ajax, HB3.002.MBR.001v5_[HB1-8xx-66W-UEU]_8MA_black_HRD",
+        "spec": "Ajax, HB3.002.MBR.001v5_[HB1-8xx-66W-UEU]_8MA_black_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000122318",
+        "nomenclature": "Ajax, HB2.001.PWB.001v4_HRD",
+        "spec": "Ajax, HB2.001.PWB.001v4_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007254",
+        "nomenclature": "Ajax, Hub_V4_holder_board with components",
+        "spec": "Ajax, Hub_V4_holder_board with components",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000020661",
+        "nomenclature": "PCB HB2.002.ANT.001v3 LTE",
+        "spec": "PCB HB2.002.ANT.001v3 LTE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000147837",
+        "nomenclature": "MiniHUB_case_backside_black_v9",
+        "spec": "MiniHUB_case_backside_black_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130437",
+        "nomenclature": "HUB_case_button_black_v9",
+        "spec": "HUB_case_button_black_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130433",
+        "nomenclature": "Hub_case_frontside_black_v9",
+        "spec": "Hub_case_frontside_black_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130441",
+        "nomenclature": "MiniHUB_case_light_v5",
+        "spec": "MiniHUB_case_light_v5",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000129737",
+        "nomenclature": "MiniHUB_case_Holder_for_antennas_black_v3",
+        "spec": "MiniHUB_case_Holder_for_antennas_black_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000019055",
+        "nomenclature": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "spec": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000083995",
+        "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "Die cut part acrylic 9mm x 30mm",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000088722",
+        "nomenclature": "[Sticker]_HB_4G_CE_MA_v1",
+        "spec": "[Sticker]_HB_4G_CE_MA_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "63939": {
+    "productCode": "63939",
+    "specCode": "63939",
+    "productName": "Ajax Rex/Hub white WL Case frontside Kale Guvenlik logo (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000130434",
+        "nomenclature": "Hub_case_frontside_WL_white_v9",
+        "spec": "Hub_case_frontside_WL_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "000063939": {
+    "productCode": "63939",
+    "specCode": "63939",
+    "productName": "Ajax Rex/Hub white WL Case frontside Kale Guvenlik logo (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000130434",
+        "nomenclature": "Hub_case_frontside_WL_white_v9",
+        "spec": "Hub_case_frontside_WL_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "63940": {
+    "productCode": "63940",
+    "specCode": "63940",
+    "productName": "Ajax Hub 4G (8EU/UEU) WL Kale Guvenlik white (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000123153",
+        "nomenclature": "Ajax, HB3.002.MBR.001v5_[HB1-8xx-66W-UEU]_WL_white_HRD",
+        "spec": "Ajax, HB3.002.MBR.001v5_[HB1-8xx-66W-UEU]_WL_white_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000122318",
+        "nomenclature": "Ajax, HB2.001.PWB.001v4_HRD",
+        "spec": "Ajax, HB2.001.PWB.001v4_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007254",
+        "nomenclature": "Ajax, Hub_V4_holder_board with components",
+        "spec": "Ajax, Hub_V4_holder_board with components",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000134006",
+        "nomenclature": "Ajax Rex/Hub white WL Case frontside Kale Guvenlik logo (напівфабрикат)",
+        "spec": "Ajax Rex/Hub white WL Case frontside Kale Guvenlik logo (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000020661",
+        "nomenclature": "PCB HB2.002.ANT.001v3 LTE",
+        "spec": "PCB HB2.002.ANT.001v3 LTE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000129738",
+        "nomenclature": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "spec": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130436",
+        "nomenclature": "HUB_case_button_white_v9",
+        "spec": "HUB_case_button_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000147836",
+        "nomenclature": "MiniHUB_case_backside_white_v9",
+        "spec": "MiniHUB_case_backside_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000019055",
+        "nomenclature": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "spec": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000083995",
+        "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "Die cut part acrylic 9mm x 30mm",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000118977",
+        "nomenclature": "[Sticker]_HB_4G_CE_WL_v2",
+        "spec": "[Sticker]_HB_4G_CE_WL_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000024054",
+        "nomenclature": "Plastic case MH WL light",
+        "spec": "Plastic case MH WL light",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "000063940": {
+    "productCode": "63940",
+    "specCode": "63940",
+    "productName": "Ajax Hub 4G (8EU/UEU) WL Kale Guvenlik white (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000123153",
+        "nomenclature": "Ajax, HB3.002.MBR.001v5_[HB1-8xx-66W-UEU]_WL_white_HRD",
+        "spec": "Ajax, HB3.002.MBR.001v5_[HB1-8xx-66W-UEU]_WL_white_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000122318",
+        "nomenclature": "Ajax, HB2.001.PWB.001v4_HRD",
+        "spec": "Ajax, HB2.001.PWB.001v4_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007254",
+        "nomenclature": "Ajax, Hub_V4_holder_board with components",
+        "spec": "Ajax, Hub_V4_holder_board with components",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000134006",
+        "nomenclature": "Ajax Rex/Hub white WL Case frontside Kale Guvenlik logo (напівфабрикат)",
+        "spec": "Ajax Rex/Hub white WL Case frontside Kale Guvenlik logo (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000020661",
+        "nomenclature": "PCB HB2.002.ANT.001v3 LTE",
+        "spec": "PCB HB2.002.ANT.001v3 LTE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000129738",
+        "nomenclature": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "spec": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000130436",
+        "nomenclature": "HUB_case_button_white_v9",
+        "spec": "HUB_case_button_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000147836",
+        "nomenclature": "MiniHUB_case_backside_white_v9",
+        "spec": "MiniHUB_case_backside_white_v9",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000019055",
+        "nomenclature": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "spec": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000083995",
+        "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "Die cut part acrylic 9mm x 30mm",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000118977",
+        "nomenclature": "[Sticker]_HB_4G_CE_WL_v2",
+        "spec": "[Sticker]_HB_4G_CE_WL_v2",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000024054",
+        "nomenclature": "Plastic case MH WL light",
+        "spec": "Plastic case MH WL light",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "63929": {
+    "productCode": "63929",
+    "specCode": "63929",
+    "productName": "Ajax Hub 4G (8PD/UEU) white охоронна централь",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000123645",
+        "nomenclature": "Ajax Hub 4G (8PD/UEU) white (напівфабрикат)",
+        "spec": "Ajax Hub 4G (8PD/UEU) white (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170889",
+        "nomenclature": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "spec": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171026",
+        "nomenclature": "Ajax, Монтажний комплект Cables Kit Type G Vietnam White",
+        "spec": "Ajax, Монтажний комплект Cables Kit Type G Vietnam White",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000007238",
+        "nomenclature": "MiniHUB_case_bracket_WHITE",
+        "spec": "MiniHUB_case_bracket_WHITE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000124369",
+        "nomenclature": "[Manual]_HB_4G_CE_GPSR_v1",
+        "spec": "[Manual]_HB_4G_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000143748",
+        "nomenclature": "[Package]_HB_4G_CE_FCC_white_v1",
+        "spec": "[Package]_HB_4G_CE_FCC_white_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019467",
+        "nomenclature": "BritishHub package liner for Controler",
+        "spec": "BritishHub package liner for Controler",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019469",
+        "nomenclature": "BritishHub package liner Vstavka",
+        "spec": "BritishHub package liner Vstavka",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000010548",
+        "nomenclature": "EPE Package 180*250 mm",
+        "spec": "EPE Package 180*250 mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166881",
+        "nomenclature": "[Sticker]_100x150_finger_en_v1",
+        "spec": "[Sticker]_100x150_finger_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166880",
+        "nomenclature": "[Sticker]_100x150_robot_en_v1",
+        "spec": "[Sticker]_100x150_robot_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000069688",
+        "nomenclature": "T mobile SIM card",
+        "spec": "T mobile SIM card",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000169227",
+        "nomenclature": "[Leaflet]_HB2PJ_SIM-card_ENG_v1",
+        "spec": "[Leaflet]_HB2PJ_SIM-card_ENG_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000132144",
+        "nomenclature": "[Sticker]_Ajax_SIM_v1",
+        "spec": "[Sticker]_Ajax_SIM_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063929": {
+    "productCode": "63929",
+    "specCode": "63929",
+    "productName": "Ajax Hub 4G (8PD/UEU) white охоронна централь",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000123645",
+        "nomenclature": "Ajax Hub 4G (8PD/UEU) white (напівфабрикат)",
+        "spec": "Ajax Hub 4G (8PD/UEU) white (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170889",
+        "nomenclature": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "spec": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171026",
+        "nomenclature": "Ajax, Монтажний комплект Cables Kit Type G Vietnam White",
+        "spec": "Ajax, Монтажний комплект Cables Kit Type G Vietnam White",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000007238",
+        "nomenclature": "MiniHUB_case_bracket_WHITE",
+        "spec": "MiniHUB_case_bracket_WHITE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000124369",
+        "nomenclature": "[Manual]_HB_4G_CE_GPSR_v1",
+        "spec": "[Manual]_HB_4G_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000143748",
+        "nomenclature": "[Package]_HB_4G_CE_FCC_white_v1",
+        "spec": "[Package]_HB_4G_CE_FCC_white_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019467",
+        "nomenclature": "BritishHub package liner for Controler",
+        "spec": "BritishHub package liner for Controler",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019469",
+        "nomenclature": "BritishHub package liner Vstavka",
+        "spec": "BritishHub package liner Vstavka",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000010548",
+        "nomenclature": "EPE Package 180*250 mm",
+        "spec": "EPE Package 180*250 mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166881",
+        "nomenclature": "[Sticker]_100x150_finger_en_v1",
+        "spec": "[Sticker]_100x150_finger_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166880",
+        "nomenclature": "[Sticker]_100x150_robot_en_v1",
+        "spec": "[Sticker]_100x150_robot_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000069688",
+        "nomenclature": "T mobile SIM card",
+        "spec": "T mobile SIM card",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000169227",
+        "nomenclature": "[Leaflet]_HB2PJ_SIM-card_ENG_v1",
+        "spec": "[Leaflet]_HB2PJ_SIM-card_ENG_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000132144",
+        "nomenclature": "[Sticker]_Ajax_SIM_v1",
+        "spec": "[Sticker]_Ajax_SIM_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "63831": {
+    "productCode": "63831",
+    "specCode": "63831",
+    "productName": "Ajax Hub 4G (8PD/UEU) black охоронна централь",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000123644",
+        "nomenclature": "Ajax Hub 4G (8PD/UEU) black (напівфабрикат)",
+        "spec": "Ajax Hub 4G (8PD/UEU) black (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170923",
+        "nomenclature": "Ajax, Монтажний комплект v.6 (MiniHub Black)",
+        "spec": "Ajax, Монтажний комплект v.6 (MiniHub Black)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171027",
+        "nomenclature": "Ajax, Монтажний комплект Cables Kit Type G Vietnam Black",
+        "spec": "Ajax, Монтажний комплект Cables Kit Type G Vietnam Black",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000007447",
+        "nomenclature": "MiniHUB_case_bracket_black",
+        "spec": "MiniHUB_case_bracket_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000124369",
+        "nomenclature": "[Manual]_HB_4G_CE_GPSR_v1",
+        "spec": "[Manual]_HB_4G_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000143749",
+        "nomenclature": "[Package]_HB_4G_CE_FCC_black_v1",
+        "spec": "[Package]_HB_4G_CE_FCC_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019467",
+        "nomenclature": "BritishHub package liner for Controler",
+        "spec": "BritishHub package liner for Controler",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019469",
+        "nomenclature": "BritishHub package liner Vstavka",
+        "spec": "BritishHub package liner Vstavka",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000010548",
+        "nomenclature": "EPE Package 180*250 mm",
+        "spec": "EPE Package 180*250 mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166881",
+        "nomenclature": "[Sticker]_100x150_finger_en_v1",
+        "spec": "[Sticker]_100x150_finger_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166880",
+        "nomenclature": "[Sticker]_100x150_robot_en_v1",
+        "spec": "[Sticker]_100x150_robot_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000069688",
+        "nomenclature": "T mobile SIM card",
+        "spec": "T mobile SIM card",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000169227",
+        "nomenclature": "[Leaflet]_HB2PJ_SIM-card_ENG_v1",
+        "spec": "[Leaflet]_HB2PJ_SIM-card_ENG_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000132144",
+        "nomenclature": "[Sticker]_Ajax_SIM_v1",
+        "spec": "[Sticker]_Ajax_SIM_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063831": {
+    "productCode": "63831",
+    "specCode": "63831",
+    "productName": "Ajax Hub 4G (8PD/UEU) black охоронна централь",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000123644",
+        "nomenclature": "Ajax Hub 4G (8PD/UEU) black (напівфабрикат)",
+        "spec": "Ajax Hub 4G (8PD/UEU) black (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170923",
+        "nomenclature": "Ajax, Монтажний комплект v.6 (MiniHub Black)",
+        "spec": "Ajax, Монтажний комплект v.6 (MiniHub Black)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171027",
+        "nomenclature": "Ajax, Монтажний комплект Cables Kit Type G Vietnam Black",
+        "spec": "Ajax, Монтажний комплект Cables Kit Type G Vietnam Black",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000007447",
+        "nomenclature": "MiniHUB_case_bracket_black",
+        "spec": "MiniHUB_case_bracket_black",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000124369",
+        "nomenclature": "[Manual]_HB_4G_CE_GPSR_v1",
+        "spec": "[Manual]_HB_4G_CE_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000143749",
+        "nomenclature": "[Package]_HB_4G_CE_FCC_black_v1",
+        "spec": "[Package]_HB_4G_CE_FCC_black_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019467",
+        "nomenclature": "BritishHub package liner for Controler",
+        "spec": "BritishHub package liner for Controler",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019469",
+        "nomenclature": "BritishHub package liner Vstavka",
+        "spec": "BritishHub package liner Vstavka",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000010548",
+        "nomenclature": "EPE Package 180*250 mm",
+        "spec": "EPE Package 180*250 mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166881",
+        "nomenclature": "[Sticker]_100x150_finger_en_v1",
+        "spec": "[Sticker]_100x150_finger_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000166880",
+        "nomenclature": "[Sticker]_100x150_robot_en_v1",
+        "spec": "[Sticker]_100x150_robot_en_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000069688",
+        "nomenclature": "T mobile SIM card",
+        "spec": "T mobile SIM card",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000169227",
+        "nomenclature": "[Leaflet]_HB2PJ_SIM-card_ENG_v1",
+        "spec": "[Leaflet]_HB2PJ_SIM-card_ENG_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000132144",
+        "nomenclature": "[Sticker]_Ajax_SIM_v1",
+        "spec": "[Sticker]_Ajax_SIM_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
   "63399": {
     "productCode": "63399",
     "specCode": "63399",
@@ -351392,280 +356234,6 @@
       {
         "materialCode": "000087247",
         "nomenclature": "[Sticker for package]_UL_logo",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      }
-    ],
-    "source": "BOM"
-  },
-  "63464": {
-    "productCode": "63464",
-    "specCode": "63464",
-    "productName": "Ajax CombiProtect (8EU) Ekingen Elektronik black датчик руху та розбиття",
-    "stage": "PKG",
-    "process": "PKG",
-    "materials": [
-      {
-        "materialCode": "000019149",
-        "nomenclature": "Ajax CombiProtect black EU (напівфабрикат)",
-        "spec": "Ajax CombiProtect black EU (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000171044",
-        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
-        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000005317",
-        "nomenclature": "MotionProtect_case_bracket_black",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000133285",
-        "nomenclature": "[Package]_CPJ_CE_FCC_black_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000031246",
-        "nomenclature": "MotionProtect Fibra package liner",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000125372",
-        "nomenclature": "[Manual]_CPJ_CE_GPSR_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      }
-    ],
-    "source": "BOM"
-  },
-  "000063464": {
-    "productCode": "63464",
-    "specCode": "63464",
-    "productName": "Ajax CombiProtect (8EU) Ekingen Elektronik black датчик руху та розбиття",
-    "stage": "PKG",
-    "process": "PKG",
-    "materials": [
-      {
-        "materialCode": "000019149",
-        "nomenclature": "Ajax CombiProtect black EU (напівфабрикат)",
-        "spec": "Ajax CombiProtect black EU (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000171044",
-        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
-        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000005317",
-        "nomenclature": "MotionProtect_case_bracket_black",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000133285",
-        "nomenclature": "[Package]_CPJ_CE_FCC_black_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000031246",
-        "nomenclature": "MotionProtect Fibra package liner",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000125372",
-        "nomenclature": "[Manual]_CPJ_CE_GPSR_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      }
-    ],
-    "source": "BOM"
-  },
-  "63480": {
-    "productCode": "63480",
-    "specCode": "63480",
-    "productName": "Ajax CombiProtect U Jeweller (8EU) ASP white датчик руху та розбиття",
-    "stage": "PKG",
-    "process": "PKG",
-    "materials": [
-      {
-        "materialCode": "000130382",
-        "nomenclature": "Ajax CombiProtect U Jeweller (8EU) white (напівфабрикат)",
-        "spec": "Ajax CombiProtect U Jeweller (8EU) white (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000171044",
-        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
-        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000059495",
-        "nomenclature": "MPS_plastic_Bracket_white_v2",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000133578",
-        "nomenclature": "[Manual]_CPJ_U_CE_GPSR_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000135879",
-        "nomenclature": "[Package]_CPJ_U_CE_white_v2",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000031246",
-        "nomenclature": "MotionProtect Fibra package liner",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000047439",
-        "nomenclature": "Screw M3x12 PH1 DIN965",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      }
-    ],
-    "source": "BOM"
-  },
-  "000063480": {
-    "productCode": "63480",
-    "specCode": "63480",
-    "productName": "Ajax CombiProtect U Jeweller (8EU) ASP white датчик руху та розбиття",
-    "stage": "PKG",
-    "process": "PKG",
-    "materials": [
-      {
-        "materialCode": "000130382",
-        "nomenclature": "Ajax CombiProtect U Jeweller (8EU) white (напівфабрикат)",
-        "spec": "Ajax CombiProtect U Jeweller (8EU) white (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000171044",
-        "nomenclature": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
-        "spec": "Ajax, Монтажний комплект v.3 Vietnam (motion) (плівка)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000059495",
-        "nomenclature": "MPS_plastic_Bracket_white_v2",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000133578",
-        "nomenclature": "[Manual]_CPJ_U_CE_GPSR_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000135879",
-        "nomenclature": "[Package]_CPJ_U_CE_white_v2",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000031246",
-        "nomenclature": "MotionProtect Fibra package liner",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000047439",
-        "nomenclature": "Screw M3x12 PH1 DIN965",
         "spec": "",
         "quantity": 1.0,
         "category": "Material",
@@ -352720,206 +357288,6 @@
       {
         "materialCode": "000025000",
         "nomenclature": "MotionCam_Outdoor_Hood_white",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      }
-    ],
-    "source": "BOM"
-  },
-  "63812": {
-    "productCode": "63812",
-    "specCode": "63812",
-    "productName": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) BR white датчик руху з камерою",
-    "stage": "PKG",
-    "process": "PKG",
-    "materials": [
-      {
-        "materialCode": "000046380",
-        "nomenclature": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) white (напівфабрикат)",
-        "spec": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) white (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000170909",
-        "nomenclature": "Ajax, Монтажний комплект (MCO Vietnam) (плівка)",
-        "spec": "Ajax, Монтажний комплект (MCO Vietnam) (плівка)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000074360",
-        "nomenclature": "[Package]_MCOJ_(PhOD)_CE_white_v3",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000028165",
-        "nomenclature": "Cardboard packaging MotionCam Outdoor",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000125037",
-        "nomenclature": "[Manual]_MCOJ_(PhOD)_CE_GPSR_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000026214",
-        "nomenclature": "CPE package 155x375 white matte for MCO",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000024999",
-        "nomenclature": "MotionCam_Outdoor_Bracket white",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000012923",
-        "nomenclature": "Cable tie 4.8x300mm, nylon, white",
-        "spec": "",
-        "quantity": 3.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000025000",
-        "nomenclature": "MotionCam_Outdoor_Hood_white",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000133041",
-        "nomenclature": "[Sticker]_MCOJ_(PhOD)_Anatel_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      }
-    ],
-    "source": "BOM"
-  },
-  "000063812": {
-    "productCode": "63812",
-    "specCode": "63812",
-    "productName": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) BR white датчик руху з камерою",
-    "stage": "PKG",
-    "process": "PKG",
-    "materials": [
-      {
-        "materialCode": "000046380",
-        "nomenclature": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) white (напівфабрикат)",
-        "spec": "Ajax MotionCam Outdoor (PhOD) Jeweller (9AU) white (напівфабрикат)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000170909",
-        "nomenclature": "Ajax, Монтажний комплект (MCO Vietnam) (плівка)",
-        "spec": "Ajax, Монтажний комплект (MCO Vietnam) (плівка)",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000074360",
-        "nomenclature": "[Package]_MCOJ_(PhOD)_CE_white_v3",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000028165",
-        "nomenclature": "Cardboard packaging MotionCam Outdoor",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000125037",
-        "nomenclature": "[Manual]_MCOJ_(PhOD)_CE_GPSR_v1",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000026214",
-        "nomenclature": "CPE package 155x375 white matte for MCO",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000024999",
-        "nomenclature": "MotionCam_Outdoor_Bracket white",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000012923",
-        "nomenclature": "Cable tie 4.8x300mm, nylon, white",
-        "spec": "",
-        "quantity": 3.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000025000",
-        "nomenclature": "MotionCam_Outdoor_Hood_white",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "PKG",
-        "stage": "PKG"
-      },
-      {
-        "materialCode": "000133041",
-        "nomenclature": "[Sticker]_MCOJ_(PhOD)_Anatel_v1",
         "spec": "",
         "quantity": 1.0,
         "category": "Material",
