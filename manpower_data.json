@@ -60,6 +60,11 @@
   "C": {
     "shift": "C",
     "name": "Shift C",
+    "lines": [
+      "1C",
+      "2C",
+      "3C"
+    ],
     "assyDirect": 43.0,
     "assyTotal": 58.0,
     "assyLinesDirect": {
@@ -113,17 +118,11 @@
   "HC": {
     "shift": "HC",
     "name": "Hành Chính",
-    "lines": [
-      "3D"
-    ],
-    "assyDirect": 11.0,
-    "assyTotal": 16.0,
-    "assyLinesDirect": {
-      "3D": 11.0
-    },
-    "assyLinesTotal": {
-      "3D": 16.0
-    },
+    "lines": [],
+    "assyDirect": 0.0,
+    "assyTotal": 0.0,
+    "assyLinesDirect": {},
+    "assyLinesTotal": {},
     "htDirect": 0.0,
     "htTotal": 0.0,
     "htBreakdown": {
