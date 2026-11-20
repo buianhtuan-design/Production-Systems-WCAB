@@ -1,7 +1,7 @@
 {
   "success": true,
-  "timestamp": "2026-11-20 15:55:03",
-  "version": 20261120155503,
+  "timestamp": "2026-11-20 16:50:29",
+  "version": 20261120165029,
   "kpiSummary": [
     {
       "month": "Nov - 2026",
@@ -6289,6 +6289,32 @@
       "qty": "561",
       "detectedQty": "1",
       "defectPct": "0.18%"
+    },
+    {
+      "date": "20.11.2026",
+      "unblockDate": "20.11.2026",
+      "device": "Ajax DoorProtect",
+      "area": "FNI",
+      "cl": "",
+      "generator": "Assembly",
+      "responsible": "",
+      "nonConformance": "Tem QR ở mặt trong và mặt ngoài không khớp nhau /The QR labels on the inside and outside do not match.",
+      "qty": "150",
+      "detectedQty": "1",
+      "defectPct": "0.67%"
+    },
+    {
+      "date": "20.11.2026",
+      "unblockDate": "",
+      "device": "Ajax, Монтажний комплект (HomeSiren)",
+      "area": "QC",
+      "cl": "",
+      "generator": "Assembly",
+      "responsible": "[VTP] Workcell A-Assembly-Team 1 B",
+      "nonConformance": "Fabric installed upside down",
+      "qty": "1331",
+      "detectedQty": "1331",
+      "defectPct": "100.00%"
     }
   ],
   "summary": {
