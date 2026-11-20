@@ -1,7 +1,7 @@
 {
   "success": true,
-  "timestamp": "2026-11-20 14:57:25",
-  "version": 20261120145725,
+  "timestamp": "2026-11-20 15:55:03",
+  "version": 20261120155503,
   "kpiSummary": [
     {
       "month": "Nov - 2026",
@@ -6227,7 +6227,7 @@
     },
     {
       "date": "06.11.2026",
-      "unblockDate": "",
+      "unblockDate": "16.11.2026",
       "device": "Ajax Hub 2 4G",
       "area": "OBA",
       "cl": "",
@@ -6276,6 +6276,19 @@
       "qty": "427",
       "detectedQty": "5",
       "defectPct": "1.17%"
+    },
+    {
+      "date": "10.11.2026",
+      "unblockDate": "12.11.2026",
+      "device": "EN54 Fireprotect Heat/Sounder",
+      "area": "FBA",
+      "cl": "",
+      "generator": "Assembly",
+      "responsible": "",
+      "nonConformance": "Thermistor was not assembled completely",
+      "qty": "561",
+      "detectedQty": "1",
+      "defectPct": "0.18%"
     }
   ],
   "summary": {
