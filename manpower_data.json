@@ -65,16 +65,16 @@
       "2C",
       "3C"
     ],
-    "assyDirect": 42.0,
-    "assyTotal": 57.0,
+    "assyDirect": 41.0,
+    "assyTotal": 56.0,
     "assyLinesDirect": {
       "1C": 14.0,
-      "2C": 14.0,
+      "2C": 13.0,
       "3C": 14.0
     },
     "assyLinesTotal": {
       "1C": 19.0,
-      "2C": 19.0,
+      "2C": 18.0,
       "3C": 19.0
     },
     "htDirect": 26.0,
