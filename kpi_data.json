@@ -1,7 +1,7 @@
 {
   "success": true,
-  "timestamp": "2026-11-21 15:41:45",
-  "version": 20261121154145,
+  "timestamp": "2026-11-21 16:30:45",
+  "version": 20261121163045,
   "kpiSummary": [
     {
       "month": "Nov - 2026",
@@ -6315,6 +6315,32 @@
       "qty": "1331",
       "detectedQty": "1331",
       "defectPct": "100.00%"
+    },
+    {
+      "date": "20.11.2026",
+      "unblockDate": "",
+      "device": "Ajax, Монтажний комплект (MCO)",
+      "area": "OBA",
+      "cl": "",
+      "generator": "Assembly",
+      "responsible": "",
+      "nonConformance": "Missing IR Filter & MotionCam_Outdoor_PIR_cover  assembly",
+      "qty": "150",
+      "detectedQty": "1",
+      "defectPct": "0.67%"
+    },
+    {
+      "date": "21.11.2026",
+      "unblockDate": "",
+      "device": "Ajax, Монтажний комплект  (StreetSiren_white)",
+      "area": "OBA",
+      "cl": "",
+      "generator": "Assembly",
+      "responsible": "",
+      "nonConformance": "Miss battery",
+      "qty": "150",
+      "detectedQty": "1",
+      "defectPct": "0.67%"
     }
   ],
   "summary": {
