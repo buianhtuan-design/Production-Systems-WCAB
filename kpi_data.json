@@ -1,8 +1,159 @@
 {
   "success": true,
-  "timestamp": "2026-11-23 01:06:02",
-  "version": 20261123010602,
-  "kpiSummary": [],
+  "timestamp": "2026-11-23 01:08:31",
+  "version": 20261123010831,
+  "kpiSummary": [
+    {
+      "month": "Nov - 2026",
+      "team": "SFPD",
+      "process": "HARD TEST",
+      "indicator": "Productivity",
+      "unit": "%",
+      "l1": "< 88,05",
+      "l2": ">= 88,05",
+      "l3": ">= 90,36",
+      "l4": ">= 92,68",
+      "l5": ">= 95",
+      "result": "",
+      "eval": "",
+      "conclusion": ""
+    },
+    {
+      "month": "",
+      "team": "SFPD",
+      "process": "",
+      "indicator": "Clip (all plant)",
+      "unit": "%",
+      "l1": "< 85",
+      "l2": ">= 85",
+      "l3": ">= 88,8",
+      "l4": ">= 92,5",
+      "l5": ">= 95",
+      "result": "",
+      "eval": "",
+      "conclusion": ""
+    },
+    {
+      "month": "",
+      "team": "SFPD",
+      "process": "",
+      "indicator": "Blocked batches (v1)",
+      "unit": "pcs",
+      "l1": "> 3",
+      "l2": "<= 3",
+      "l3": "<= 2",
+      "l4": "<= 1",
+      "l5": "<= 0",
+      "result": "",
+      "eval": "",
+      "conclusion": ""
+    },
+    {
+      "month": "",
+      "team": "SFPD",
+      "process": "",
+      "indicator": "Inspection remarks, %",
+      "unit": "%",
+      "l1": "< 91",
+      "l2": ">= 91",
+      "l3": ">= 94",
+      "l4": ">= 96",
+      "l5": ">= 98",
+      "result": "",
+      "eval": "",
+      "conclusion": ""
+    },
+    {
+      "month": "",
+      "team": "SFPD",
+      "process": "",
+      "indicator": "Scrap, %",
+      "unit": "%",
+      "l1": "> 0,0427",
+      "l2": "<= 0,0427",
+      "l3": "<= 0,0417",
+      "l4": "<= 0,0407",
+      "l5": "<= 0,0387",
+      "result": "",
+      "eval": "",
+      "conclusion": ""
+    },
+    {
+      "month": "",
+      "team": "SFPD",
+      "process": "ASSEMBLY",
+      "indicator": "Productivity",
+      "unit": "%",
+      "l1": "< 88,05",
+      "l2": ">= 88,05",
+      "l3": ">= 90,36",
+      "l4": ">= 92,68",
+      "l5": ">= 95",
+      "result": "",
+      "eval": "",
+      "conclusion": ""
+    },
+    {
+      "month": "",
+      "team": "SFPD",
+      "process": "",
+      "indicator": "Clip (all plant)",
+      "unit": "%",
+      "l1": "< 85",
+      "l2": ">= 85",
+      "l3": ">= 88,8",
+      "l4": ">= 92,5",
+      "l5": ">= 95",
+      "result": "",
+      "eval": "",
+      "conclusion": ""
+    },
+    {
+      "month": "",
+      "team": "SFPD",
+      "process": "",
+      "indicator": "Blocked batches (v1)",
+      "unit": "pcs",
+      "l1": "> 3",
+      "l2": "<= 3",
+      "l3": "<= 2",
+      "l4": "<= 1",
+      "l5": "<= 0",
+      "result": "",
+      "eval": "",
+      "conclusion": ""
+    },
+    {
+      "month": "",
+      "team": "SFPD",
+      "process": "",
+      "indicator": "Inspection remarks, %",
+      "unit": "%",
+      "l1": "< 91",
+      "l2": ">= 91",
+      "l3": ">= 94",
+      "l4": ">= 96",
+      "l5": ">= 98",
+      "result": "",
+      "eval": "",
+      "conclusion": ""
+    },
+    {
+      "month": "",
+      "team": "SFPD",
+      "process": "",
+      "indicator": "Scrap, %",
+      "unit": "%",
+      "l1": "> 0,0427",
+      "l2": "<= 0,0427",
+      "l3": "<= 0,0417",
+      "l4": "<= 0,0407",
+      "l5": "<= 0,0387",
+      "result": "",
+      "eval": "",
+      "conclusion": ""
+    }
+  ],
   "productivity": [
     {
       "id": "prod_1",
@@ -14,7 +165,7 @@
       "haveH": "5523,25",
       "result": "89,10%",
       "retest": "",
-      "downtime": "",
+      "downtime": "18,5",
       "downtimePct": "0,33%"
     },
     {
@@ -27,7 +178,7 @@
       "haveH": "5523,25",
       "result": "89,10%",
       "retest": "",
-      "downtime": "",
+      "downtime": "18,5",
       "downtimePct": "0,33%"
     },
     {
@@ -456,7 +607,7 @@
       "haveH": "16530,25",
       "result": "100,69%",
       "retest": "13469",
-      "downtime": "",
+      "downtime": "579,5",
       "downtimePct": "3,51%"
     },
     {
@@ -469,7 +620,7 @@
       "haveH": "16530,25",
       "result": "100,69%",
       "retest": "13469",
-      "downtime": "",
+      "downtime": "579,5",
       "downtimePct": "3,51%"
     },
     {
@@ -508,7 +659,7 @@
       "haveH": "1167,75",
       "result": "99,69%",
       "retest": "111",
-      "downtime": "",
+      "downtime": "73,25",
       "downtimePct": "6,27%"
     },
     {
@@ -521,7 +672,7 @@
       "haveH": "1,249,666,667",
       "result": "97,92%",
       "retest": "48",
-      "downtime": "",
+      "downtime": "83,25",
       "downtimePct": "6,66%"
     },
     {
@@ -764,7 +915,7 @@
       "stage": "Assembly",
       "team": "[VTP] Workcell Fire-Assembly-Team 2 A",
       "fact": "3.642",
-      "normH": "",
+      "normH": "327,78",
       "haveH": "3,526,666,667",
       "result": "92,94%",
       "retest": "29",
@@ -777,7 +928,7 @@
       "stage": "Assembly",
       "team": "[VTP] Workcell Fire-Assembly-Team 2 B",
       "fact": "2.619",
-      "normH": "",
+      "normH": "235,71",
       "haveH": "226,25",
       "result": "104,18%",
       "retest": "12",
@@ -872,7 +1023,7 @@
       "haveH": "",
       "result": "",
       "retest": "9733",
-      "downtime": "",
+      "downtime": "74,65",
       "downtimePct": "Infinity"
     },
     {
@@ -1010,7 +1161,7 @@
       "district": "Total",
       "stage": "",
       "team": "",
-      "fact": "",
+      "fact": "3.475.532",
       "normH": "4,685,700,784",
       "haveH": "46,863,125",
       "result": "99,99%",
@@ -2361,7 +2512,7 @@
     }
   ],
   "scrap": {
-    "target": "",
+    "target": "0.0387%",
     "actual": "0.0312%",
     "items": [
       {
@@ -5828,6 +5979,19 @@
   },
   "blockedBatches": [
     {
+      "date": "12.02.2026",
+      "unblockDate": "13.02.2026",
+      "device": "Ajax DoorProtect Plus",
+      "area": "Hard Test",
+      "cl": "2.1",
+      "generator": "Hard Test",
+      "responsible": "[VTP] Workcell UEA-SMT-Team 1 A",
+      "nonConformance": "Mixed VT1 component Code : used 000005903 instead of 000006278",
+      "qty": "7006",
+      "detectedQty": "3,000",
+      "defectPct": "42.82%"
+    },
+    {
       "date": "18.03.2026",
       "unblockDate": "10.04.2026",
       "device": "Ajax MotionCam Outdoor",
@@ -6092,7 +6256,7 @@
       "unblockDate": "15.11.2026",
       "device": "Ajax, MTR.001.MBR.000v1b (8XX_3EOL)_плата с компонентами",
       "area": "QC SMT/DIP",
-      "cl": "",
+      "cl": "Y9",
       "generator": "SMT",
       "responsible": "[VTP] Workcell UEA-SMT-Team 1 B",
       "nonConformance": "misaligned components L3/ Lệch linh kiện L3",
@@ -6182,7 +6346,7 @@
   "summary": {
     "totalProductivity": "99,99%",
     "totalRemarks": "98 %",
-    "scrapTarget": "",
+    "scrapTarget": "0.0387%",
     "scrapActual": "0.0312%",
     "workcellTeamsCount": 30
   },
