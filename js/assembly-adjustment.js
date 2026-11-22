@@ -1330,23 +1330,23 @@
     const activeToIso = store.customToDate || (dates.length > 0 ? normalizeDateKey(dates[dates.length - 1]) : '');
 
     let html = `
-      <div class="section-card assembly-adjustment-card" id="assemblyAdjustmentSectionCard" style="border: 1.5px solid var(--border-glass); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); background: var(--bg-card);">
+      <div class="section-card assembly-adjustment-card" id="assemblyAdjustmentSectionCard" style="border: 1px solid rgba(245, 158, 11, 0.35); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);">
         <!-- Header Row: Tiêu đề + Chọn công đoạn + Chọn khoảng ngày cố định + Thu gọn -->
-        <div class="section-header-row" style="flex-wrap: wrap; gap: 0.65rem; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #cbd5e1; padding: 0.75rem 1rem; background: var(--bg-card-header, #fff3cc); border-radius: 8px 8px 0 0;">
+        <div class="section-header-row" style="flex-wrap: wrap; gap: 0.65rem; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08)); padding-bottom: 0.75rem;">
           <div class="section-title-wrap" style="display: flex; align-items: center; gap: 0.65rem;">
-            <div class="section-icon-badge" style="background: rgba(245, 158, 11, 0.2); border-color: #fabd05; color: #000000; font-size: 1.25rem;">
+            <div class="section-icon-badge" style="background: rgba(245, 158, 11, 0.18); border-color: rgba(245, 158, 11, 0.45); color: #fbbf24; font-size: 1.25rem;">
               ⚡
             </div>
             <div>
               <div style="display: flex; align-items: center; gap: 0.55rem; flex-wrap: wrap;">
-                <h2 style="font-size: 1.05rem; font-weight: 900; color: var(--text-primary) !important; margin: 0; letter-spacing: -0.01em;">
+                <h2 style="font-size: 1.05rem; font-weight: 800; color: #f8fafc; margin: 0; letter-spacing: -0.01em;">
                   📋 KẾ HOẠCH ĐIỀU CHỈNH OVERTIME
                 </h2>
 
                 <!-- CHỨC NĂNG CHỌN CÔNG ĐOẠN BÊN CẠNH -->
-                <div style="display: inline-flex; align-items: center; gap: 0.35rem; background: var(--bg-card); padding: 0.18rem 0.5rem; border-radius: 6px; border: 1.5px solid var(--border-glass);">
-                  <span style="font-size: 0.75rem; font-weight: 800; color: var(--text-primary);">Công đoạn:</span>
-                  <select id="adjStageSelect" class="select-filter" onchange="window.handleAdjustmentStageChange(this.value)" style="padding: 0.2rem 0.55rem; font-size: 0.775rem; font-weight: 800; border-radius: 4px; background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); cursor: pointer; outline: none;" title="Chọn công đoạn để lập kế hoạch điều chỉnh Overtime">
+                <div style="display: inline-flex; align-items: center; gap: 0.35rem; background: rgba(15, 23, 42, 0.85); padding: 0.18rem 0.5rem; border-radius: 6px; border: 1px solid rgba(167, 139, 250, 0.45);">
+                  <span style="font-size: 0.75rem; font-weight: 700; color: #c4b5fd;">Công đoạn:</span>
+                  <select id="adjStageSelect" class="select-filter" onchange="window.handleAdjustmentStageChange(this.value)" style="padding: 0.2rem 0.55rem; font-size: 0.775rem; font-weight: 800; border-radius: 4px; background: #1e1b4b; border: 1px solid #8b5cf6; color: #fde047; cursor: pointer; outline: none;" title="Chọn công đoạn để lập kế hoạch điều chỉnh Overtime">
                     ${Object.keys(STAGE_CONFIGS).map(stKey => `
                       <option value="${stKey}" ${stKey === activeStageId ? 'selected' : ''}>${STAGE_CONFIGS[stKey].name}</option>
                     `).join('')}
@@ -1354,19 +1354,19 @@
                 </div>
 
                 <!-- BỘ CHỌN KHOẢNG NGÀY RIÊNG (CỐ ĐỊNH KHÔNG ĐỔI KHI WEB REFRESH) -->
-                <div class="adj-date-range-picker" style="display: inline-flex; align-items: center; gap: 0.35rem; background: var(--bg-card); padding: 0.18rem 0.55rem; border-radius: 8px; border: 1.5px solid var(--border-glass); font-size: 0.75rem; color: var(--text-primary);" title="Chọn khoảng thời gian riêng cho Kế Hoạch Điều Chỉnh Overtime — giữ nguyên cố định khi web refresh">
-                  <span style="font-weight: 800; color: var(--text-primary);">📅 Ngày:</span>
-                  <span style="font-weight: 600; color: var(--text-primary);">Từ</span>
+                <div class="adj-date-range-picker" style="display: inline-flex; align-items: center; gap: 0.35rem; background: rgba(15, 23, 42, 0.9); padding: 0.18rem 0.55rem; border-radius: 8px; border: 1px solid rgba(96, 165, 250, 0.4); font-size: 0.75rem; color: #e2e8f0;" title="Chọn khoảng thời gian riêng cho Kế Hoạch Điều Chỉnh Overtime — giữ nguyên cố định khi web refresh">
+                  <span style="font-weight: 800; color: #60a5fa;">📅 Ngày:</span>
+                  <span style="font-weight: 600; color: #cbd5e1;">Từ</span>
                   <input type="date" id="adjFromDateInput" value="${activeFromIso}"
                          onchange="window.handleAdjustmentDateRangeChange(this.value, document.getElementById('adjToDateInput')?.value)"
-                         style="padding: 0.16rem 0.45rem; font-size: 0.75rem; font-weight: 700; border-radius: 6px; background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); cursor: pointer; outline: none; color-scheme: light;" />
-                  <span style="font-weight: 600; color: var(--text-primary);">Đến</span>
+                         style="padding: 0.16rem 0.45rem; font-size: 0.75rem; font-weight: 700; border-radius: 6px; background: #0f172a; border: 1px solid rgba(148, 163, 184, 0.45); color: #f8fafc; cursor: pointer; outline: none; color-scheme: dark;" />
+                  <span style="font-weight: 600; color: #cbd5e1;">Đến</span>
                   <input type="date" id="adjToDateInput" value="${activeToIso}"
                          onchange="window.handleAdjustmentDateRangeChange(document.getElementById('adjFromDateInput')?.value, this.value)"
-                         style="padding: 0.16rem 0.45rem; font-size: 0.75rem; font-weight: 700; border-radius: 6px; background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); cursor: pointer; outline: none; color-scheme: light;" />
+                         style="padding: 0.16rem 0.45rem; font-size: 0.75rem; font-weight: 700; border-radius: 6px; background: #0f172a; border: 1px solid rgba(148, 163, 184, 0.45); color: #f8fafc; cursor: pointer; outline: none; color-scheme: dark;" />
                 </div>
 
-                <button type="button" class="btn-filter-toggle" onclick="window.toggleAssemblyAdjustmentCollapse()" style="font-size: 0.75rem; padding: 0.2rem 0.6rem; background: var(--bg-card); border: 1.5px solid #000000; color: var(--text-primary); font-weight: 700;" title="Thu gọn hoặc Mở rộng Bảng Điều Chỉnh">
+                <button type="button" class="btn-filter-toggle" onclick="window.toggleAssemblyAdjustmentCollapse()" style="font-size: 0.75rem; padding: 0.2rem 0.6rem;" title="Thu gọn hoặc Mở rộng Bảng Điều Chỉnh">
                   ${isCollapsed ? '🔽 Mở rộng' : '🔼 Thu gọn'}
                 </button>
               </div>
@@ -1437,25 +1437,25 @@
 
         <!-- Body Container (Hỗ trợ thu gọn/mở rộng) -->
         <div id="assemblyAdjustmentTableBodyWrap" style="${isCollapsed ? 'display: none;' : 'margin-top: 0.75rem;'}">
-          <div class="table-container assembly-adj-scroll-wrap" style="overflow: auto; max-height: 620px; border: 1.5px solid var(--border-glass); border-radius: 8px;">
+          <div class="table-container assembly-adj-scroll-wrap" style="overflow: auto; max-height: 620px; border: 1px solid var(--border-glass, #334155); border-radius: 8px;">
             <table class="data-table assembly-adj-table" id="assemblyAdjustmentTable" style="width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.8rem;">
               <thead>
                 <!-- HEADER DUY NHẤT GỘP 2 DÒNG GỌN (DD/MM/26 + Day/Night - Kíp) & ĐÓNG BĂNG CỐ ĐỊNH Ở ĐỈNH BẢNG (top: 0) -->
-                <tr class="adj-header-shift-row" style="background: var(--bg-card-header, #fff3cc);">
-                  <th class="sticky-col-header" style="position: sticky; top: 0; left: 0; z-index: 35; background: var(--bg-card-header, #fff3cc); color: var(--text-primary); font-weight: 800; border-right: 1px solid var(--border-glass); border-bottom: 2px solid #cbd5e1; text-align: left; padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; height: 42px; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: none;">
+                <tr class="adj-header-shift-row" style="background: var(--bg-card-solid, #1e293b);">
+                  <th class="sticky-col-header" style="position: sticky; top: 0; left: 0; z-index: 35; background: var(--bg-card-solid, #1e293b); color: #f8fafc; font-weight: 800; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); text-align: left; padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; height: 42px; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: none;">
                     📅 CA SẢN XUẤT
                   </th>
                   <!-- CỘT TỔNG CỘNG: CỐ ĐỊNH BÊN TRÁI CẠNH CỘT 1 -->
-                  <th class="sticky-col-summary-header" style="position: sticky; top: 0; left: 220px; z-index: 34; background: var(--bg-card-header, #fff3cc); color: var(--text-primary); font-weight: 900; font-size: 0.72rem; text-align: center; border-right: 2px solid #fabd05; border-bottom: 2px solid #cbd5e1; padding: 0.3rem 0.2rem; min-width: 75px; max-width: 75px; width: 75px; height: 42px; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: none;">
-                    <div style="line-height: 1.25; color: var(--text-primary);">TỔNG</div>
-                    <div style="line-height: 1.25; font-size: 0.68rem; color: var(--text-primary);">(${colsData.length} ca)</div>
+                  <th class="sticky-col-summary-header" style="position: sticky; top: 0; left: 220px; z-index: 34; background: #0f172a; color: #fbbf24; font-weight: 900; font-size: 0.72rem; text-align: center; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.3rem 0.2rem; min-width: 75px; max-width: 75px; width: 75px; height: 42px; box-sizing: border-box; box-shadow: 4px 0 10px rgba(0,0,0,0.25); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: none;">
+                    <div style="line-height: 1.25;">TỔNG</div>
+                    <div style="line-height: 1.25; font-size: 0.68rem;">(${colsData.length} ca)</div>
                   </th>
                   ${colsData.map(cd => {
                     const isDay = cd.shift === 'Day';
                     return `
-                      <th style="position: sticky; top: 0; z-index: 25; background: var(--bg-card-header, #fff3cc); color: var(--text-primary); font-weight: 800; font-size: 0.73rem; text-align: center; border-right: 1px solid var(--border-glass); border-bottom: 2px solid #cbd5e1; padding: 0.25rem 0.3rem; min-width: 68px; height: 42px; box-sizing: border-box; white-space: nowrap; text-transform: none; line-height: 1.25;" title="Ngày ${formatDateDisplay(cd.dateStr)} • Ca ${cd.shift} • Kíp ${cd.kip}">
-                        <div style="line-height: 1.25; color: var(--text-primary);">${formatDateDisplay(cd.dateStr)}</div>
-                        <div style="line-height: 1.25; color: var(--text-primary);"><span>${cd.shift}</span> - <span>${cd.kip}</span></div>
+                      <th style="position: sticky; top: 0; z-index: 25; background: var(--bg-card-solid, #1e293b); color: #f8fafc; font-weight: 800; font-size: 0.73rem; text-align: center; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.25rem 0.3rem; min-width: 68px; height: 42px; box-sizing: border-box; white-space: nowrap; text-transform: none; line-height: 1.25;" title="Ngày ${formatDateDisplay(cd.dateStr)} • Ca ${cd.shift} • Kíp ${cd.kip}">
+                        <div style="line-height: 1.25;">${formatDateDisplay(cd.dateStr)}</div>
+                        <div style="line-height: 1.25;"><span style="color: ${isDay ? '#fbbf24' : '#c084fc'};">${cd.shift}</span> - <span style="color: #fde047;">${cd.kip}</span></div>
                       </th>
                     `;
                   }).join('')}
@@ -1464,48 +1464,48 @@
 
               <tbody>
                 <!-- 1. KẾ HOẠCH CẦN (PLAN) -->
-                <tr class="adj-row-plan" style="background: var(--bg-card);">
-                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: var(--bg-card); font-weight: 800; color: var(--text-primary); border-right: 1px solid var(--border-glass); border-bottom: 1px solid var(--border-glass); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;">
+                <tr class="adj-row-plan" style="background: rgba(59, 130, 246, 0.08);">
+                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #0f1a30; font-weight: 700; color: #93c5fd; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;">
                     👷 1. Kế Hoạch Cần (Plan)
                   </td>
                   <!-- TỔNG CỘNG PLAN (BÊN TRÁI) -->
-                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.85rem; border-right: 2px solid #fabd05; border-bottom: 1px solid var(--border-glass); padding: 0.35rem 0.5rem; background: var(--bg-card); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
+                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; color: #93c5fd; font-size: 0.85rem; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.5rem; background: #0b1329; box-shadow: 4px 0 10px rgba(0,0,0,0.25); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
                     ${summary.totalPlanValue.toFixed(1)}
                   </td>
                   ${colsData.map(cd => `
-                    <td style="text-align: right; font-weight: 700; color: var(--color-plan-blue, #0000ff) !important; border-right: 1px solid var(--border-glass); border-bottom: 1px solid var(--border-glass); padding: 0.35rem 0.55rem;">
+                    <td style="text-align: right; font-weight: 700; color: #93c5fd; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem;">
                       ${cd.planValue.toFixed(1)}
                     </td>
                   `).join('')}
                 </tr>
 
                 <!-- 1B. KẾ HOẠCH CẦN SỐ LINE -->
-                <tr class="adj-row-plan-lines" style="background: var(--bg-card);">
-                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: var(--bg-card); font-weight: 800; color: var(--text-primary); border-right: 1px solid var(--border-glass); border-bottom: 1px solid var(--border-glass); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;">
+                <tr class="adj-row-plan-lines" style="background: rgba(147, 51, 234, 0.06);">
+                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #16122c; font-weight: 700; color: #c084fc; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;">
                     🏭 1b. Kế Hoạch Cần Số Line
                   </td>
                   <!-- TỔNG CỘNG LINE CẦN (BÊN TRÁI) -->
-                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.85rem; border-right: 2px solid #fabd05; border-bottom: 1px solid var(--border-glass); padding: 0.35rem 0.5rem; background: var(--bg-card); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
+                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; color: #c084fc; font-size: 0.85rem; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.5rem; background: #0b1329; box-shadow: 4px 0 10px rgba(0,0,0,0.25); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
                     ${summary.totalPlanLines.toFixed(1)}
                   </td>
                   ${colsData.map(cd => `
-                    <td style="text-align: right; font-weight: 800; color: var(--color-plan-blue, #0000ff) !important; border-right: 1px solid var(--border-glass); border-bottom: 1px solid var(--border-glass); padding: 0.35rem 0.55rem;">
+                    <td style="text-align: right; font-weight: 800; color: #c084fc; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem;">
                       ${cd.planLines.toFixed(1)}
                     </td>
                   `).join('')}
                 </tr>
 
                 <!-- 2B. THỰC TẾ CÓ SỐ LINE -->
-                <tr class="adj-row-act-lines" style="background: var(--bg-card); border-bottom: 1px solid var(--border-glass);">
-                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: var(--bg-card); font-weight: 800; color: var(--text-primary); border-right: 1px solid var(--border-glass); border-bottom: 1px solid var(--border-glass); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;">
+                <tr class="adj-row-act-lines" style="background: rgba(16, 185, 129, 0.08); border-bottom: 1px solid var(--border-glass, #334155);">
+                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #0c1e1c; font-weight: 800; color: #34d399; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;">
                     🏭 2b. Thực Tế Có Số Line
                   </td>
                   <!-- TỔNG CỘNG LINE THỰC TẾ (BÊN TRÁI) -->
-                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; color: var(--text-primary); font-size: 0.95rem; border-right: 2px solid #fabd05; border-bottom: 1px solid var(--border-glass); padding: 0.35rem 0.5rem; background: var(--bg-card); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
+                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; color: #34d399; font-size: 0.95rem; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.5rem; background: #0b1329; box-shadow: 4px 0 10px rgba(0,0,0,0.25); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
                     ${summary.totalActualLines}
                   </td>
                   ${colsData.map(cd => `
-                    <td style="text-align: right; font-weight: 900; color: var(--text-primary); font-size: 0.95rem; border-right: 1px solid var(--border-glass); border-bottom: 1px solid var(--border-glass); padding: 0.35rem 0.55rem;">
+                    <td style="text-align: right; font-weight: 900; color: #34d399; font-size: 0.95rem; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem;">
                       ${cd.totalLines}
                     </td>
                   `).join('')}
@@ -1516,19 +1516,19 @@
                 <!-- ======================================================== -->
 
                 <!-- HÀNG 1: CHÊNH LỆCH / CA -->
-                <tr class="adj-row-diff" style="background: var(--bg-card); border-bottom: 1px solid var(--border-glass);">
-                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: var(--bg-card); font-weight: 900; color: var(--text-primary); border-right: 1px solid var(--border-glass); border-bottom: 1px solid var(--border-glass); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;" title="Chênh lệch giữa số line thực tế có và số line kế hoạch cần của từng ca">
+                <tr class="adj-row-diff" style="background: rgba(15, 23, 42, 0.85); border-bottom: 1px solid var(--border-glass, #334155);">
+                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #0b1329; font-weight: 900; color: #f8fafc; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;" title="Chênh lệch giữa số line thực tế có và số line kế hoạch cần của từng ca">
                     ⚖️ Chênh Lệch / Ca
                   </td>
                   <!-- TỔNG CỘNG CHÊNH LỆCH THEO CA (BÊN TRÁI) -->
-                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; font-size: 0.95rem; border-right: 2px solid #fabd05; border-bottom: 1px solid var(--border-glass); padding: 0.35rem 0.5rem; background: var(--bg-card); color: ${summary.totalDiffLines >= 0 ? '#0000ff !important' : '#ff0000 !important'}; min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
+                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; font-size: 0.95rem; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.5rem; background: ${summary.totalDiffLines >= 0 ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)'}; color: ${summary.totalDiffLines >= 0 ? '#4ade80' : '#f87171'}; box-shadow: 4px 0 10px rgba(0,0,0,0.25); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
                     ${(summary.totalDiffLines > 0 ? '+' : '') + summary.totalDiffLines.toFixed(1)}
                   </td>
                   ${colsData.map(cd => {
                     const isNeg = cd.diffLines < 0;
                     const diffText = (cd.diffLines > 0 ? '+' : '') + cd.diffLines.toFixed(1);
                     return `
-                      <td style="text-align: right; font-weight: 900; font-size: 0.95rem; border-right: 1px solid var(--border-glass); border-bottom: 1px solid var(--border-glass); padding: 0.35rem 0.55rem; background: ${isNeg ? '#fff1f2' : '#f0fdf4'}; color: ${isNeg ? '#ff0000 !important' : '#0000ff !important'};" title="${isNeg ? 'Thiếu line so với kế hoạch cần' : 'Đạt / vượt số line yêu cầu'} (Ca ${cd.shift})">
+                      <td style="text-align: right; font-weight: 900; font-size: 0.95rem; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; background: ${isNeg ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.12)'}; color: ${isNeg ? '#f87171' : '#34d399'};" title="${isNeg ? 'Thiếu line so với kế hoạch cần' : 'Đạt / vượt số line yêu cầu'} (Ca ${cd.shift})">
                         ${diffText}
                       </td>
                     `;
@@ -1536,12 +1536,12 @@
                 </tr>
 
                 <!-- HÀNG 2: CHÊNH LỆCH / NGÀY (GỒM CẢ CA NGÀY VÀ CA ĐÊM) -->
-                <tr class="adj-row-diff-daily" style="background: var(--bg-card); border-bottom: 1px solid var(--border-glass);">
-                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: var(--bg-card); font-weight: 900; color: var(--text-primary); border-right: 1px solid var(--border-glass); border-bottom: 1px solid var(--border-glass); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;" title="Tổng chênh lệch sau điều chỉnh theo từng ngày (gồm cả Ca Ngày + Ca Đêm)">
+                <tr class="adj-row-diff-daily" style="background: rgba(30, 41, 59, 0.95); border-bottom: 1px solid var(--border-glass, #334155);">
+                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #070d1e; font-weight: 900; color: #38bdf8; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;" title="Tổng chênh lệch sau điều chỉnh theo từng ngày (gồm cả Ca Ngày + Ca Đêm)">
                     📅 Chênh Lệch / Ngày
                   </td>
                   <!-- TỔNG CỘNG CHÊNH LỆCH THEO NGÀY (TOÀN KỲ) -->
-                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; font-size: 0.95rem; border-right: 2px solid #fabd05; border-bottom: 1px solid var(--border-glass); padding: 0.35rem 0.5rem; background: var(--bg-card); color: ${summary.totalDiffLines >= 0 ? '#0000ff !important' : '#ff0000 !important'}; min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
+                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; font-size: 0.95rem; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.5rem; background: ${summary.totalDiffLines >= 0 ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}; color: ${summary.totalDiffLines >= 0 ? '#34d399' : '#f87171'}; box-shadow: 4px 0 10px rgba(0,0,0,0.25); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
                     ${(summary.totalDiffLines > 0 ? '+' : '') + summary.totalDiffLines.toFixed(1)}
                   </td>
                   ${dates.map(dStr => {
@@ -1553,7 +1553,7 @@
                     const isNeg = dailyDiff < 0;
                     const diffText = (dailyDiff > 0 ? '+' : '') + dailyDiff.toFixed(1);
                     return `
-                      <td colspan="2" style="text-align: center; font-weight: 900; font-size: 0.95rem; border-right: 1px solid var(--border-glass); border-bottom: 1px solid var(--border-glass); padding: 0.35rem 0.55rem; background: ${isNeg ? '#fff1f2' : '#f0fdf4'}; color: ${isNeg ? '#ff0000 !important' : '#0000ff !important'};" title="Tổng chênh lệch ngày ${formatDateDisplay(dStr)}: ${diffText} line (Ca Ngày: ${dayDiff > 0 ? '+' : ''}${dayDiff} | Ca Đêm: ${nightDiff > 0 ? '+' : ''}${nightDiff})">
+                      <td colspan="2" style="text-align: center; font-weight: 900; font-size: 0.95rem; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; background: ${isNeg ? 'rgba(239, 68, 68, 0.22)' : 'rgba(16, 185, 129, 0.2)'}; color: ${isNeg ? '#f87171' : '#34d399'};" title="Tổng chênh lệch ngày ${formatDateDisplay(dStr)}: ${diffText} line (Ca Ngày: ${dayDiff > 0 ? '+' : ''}${dayDiff} | Ca Đêm: ${nightDiff > 0 ? '+' : ''}${nightDiff})">
                         ${diffText}
                       </td>
                     `;
@@ -1561,32 +1561,32 @@
                 </tr>
 
                 <!-- HÀNG 3: SỐ LINE OT -->
-                <tr class="adj-row-ot-lines" style="background: var(--bg-card); border-bottom: 1px solid var(--border-glass);">
-                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: var(--bg-card); font-weight: 800; color: var(--text-primary); border-right: 1px solid var(--border-glass); border-bottom: 1px solid var(--border-glass); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;">
+                <tr class="adj-row-ot-lines" style="background: rgba(245, 158, 11, 0.05); border-bottom: 1px solid var(--border-glass, #334155);">
+                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #1c1911; font-weight: 700; color: #facc15; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;">
                     ⚡ Số Line OT
                   </td>
                   <!-- TỔNG SỐ LINE OT (BÊN TRÁI) -->
-                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; color: var(--text-primary); background: #fabd05; border-right: 2px solid #d97706; border-bottom: 1px solid var(--border-glass); padding: 0.35rem 0.5rem; font-size: 0.88rem; min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
+                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; color: #000000; background: #fde047; border-right: 2px solid #d97706; border-bottom: 1px solid rgba(0,0,0,0.15); padding: 0.35rem 0.5rem; font-size: 0.88rem; box-shadow: 4px 0 10px rgba(0,0,0,0.25); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
                     ${summary.totalOtLinesCount > 0 ? summary.totalOtLinesCount : ''}
                   </td>
                   ${colsData.map(cd => `
-                    <td style="text-align: right; font-weight: 800; color: var(--text-primary); border-right: 1px solid var(--border-glass); border-bottom: 1px solid var(--border-glass); padding: 0.35rem 0.55rem;">
+                    <td style="text-align: right; font-weight: 800; color: #facc15; border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem;">
                       ${cd.otCount > 0 ? cd.otCount : ''}
                     </td>
                   `).join('')}
                 </tr>
 
                 <!-- HÀNG 4: SỐ NGƯỜI OT (CÓ BORDER DÀY PHÂN TÁCH VỚI KHỐI LINE) -->
-                <tr class="adj-row-ot-people" style="background: var(--bg-card); border-bottom: 2px solid #cbd5e1;">
-                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: var(--bg-card); font-weight: 800; color: var(--text-primary); border-right: 1px solid var(--border-glass); border-bottom: 2px solid #cbd5e1; padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;">
+                <tr class="adj-row-ot-people" style="background: rgba(245, 158, 11, 0.08); border-bottom: 2px solid var(--border-glass, #475569);">
+                  <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: #1f1b0e; font-weight: 800; color: #fbbf24; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;">
                     👥 Số Người OT
                   </td>
                   <!-- TỔNG SỐ NGƯỜI OT (BÊN TRÁI) -->
-                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; color: var(--text-primary); background: #fabd05; border-right: 2px solid #d97706; border-bottom: 2px solid #cbd5e1; padding: 0.35rem 0.5rem; font-size: 0.88rem; min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
+                  <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: right; font-weight: 900; color: #000000; background: #fde047; border-right: 2px solid #d97706; border-bottom: 2px solid var(--border-glass, #475569); padding: 0.35rem 0.5rem; font-size: 0.88rem; box-shadow: 4px 0 10px rgba(0,0,0,0.25); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
                     ${summary.totalOtPeopleCount > 0 ? summary.totalOtPeopleCount : ''}
                   </td>
                   ${colsData.map(cd => `
-                    <td style="text-align: right; font-weight: 900; color: var(--text-primary); font-size: 0.88rem; border-right: 1px solid var(--border-glass); border-bottom: 2px solid #cbd5e1; padding: 0.35rem 0.55rem;">
+                    <td style="text-align: right; font-weight: 900; color: #fbbf24; font-size: 0.88rem; border-right: 1px solid var(--border-glass, #334155); border-bottom: 2px solid var(--border-glass, #475569); padding: 0.35rem 0.55rem;">
                       ${cd.otPeople > 0 ? cd.otPeople : ''}
                     </td>
                   `).join('')}
@@ -1601,15 +1601,18 @@
                   const lineDisplayName = activeStageConfig.id === 'ASSEMBLY' ? `Line ${lineName}` : `${activeStageConfig.id} ${lineName}`;
                   return `
                     <tr class="adj-row-line hover-row" data-line="${lineName}">
-                      <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: var(--bg-card); font-weight: 800; color: var(--text-primary); border-right: 1px solid var(--border-glass); border-bottom: 1px solid var(--border-glass); padding: 0.45rem 0.65rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap; font-size: 0.95rem;">
+                      <td class="sticky-col-cell" style="position: sticky; left: 0; z-index: 10; background: var(--bg-card-solid, #1e293b); font-weight: 800; color: var(--text-primary, #f8fafc); border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.55rem; min-width: 220px; max-width: 220px; width: 220px; box-sizing: border-box; white-space: nowrap;">
                         ${lineDisplayName}
+                        <small style="font-size: 0.68rem; color: var(--text-muted); font-weight: normal; margin-left: 0.35rem;">
+                          (${lineSum.direct}ng / ${lineSum.total}ng)
+                        </small>
                       </td>
 
                       <!-- CỘT TỔNG CỘNG CHO TỪNG LINE (CHỈ HIỂN THỊ "OT X", NẾU 0 OT THÌ ĐỂ TRỐNG) -->
-                      <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: center; border-right: 2px solid #fabd05; border-bottom: 1px solid var(--border-glass); padding: 0.3rem 0.35rem; background: var(--bg-card); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
+                      <td class="sticky-col-summary-cell" style="position: sticky; left: 220px; z-index: 9; text-align: center; border-right: 2px solid rgba(245, 158, 11, 0.5); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.3rem 0.35rem; background: #0b1329; box-shadow: 4px 0 10px rgba(0,0,0,0.25); min-width: 75px; max-width: 75px; width: 75px; box-sizing: border-box;">
                         ${otCount > 0 ? `
                           <div style="text-align: center;">
-                            <span style="background: #fabd05; color: #000000; font-weight: 900; font-size: 0.76rem; padding: 0.15rem 0.5rem; border-radius: 4px; display: inline-block;" title="${lineDisplayName} có ${otCount} ca làm thêm (OT)">
+                            <span style="background: #fde047; color: #000000; font-weight: 900; font-size: 0.76rem; padding: 0.15rem 0.5rem; border-radius: 4px; display: inline-block;" title="${lineDisplayName} có ${otCount} ca làm thêm (OT)">
                               OT ${otCount}
                             </span>
                           </div>
@@ -1654,13 +1657,13 @@
           </div>
 
           <!-- Bottom Legend -->
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.55rem; padding: 0.4rem 0.75rem; background: var(--bg-card-header, #fff3cc); border: 1px solid var(--border-glass); border-radius: 6px; font-size: 0.75rem; color: var(--text-primary);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.55rem; padding: 0.4rem 0.75rem; background: rgba(15, 23, 42, 0.4); border-radius: 6px; font-size: 0.75rem; color: var(--text-muted, #94a3b8);">
             <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-              <span>💡 <strong>Hướng dẫn:</strong> Bấm ô Line nghỉ để bật <strong style="color: var(--text-primary); background: #fabd05; padding: 0.1rem 0.35rem; border-radius: 3px;">OT</strong>. Bấm ô <strong style="color: var(--text-primary); background: #fabd05; padding: 0.1rem 0.35rem; border-radius: 3px;">OT</strong> để hủy.</span>
-              <span style="color: var(--text-primary); font-weight: 700;">🛡️ Giới hạn an toàn: 1 Line không được làm liên tục quá 5 ngày.</span>
+              <span>💡 <strong>Hướng dẫn:</strong> Bấm ô Line nghỉ để bật <strong style="color: #fde047;">OT</strong>. Bấm ô <strong style="color: #fde047;">OT</strong> để hủy.</span>
+              <span style="color: #fbbf24; font-weight: 700;">🛡️ Giới hạn an toàn: 1 Line không được làm liên tục quá 5 ngày.</span>
             </div>
             <div>
-              <span>Đồng bộ 100% <strong>Bảng Nhân Lực &amp; Cân Đối Ca</strong> • Công đoạn: <strong>${activeStageConfig.name}</strong> • Định mức theo <strong>Cấu Hình Line Kíp</strong></span>
+              <span>Đồng bộ 100% <strong>Bảng Nhân Lực &amp; Cân Đối Ca</strong> • Công đoạn: <strong style="color: #fde047;">${activeStageConfig.name}</strong> • Định mức theo <strong>Cấu Hình Line Kíp</strong></span>
             </div>
           </div>
         </div>
@@ -2016,11 +2019,11 @@
     }
 
     modal.innerHTML = `
-      <div class="modal-card" style="background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 12px; width: 92%; max-width: 680px; max-height: 85vh; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,0.15);">
-        <div style="padding: 1rem 1.25rem; border-bottom: 1.5px solid #cbd5e1; background: var(--bg-card-header, #fff3cc); border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center;">
+      <div class="modal-card" style="background: var(--bg-card-solid, #1e293b); border: 1px solid var(--border-glass, #334155); border-radius: 12px; width: 92%; max-width: 680px; max-height: 85vh; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+        <div style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-glass, #334155); display: flex; justify-content: space-between; align-items: center;">
           <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span style="font-size: 1.25rem;">📜</span>
-            <h3 style="margin: 0; font-size: 1.05rem; font-weight: 900; color: var(--text-primary);">
+            <h3 style="margin: 0; font-size: 1.05rem; font-weight: 800; color: #f8fafc;">
               LỊCH SỬ KẾ HOẠCH ĐIỀU CHỈNH OVERTIME (${history.length} bản ghi)
             </h3>
           </div>

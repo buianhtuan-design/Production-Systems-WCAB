@@ -44,29 +44,29 @@
    * Cấu hình badge và icon nhận diện từng công đoạn
    */
   const STAGE_STYLES = {
-    'ASSEMBLY': { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '🔧' },
-    'HARD TEST': { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '⚡' },
-    'OPTICS ASM': { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '🔬' },
-    'FOCUS': { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '🎯' },
-    'A IMP ASM': { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '⚙️' },
-    'PKG': { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '📦' },
-    'COM PKG': { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '📦' },
-    'COM PKG AUTO': { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '🤖' },
-    'DIP': { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '🔌' },
-    'DIP. SELECTIV': { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '🎛️' },
-    'Selective': { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '🎛️' },
-    'THT': { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '⚙️' },
-    'SMD': { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '🖨️' },
-    'LONG TEST': { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '⏱️' },
-    'TEST ROOM': { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '🔬' },
-    'LACQUERING': { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '💧' },
-    'QC': { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '🔍' },
-    'MB': { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '📟' }
+    'ASSEMBLY': { bg: 'rgba(56, 189, 248, 0.15)', border: 'rgba(56, 189, 248, 0.45)', color: '#38bdf8', icon: '🔧' },
+    'HARD TEST': { bg: 'rgba(168, 85, 247, 0.15)', border: 'rgba(168, 85, 247, 0.45)', color: '#c084fc', icon: '⚡' },
+    'OPTICS ASM': { bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.45)', color: '#fbbf24', icon: '🔬' },
+    'FOCUS': { bg: 'rgba(16, 185, 129, 0.15)', border: 'rgba(16, 185, 129, 0.45)', color: '#34d399', icon: '🎯' },
+    'A IMP ASM': { bg: 'rgba(59, 130, 246, 0.15)', border: 'rgba(59, 130, 246, 0.45)', color: '#60a5fa', icon: '⚙️' },
+    'PKG': { bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.45)', color: '#f59e0b', icon: '📦' },
+    'COM PKG': { bg: 'rgba(249, 115, 22, 0.15)', border: 'rgba(249, 115, 22, 0.45)', color: '#fb923c', icon: '📦' },
+    'COM PKG AUTO': { bg: 'rgba(249, 115, 22, 0.15)', border: 'rgba(249, 115, 22, 0.45)', color: '#fb923c', icon: '🤖' },
+    'DIP': { bg: 'rgba(6, 182, 212, 0.15)', border: 'rgba(6, 182, 212, 0.45)', color: '#22d3ee', icon: '🔌' },
+    'DIP. SELECTIV': { bg: 'rgba(6, 182, 212, 0.15)', border: 'rgba(6, 182, 212, 0.45)', color: '#22d3ee', icon: '🎛️' },
+    'Selective': { bg: 'rgba(6, 182, 212, 0.15)', border: 'rgba(6, 182, 212, 0.45)', color: '#22d3ee', icon: '🎛️' },
+    'THT': { bg: 'rgba(20, 184, 166, 0.15)', border: 'rgba(20, 184, 166, 0.45)', color: '#2dd4bf', icon: '⚙️' },
+    'SMD': { bg: 'rgba(236, 72, 153, 0.15)', border: 'rgba(236, 72, 153, 0.45)', color: '#f472b6', icon: '🖨️' },
+    'LONG TEST': { bg: 'rgba(16, 185, 129, 0.15)', border: 'rgba(16, 185, 129, 0.45)', color: '#34d399', icon: '⏱️' },
+    'TEST ROOM': { bg: 'rgba(132, 204, 22, 0.15)', border: 'rgba(132, 204, 22, 0.45)', color: '#a3e635', icon: '🔬' },
+    'LACQUERING': { bg: 'rgba(14, 165, 233, 0.15)', border: 'rgba(14, 165, 233, 0.45)', color: '#38bdf8', icon: '💧' },
+    'QC': { bg: 'rgba(234, 179, 8, 0.15)', border: 'rgba(234, 179, 8, 0.45)', color: '#facc15', icon: '🔍' },
+    'MB': { bg: 'rgba(99, 102, 241, 0.15)', border: 'rgba(99, 102, 241, 0.45)', color: '#818cf8', icon: '📟' }
   };
 
   function getPfcStageStyle(stage) {
     const s = String(stage || '').toUpperCase().trim();
-    return STAGE_STYLES[s] || { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '🏷️' };
+    return STAGE_STYLES[s] || { bg: 'rgba(148, 163, 184, 0.12)', border: 'rgba(148, 163, 184, 0.3)', color: '#94a3b8', icon: '🏷️' };
   }
 
   function escapePfcHtml(str) {
@@ -603,9 +603,9 @@
   function renderPfcShiftCardHtml(s) {
     const isNeg = s._gapVal < 0;
     const isPos = s._gapVal > 0;
-    const cardBorderColor = isNeg ? '#ef4444' : (isPos ? '#0284c7' : '#cbd5e1');
-    const cardBg = isNeg ? '#ffffff' : (isPos ? '#e0f2fe' : '#ffffff');
-    const gapColor = isNeg ? '#ff0000' : (isPos ? '#0000ff' : '#000000');
+    const cardBorderColor = isNeg ? '#ef4444' : (isPos ? '#10b981' : '#64748b');
+    const cardBg = isNeg ? 'rgba(239, 68, 68, 0.08)' : (isPos ? 'rgba(16, 185, 129, 0.08)' : 'rgba(100, 116, 139, 0.08)');
+    const gapColor = isNeg ? '#f87171' : (isPos ? '#34d399' : '#94a3b8');
     const gapSign = isPos ? '+' : '';
     const gapStr = s._gapVal !== 0 ? `(${gapSign}${Math.round(s._gapVal).toLocaleString('vi-VN')})` : '(0)';
     const shiftLabel = s._shiftNorm === 'day' ? '☀️ Ngày' : '🌙 Đêm';
@@ -613,19 +613,19 @@
     const lineLabel = s.line ? ` [${escapePfcHtml(s.line)}]` : '';
 
     return `
-      <div class="pfc-shift-card" style="padding: 0.4rem 0.65rem; border-radius: 6px; background: ${cardBg}; border: 1.5px solid ${cardBorderColor}; border-left: 4px solid ${cardBorderColor}; margin-bottom: 0.35rem;">
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.4rem; margin-bottom: 0.2rem;">
-          <span style="font-weight: 800; font-size: 0.825rem; color: var(--text-primary);">
+      <div class="pfc-shift-card" style="padding: 0.35rem 0.6rem; border-radius: 6px; background: ${cardBg}; border-left: 3px solid ${cardBorderColor}; margin-bottom: 0.25rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.4rem; margin-bottom: 0.15rem;">
+          <span style="font-weight: 800; font-size: 0.72rem; color: ${isNeg ? '#fca5a5' : (isPos ? '#6ee7b7' : '#cbd5e1')};">
             📅 ${dateLabel} • ${shiftLabel}${lineLabel}
           </span>
-          <span class="font-mono" style="font-weight: 900; font-size: 0.85rem; color: ${gapColor} !important;">
+          <span class="font-mono" style="font-weight: 800; font-size: 0.75rem; color: ${gapColor};">
             ${gapStr}
           </span>
         </div>
-        <div style="font-size: 0.825rem; color: var(--text-primary); font-weight: 600; line-height: 1.4; word-break: break-word;">
-          ${s.reason ? escapePfcHtml(s.reason) : '<span style="color: #64748b; font-style: italic;">Chưa có lý do chi tiết</span>'}
+        <div style="font-size: 0.735rem; color: var(--text-primary, #f1f5f9); line-height: 1.4; word-break: break-word;">
+          ${s.reason ? escapePfcHtml(s.reason) : '<span style="color: var(--text-muted, #64748b); font-style: italic;">Chưa có lý do chi tiết</span>'}
         </div>
-        ${s.qualityIssue ? `<div style="font-size: 0.775rem; color: #d97706; font-weight: 700; margin-top: 0.15rem;">⚠️ ${escapePfcHtml(s.qualityIssue)}</div>` : ''}
+        ${s.qualityIssue ? `<div style="font-size: 0.675rem; color: #fbbf24; margin-top: 0.1rem;">⚠️ ${escapePfcHtml(s.qualityIssue)}</div>` : ''}
       </div>
     `;
   }
@@ -645,16 +645,16 @@
       if (m.gapTotal < 0) {
         return `
           <div style="display: flex; align-items: center; gap: 0.4rem;">
-            <span class="badge" style="background: var(--bg-card); border: 1.5px solid #ef4444; color: var(--color-alert-red, #ff0000); font-size: 0.825rem; padding: 0.3rem 0.65rem; font-weight: 800;">
-              ⚠️ Thiếu hụt — Chưa cập nhật ca &amp; lý do
+            <span class="badge" style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); color: #fbbf24; font-size: 0.72rem; padding: 0.25rem 0.6rem; font-weight: 800;">
+              ⚠️ Thiếu hụt — Chưa cập nhật ca & lý do
             </span>
           </div>
         `;
       }
       if (m.gapTotal > 0) {
-        return `<div style="color: var(--color-plan-blue, #0000ff); font-size: 0.85rem; font-weight: 700;">✅ Vượt kế hoạch (+${m.gapTotal.toLocaleString('vi-VN')}) — Không ghi nhận âm</div>`;
+        return `<div style="color: #34d399; font-size: 0.75rem; font-style: italic;">✅ Vượt kế hoạch (+${m.gapTotal.toLocaleString('vi-VN')}) — Không ghi nhận âm</div>`;
       }
-      return `<div style="color: var(--text-primary); font-size: 0.85rem; font-weight: 700;">— (Cân bằng kế hoạch)</div>`;
+      return `<div style="color: var(--text-muted, #64748b); font-size: 0.75rem;">— (Cân bằng kế hoạch)</div>`;
     }
 
     // TH 2: Có các bản ghi ca
@@ -663,13 +663,13 @@
     const hiddenCount = shifts.length - 2;
 
     return `
-      <div class="pfc-shift-wrap" style="display: flex; flex-direction: column; gap: 0.2rem; min-width: 290px; max-width: 440px;">
-        <div style="font-size: 0.775rem; color: var(--text-primary); font-weight: 800; display: flex; align-items: center; justify-content: space-between; gap: 0.4rem; margin-bottom: 0.2rem;">
+      <div class="pfc-shift-wrap" style="display: flex; flex-direction: column; gap: 0.15rem; min-width: 290px; max-width: 440px;">
+        <div style="font-size: 0.7rem; color: var(--text-muted, #94a3b8); font-weight: 800; display: flex; align-items: center; justify-content: space-between; gap: 0.4rem; margin-bottom: 0.15rem;">
           <span>📋 Tổng hợp ${shifts.length} ca có phát sinh &amp; ghi nhận:</span>
           <button type="button" class="btn-link"
             onclick="window.openPlanFactCheckShiftModal(decodeURIComponent('${encModel}'), decodeURIComponent('${encStage}'), decodeURIComponent('${encSpec}'))"
             title="Mở bảng chi tiết tất cả các ca (Popup Modal)"
-            style="color: var(--color-plan-blue, #0000ff); font-size: 0.775rem; font-weight: 800; cursor: pointer; text-decoration: underline; background: none; border: none; padding: 0;">
+            style="color: #38bdf8; font-size: 0.7rem; font-weight: 800; cursor: pointer; text-decoration: underline; background: none; border: none; padding: 0;">
             Bảng chi tiết ↗
           </button>
         </div>
@@ -677,25 +677,25 @@
         ${topShifts.map(renderPfcShiftCardHtml).join('')}
 
         ${(shifts.length > 2 && !isExpanded) ? `
-          <div style="display: flex; align-items: center; gap: 0.35rem; margin-top: 0.2rem;">
+          <div style="display: flex; align-items: center; gap: 0.35rem; margin-top: 0.15rem;">
             <button type="button" class="btn btn-xs btn-secondary"
               onclick="window.togglePlanFactCheckModelExpand('${m.modelKey}')"
-              style="font-size: 0.75rem; padding: 0.2rem 0.55rem; background: var(--bg-card); border: 1px dashed #cbd5e1; color: var(--text-primary); font-weight: 800;">
+              style="font-size: 0.68rem; padding: 0.15rem 0.5rem; background: rgba(147, 51, 234, 0.16); border: 1px dashed rgba(168, 85, 247, 0.5); color: #c084fc; font-weight: 800;">
               🔍 Xem thêm +${hiddenCount} ca khác trong kỳ...
             </button>
             <button type="button" class="btn btn-xs btn-secondary"
               onclick="window.openPlanFactCheckShiftModal(decodeURIComponent('${encModel}'), decodeURIComponent('${encStage}'), decodeURIComponent('${encSpec}'))"
-              style="font-size: 0.75rem; padding: 0.2rem 0.55rem; background: #e0f2fe; border: 1px solid #0284c7; color: var(--color-plan-blue, #0000ff); font-weight: 800;">
+              style="font-size: 0.68rem; padding: 0.15rem 0.45rem; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.4); color: #38bdf8; font-weight: 800;">
               📋 Popup ↗
             </button>
           </div>
         ` : ''}
 
         ${(shifts.length > 2 && isExpanded) ? `
-          <div style="margin-top: 0.2rem;">
+          <div style="margin-top: 0.15rem;">
             <button type="button" class="btn btn-xs btn-secondary"
               onclick="window.togglePlanFactCheckModelExpand('${m.modelKey}')"
-              style="font-size: 0.75rem; padding: 0.2rem 0.55rem; background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); font-weight: 700;">
+              style="font-size: 0.68rem; padding: 0.15rem 0.5rem; color: #94a3b8;">
               ▲ Thu gọn danh sách ca
             </button>
           </div>
@@ -732,24 +732,24 @@
 
       startBadge = `
         ${prodStartHtml}
-        <div style="margin-bottom: 0.3rem;">
-          <span class="badge" style="background: var(--bg-card); border: 1.5px solid #ef4444; color: var(--color-alert-red, #ff0000); font-weight: 800; font-size: 0.8rem; padding: 0.2rem 0.55rem; display: inline-flex; align-items: center; gap: 0.25rem;">
+        <div style="margin-bottom: 0.25rem;">
+          <span class="badge" style="background: rgba(239, 68, 68, 0.18); border: 1px solid #ef4444; color: #fca5a5; font-weight: 800; font-size: 0.72rem; padding: 0.15rem 0.5rem; display: inline-flex; align-items: center; gap: 0.25rem;">
             <span>🚨 Bắt đầu âm:</span>
-            <span style="color: var(--text-primary); text-decoration: underline; font-weight: 900;">${dateShort}</span>
-            <span style="color: var(--color-alert-red, #ff0000); font-weight: 900;">(-${firstGapStr})</span>
+            <span style="color: #ffffff; text-decoration: underline;">${dateShort}</span>
+            <span>(-${firstGapStr})</span>
           </span>
         </div>
-        <div style="font-size: 0.775rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 0.2rem; font-weight: 700;">
+        <div style="font-size: 0.675rem; color: #94a3b8; display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 0.2rem;">
           <span>⏳ Kéo dài <strong>${m.daysSinceFirstDeficit} ngày</strong></span>
           <span>•</span>
-          <span style="color: var(--color-alert-red, #ff0000); font-weight: 800;">${m.deficitDaysCount} ngày bị âm</span>
+          <span style="color: #f87171; font-weight: 700;">${m.deficitDaysCount} ngày bị âm</span>
         </div>
         ${m.hasPriorDeficit ? `
-          <div style="margin-bottom: 0.3rem; font-size: 0.775rem; color: var(--text-primary); background: var(--bg-card-header, #fff3cc); border: 1px solid #f59e0b; border-left: 3px solid #f59e0b; padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: 700;">
-            <span>⚠️ Tuần trước đẩy sang: <strong style="color: var(--color-alert-red, #ff0000);">-${Math.abs(m.priorGap).toLocaleString('vi-VN')}</strong> pcs</span>
+          <div style="margin-bottom: 0.25rem; font-size: 0.675rem; color: #fbbf24; background: rgba(245, 158, 11, 0.1); border-left: 2px solid #f59e0b; padding: 0.1rem 0.35rem; border-radius: 2px;">
+            <span>⚠️ Tuần trước đẩy sang: <strong>-${Math.abs(m.priorGap).toLocaleString('vi-VN')}</strong> pcs</span>
           </div>
         ` : ''}
-        <div style="font-size: 0.775rem; margin-bottom: 0.25rem;">
+        <div style="font-size: 0.68rem; margin-bottom: 0.25rem;">
           ${periodGapHtml}
         </div>
       `;
@@ -758,19 +758,19 @@
       const dateShort = firstGapObj ? firstGapObj.dateShort : (m.firstGapDate ? formatPfcDateShort(m.firstGapDate) : '—');
       startBadge = `
         ${prodStartHtml}
-        <div style="margin-bottom: 0.3rem;">
-          <span class="badge" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: var(--color-plan-blue, #0000ff); font-weight: 800; font-size: 0.8rem; padding: 0.2rem 0.55rem;">
+        <div style="margin-bottom: 0.25rem;">
+          <span class="badge" style="background: rgba(16, 185, 129, 0.18); border: 1px solid #10b981; color: #6ee7b7; font-weight: 800; font-size: 0.72rem; padding: 0.15rem 0.5rem;">
             🟢 Bắt đầu vượt: ${dateShort}
           </span>
         </div>
-        <div style="font-size: 0.775rem; color: var(--color-plan-blue, #0000ff); font-weight: 800; margin-bottom: 0.25rem;">
-          Vượt +${m.gapTotal.toLocaleString('vi-VN')} pcs
+        <div style="font-size: 0.675rem; color: #34d399; font-weight: 700; margin-bottom: 0.25rem;">
+          Vượt ${m.gapTotal.toLocaleString('vi-VN')} pcs
         </div>
       `;
     } else {
       startBadge = `
         ${prodStartHtml}
-        <div style="font-size: 0.8rem; color: var(--text-primary); font-weight: 700; margin-bottom: 0.25rem;">
+        <div style="font-size: 0.72rem; color: #94a3b8; font-weight: 600; margin-bottom: 0.25rem;">
           ✓ Cân bằng kế hoạch
         </div>
       `;
@@ -786,7 +786,7 @@
         <div style="margin-top: 0.35rem;">
           <button type="button" class="btn btn-xs ${btnClass}"
             onclick="window.handleToggleModelDailyTimeline('${escapePfcAttr(m.modelKey)}')"
-            style="font-size: 0.75rem; padding: 0.25rem 0.55rem; font-weight: 800; width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.25rem; background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary);">
+            style="font-size: 0.68rem; padding: 0.2rem 0.45rem; font-weight: 700; width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
             <span>📈</span><span>${btnLabel}</span>
           </button>
         </div>
@@ -812,11 +812,11 @@
       const isPos = t.gap > 0;
       const isZero = t.gap === 0;
 
-      const gapColor = isNeg ? '#ff0000' : (isPos ? '#0000ff' : '#000000');
+      const gapColor = isNeg ? '#f87171' : (isPos ? '#34d399' : 'var(--text-muted, #94a3b8)');
       const gapSign = isPos ? '+' : '';
       const gapText = isZero ? '0' : `${gapSign}${t.gap.toLocaleString('vi-VN')}`;
 
-      const cumColor = t.cumGap < 0 ? '#ff0000' : (t.cumGap > 0 ? '#0000ff' : '#000000');
+      const cumColor = t.cumGap < 0 ? '#f87171' : (t.cumGap > 0 ? '#34d399' : '#94a3b8');
       const cumSign = t.cumGap > 0 ? '+' : '';
       const cumText = t.cumGap === 0 ? '0' : `${cumSign}${t.cumGap.toLocaleString('vi-VN')}`;
 
@@ -1020,27 +1020,27 @@
     let subHtml = '';
 
     if (m.gapTotal < 0) {
-      badgeHtml = `<span class="badge" style="background: var(--bg-card); border: 1.5px solid #ef4444; color: var(--color-alert-red, #ff0000); font-weight: 800; font-size: 0.825rem; padding: 0.25rem 0.6rem;">⚠️ Thiếu ${Math.abs(m.gapTotal).toLocaleString('vi-VN')}</span>`;
+      badgeHtml = `<span class="badge" style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #f87171; font-weight: 800; font-size: 0.75rem; padding: 0.25rem 0.6rem;">⚠️ Thiếu ${Math.abs(m.gapTotal).toLocaleString('vi-VN')}</span>`;
       if (m.shiftsWithReasonsCount > 0) {
         subHtml = `
-          <div style="font-size: 0.75rem; color: var(--text-primary); font-weight: 800; margin-top: 0.25rem; display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
+          <div style="font-size: 0.675rem; color: #38bdf8; font-weight: 800; margin-top: 0.25rem; display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
             <span>✓ Đã giải trình</span>
-            <span style="background: #e0f2fe; color: var(--color-plan-blue, #0000ff); border: 1px solid #0284c7; padding: 0.05rem 0.35rem; border-radius: 9999px;">${m.shiftsWithReasonsCount}</span>
+            <span style="background: rgba(56, 189, 248, 0.2); padding: 0.05rem 0.35rem; border-radius: 9999px;">${m.shiftsWithReasonsCount}</span>
           </div>
         `;
       } else {
-        subHtml = `<div style="font-size: 0.75rem; color: #d97706; font-weight: 800; margin-top: 0.25rem;">⚡ Cần giải trình</div>`;
+        subHtml = `<div style="font-size: 0.675rem; color: #fbbf24; font-weight: 800; margin-top: 0.25rem;">⚡ Cần giải trình</div>`;
       }
     } else if (m.gapTotal > 0) {
-      badgeHtml = `<span class="badge" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: var(--color-plan-blue, #0000ff); font-weight: 800; font-size: 0.825rem; padding: 0.25rem 0.6rem;">✅ Vượt +${m.gapTotal.toLocaleString('vi-VN')}</span>`;
-      subHtml = `<div style="font-size: 0.75rem; color: var(--color-plan-blue, #0000ff); font-weight: 800; margin-top: 0.25rem;">Vượt tiến độ</div>`;
+      badgeHtml = `<span class="badge" style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #34d399; font-weight: 800; font-size: 0.75rem; padding: 0.25rem 0.6rem;">✅ Vượt +${m.gapTotal.toLocaleString('vi-VN')}</span>`;
+      subHtml = `<div style="font-size: 0.675rem; color: #34d399; font-weight: 700; margin-top: 0.25rem;">Vượt tiến độ</div>`;
     } else {
       if (m.planTotal > 0) {
-        badgeHtml = `<span class="badge" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: var(--color-plan-blue, #0000ff); font-weight: 800; font-size: 0.825rem; padding: 0.25rem 0.6rem;">✓ Đạt 100%</span>`;
-        subHtml = `<div style="font-size: 0.75rem; color: var(--text-primary); font-weight: 700; margin-top: 0.25rem;">Cân bằng kế hoạch</div>`;
+        badgeHtml = `<span class="badge" style="background: rgba(59, 130, 246, 0.2); border: 1px solid #3b82f6; color: #60a5fa; font-weight: 800; font-size: 0.75rem; padding: 0.25rem 0.6rem;">✓ Đạt 100%</span>`;
+        subHtml = `<div style="font-size: 0.675rem; color: #60a5fa; font-weight: 700; margin-top: 0.25rem;">Cân bằng kế hoạch</div>`;
       } else {
-        badgeHtml = `<span class="badge" style="background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); font-size: 0.8rem; font-weight: 700;">Chưa triển khai</span>`;
-        subHtml = `<div style="font-size: 0.75rem; color: var(--text-primary); margin-top: 0.25rem;">Không có plan</div>`;
+        badgeHtml = `<span class="badge" style="background: rgba(148, 163, 184, 0.12); color: #94a3b8; font-size: 0.72rem;">Chưa triển khai</span>`;
+        subHtml = `<div style="font-size: 0.675rem; color: #64748b; margin-top: 0.25rem;">Không có plan</div>`;
       }
     }
 
@@ -1101,7 +1101,7 @@
         table1RowsHtml = pagedItems.map((m, idx) => {
           const rowNum = startIdx + idx + 1;
           const stg = getPfcStageStyle(m.stage);
-          const gapColor = m.gapTotal < 0 ? '#ff0000' : (m.gapTotal > 0 ? '#0000ff' : '#000000');
+          const gapColor = m.gapTotal < 0 ? '#f87171' : (m.gapTotal > 0 ? '#34d399' : 'var(--text-muted, #94a3b8)');
           const gapSign = m.gapTotal > 0 ? '+' : '';
           const gapStr = m.gapTotal !== 0 ? `${gapSign}${m.gapTotal.toLocaleString('vi-VN')}` : '0';
           const encModel = encodeURIComponent(m.productName1C);
@@ -1116,19 +1116,19 @@
                   <span>${stg.icon}</span><span>${escapePfcHtml(m.stage)}</span>
                 </span>
               </td>
-              <td style="white-space: nowrap; font-weight: 850; color: var(--text-primary); font-size: 0.875rem;">
+              <td style="white-space: nowrap; font-weight: 800; color: var(--text-primary, #f8fafc); font-size: 0.85rem;">
                 ${escapePfcHtml(m.groupModel || '—')}
               </td>
               <td style="min-width: 260px; max-width: 380px;">
-                <div class="font-mono font-bold" style="font-size: 0.85rem; color: var(--text-primary); word-break: break-all; line-height: 1.45;">
+                <div class="font-mono font-bold" style="font-size: 0.775rem; color: #93c5fd; word-break: break-all; line-height: 1.45;">
                   ${escapePfcHtml(m.productName1C)}
                 </div>
-                ${m.specCode ? `<div style="font-size: 0.75rem; color: var(--text-primary); font-weight: 700; margin-top: 0.1rem;">Spec: ${escapePfcHtml(m.specCode.replace(/^0+/, '') || m.specCode)}</div>` : ''}
+                ${m.specCode ? `<div style="font-size: 0.675rem; color: #38bdf8; margin-top: 0.1rem;">Spec: ${escapePfcHtml(m.specCode.replace(/^0+/, '') || m.specCode)}</div>` : ''}
               </td>
-              <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.875rem;">
+              <td class="font-mono" style="text-align: right; font-weight: 800; color: #60a5fa; font-size: 0.875rem;">
                 ${m.planTotal.toLocaleString('vi-VN')}
               </td>
-              <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary) !important; font-size: 0.875rem;">
+              <td class="font-mono" style="text-align: right; font-weight: 800; color: #34d399; font-size: 0.875rem;">
                 ${m.factTotal.toLocaleString('vi-VN')}
               </td>
               <td class="font-mono" style="text-align: right; font-weight: 900; color: ${gapColor}; font-size: 0.9rem;">
@@ -1137,7 +1137,7 @@
               <td style="vertical-align: middle; padding: 0.4rem 0.65rem; min-width: 175px;">
                 ${renderPfcStartGapCellHtml(m)}
               </td>
-              <td style="vertical-align: middle; padding: 0.4rem 0.65rem; ${m.gapTotal < 0 ? 'border: 1.5px solid #ef4444 !important; border-radius: 4px;' : ''}">
+              <td style="vertical-align: middle; padding: 0.4rem 0.65rem;">
                 ${renderPfcModelReasonsCellHtml(m)}
               </td>
               <td style="text-align: center; vertical-align: middle; padding: 0.4rem 0.5rem;">
@@ -1181,7 +1181,7 @@
           const rowNum = startIdx + idx + 1;
           const stg = getPfcStageStyle(log.workcell || log.process);
           const gapVal = log._gapVal;
-          const gapColor = gapVal < 0 ? '#ff0000' : (gapVal > 0 ? '#0000ff' : '#000000');
+          const gapColor = gapVal < 0 ? '#f87171' : (gapVal > 0 ? '#34d399' : 'var(--text-muted, #94a3b8)');
           const gapSign = gapVal > 0 ? '+' : '';
           const shiftBadge = log._shiftNorm === 'day' ?
             `<span class="badge" style="background: rgba(245, 158, 11, 0.16); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); font-weight: 800; font-size: 0.7rem;">☀️ Ngày</span>` :
@@ -1199,18 +1199,18 @@
                   ${stg.icon} ${escapePfcHtml(log.workcell || log.process || '—')}
                 </span>
               </td>
-              <td style="text-align: center; white-space: nowrap; font-weight: 850; color: var(--text-primary); font-size: 0.85rem;">
+              <td style="text-align: center; white-space: nowrap; font-weight: 800; color: #38bdf8; font-size: 0.785rem;">
                 ${escapePfcHtml(log.line || '—')}
               </td>
               <td style="min-width: 250px;">
-                <div class="font-mono font-bold" style="font-size: 0.85rem; color: var(--text-primary); word-break: break-all;">
+                <div class="font-mono font-bold" style="font-size: 0.775rem; color: #93c5fd; word-break: break-all;">
                   ${escapePfcHtml(log.model || '—')}
                 </div>
               </td>
-              <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.825rem;">
+              <td class="font-mono" style="text-align: right; font-weight: 800; color: #60a5fa; font-size: 0.825rem;">
                 ${Math.round(log._planVal).toLocaleString('vi-VN')}
               </td>
-              <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary) !important; font-size: 0.825rem;">
+              <td class="font-mono" style="text-align: right; font-weight: 800; color: #34d399; font-size: 0.825rem;">
                 ${Math.round(log._factVal).toLocaleString('vi-VN')}
               </td>
               <td class="font-mono" style="text-align: right; font-weight: 900; color: ${gapColor}; font-size: 0.85rem;">
@@ -1349,33 +1349,33 @@
                         const isNeg = t.gap < 0;
                         const isPos = t.gap > 0;
                         const isZero = t.gap === 0;
-                        const gapColor = isNeg ? '#ff0000' : (isPos ? '#0000ff' : '#000000');
+                        const gapColor = isNeg ? '#f87171' : (isPos ? '#34d399' : '#94a3b8');
                         const gapSign = isPos ? '+' : '';
                         const gapText = isZero ? '0' : `${gapSign}${t.gap.toLocaleString('vi-VN')}`;
-                        const cumColor = t.cumGap < 0 ? '#ff0000' : (t.cumGap > 0 ? '#0000ff' : '#000000');
+                        const cumColor = t.cumGap < 0 ? '#f87171' : (t.cumGap > 0 ? '#34d399' : '#94a3b8');
                         const cumSign = t.cumGap > 0 ? '+' : '';
                         const cumText = t.cumGap === 0 ? '0' : `${cumSign}${t.cumGap.toLocaleString('vi-VN')}`;
 
                         let statusDesc = '✓ Đúng kế hoạch';
                         if (t.dateIso === md.firstDeficitDate) {
-                          statusDesc = `<span class="badge" style="background: rgba(239, 68, 68, 0.25); border: 1px solid #ef4444; color: var(--color-alert-red, #ff0000); font-weight: 800; font-size: 0.72rem;">🚨 Bắt đầu thiếu hụt (${gapText})</span>`;
+                          statusDesc = `<span class="badge" style="background: rgba(239, 68, 68, 0.25); border: 1px solid #ef4444; color: #fca5a5; font-weight: 800; font-size: 0.72rem;">🚨 Bắt đầu thiếu hụt (${gapText})</span>`;
                         } else if (t.dateIso === md.firstCumDeficitDate && md.firstCumDeficitDate !== md.firstDeficitDate) {
-                          statusDesc = `<span class="badge" style="background: rgba(239, 68, 68, 0.2); border: 1px dashed #ef4444; color: var(--color-alert-red, #ff0000); font-weight: 800; font-size: 0.72rem;">📉 Lũy kế chuyển sang âm (${cumText})</span>`;
+                          statusDesc = `<span class="badge" style="background: rgba(239, 68, 68, 0.2); border: 1px dashed #ef4444; color: #fca5a5; font-weight: 800; font-size: 0.72rem;">📉 Lũy kế chuyển sang âm (${cumText})</span>`;
                         } else if (isNeg) {
-                          statusDesc = `<span style="color: var(--color-alert-red, #ff0000); font-weight: 800;">📉 Thiếu ${Math.abs(t.gap).toLocaleString('vi-VN')} pcs</span>`;
+                          statusDesc = `<span style="color: #f87171; font-weight: 700;">📉 Thiếu ${Math.abs(t.gap).toLocaleString('vi-VN')} pcs</span>`;
                         } else if (isPos) {
                           statusDesc = t.cumGap < 0 ?
-                            `<span style="color: var(--color-plan-blue, #0000ff); font-weight: 800;">📈 Chạy bù +${t.gap.toLocaleString('vi-VN')}</span>` :
-                            `<span style="color: var(--color-plan-blue, #0000ff); font-weight: 800;">🟢 Vượt +${t.gap.toLocaleString('vi-VN')} pcs</span>`;
+                            `<span style="color: #34d399; font-weight: 700;">📈 Chạy bù +${t.gap.toLocaleString('vi-VN')}</span>` :
+                            `<span style="color: #34d399; font-weight: 700;">🟢 Vượt +${t.gap.toLocaleString('vi-VN')} pcs</span>`;
                         } else if (t.plan === 0 && t.fact === 0) {
-                          statusDesc = `<span style="color: var(--text-primary);">— Không có plan</span>`;
+                          statusDesc = `<span style="color: #64748b;">— Không có plan</span>`;
                         }
 
                         let shiftsText = '—';
                         if (t.shifts && t.shifts.length > 0) {
                           shiftsText = t.shifts.map(s => {
                             const shIcon = s._shiftNorm === 'day' ? '☀️ Ngày' : '🌙 Đêm';
-                            const sGapColor = s._gapVal < 0 ? '#ff0000' : (s._gapVal > 0 ? '#0000ff' : '#000000');
+                            const sGapColor = s._gapVal < 0 ? '#f87171' : (s._gapVal > 0 ? '#34d399' : '#94a3b8');
                             const sGapSign = s._gapVal > 0 ? '+' : '';
                             return `<div><strong>[${escapePfcHtml(s.line || 'Line')}] ${shIcon}:</strong> <span class="font-mono font-bold" style="color: ${sGapColor};">(${sGapSign}${Math.round(s._gapVal).toLocaleString('vi-VN')})</span>${s.reason ? ` — ${escapePfcHtml(s.reason)}` : ''}</div>`;
                           }).join('');
@@ -1385,9 +1385,9 @@
                           <tr class="hover-row">
                             <td style="text-align: center; color: var(--text-muted, #94a3b8); font-size: 0.725rem;">${tIdx + 1}</td>
                             <td class="font-mono font-bold" style="text-align: center; white-space: nowrap; font-size: 0.775rem;">${t.dateFormatted}</td>
-                            <td style="text-align: center; font-size: 0.75rem; font-weight: 700; color: var(--text-primary);">${t.dayOfWeek}</td>
-                            <td class="font-mono" style="text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;">${t.plan.toLocaleString('vi-VN')}</td>
-                            <td class="font-mono" style="text-align: right; color: var(--text-primary) !important; font-weight: 800;">${t.fact.toLocaleString('vi-VN')}</td>
+                            <td style="text-align: center; font-size: 0.75rem; font-weight: 700; color: #94a3b8;">${t.dayOfWeek}</td>
+                            <td class="font-mono" style="text-align: right; color: #60a5fa; font-weight: 800;">${t.plan.toLocaleString('vi-VN')}</td>
+                            <td class="font-mono" style="text-align: right; color: #34d399; font-weight: 800;">${t.fact.toLocaleString('vi-VN')}</td>
                             <td class="font-mono font-bold" style="text-align: right; color: ${gapColor};">${gapText}</td>
                             <td class="font-mono font-bold" style="text-align: right; color: ${cumColor}; background: rgba(255, 255, 255, 0.03);">${cumText}</td>
                             <td style="vertical-align: middle;">${statusDesc}</td>
@@ -1652,65 +1652,65 @@
               <table class="datamass-table" style="width: 100%; border-collapse: separate; border-spacing: 0;">
                 <thead>
                   <tr>
-                    <th style="width: 45px; text-align: center; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 850 !important; border: 1px solid var(--border-glass) !important;">STT</th>
-                    <th style="width: 120px; text-align: center; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 850 !important; border: 1px solid var(--border-glass) !important;">CÔNG ĐOẠN</th>
-                    <th style="min-width: 140px; text-align: left; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 850 !important; border: 1px solid var(--border-glass) !important;">GROUP MODEL</th>
-                    <th style="min-width: 270px; text-align: left; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 850 !important; border: 1px solid var(--border-glass) !important;">MODEL (MÃ 1C)</th>
-                    <th style="width: 125px; text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-weight: 850 !important; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass) !important;">
+                    <th style="width: 45px; text-align: center;">STT</th>
+                    <th style="width: 120px; text-align: center;">CÔNG ĐOẠN</th>
+                    <th style="min-width: 140px; text-align: left;">GROUP MODEL</th>
+                    <th style="min-width: 270px; text-align: left;">MODEL (MÃ 1C)</th>
+                    <th style="width: 125px; text-align: right; color: #60a5fa;">
                       KẾ HOẠCH (PLAN)<br>
-                      <span style="font-size: 0.725rem; font-weight: 700; color: var(--text-primary) !important;">(${fromFormatted} ➜ ${toFormatted})</span>
+                      <span style="font-size: 0.68rem; font-weight: 600; color: #cbd5e1;">(${fromFormatted} ➜ ${toFormatted})</span>
                     </th>
-                    <th style="width: 125px; text-align: right; color: var(--text-primary) !important; font-weight: 850 !important; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass) !important;">
+                    <th style="width: 125px; text-align: right; color: #34d399;">
                       THỰC TẾ (FACT)<br>
-                      <span style="font-size: 0.725rem; font-weight: 700; color: var(--text-primary) !important;">(${fromFormatted} ➜ ${toFormatted})</span>
+                      <span style="font-size: 0.68rem; font-weight: 600; color: #cbd5e1;">(${fromFormatted} ➜ ${toFormatted})</span>
                     </th>
-                    <th style="width: 130px; text-align: right; color: var(--text-primary) !important; font-weight: 850 !important; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass) !important;">
+                    <th style="width: 130px; text-align: right; color: #f87171;">
                       CHÊNH LỆCH (GAP)<br>
-                      <span style="font-size: 0.725rem; font-weight: 700; color: var(--text-primary) !important;">(Kỳ đã chọn)</span>
+                      <span style="font-size: 0.68rem; font-weight: 600; color: #cbd5e1;">(Kỳ đã chọn)</span>
                     </th>
-                    <th style="min-width: 185px; max-width: 230px; text-align: left; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass) !important; color: var(--text-primary) !important; font-weight: 850 !important;">
+                    <th style="min-width: 185px; max-width: 230px; text-align: left; background: rgba(245, 158, 11, 0.12); border-left: 1px solid rgba(245, 158, 11, 0.3);">
                       NGÀY BẮT ĐẦU GAP &amp; LŨY KẾ<br>
-                      <span style="font-size: 0.725rem; font-weight: 700; color: var(--text-primary) !important;">(Lịch sử từ 22/09/2025)</span>
+                      <span style="font-size: 0.68rem; font-weight: 600; color: #fbbf24;">(Lịch sử từ 22/09/2025)</span>
                     </th>
-                    <th style="min-width: 320px; max-width: 440px; text-align: left; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass) !important; border-left: 2px solid #ef4444 !important; color: var(--color-alert-red, #ff0000) !important; font-weight: 850 !important;">
+                    <th style="min-width: 320px; max-width: 440px; text-align: left; background: rgba(239, 68, 68, 0.12); border-left: 2px solid #ef4444;">
                       NGUYÊN NHÂN ÂM (THEO CA &amp; NGÀY)<br>
-                      <span style="font-size: 0.75rem; font-weight: 700; color: var(--color-alert-red, #ff0000);">(Cập nhật từ Sheet Mass-History)</span>
+                      <span style="font-size: 0.68rem; font-weight: 600; color: #fca5a5;">(Cập nhật từ Sheet Mass-History)</span>
                     </th>
-                    <th style="width: 145px; text-align: center; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass) !important; color: var(--text-primary) !important; font-weight: 850 !important;">
+                    <th style="width: 145px; text-align: center; background: rgba(56, 189, 248, 0.12); border-left: 1px solid rgba(56, 189, 248, 0.3);">
                       ĐÁNH GIÁ<br>
-                      <span style="font-size: 0.725rem; font-weight: 700; color: var(--text-primary) !important;">(Tiến độ &amp; Trạng thái)</span>
+                      <span style="font-size: 0.68rem; font-weight: 600; color: #7dd3fc;">(Tiến độ &amp; Trạng thái)</span>
                     </th>
-                    <th style="width: 105px; text-align: center; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass) !important; color: var(--text-primary) !important; font-weight: 850 !important;">Thao Tác</th>
+                    <th style="width: 105px; text-align: center;">Thao Tác</th>
                   </tr>
 
                   <!-- HÀNG TỔNG CỘNG ĐÓNG BĂNG TRÊN ĐẦU BẢNG -->
-                  <tr class="sticky-grand-total-row" style="position: sticky; top: 41px; z-index: 20; background: var(--bg-card-header, #fff3cc) !important; border-bottom: 2px solid #cbd5e1 !important;">
-                    <th colspan="4" style="text-align: right; padding: 0.65rem 1rem; font-size: 0.9rem; font-weight: 850; color: var(--text-primary) !important; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass) !important;">
+                  <tr class="sticky-grand-total-row" style="position: sticky; top: 41px; z-index: 20; background: #0f172a; border-bottom: 2px solid #3b82f6;">
+                    <th colspan="4" style="text-align: right; padding: 0.65rem 1rem; font-size: 0.85rem; font-weight: 800; color: #f8fafc;">
                       TỔNG CỘNG (${models.length.toLocaleString('vi-VN')} MODEL KHỚP LỌC):
                     </th>
-                    <th class="font-mono" style="text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-size: 1rem; font-weight: 900; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass) !important;">
+                    <th class="font-mono" style="text-align: right; color: #60a5fa; font-size: 0.95rem; font-weight: 900;">
                       ${kpi.totalPlan.toLocaleString('vi-VN')}
                     </th>
-                    <th class="font-mono" style="text-align: right; color: var(--text-primary) !important; font-size: 1rem; font-weight: 900; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass) !important;">
+                    <th class="font-mono" style="text-align: right; color: #34d399; font-size: 0.95rem; font-weight: 900;">
                       ${kpi.totalFact.toLocaleString('vi-VN')}
                     </th>
-                    <th class="font-mono" style="text-align: right; font-size: 1rem; font-weight: 900; color: ${kpi.totalGap < 0 ? '#ff0000' : (kpi.totalGap > 0 ? '#0000ff' : '#000000')} !important; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass) !important;">
+                    <th class="font-mono" style="text-align: right; font-size: 0.95rem; font-weight: 900; color: ${kpi.totalGap < 0 ? '#f87171' : (kpi.totalGap > 0 ? '#34d399' : '#94a3b8')};">
                       ${kpi.totalGap > 0 ? '+' : ''}${kpi.totalGap.toLocaleString('vi-VN')}
                     </th>
-                    <th style="text-align: left; font-size: 0.8rem; color: var(--text-primary); padding: 0.45rem 0.65rem; font-weight: 700; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass) !important;">
-                      📈 <strong style="color: var(--color-alert-red, #ff0000);">${kpi.deficitModels}</strong> model có gap âm
+                    <th style="text-align: left; font-size: 0.72rem; color: #fbbf24; padding: 0.45rem 0.65rem;">
+                      📈 ${kpi.deficitModels} model có gap âm
                     </th>
-                    <th style="text-align: left; font-size: 0.825rem; color: var(--text-primary); padding: 0.45rem 0.75rem; font-weight: 700; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass) !important;">
+                    <th style="text-align: left; font-size: 0.775rem; color: #94a3b8; padding: 0.45rem 0.75rem; font-weight: 700;">
                       ${kpi.deficitModels > 0 ?
-                        `<span style="color: var(--color-alert-red, #ff0000); font-weight: 800;">⚠️ ${kpi.deficitModels} Model thiếu hụt</span> (${kpi.explainedModels} đã có lý do)` :
-                        `<span style="color: var(--color-plan-blue, #0000ff); font-weight: 800;">✅ Tất cả đạt tiến độ</span>`}
+                        `<span style="color: #fca5a5; font-weight: 800;">⚠️ ${kpi.deficitModels} Model thiếu hụt</span> (${kpi.explainedModels} đã có lý do)` :
+                        `<span style="color: #34d399; font-weight: 800;">✅ Tất cả đạt tiến độ</span>`}
                     </th>
-                    <th style="text-align: center; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass) !important;">
-                      <span class="badge" style="font-weight: 800; font-size: 0.8rem; background: ${kpi.totalGap < 0 ? '#ffffff' : '#e0f2fe'}; border: 1.5px solid ${kpi.totalGap < 0 ? '#ef4444' : '#0284c7'}; color: ${kpi.totalGap < 0 ? '#ff0000' : '#0000ff'};">
+                    <th style="text-align: center;">
+                      <span class="badge ${kpi.totalGap < 0 ? 'badge-red' : 'badge-green'}" style="font-weight: 800; font-size: 0.725rem;">
                         ${kpi.totalGap < 0 ? `⚠️ Thiếu ${Math.abs(kpi.totalGap).toLocaleString('vi-VN')}` : `✅ Đạt ${kpi.totalPlan > 0 ? Math.round(kpi.totalFact / kpi.totalPlan * 100) + '%' : '100%'}`}
                       </span>
                     </th>
-                    <th style="background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass) !important;"></th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1719,20 +1719,20 @@
               </table>
             ` : `
               <!-- CHẾ ĐỘ 2: BẢNG CHI TIẾT TỪNG NGÀY & CA (NHẬT KÝ SẢN XUẤT) -->
-              <table class="datamass-table" style="width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.85rem;">
+              <table class="datamass-table" style="width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.785rem;">
                 <thead>
                   <tr>
-                    <th style="width: 45px; text-align: center; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 850 !important; border: 1px solid var(--border-glass) !important;">STT</th>
-                    <th style="width: 95px; text-align: center; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 850 !important; border: 1px solid var(--border-glass) !important;">Ngày Làm</th>
-                    <th style="width: 75px; text-align: center; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 850 !important; border: 1px solid var(--border-glass) !important;">Ca</th>
-                    <th style="width: 110px; text-align: center; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 850 !important; border: 1px solid var(--border-glass) !important;">Công Đoạn</th>
-                    <th style="width: 85px; text-align: center; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 850 !important; border: 1px solid var(--border-glass) !important;">Line SX</th>
-                    <th style="min-width: 260px; text-align: left; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 850 !important; border: 1px solid var(--border-glass) !important;">Model (Mã 1C)</th>
-                    <th style="width: 95px; text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-weight: 850 !important; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass) !important;">KH (Plan)</th>
-                    <th style="width: 95px; text-align: right; color: var(--text-primary) !important; font-weight: 850 !important; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass) !important;">TT (Fact)</th>
-                    <th style="width: 95px; text-align: right; color: var(--text-primary) !important; font-weight: 850 !important; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass) !important;">Chênh Lệch</th>
-                    <th style="min-width: 260px; text-align: left; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 850 !important; border: 1px solid var(--border-glass) !important;">Nguyên Nhân Cụ Thể (Mass-History)</th>
-                    <th style="min-width: 140px; text-align: left; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 850 !important; border: 1px solid var(--border-glass) !important;">Chất Lượng / Khắc Phục</th>
+                    <th style="width: 45px; text-align: center;">STT</th>
+                    <th style="width: 95px; text-align: center;">Ngày Làm</th>
+                    <th style="width: 75px; text-align: center;">Ca</th>
+                    <th style="width: 110px; text-align: center;">Công Đoạn</th>
+                    <th style="width: 85px; text-align: center;">Line SX</th>
+                    <th style="min-width: 260px; text-align: left;">Model (Mã 1C)</th>
+                    <th style="width: 85px; text-align: right; color: #60a5fa;">KH (Plan)</th>
+                    <th style="width: 85px; text-align: right; color: #34d399;">TT (Fact)</th>
+                    <th style="width: 90px; text-align: right; color: #f87171;">Chênh Lệch</th>
+                    <th style="min-width: 260px; text-align: left;">Nguyên Nhân Cụ Thể (Mass-History)</th>
+                    <th style="min-width: 140px; text-align: left;">Chất Lượng / Khắc Phục</th>
                   </tr>
                 </thead>
                 <tbody>

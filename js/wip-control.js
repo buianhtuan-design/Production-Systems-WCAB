@@ -82,12 +82,12 @@
 
   // Định nghĩa danh mục kho Stock 1C hỗ trợ mở rộng cột linh hoạt
   const STOCK_WAREHOUSES_DEF = [
-    { id: 'all', key: 'ALL', label: 'Tổng Kho', icon: '🌐', shortName: '🌐 Tổng Kho', title: 'Tổng tồn cuối tất cả kho trong sheet Inventory 1C', color: '#000000' },
-    { id: 'whAssembly', key: 'WH ASSEMBLY_VTP', label: 'WH ASSEMBLY_VTP', icon: '🏭', shortName: '🏭 WH ASM', title: 'Kho WH ASSEMBLY_VTP', color: '#000000' },
-    { id: 'whPkg', key: 'PKG_VTP', label: 'PKG_VTP', icon: '📦', shortName: '📦 PKG', title: 'Kho PKG_VTP', color: '#000000' },
-    { id: 'whRepairSemi', key: 'Repair of semi-finished products_VTP', label: 'Repair Semi-FG', icon: '🔧', shortName: '🔧 Repair Semi', title: 'Kho Repair of semi-finished products_VTP (Bán thành phẩm sửa chữa)', color: '#000000' },
-    { id: 'whRepairBoard', key: 'Repair of board_VTP', label: 'Repair Board', icon: '📟', shortName: '📟 Repair Board', title: 'Kho Repair of board_VTP (Bo mạch sửa chữa)', color: '#000000' },
-    { id: 'whHardTest', key: 'WH of Hard Test_VTP', label: 'WH of Hard Test_VTP', icon: '⚡', shortName: '⚡ Hard Test', title: 'Kho WH of Hard Test_VTP (Khu vực Hard Test)', color: '#000000' }
+    { id: 'all', key: 'ALL', label: 'Tổng Kho', icon: '🌐', shortName: '🌐 Tổng Kho', title: 'Tổng tồn cuối tất cả kho trong sheet Inventory 1C', color: '#6ee7b7' },
+    { id: 'whAssembly', key: 'WH ASSEMBLY_VTP', label: 'WH ASSEMBLY_VTP', icon: '🏭', shortName: '🏭 WH ASM', title: 'Kho WH ASSEMBLY_VTP', color: '#a7f3d0' },
+    { id: 'whPkg', key: 'PKG_VTP', label: 'PKG_VTP', icon: '📦', shortName: '📦 PKG', title: 'Kho PKG_VTP', color: '#a7f3d0' },
+    { id: 'whRepairSemi', key: 'Repair of semi-finished products_VTP', label: 'Repair Semi-FG', icon: '🔧', shortName: '🔧 Repair Semi', title: 'Kho Repair of semi-finished products_VTP (Bán thành phẩm sửa chữa)', color: '#a7f3d0' },
+    { id: 'whRepairBoard', key: 'Repair of board_VTP', label: 'Repair Board', icon: '📟', shortName: '📟 Repair Board', title: 'Kho Repair of board_VTP (Bo mạch sửa chữa)', color: '#a7f3d0' },
+    { id: 'whHardTest', key: 'WH of Hard Test_VTP', label: 'WH of Hard Test_VTP', icon: '⚡', shortName: '⚡ Hard Test', title: 'Kho WH of Hard Test_VTP (Khu vực Hard Test)', color: '#fde047' }
   ];
 
   function getInitialActiveStockWarehouses() {
@@ -179,14 +179,14 @@
    */
   function getStageBadgeStyle(stage) {
     const s = (stage || '').toUpperCase();
-    if (s.includes('SMD')) return { bg: '#e0f2fe', border: '#0284c7', color: '#000000', icon: '⚡' };
-    if (s.includes('DIP')) return { bg: '#fff3cc', border: '#f59e0b', color: '#000000', icon: '🔌' };
-    if (s.includes('HARD TEST') || s.includes('HT')) return { bg: '#e0f2fe', border: '#0284c7', color: '#000000', icon: '🔬' };
-    if (s.includes('ASSEMBLY') || s.includes('ASM')) return { bg: '#fff3cc', border: '#f59e0b', color: '#000000', icon: '🔧' };
-    if (s.includes('LAQ')) return { bg: '#e0f2fe', border: '#0284c7', color: '#000000', icon: '💧' };
-    if (s.includes('PKG') || s.includes('PACK')) return { bg: '#fff3cc', border: '#f59e0b', color: '#000000', icon: '📦' };
-    if (s.includes('QC') || s.includes('TEST')) return { bg: '#e0f2fe', border: '#0284c7', color: '#000000', icon: '⭐' };
-    return { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '🏭' };
+    if (s.includes('SMD')) return { bg: 'rgba(59, 130, 246, 0.15)', border: 'rgba(59, 130, 246, 0.35)', color: '#60a5fa', icon: '⚡' };
+    if (s.includes('DIP')) return { bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.35)', color: '#fbbf24', icon: '🔌' };
+    if (s.includes('HARD TEST') || s.includes('HT')) return { bg: 'rgba(16, 185, 129, 0.15)', border: 'rgba(16, 185, 129, 0.35)', color: '#34d399', icon: '🔬' };
+    if (s.includes('ASSEMBLY') || s.includes('ASM')) return { bg: 'rgba(139, 92, 246, 0.15)', border: 'rgba(139, 92, 246, 0.35)', color: '#c084fc', icon: '🔧' };
+    if (s.includes('LAQ')) return { bg: 'rgba(6, 182, 212, 0.15)', border: 'rgba(6, 182, 212, 0.35)', color: '#22d3ee', icon: '💧' };
+    if (s.includes('PKG') || s.includes('PACK')) return { bg: 'rgba(236, 72, 153, 0.15)', border: 'rgba(236, 72, 153, 0.35)', color: '#f472b6', icon: '📦' };
+    if (s.includes('QC') || s.includes('TEST')) return { bg: 'rgba(168, 85, 247, 0.15)', border: 'rgba(168, 85, 247, 0.35)', color: '#d8b4fe', icon: '⭐' };
+    return { bg: 'rgba(148, 163, 184, 0.15)', border: 'rgba(148, 163, 184, 0.35)', color: '#94a3b8', icon: '🏭' };
   }
 
   /**
@@ -194,15 +194,15 @@
    */
   function getWipStatusBadge(status) {
     if (status === 'COMPLETED') {
-      return '<span class="badge" style="background: #e0f2fe; color: var(--color-plan-blue, #0000ff); border: 1.5px solid #0284c7; font-weight: 800;">✓ Đạt KH</span>';
+      return '<span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">✓ Đạt KH</span>';
     } else if (status === 'IN_PROGRESS') {
-      return '<span class="badge" style="background: var(--bg-card-header, #fff3cc); color: var(--text-primary); border: 1.5px solid #f59e0b; font-weight: 800;">⏳ Đang chạy</span>';
+      return '<span class="badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3);">⏳ Đang chạy</span>';
     } else if (status === 'PENDING') {
-      return '<span class="badge" style="background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); font-weight: 800;">⌛ Chờ chạy</span>';
+      return '<span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3);">⌛ Chờ chạy</span>';
     } else if (status === 'UNPLANNED') {
-      return '<span class="badge" style="background: var(--bg-card-header, #fff3cc); color: var(--text-primary); border: 1.5px solid #f59e0b; font-weight: 800;">+ Ngoài KH</span>';
+      return '<span class="badge" style="background: rgba(236, 72, 153, 0.15); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.3);">+ Ngoài KH</span>';
     }
-    return '<span class="badge" style="background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); font-weight: 800;">Cân đối</span>';
+    return '<span class="badge" style="background: rgba(148, 163, 184, 0.1); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.25);">Cân đối</span>';
   }
 
   /**
@@ -761,20 +761,18 @@
   function renderWipSubtabSwitcherHtml(activeSubView) {
     const isTable = activeSubView !== 'SFG_LOOKUP';
     return `
-      <div class="wip-subtab-bar" role="tablist" aria-label="Chế độ WIP Control" style="display: inline-flex; align-items: center; gap: 0.35rem; background: var(--bg-card); padding: 0.25rem; border-radius: var(--radius-sm); border: 1.5px solid var(--border-glass);">
+      <div class="wip-subtab-bar" role="tablist" aria-label="Chế độ WIP Control">
         <button type="button"
           class="wip-subtab-btn ${isTable ? 'active' : ''}"
           onclick="window.setWipSubView('TABLE')"
-          title="Bảng Kiểm Soát Tồn Kho 1C & BOM (kèm 4 cột Tra cứu SFG công đoạn trước cạnh Catagory)"
-          style="padding: 0.4rem 0.85rem; font-size: 0.825rem; font-weight: 800; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; ${isTable ? 'background: #0284c7 !important; color: #ffffff !important; border: 1.5px solid #0284c7 !important;' : 'background: var(--bg-card) !important; color: var(--text-primary) !important; border: 1px solid var(--border-glass) !important;'}">
+          title="Bảng Kiểm Soát Tồn Kho 1C & BOM (kèm 4 cột Tra cứu SFG công đoạn trước cạnh Catagory)">
           <span>📦</span>
           <span>Bảng Kiểm Soát WIP &amp; BOM</span>
         </button>
         <button type="button"
           class="wip-subtab-btn is-sfg ${!isTable ? 'active' : ''}"
           onclick="window.setWipSubView('SFG_LOOKUP')"
-          title="Tra cứu SFG đa cấp: xem Kế hoạch - Thực tế - Gap toàn chuỗi công đoạn trước (Assembly ➔ Hardtest ➔ DIP ➔ SMD)"
-          style="padding: 0.4rem 0.85rem; font-size: 0.825rem; font-weight: 800; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; ${!isTable ? 'background: #0284c7 !important; color: #ffffff !important; border: 1.5px solid #0284c7 !important;' : 'background: var(--bg-card) !important; color: var(--text-primary) !important; border: 1px solid var(--border-glass) !important;'}">
+          title="Tra cứu SFG đa cấp: xem Kế hoạch - Thực tế - Gap toàn chuỗi công đoạn trước (Assembly ➔ Hardtest ➔ DIP ➔ SMD)">
           <span>🔍</span>
           <span>Tra cứu SFG</span>
         </button>
@@ -784,24 +782,24 @@
 
   function renderWipDateRangeBoxHtml(curFromDate, curToDate) {
     return `
-      <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; background: var(--bg-card); padding: 0.35rem 0.65rem; border-radius: var(--radius-sm); border: 1.5px solid var(--border-glass);">
-        <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 0.25rem;">
+      <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; background: rgba(15, 23, 42, 0.4); padding: 0.35rem 0.65rem; border-radius: var(--radius-sm); border: 1px solid rgba(96, 165, 250, 0.3);">
+        <span style="font-size: 0.75rem; font-weight: 800; color: #60a5fa; display: flex; align-items: center; gap: 0.25rem;">
           📅 Kế Hoạch:
         </span>
-        <span style="font-size: 0.775rem; color: var(--text-primary); font-weight: 700;">Từ</span>
+        <span style="font-size: 0.725rem; color: var(--text-muted); font-weight: 600;">Từ</span>
         <input type="date"
           id="wipFromDate"
           class="select-filter font-mono font-bold"
           value="${curFromDate}"
-          style="padding: 0.25rem 0.45rem; font-size: 0.8rem; min-width: 125px; border-radius: var(--radius-sm); border: 1.5px solid var(--border-glass); background: var(--bg-card); color: var(--text-primary); font-weight: 800;"
+          style="padding: 0.25rem 0.45rem; font-size: 0.775rem; min-width: 125px; border-radius: var(--radius-sm); border: 1px solid rgba(96, 165, 250, 0.4); background: rgba(15, 23, 42, 0.6); color: #f8fafc;"
           onchange="window.handleWipDateRangeChange()"
           title="Ngày bắt đầu khoảng kế hoạch">
-        <span style="font-size: 0.775rem; color: var(--text-primary); font-weight: 700;">Đến</span>
+        <span style="font-size: 0.725rem; color: var(--text-muted); font-weight: 600;">Đến</span>
         <input type="date"
           id="wipToDate"
           class="select-filter font-mono font-bold"
           value="${curToDate}"
-          style="padding: 0.25rem 0.45rem; font-size: 0.8rem; min-width: 125px; border-radius: var(--radius-sm); border: 1.5px solid var(--border-glass); background: var(--bg-card); color: var(--text-primary); font-weight: 800;"
+          style="padding: 0.25rem 0.45rem; font-size: 0.775rem; min-width: 125px; border-radius: var(--radius-sm); border: 1px solid rgba(96, 165, 250, 0.4); background: rgba(15, 23, 42, 0.6); color: #f8fafc;"
           onchange="window.handleWipDateRangeChange()"
           title="Ngày kết thúc khoảng kế hoạch (mốc kiểm kê tồn kho)">
         <button type="button"
@@ -809,7 +807,7 @@
           class="btn btn-sm btn-primary"
           onclick="window.handleWipLoadData()"
           title="Tra cứu kế hoạch và tải lại dữ liệu tồn kho WIP theo khoảng ngày đã chọn"
-          style="font-size: 0.8rem; padding: 0.3rem 0.75rem; font-weight: 800; background: #0284c7; color: #ffffff; border: 1.5px solid #0284c7; border-radius: var(--radius-sm); display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; box-shadow: 0 2px 4px rgba(2, 132, 199, 0.25); margin-left: 0.25rem;">
+          style="font-size: 0.75rem; padding: 0.3rem 0.7rem; font-weight: 700; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #ffffff; border: 1px solid rgba(59, 130, 246, 0.5); border-radius: var(--radius-sm); display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25); margin-left: 0.25rem;">
           <span id="wipLoadIcon" style="display: inline-block;">📥</span>
           <span id="wipLoadText">Tra Cứu</span>
         </button>
@@ -910,39 +908,38 @@
       const stStyle = getStageBadgeStyle(it.stage);
       const rawCode = String(it.specCode || it.rawSpecCode || '').trim();
       const dispSpec = (rawCode && /^\d+$/.test(rawCode)) ? (rawCode.replace(/^0+/, '') || '0') : rawCode;
-      const rootGapColor = it.gapQty < 0 ? '#ff0000' : (it.gapQty > 0 ? '#0000ff' : '#000000');
+      const rootGapColor = it.gapQty < 0 ? '#f87171' : (it.gapQty > 0 ? '#34d399' : '#94a3b8');
       const rootStock = getMaterialStocksGroup(it.productName1C, it.specCode);
 
       const rootRow = `
-        <tr class="wip-sfg-chain-root" style="background: var(--bg-card); border-top: 1.5px solid #cbd5e1;">
-          <td style="text-align: center; font-weight: 800; color: var(--text-primary); font-size: 0.825rem; border: 1px solid var(--border-glass);">${idx + 1}</td>
-          <td style="white-space: nowrap; border: 1px solid var(--border-glass);">
-            <span class="badge" style="background: var(--bg-card-header, #fff3cc); color: var(--text-primary); border: 1.5px solid #f59e0b; font-size: 0.75rem; font-weight: 800;">
+        <tr class="wip-sfg-chain-root">
+          <td style="text-align: center; font-weight: 800; color: #94a3b8; font-size: 0.775rem;">${idx + 1}</td>
+          <td style="white-space: nowrap;">
+            <span class="badge" style="background: rgba(56, 189, 248, 0.16); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); font-size: 0.7rem; font-weight: 800;">
               Cấp 0 (Gốc)
             </span>
           </td>
-          <td style="white-space: nowrap; border: 1px solid var(--border-glass);">
-            <span class="badge" style="background: ${stStyle.bg}; border: 1.5px solid ${stStyle.border}; color: ${stStyle.color}; font-weight: 800; font-size: 0.775rem;">
+          <td style="white-space: nowrap;">
+            <span class="badge" style="background: ${stStyle.bg}; border: 1px solid ${stStyle.border}; color: ${stStyle.color}; font-weight: 800; font-size: 0.725rem;">
               ${stStyle.icon} ${escapeWipHtml(it.stage)}
             </span>
           </td>
-          <td style="font-size: 0.825rem; font-weight: 800; color: var(--text-primary); border: 1px solid var(--border-glass);">
+          <td style="font-size: 0.8rem; font-weight: 700; color: var(--text-primary);">
             <div>${escapeWipHtml(it.productName1C)}</div>
-            <div style="font-size: 0.75rem; color: var(--text-primary); font-weight: 700; margin-top: 0.12rem;">Group: ${escapeWipHtml(it.model || '—')}</div>
+            <div style="font-size: 0.7rem; color: #38bdf8; margin-top: 0.12rem;">Group: ${escapeWipHtml(it.model || '—')}</div>
           </td>
-          <td class="font-mono" style="white-space: nowrap; font-size: 0.8rem; color: var(--text-primary); font-weight: 800; border: 1px solid var(--border-glass);">
+          <td class="font-mono" style="white-space: nowrap; font-size: 0.75rem; color: #3b82f6; font-weight: 700;">
             ${escapeWipHtml(dispSpec || '—')}
           </td>
-          <td class="font-mono" style="text-align: right; color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--border-glass);">—</td>
-          <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--color-plan-blue, #0000ff); font-size: 0.85rem; border: 1px solid var(--border-glass);">${it.planQty.toLocaleString('vi-VN')}</td>
-          <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary); font-size: 0.85rem; border: 1px solid var(--border-glass);">${it.factQty.toLocaleString('vi-VN')}</td>
-          <td class="font-mono" style="text-align: right; font-weight: 900; color: ${rootGapColor}; font-size: 0.875rem; border: 1px solid var(--border-glass);">${it.gapQty > 0 ? '+' : ''}${it.gapQty.toLocaleString('vi-VN')}</td>
-          <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary); font-size: 0.825rem; border: 1px solid var(--border-glass);">${rootStock.all > 0 ? rootStock.all.toLocaleString('vi-VN') : '—'}</td>
-          <td style="text-align: center; white-space: nowrap; border: 1px solid var(--border-glass);">
+          <td class="font-mono" style="text-align: right; color: var(--text-muted); font-size: 0.775rem;">—</td>
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: #2563eb; font-size: 0.825rem;">${it.planQty.toLocaleString('vi-VN')}</td>
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary); font-size: 0.825rem;">${it.factQty.toLocaleString('vi-VN')}</td>
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: ${rootGapColor}; font-size: 0.825rem;">${it.gapQty > 0 ? '+' : ''}${it.gapQty.toLocaleString('vi-VN')}</td>
+          <td class="font-mono" style="text-align: right; font-weight: 700; color: #10b981; font-size: 0.775rem;">${rootStock.all > 0 ? rootStock.all.toLocaleString('vi-VN') : '—'}</td>
+          <td style="text-align: center; white-space: nowrap;">
             <button type="button" class="btn btn-xs btn-secondary wip-sfg-action-btn is-back"
               onclick="window.openWipTableFromSfgChain(decodeURIComponent('${encodeURIComponent(it.stage || '')}'), decodeURIComponent('${encodeURIComponent(it.productName1C || '')}'))"
-              title="Mở Model này trong Bảng Kiểm Soát WIP & BOM"
-              style="background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); font-weight: 800; font-size: 0.75rem;">
+              title="Mở Model này trong Bảng Kiểm Soát WIP & BOM">
               📦 Bảng WIP
             </button>
           </td>
@@ -955,7 +952,7 @@
         const indentPx = Math.max(0, (step.depth - 1) * 14);
         const prefixArrow = `${'↳'.repeat(step.depth)} Cấp ${step.depth}`;
         const stInfo = getMaterialStocksGroup(step.nomenclature, step.materialCode);
-        const stgStyle = res ? getStageBadgeStyle(res.stage) : { bg: '#ffffff', border: '#cbd5e1', color: '#000000', icon: '❓' };
+        const stgStyle = res ? getStageBadgeStyle(res.stage) : { bg: 'rgba(148,163,184,0.12)', border: 'rgba(148,163,184,0.3)', color: '#94a3b8', icon: '❓' };
 
         const childRawSpec = res ? String(res.specCode || '').trim() : '';
         const childSpec = (childRawSpec && /^\d+$/.test(childRawSpec)) ? (childRawSpec.replace(/^0+/, '') || '0') : childRawSpec;
@@ -963,52 +960,51 @@
         const factHtml = res ? res.factQty.toLocaleString('vi-VN') : '—';
         const gapVal = res ? res.gapQty : null;
         const gapHtml = res ? `${gapVal > 0 ? '+' : ''}${gapVal.toLocaleString('vi-VN')}` : '—';
-        const gapColor = res ? (gapVal < 0 ? '#ff0000' : (gapVal > 0 ? '#0000ff' : '#000000')) : '#000000';
+        const gapColor = res ? (gapVal < 0 ? '#f87171' : (gapVal > 0 ? '#34d399' : '#94a3b8')) : '#64748b';
         const otherHint = (res && res.otherStages && res.otherStages.length > 0)
           ? ` • Cũng xuất hiện ở: ${res.otherStages.map(o => `${o.stage} (KH ${o.planQty.toLocaleString('vi-VN')} / TT ${o.factQty.toLocaleString('vi-VN')} / Gap ${o.gapQty.toLocaleString('vi-VN')})`).join(', ')}`
           : '';
 
         return `
-          <tr class="wip-sfg-chain-child ${depthClass}" style="background: var(--bg-card);">
-            <td style="text-align: center; color: var(--text-primary); font-size: 0.775rem; border: 1px solid var(--border-glass);">•</td>
-            <td style="white-space: nowrap; border: 1px solid var(--border-glass);">
-              <span class="badge wip-sfg-level-badge" style="margin-left: ${indentPx}px; background: #e0f2fe; color: var(--text-primary); border: 1px solid #0284c7; font-weight: 800; font-size: 0.725rem;">
+          <tr class="wip-sfg-chain-child ${depthClass}">
+            <td style="text-align: center; color: #64748b; font-size: 0.725rem;">•</td>
+            <td style="white-space: nowrap;">
+              <span class="badge wip-sfg-level-badge" style="margin-left: ${indentPx}px;">
                 ${prefixArrow}
               </span>
             </td>
-            <td style="white-space: nowrap; border: 1px solid var(--border-glass);" title="${escapeWipHtml(res ? `Công đoạn trước của ${step.parentStage}${otherHint}` : 'Chưa có kế hoạch trong Data_Mass')}">
+            <td style="white-space: nowrap;" title="${escapeWipHtml(res ? `Công đoạn trước của ${step.parentStage}${otherHint}` : 'Chưa có kế hoạch trong Data_Mass')}">
               ${res ? `
-                <span class="badge" style="background: ${stgStyle.bg}; border: 1.5px solid ${stgStyle.border}; color: ${stgStyle.color}; font-weight: 800; font-size: 0.75rem;">
+                <span class="badge" style="background: ${stgStyle.bg}; border: 1px solid ${stgStyle.border}; color: ${stgStyle.color}; font-weight: 800; font-size: 0.725rem;">
                   ${stgStyle.icon} ${escapeWipHtml(res.stage)}
                 </span>
               ` : `
-                <span class="badge" style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-glass); font-size: 0.725rem; font-weight: 700;">Chưa có ĐM</span>
+                <span class="badge" style="background: rgba(148,163,184,0.12); color: #94a3b8; border: 1px solid rgba(148,163,184,0.3); font-size: 0.7rem;">Chưa có ĐM</span>
               `}
             </td>
-            <td class="wip-sfg-child-name" style="font-size: 0.8rem; font-weight: 800; color: var(--text-primary); border: 1px solid var(--border-glass);">
+            <td class="wip-sfg-child-name" style="font-size: 0.785rem;">
               <div style="padding-left: ${indentPx}px;">
                 <span>${escapeWipHtml(step.nomenclature)}</span>
-                ${step.isCycle ? `<span class="badge" style="margin-left: 0.35rem; font-size: 0.675rem; background: var(--bg-card-header, #fff3cc); color: var(--text-primary); border: 1px solid #f59e0b; font-weight: 800;">Đã hiển thị ở trên</span>` : ''}
-                ${otherHint ? `<div style="font-size: 0.7rem; color: var(--text-primary); font-weight: 600; margin-top: 0.15rem;">${escapeWipHtml(otherHint.replace(/^ • /, ''))}</div>` : ''}
+                ${step.isCycle ? `<span class="badge" style="margin-left: 0.35rem; font-size: 0.65rem; background: rgba(148,163,184,0.2); color: var(--text-secondary);">Đã hiển thị ở trên</span>` : ''}
+                ${otherHint ? `<div style="font-size: 0.675rem; color: var(--text-muted); font-weight: 500; margin-top: 0.15rem;">${escapeWipHtml(otherHint.replace(/^ • /, ''))}</div>` : ''}
               </div>
             </td>
-            <td class="font-mono wip-sfg-child-mat" style="white-space: nowrap; font-size: 0.775rem; border: 1px solid var(--border-glass);">
-              <div style="font-weight: 800; color: var(--text-primary);">${escapeWipHtml(step.materialCode || '—')}</div>
-              ${childSpec ? `<div style="font-size: 0.7rem; color: var(--text-primary); font-weight: 700;">Spec: ${escapeWipHtml(childSpec)}</div>` : ''}
+            <td class="font-mono wip-sfg-child-mat" style="white-space: nowrap; font-size: 0.75rem;">
+              <div>${escapeWipHtml(step.materialCode || '—')}</div>
+              ${childSpec ? `<div style="font-size: 0.675rem; color: #3b82f6;">Spec: ${escapeWipHtml(childSpec)}</div>` : ''}
             </td>
-            <td class="font-mono font-bold" style="text-align: right; color: var(--text-primary); font-size: 0.8rem; font-weight: 800; border: 1px solid var(--border-glass);">${step.qtyPerUnit}</td>
-            <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--color-plan-blue, #0000ff); font-size: 0.85rem; border: 1px solid var(--border-glass);">${planHtml}</td>
-            <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary); font-size: 0.85rem; border: 1px solid var(--border-glass);">${factHtml}</td>
-            <td class="font-mono" style="text-align: right; font-weight: 900; color: ${gapColor}; font-size: 0.875rem; border: 1px solid var(--border-glass);">${gapHtml}</td>
-            <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary); font-size: 0.825rem; border: 1px solid var(--border-glass);" title="WH ASM: ${stInfo.whAssembly.toLocaleString('vi-VN')} | WH HT: ${stInfo.whHardTest.toLocaleString('vi-VN')}">
+            <td class="font-mono font-bold" style="text-align: right; color: #d97706; font-size: 0.785rem;">${step.qtyPerUnit}</td>
+            <td class="font-mono" style="text-align: right; font-weight: 800; color: #2563eb; font-size: 0.825rem;">${planHtml}</td>
+            <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary); font-size: 0.825rem;">${factHtml}</td>
+            <td class="font-mono" style="text-align: right; font-weight: 800; color: ${gapColor}; font-size: 0.825rem;">${gapHtml}</td>
+            <td class="font-mono" style="text-align: right; font-weight: 700; color: #10b981; font-size: 0.775rem;" title="WH ASM: ${stInfo.whAssembly.toLocaleString('vi-VN')} | WH HT: ${stInfo.whHardTest.toLocaleString('vi-VN')}">
               ${stInfo.all > 0 ? stInfo.all.toLocaleString('vi-VN') : '—'}
             </td>
-            <td style="text-align: center; white-space: nowrap; border: 1px solid var(--border-glass);">
+            <td style="text-align: center; white-space: nowrap;">
               ${res ? `
                 <button type="button" class="btn btn-xs btn-secondary wip-sfg-action-btn is-stage"
                   onclick="window.openWipTableFromSfgChain(decodeURIComponent('${encodeURIComponent(res.stage)}'), decodeURIComponent('${encodeURIComponent(res.productName1C)}'))"
-                  title="Xem dòng SFG này tại công đoạn ${escapeWipHtml(res.stage)} trong Bảng WIP"
-                  style="background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); font-weight: 800; font-size: 0.75rem;">
+                  title="Xem dòng SFG này tại công đoạn ${escapeWipHtml(res.stage)} trong Bảng WIP">
                   📦 Xem ${escapeWipHtml(res.stage)}
                 </button>
               ` : '—'}
@@ -1023,21 +1019,21 @@
     container.innerHTML = `
       <div class="wip-control-root" style="display: flex; flex-direction: column; gap: 1.15rem;">
         <!-- 1. HEADER BANNER -->
-        <div class="card-glass" style="padding: 1.15rem 1.5rem; border-radius: var(--radius-lg); border: 1.5px solid var(--border-glass); background: var(--bg-card);">
+        <div class="card-glass" style="padding: 1.15rem 1.5rem; border-radius: var(--radius-lg); border: 1px solid rgba(245, 158, 11, 0.35); background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(30, 41, 59, 0.45) 100%);">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
             <div>
               <div style="display: flex; align-items: center; gap: 0.65rem;">
-                <div class="section-icon-badge" style="background: var(--bg-card-header, #fff3cc); border: 1.5px solid #f59e0b; color: var(--text-primary); font-size: 1.25rem;">
+                <div class="section-icon-badge" style="background: rgba(245, 158, 11, 0.16); border: 1px solid rgba(245, 158, 11, 0.45); color: #fbbf24; font-size: 1.25rem;">
                   🔍
                 </div>
                 <div>
-                  <h1 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                  <h1 style="font-size: 1.35rem; font-weight: 800; color: #f8fafc; margin: 0; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
                     TRA CỨU SFG — TRUY VẾT CÔNG ĐOẠN TRƯỚC
-                    <span class="badge" style="background: var(--bg-card-header, #fff3cc); color: var(--text-primary); border: 1.5px solid #f59e0b; font-size: 0.75rem; font-weight: 800;">
+                    <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fde047; border: 1px solid rgba(245, 158, 11, 0.45); font-size: 0.725rem;">
                       ĐA CẤP (ASSEMBLY ➔ HARDTEST ➔ DIP)
                     </span>
                   </h1>
-                  <p style="font-size: 0.85rem; color: var(--text-primary); margin: 0.2rem 0 0 0; font-weight: 600;">
+                  <p style="font-size: 0.8rem; color: #94a3b8; margin: 0.2rem 0 0 0;">
                     Xem trực tiếp <strong>Kế Hoạch • Thực Tế • Gap</strong> của mã SFG ở từng công đoạn trước trong BOM (VD: <strong>Assembly</strong> ➔ <strong>Hardtest</strong> ➔ <strong>DIP</strong>)
                   </p>
                 </div>
@@ -1046,11 +1042,11 @@
             <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem;">
               ${renderWipSubtabSwitcherHtml('SFG_LOOKUP')}
               <button type="button" class="btn btn-sm btn-primary" onclick="window.handleCopySfgChainForGoogleSheet()"
-                style="background: #0284c7; border: 1.5px solid #0284c7; color: #ffffff; font-weight: 800; display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.4rem 0.85rem; font-size: 0.8rem; border-radius: 4px;">
+                style="background: linear-gradient(135deg, #d97706, #b45309); border-color: rgba(245, 158, 11, 0.55); color: #fff; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.85rem; font-size: 0.775rem;">
                 <span>📋</span>
                 <span>Copy Chuỗi SFG</span>
               </button>
-              <button type="button" class="btn btn-sm btn-secondary" onclick="window.handleWipSfgReset()" style="padding: 0.4rem 0.75rem; font-size: 0.8rem; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); font-weight: 800; border-radius: 4px;">
+              <button type="button" class="btn btn-sm btn-secondary" onclick="window.handleWipSfgReset()" style="padding: 0.35rem 0.75rem; font-size: 0.775rem;">
                 <span>↺ Đặt lại</span>
               </button>
             </div>
@@ -1058,19 +1054,19 @@
         </div>
 
         <!-- 2. FILTER BAR -->
-        <div class="card-glass" style="padding: 1rem 1.25rem; border-radius: var(--radius-md); border: 1.5px solid var(--border-glass); background: var(--bg-card);">
+        <div class="card-glass" style="padding: 1rem 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
           <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.85rem;">
             <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; flex: 1;">
               <div style="display: flex; align-items: center; gap: 0.35rem;">
-                <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-primary);">🏭 Công Đoạn gốc:</span>
-                <select id="wipSfgStageFilter" class="select-filter font-bold" style="padding: 0.35rem 0.6rem; font-size: 0.8rem; background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800;" onchange="window.handleWipSfgStageChange(this.value)">
+                <span style="font-size: 0.75rem; font-weight: 700; color: #c084fc;">🏭 Công Đoạn gốc:</span>
+                <select id="wipSfgStageFilter" class="select-filter font-bold" style="padding: 0.3rem 0.55rem; font-size: 0.775rem;" onchange="window.handleWipSfgStageChange(this.value)">
                   <option value="ALL" ${sfgStageFilter === 'ALL' ? 'selected' : ''}>Tất cả công đoạn</option>
                   ${distinctStages.map(st => `<option value="${escapeWipHtml(st)}" ${sfgStageFilter === st ? 'selected' : ''}>${escapeWipHtml(st)}</option>`).join('')}
                 </select>
               </div>
               <div style="display: flex; align-items: center; gap: 0.35rem;">
-                <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-primary);">⚖️ Chênh Lệch gốc:</span>
-                <select id="wipSfgGapFilter" class="select-filter font-bold" style="padding: 0.35rem 0.6rem; font-size: 0.8rem; background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800;" onchange="window.handleWipSfgGapChange(this.value)">
+                <span style="font-size: 0.75rem; font-weight: 700; color: #f87171;">⚖️ Chênh Lệch gốc:</span>
+                <select id="wipSfgGapFilter" class="select-filter font-bold" style="padding: 0.3rem 0.55rem; font-size: 0.775rem;" onchange="window.handleWipSfgGapChange(this.value)">
                   <option value="HAS_GAP" ${sfgGapFilter === 'HAS_GAP' ? 'selected' : ''}>⚡ Chỉ Mã Có GAP (≠ 0)</option>
                   <option value="NEGATIVE" ${sfgGapFilter === 'NEGATIVE' ? 'selected' : ''}>🔴 Model âm (&lt; 0)</option>
                   <option value="POSITIVE" ${sfgGapFilter === 'POSITIVE' ? 'selected' : ''}>🟢 Model dương (&gt; 0)</option>
@@ -1078,8 +1074,8 @@
                 </select>
               </div>
               <div style="display: flex; align-items: center; gap: 0.35rem;">
-                <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-primary);">🔃 Sắp Xếp:</span>
-                <select id="wipSfgSortBy" class="select-filter font-bold" style="padding: 0.35rem 0.6rem; font-size: 0.8rem; background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800;" onchange="window.handleWipSfgSortChange(this.value)">
+                <span style="font-size: 0.75rem; font-weight: 700; color: #38bdf8;">🔃 Sắp Xếp:</span>
+                <select id="wipSfgSortBy" class="select-filter font-bold" style="padding: 0.3rem 0.55rem; font-size: 0.775rem;" onchange="window.handleWipSfgSortChange(this.value)">
                   <option value="GAP_ASC" ${sfgSortBy === 'GAP_ASC' ? 'selected' : ''}>🔴 Âm nhiều nhất lên đầu</option>
                   <option value="GAP_DESC" ${sfgSortBy === 'GAP_DESC' ? 'selected' : ''}>🟢 Dương nhiều nhất lên đầu</option>
                   <option value="PLAN_DESC" ${sfgSortBy === 'PLAN_DESC' ? 'selected' : ''}>📊 Kế hoạch cao nhất</option>
@@ -1091,7 +1087,6 @@
                 <input type="text" id="wipSfgSearchInput" class="input-search"
                   placeholder="Tìm Model, Mã SFG (VD: MotionProtect white EU, MP.002...)"
                   value="${escapeWipHtml(sfgSearch)}"
-                  style="background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 700; font-size: 0.8rem;"
                   oninput="window.handleWipSfgSearch(this.value)">
               </div>
             </div>
@@ -1101,46 +1096,46 @@
 
         <!-- 3. KPI SUMMARY STRIP -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0.75rem;">
-          <div class="card-glass" style="padding: 0.75rem 1rem; border-radius: var(--radius-md); border: 1.5px solid #0284c7; background: #e0f2fe;">
-            <div style="font-size: 0.75rem; color: var(--text-primary); font-weight: 800;">MODEL CÓ CHUỖI SFG ĐANG LỌC</div>
-            <div class="font-mono" style="font-size: 1.35rem; font-weight: 900; color: var(--text-primary); margin-top: 0.2rem;">${results.length.toLocaleString('vi-VN')} <span style="font-size: 0.8rem; color: var(--text-primary); font-weight: 700;">Model (${datesCount} ngày)</span></div>
+          <div class="card-glass" style="padding: 0.75rem 1rem; border-radius: var(--radius-md); border-left: 3px solid #38bdf8;">
+            <div style="font-size: 0.725rem; color: #94a3b8; font-weight: 700;">MODEL CÓ CHUỖI SFG ĐANG LỌC</div>
+            <div class="font-mono" style="font-size: 1.25rem; font-weight: 800; color: #38bdf8; margin-top: 0.2rem;">${results.length.toLocaleString('vi-VN')} <span style="font-size: 0.75rem; color: #94a3b8;">Model (${datesCount} ngày)</span></div>
           </div>
-          <div class="card-glass" style="padding: 0.75rem 1rem; border-radius: var(--radius-md); border: 1.5px solid #ef4444; background: var(--bg-card-header, #fff3cc);">
-            <div style="font-size: 0.75rem; color: var(--text-primary); font-weight: 800;">MODEL GỐC ĐANG ÂM / MẮT XÍCH SFG ÂM</div>
-            <div class="font-mono" style="font-size: 1.35rem; font-weight: 900; color: var(--color-alert-red, #ff0000); margin-top: 0.2rem;">${totalNegRoots.toLocaleString('vi-VN')} <span style="font-size: 0.8rem; color: var(--text-primary); font-weight: 700;">Model gốc •</span> ${totalDeficientSfgSteps.toLocaleString('vi-VN')} <span style="font-size: 0.8rem; color: var(--color-alert-red, #ff0000); font-weight: 800;">cấp SFG âm</span></div>
+          <div class="card-glass" style="padding: 0.75rem 1rem; border-radius: var(--radius-md); border-left: 3px solid #f87171;">
+            <div style="font-size: 0.725rem; color: #94a3b8; font-weight: 700;">MODEL GỐC ĐANG ÂM / MẮT XÍCH SFG ÂM</div>
+            <div class="font-mono" style="font-size: 1.25rem; font-weight: 800; color: #f87171; margin-top: 0.2rem;">${totalNegRoots.toLocaleString('vi-VN')} <span style="font-size: 0.75rem; color: #94a3b8;">Model gốc •</span> ${totalDeficientSfgSteps.toLocaleString('vi-VN')} <span style="font-size: 0.75rem; color: #94a3b8;">cấp SFG âm</span></div>
           </div>
-          <div class="card-glass" style="padding: 0.75rem 1rem; border-radius: var(--radius-md); border: 1.5px solid #f59e0b; background: var(--bg-card-header, #fff3cc);">
-            <div style="font-size: 0.75rem; color: var(--text-primary); font-weight: 800;">ĐỘ SÂU CHUỖI SFG TỐI ĐA</div>
-            <div class="font-mono" style="font-size: 1.35rem; font-weight: 900; color: var(--text-primary); margin-top: 0.2rem;">${maxChainDepth} <span style="font-size: 0.8rem; color: var(--text-primary); font-weight: 700;">cấp công đoạn trước</span></div>
+          <div class="card-glass" style="padding: 0.75rem 1rem; border-radius: var(--radius-md); border-left: 3px solid #fbbf24;">
+            <div style="font-size: 0.725rem; color: #94a3b8; font-weight: 700;">ĐỘ SÂU CHUỖI SFG TỐI ĐA</div>
+            <div class="font-mono" style="font-size: 1.25rem; font-weight: 800; color: #fbbf24; margin-top: 0.2rem;">${maxChainDepth} <span style="font-size: 0.75rem; color: #94a3b8;">cấp công đoạn trước</span></div>
           </div>
         </div>
 
         <!-- 4. MULTI-LEVEL SFG TRACE TABLE -->
-        <div class="card-glass" style="border-radius: var(--radius-md); border: 1.5px solid var(--border-glass); background: var(--bg-card); overflow: hidden;">
+        <div class="card-glass" style="border-radius: var(--radius-md); border: 1px solid var(--border-glass); overflow: hidden;">
           <div class="table-container" style="max-height: 700px; overflow-y: auto;">
             <table class="datamass-table wip-sfg-chain-table" style="width: 100%; border-collapse: separate; border-spacing: 0;">
               <thead>
                 <tr>
-                  <th style="width: 45px; text-align: center; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">STT</th>
-                  <th style="width: 120px; text-align: left; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">Cấp Truy Vết</th>
-                  <th style="width: 135px; text-align: left; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">Công Đoạn</th>
-                  <th style="min-width: 280px; text-align: left; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">Model / Mã SFG (1C)</th>
-                  <th style="width: 125px; text-align: left; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">Mã NL / Spec</th>
-                  <th style="width: 75px; text-align: right; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">Định Mức</th>
-                  <th style="width: 95px; text-align: right; background: var(--bg-card-header, #fff3cc) !important; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800; border: 1px solid var(--border-glass);">KẾ HOẠCH<br><span style="font-size: 0.65rem;">(PLAN)</span></th>
-                  <th style="width: 95px; text-align: right; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">THỰC TẾ<br><span style="font-size: 0.65rem;">(FACT)</span></th>
-                  <th style="width: 100px; text-align: right; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">CHÊNH LỆCH<br><span style="font-size: 0.65rem;">(GAP)</span></th>
-                  <th style="width: 100px; text-align: right; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">TỔNG TỒN 1C</th>
-                  <th style="width: 115px; text-align: center; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">Thao Tác</th>
+                  <th style="width: 45px; text-align: center;">STT</th>
+                  <th style="width: 120px; text-align: left;">Cấp Truy Vết</th>
+                  <th style="width: 135px; text-align: left;">Công Đoạn</th>
+                  <th style="min-width: 280px; text-align: left;">Model / Mã SFG (1C)</th>
+                  <th style="width: 125px; text-align: left;">Mã NL / Spec</th>
+                  <th style="width: 75px; text-align: right; color: #fbbf24;">Định Mức</th>
+                  <th style="width: 95px; text-align: right; color: #60a5fa;">KẾ HOẠCH<br><span style="font-size: 0.65rem;">(PLAN)</span></th>
+                  <th style="width: 95px; text-align: right; color: #34d399;">THỰC TẾ<br><span style="font-size: 0.65rem;">(FACT)</span></th>
+                  <th style="width: 100px; text-align: right; color: #f87171;">CHÊNH LỆCH<br><span style="font-size: 0.65rem;">(GAP)</span></th>
+                  <th style="width: 100px; text-align: right; color: #34d399;">TỔNG TỒN 1C</th>
+                  <th style="width: 115px; text-align: center;">Thao Tác</th>
                 </tr>
               </thead>
               <tbody>
                 ${results.length === 0 ? `
                   <tr>
-                    <td colspan="11" style="text-align: center; padding: 3rem; color: var(--text-primary); font-weight: 700;">
+                    <td colspan="11" style="text-align: center; padding: 3rem; color: var(--text-secondary);">
                       <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔍</div>
                       <strong>Không tìm thấy chuỗi SFG nào phù hợp với bộ lọc hiện tại.</strong>
-                      <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-primary);">Thử chuyển bộ lọc Chênh Lệch sang <strong>Tất cả</strong> hoặc nhập từ khóa khác.</div>
+                      <div style="margin-top: 0.5rem; font-size: 0.8rem;">Thử chuyển bộ lọc Chênh Lệch sang <strong>Tất cả</strong> hoặc nhập từ khóa khác.</div>
                     </td>
                   </tr>
                 ` : rowsHtml}
@@ -1148,13 +1143,9 @@
             </table>
           </div>
           ${results.length > 80 ? `
-            <div style="padding: 0.65rem 1.25rem; font-size: 0.8rem; color: var(--text-primary); font-weight: 700; border-top: 1px solid var(--border-glass); background: var(--bg-card-header, #fff3cc);">
+            <div style="padding: 0.65rem 1.25rem; font-size: 0.775rem; color: #94a3b8; border-top: 1px solid var(--border-glass); background: var(--surface-card);">
               Đang hiển thị 80 chuỗi đầu tiên trong tổng số <strong>${results.length.toLocaleString('vi-VN')}</strong> chuỗi Model khớp bộ lọc. Nhập thêm từ khóa tìm kiếm để thu hẹp.
             </div>
-          ` : ''}
-        </div>
-      </div>
-    `;
           ` : ''}
         </div>
       </div>
@@ -1256,23 +1247,23 @@
     if (isAllStagesSelected) {
       stageTriggerLabelHtml = `<span>🏭 Tất cả Công Đoạn (${distinctStages.length})</span>`;
     } else if (selectedStagesList.length === 0) {
-      stageTriggerLabelHtml = `<span style="color: var(--text-primary); font-weight: 800;">⚠️ Chưa chọn công đoạn (0/${distinctStages.length})</span>`;
+      stageTriggerLabelHtml = `<span style="color: #94a3b8;">⚠️ Chưa chọn công đoạn (0/${distinctStages.length})</span>`;
     } else if (selectedStagesList.length === 1) {
       const st = selectedStagesList[0];
       const stStyle = getStageBadgeStyle(st);
-      stageTriggerLabelHtml = `<span class="badge" style="background: ${stStyle.bg}; border: 1.5px solid ${stStyle.border}; color: ${stStyle.color}; font-size: 0.75rem; padding: 0.15rem 0.45rem; font-weight: 800;">${stStyle.icon} ${st}</span>`;
+      stageTriggerLabelHtml = `<span class="badge" style="background: ${stStyle.bg}; border: 1px solid ${stStyle.border}; color: ${stStyle.color}; font-size: 0.75rem; padding: 0.15rem 0.45rem;">${stStyle.icon} ${st}</span>`;
     } else {
-      stageTriggerLabelHtml = `<span class="badge" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: var(--text-primary); font-size: 0.75rem; font-weight: 800; padding: 0.15rem 0.5rem;">🏭 Đã chọn ${selectedStagesList.length} / ${distinctStages.length} Công Đoạn</span>`;
+      stageTriggerLabelHtml = `<span class="badge badge-purple" style="font-size: 0.75rem; font-weight: 800; padding: 0.15rem 0.5rem;">🏭 Đã chọn ${selectedStagesList.length} / ${distinctStages.length} Công Đoạn</span>`;
     }
 
     const stageCheckboxItems = distinctStages.map(st => {
       const isChecked = isStageSelected(st);
       const stStyle = getStageBadgeStyle(st);
       return `
-        <label class="wip-stage-option-row" data-stage="${st.toLowerCase()}" style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.35rem 0.6rem; border-radius: var(--radius-sm); cursor: pointer; transition: background 0.15s ease; user-select: none; background: ${isChecked ? '#fff3cc' : '#ffffff'}; border: 1px solid ${isChecked ? '#f59e0b' : '#cbd5e1'};">
+        <label class="wip-stage-option-row" data-stage="${st.toLowerCase()}" style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.35rem 0.6rem; border-radius: var(--radius-sm); cursor: pointer; transition: background 0.15s ease; user-select: none; background: ${isChecked ? 'rgba(168, 85, 247, 0.12)' : 'transparent'};">
           <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <input type="checkbox" class="wip-stage-checkbox" value="${st}" ${isChecked ? 'checked' : ''} onchange="window.handleWipStageToggle('${st}', this.checked, event)" style="cursor: pointer; width: 15px; height: 15px; accent-color: #0284c7;">
-            <span class="badge" style="background: ${stStyle.bg}; border: 1px solid ${stStyle.border}; color: ${stStyle.color}; font-size: 0.75rem; font-weight: 800; display: inline-flex; align-items: center; gap: 0.25rem;">
+            <input type="checkbox" class="wip-stage-checkbox" value="${st}" ${isChecked ? 'checked' : ''} onchange="window.handleWipStageToggle('${st}', this.checked, event)" style="cursor: pointer; width: 15px; height: 15px; accent-color: #a855f7;">
+            <span class="badge" style="background: ${stStyle.bg}; border: 1px solid ${stStyle.border}; color: ${stStyle.color}; font-size: 0.725rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.25rem;">
               <span>${stStyle.icon}</span>
               <span>${st}</span>
             </span>
@@ -1285,15 +1276,15 @@
     const warehouseCheckboxItems = STOCK_WAREHOUSES_DEF.map(w => {
       const isChecked = activeWhKeys.includes(w.id);
       return `
-        <label class="wip-wh-option-row" data-wh="${w.label.toLowerCase()} ${w.shortName.toLowerCase()}" style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.45rem 0.65rem; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.15s ease; user-select: none; background: ${isChecked ? '#fff3cc' : '#ffffff'}; border: 1px solid ${isChecked ? '#0284c7' : '#cbd5e1'};">
+        <label class="wip-wh-option-row" data-wh="${w.label.toLowerCase()} ${w.shortName.toLowerCase()}" style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.45rem 0.65rem; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.15s ease; user-select: none; background: ${isChecked ? 'rgba(16, 185, 129, 0.14)' : 'rgba(255, 255, 255, 0.02)'}; border: 1px solid ${isChecked ? 'rgba(16, 185, 129, 0.4)' : 'rgba(255, 255, 255, 0.06)'};">
           <div style="display: flex; align-items: center; gap: 0.6rem;">
-            <input type="checkbox" class="wip-wh-checkbox" value="${w.id}" ${isChecked ? 'checked' : ''} onchange="window.handleWipWarehouseToggle('${w.id}', this.checked, event)" style="cursor: pointer; width: 16px; height: 16px; accent-color: #0284c7;">
-            <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-primary); display: inline-flex; align-items: center; gap: 0.4rem;">
+            <input type="checkbox" class="wip-wh-checkbox" value="${w.id}" ${isChecked ? 'checked' : ''} onchange="window.handleWipWarehouseToggle('${w.id}', this.checked, event)" style="cursor: pointer; width: 16px; height: 16px; accent-color: #10b981;">
+            <span style="font-size: 0.8rem; font-weight: 700; color: ${isChecked ? w.color : '#cbd5e1'}; display: inline-flex; align-items: center; gap: 0.4rem;">
               <span style="font-size: 0.95rem;">${w.icon}</span>
               <span>${w.label}</span>
             </span>
           </div>
-          <span class="badge" style="background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); font-size: 0.7rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 4px;">
+          <span class="badge" style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.12); color: #94a3b8; font-size: 0.675rem; font-weight: 600; padding: 0.1rem 0.45rem; border-radius: 4px;">
             ${w.shortName.replace(/^[^\w\s]+\s*/, '')}
           </span>
         </label>
@@ -1311,21 +1302,21 @@
         <!-- ========================================== -->
         <!-- 1. HEADER BANNER                           -->
         <!-- ========================================== -->
-        <div class="card-glass" style="padding: 1.15rem 1.5rem; border-radius: var(--radius-lg); border: 1.5px solid var(--border-glass); background: var(--bg-card);">
+        <div class="card-glass" style="padding: 1.15rem 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--border-glass); background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(30, 41, 59, 0.4) 100%);">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
             <div>
               <div style="display: flex; align-items: center; gap: 0.65rem;">
-                <div class="section-icon-badge" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: var(--text-primary); font-size: 1.25rem;">
+                <div class="section-icon-badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #34d399; font-size: 1.25rem;">
                   📦
                 </div>
                 <div>
-                  <h1 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                  <h1 style="font-size: 1.35rem; font-weight: 800; color: #f8fafc; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
                     KIỂM SOÁT TỒN KHO 1C THEO NGÀY (WIP CONTROL)
-                    <span class="badge" style="background: var(--bg-card-header, #fff3cc); color: var(--text-primary); border: 1.5px solid #f59e0b; font-size: 0.75rem; font-weight: 800;">
+                    <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); font-size: 0.725rem;">
                       SHEET INVENTORY 1C
                     </span>
                   </h1>
-                  <p style="font-size: 0.85rem; color: var(--text-primary); margin: 0.2rem 0 0 0; font-weight: 600;">
+                  <p style="font-size: 0.8rem; color: #94a3b8; margin: 0.2rem 0 0 0;">
                     Lấy dữ liệu WIP từ Sheet <strong>Inventory 1C</strong> &amp; Định mức Sheet <strong>BOM</strong>: <strong>Công Đoạn</strong> • <strong>Group Model</strong> • <strong>Product Name 1C</strong> • <strong>Specification Code (0000...)</strong> • <strong>BOM Nguyên Liệu</strong> • <strong>Stock 1C</strong>
                   </p>
                 </div>
@@ -1342,7 +1333,7 @@
                 class="btn btn-sm"
                 onclick="window.toggleWipSfgColumns()"
                 title="Bật / Tắt 4 cột Tra cứu SFG (Công đoạn trước, Kế hoạch, Thực tế, Gap) ngay cạnh cột Catagory"
-                style="padding: 0.4rem 0.8rem; font-size: 0.8rem; font-weight: 800; display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; ${showSfgCols ? 'background: var(--bg-card-header, #fff3cc) !important; border: 1.5px solid #f59e0b !important; color: var(--text-primary) !important;' : 'background: var(--bg-card) !important; border: 1px solid var(--border-glass) !important; color: var(--text-primary) !important;'}">
+                style="padding: 0.35rem 0.75rem; font-size: 0.775rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; ${showSfgCols ? 'background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.55); color: #fde047;' : 'background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255,255,255,0.12); color: #94a3b8;'}">
                 <span>🔍</span>
                 <span>Cột Tra cứu SFG: ${showSfgCols ? 'Bật' : 'Tắt'}</span>
               </button>
@@ -1353,7 +1344,7 @@
                 class="btn btn-sm btn-primary" 
                 onclick="window.handleCopyForGoogleSheet()" 
                 title="Sao chép toàn bộ bảng dữ liệu WIP ra Clipboard theo định dạng TSV để dán trực tiếp (Ctrl+V / Cmd+V) vào Google Sheets"
-                style="background: #0284c7; border: 1.5px solid #0284c7; color: #ffffff; font-weight: 800; box-shadow: 0 2px 4px rgba(2, 132, 199, 0.25); display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.4rem 0.85rem; font-size: 0.8rem; border-radius: 4px;">
+                style="background: linear-gradient(135deg, #059669, #047857); border-color: rgba(16, 185, 129, 0.5); color: #fff; font-weight: 700; box-shadow: 0 2px 5px rgba(5, 150, 105, 0.25); display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.85rem; font-size: 0.775rem;">
                 <span>📋</span>
                 <span>Copy cho Google Sheet</span>
               </button>
@@ -1364,7 +1355,7 @@
                 class="btn btn-sm btn-secondary" 
                 onclick="window.handleExportWipGoogleSheet()" 
                 title="Tải xuống toàn bộ bảng dữ liệu WIP (kèm Specification Code) ra file CSV chuẩn UTF-8 để Import vào Google Sheets hoặc Excel"
-                style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.4rem 0.8rem; font-size: 0.8rem; font-weight: 800; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 4px;">
+                style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.8rem; font-size: 0.775rem; font-weight: 600;">
                 <span>📊</span>
                 <span>Xuất File Google Sheet</span>
               </button>
@@ -1374,53 +1365,53 @@
                 class="btn btn-sm btn-secondary" 
                 onclick="window.handleResetWipFilters()" 
                 title="Khôi phục toàn bộ bộ lọc về mặc định"
-                style="padding: 0.4rem 0.75rem; font-size: 0.8rem; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); font-weight: 800; border-radius: 4px;">
+                style="padding: 0.35rem 0.75rem; font-size: 0.775rem;">
                 <span>↺ Đặt lại bộ lọc</span>
               </button>
 
               <!-- Phân Nhóm Nút Lọc Nhanh Kho 1C (Tất cả kho / WH ASSEMBLY_VTP / PKG_VTP / Repair semi-finished / Repair of board) -->
-              <div style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.45rem; background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: var(--radius-sm); margin-left: 0.35rem; flex-wrap: wrap;">
-                <span style="font-size: 0.775rem; font-weight: 800; color: var(--text-primary); margin-right: 0.2rem;">📦 Kho 1C:</span>
+              <div style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.45rem; background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: var(--radius-sm); margin-left: 0.35rem; flex-wrap: wrap;">
+                <span style="font-size: 0.725rem; font-weight: 800; color: #34d399; margin-right: 0.2rem;">📦 Kho 1C:</span>
                 <button type="button" 
                   onclick="window.handleWipWarehouseChange('ALL')" 
                   class="btn btn-xs" 
                   title="Xem tổng tồn cuối của tất cả các kho"
-                  style="font-size: 0.75rem; font-weight: 800; padding: 0.25rem 0.6rem; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; ${window.WipStore.warehouseFilter === 'ALL' ? 'background: #0284c7 !important; color: #ffffff !important; border: 1.5px solid #0284c7 !important;' : 'background: var(--bg-card) !important; color: var(--text-primary) !important; border: 1px solid var(--border-glass) !important;'}">
+                  style="font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; ${window.WipStore.warehouseFilter === 'ALL' ? 'background: #059669; color: #fff; border: 1px solid #10b981; box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);' : 'background: rgba(30, 41, 59, 0.6); color: #94a3b8; border: 1px solid rgba(255, 255, 255, 0.1);'}">
                   Tất cả kho
                 </button>
                 <button type="button" 
                   onclick="window.handleWipWarehouseChange('WH ASSEMBLY_VTP')" 
                   class="btn btn-xs" 
                   title="Chỉ xem tồn cuối của kho WH ASSEMBLY_VTP"
-                  style="font-size: 0.75rem; font-weight: 800; padding: 0.25rem 0.6rem; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; ${window.WipStore.warehouseFilter === 'WH ASSEMBLY_VTP' ? 'background: #0284c7 !important; color: #ffffff !important; border: 1.5px solid #0284c7 !important;' : 'background: var(--bg-card) !important; color: var(--text-primary) !important; border: 1px solid var(--border-glass) !important;'}">
+                  style="font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; ${window.WipStore.warehouseFilter === 'WH ASSEMBLY_VTP' ? 'background: #059669; color: #fff; border: 1px solid #10b981; box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);' : 'background: rgba(30, 41, 59, 0.6); color: #94a3b8; border: 1px solid rgba(255, 255, 255, 0.1);'}">
                   🏭 WH ASSEMBLY_VTP
                 </button>
                 <button type="button" 
                   onclick="window.handleWipWarehouseChange('PKG_VTP')" 
                   class="btn btn-xs" 
                   title="Chỉ xem tồn cuối của kho PKG_VTP"
-                  style="font-size: 0.75rem; font-weight: 800; padding: 0.25rem 0.6rem; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; ${window.WipStore.warehouseFilter === 'PKG_VTP' ? 'background: #0284c7 !important; color: #ffffff !important; border: 1.5px solid #0284c7 !important;' : 'background: var(--bg-card) !important; color: var(--text-primary) !important; border: 1px solid var(--border-glass) !important;'}">
+                  style="font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; ${window.WipStore.warehouseFilter === 'PKG_VTP' ? 'background: #059669; color: #fff; border: 1px solid #10b981; box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);' : 'background: rgba(30, 41, 59, 0.6); color: #94a3b8; border: 1px solid rgba(255, 255, 255, 0.1);'}">
                   📦 PKG_VTP
                 </button>
                 <button type="button" 
                   onclick="window.handleWipWarehouseChange('Repair of semi-finished products_VTP')" 
                   class="btn btn-xs" 
                   title="Chỉ xem tồn cuối của kho Repair of semi-finished products_VTP (Bán thành phẩm sửa chữa)"
-                  style="font-size: 0.75rem; font-weight: 800; padding: 0.25rem 0.6rem; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; ${window.WipStore.warehouseFilter === 'Repair of semi-finished products_VTP' ? 'background: #0284c7 !important; color: #ffffff !important; border: 1.5px solid #0284c7 !important;' : 'background: var(--bg-card) !important; color: var(--text-primary) !important; border: 1px solid var(--border-glass) !important;'}">
+                  style="font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; ${window.WipStore.warehouseFilter === 'Repair of semi-finished products_VTP' ? 'background: #059669; color: #fff; border: 1px solid #10b981; box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);' : 'background: rgba(30, 41, 59, 0.6); color: #94a3b8; border: 1px solid rgba(255, 255, 255, 0.1);'}">
                   🔧 Repair Semi-FG
                 </button>
                 <button type="button" 
                   onclick="window.handleWipWarehouseChange('Repair of board_VTP')" 
                   class="btn btn-xs" 
                   title="Chỉ xem tồn cuối của kho Repair of board_VTP (Bo mạch sửa chữa)"
-                  style="font-size: 0.75rem; font-weight: 800; padding: 0.25rem 0.6rem; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; ${window.WipStore.warehouseFilter === 'Repair of board_VTP' ? 'background: #0284c7 !important; color: #ffffff !important; border: 1.5px solid #0284c7 !important;' : 'background: var(--bg-card) !important; color: var(--text-primary) !important; border: 1px solid var(--border-glass) !important;'}">
+                  style="font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; ${window.WipStore.warehouseFilter === 'Repair of board_VTP' ? 'background: #059669; color: #fff; border: 1px solid #10b981; box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);' : 'background: rgba(30, 41, 59, 0.6); color: #94a3b8; border: 1px solid rgba(255, 255, 255, 0.1);'}">
                   📟 Repair Board
                 </button>
                 <button type="button" 
                   onclick="window.handleWipWarehouseChange('WH of Hard Test_VTP')" 
                   class="btn btn-xs" 
                   title="Chỉ xem tồn cuối của kho WH of Hard Test_VTP (Khu vực Hard Test)"
-                  style="font-size: 0.75rem; font-weight: 800; padding: 0.25rem 0.6rem; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; ${window.WipStore.warehouseFilter === 'WH of Hard Test_VTP' ? 'background: #0284c7 !important; color: #ffffff !important; border: 1.5px solid #0284c7 !important;' : 'background: var(--bg-card) !important; color: var(--text-primary) !important; border: 1px solid var(--border-glass) !important;'}">
+                  style="font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; ${window.WipStore.warehouseFilter === 'WH of Hard Test_VTP' ? 'background: #059669; color: #fff; border: 1px solid #10b981; box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);' : 'background: rgba(30, 41, 59, 0.6); color: #94a3b8; border: 1px solid rgba(255, 255, 255, 0.1);'}">
                   ⚡ WH Hard Test
                 </button>
               </div>
@@ -1431,13 +1422,13 @@
         <!-- ========================================== -->
         <!-- 2. FILTER CONTROLS TOOLBAR                 -->
         <!-- ========================================== -->
-        <div class="card-glass" style="padding: 1rem 1.25rem; border-radius: var(--radius-md); border: 1.5px solid var(--border-glass); background: var(--bg-card);">
+        <div class="card-glass" style="padding: 1rem 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
           <div style="display: flex; flex-direction: column; gap: 0.85rem;">
             <!-- Row 1: Dropdown Filters -->
             <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.85rem;">
               <!-- 1. Multi-Select Stage Filter -->
               <div style="display: flex; align-items: center; gap: 0.35rem; position: relative;">
-                <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-primary);">🏭 Công Đoạn:</span>
+                <span style="font-size: 0.75rem; font-weight: 700; color: #c084fc;">🏭 Công Đoạn:</span>
                 
                 <div class="stage-multiselect-container" id="wipStageMultiSelectContainer" style="position: relative; display: inline-block;">
                   <button type="button" 
@@ -1445,43 +1436,43 @@
                     class="stage-multiselect-trigger" 
                     onclick="window.toggleWipStageMultiSelect(event)" 
                     title="Nhấn để chọn 1 hoặc nhiều công đoạn kiểm soát tồn kho" 
-                    style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.35rem 0.65rem; min-width: 210px; background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease;">
-                    <span id="wipStageMultiSelectLabel" style="display: flex; align-items: center; gap: 0.35rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text-primary); font-weight: 800;">
+                    style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.35rem 0.65rem; min-width: 210px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: var(--radius-sm); color: #f8fafc; font-size: 0.775rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease;">
+                    <span id="wipStageMultiSelectLabel" style="display: flex; align-items: center; gap: 0.35rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">
                       ${stageTriggerLabelHtml}
                     </span>
-                    <span style="font-size: 0.65rem; color: var(--text-primary);">▼</span>
+                    <span style="font-size: 0.65rem; color: #c084fc;">▼</span>
                   </button>
 
                   <!-- Popover Menu -->
-                  <div id="wipStageMultiSelectMenu" class="stage-multiselect-menu" onclick="event.stopPropagation()" style="display: none; position: absolute; top: calc(100% + 5px); left: 0; z-index: 1000; width: 350px; max-width: 90vw; background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: var(--radius-md); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1); padding: 0.75rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; margin-bottom: 0.5rem; border-bottom: 1px solid var(--border-glass);">
-                      <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 0.35rem;">
+                  <div id="wipStageMultiSelectMenu" class="stage-multiselect-menu" onclick="event.stopPropagation()" style="display: none; position: absolute; top: calc(100% + 5px); left: 0; z-index: 1000; width: 350px; max-width: 90vw; background: #0f172a; border: 1px solid rgba(168, 85, 247, 0.5); border-radius: var(--radius-md); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.8), 0 8px 10px -6px rgba(0, 0, 0, 0.6); padding: 0.75rem; backdrop-filter: blur(12px);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; margin-bottom: 0.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                      <span style="font-size: 0.775rem; font-weight: 800; color: #c4b5fd; display: flex; align-items: center; gap: 0.35rem;">
                         🏭 BỘ LỌC CÔNG ĐOẠN (${distinctStages.length})
                       </span>
                       <div style="display: flex; gap: 0.3rem;">
-                        <button type="button" class="btn btn-xs btn-outline" onclick="window.handleWipStageSelectAll(event)" style="font-size: 0.7rem; font-weight: 800; padding: 0.2rem 0.5rem; background: #e0f2fe; border: 1px solid #0284c7; color: #0284c7; border-radius: 3px; cursor: pointer;">✓ Chọn Hết</button>
-                        <button type="button" class="btn btn-xs btn-outline" onclick="window.handleWipStageClearAll(event)" style="font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.5rem; background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); border-radius: 3px; cursor: pointer;">✗ Bỏ Chọn</button>
-                        <button type="button" class="btn btn-xs btn-outline" onclick="window.closeWipStageMultiSelect(event)" style="font-size: 0.7rem; font-weight: 800; padding: 0.2rem 0.5rem; background: var(--bg-card); border: 1px solid #ef4444; color: var(--color-alert-red, #ff0000); border-radius: 3px; cursor: pointer;">✕</button>
+                        <button type="button" class="btn btn-xs btn-outline" onclick="window.handleWipStageSelectAll(event)" style="font-size: 0.675rem; padding: 0.15rem 0.45rem; background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.3); color: #d8b4fe; border-radius: 3px; cursor: pointer;">✓ Chọn Hết</button>
+                        <button type="button" class="btn btn-xs btn-outline" onclick="window.handleWipStageClearAll(event)" style="font-size: 0.675rem; padding: 0.15rem 0.45rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); color: #94a3b8; border-radius: 3px; cursor: pointer;">✗ Bỏ Chọn</button>
+                        <button type="button" class="btn btn-xs btn-outline" onclick="window.closeWipStageMultiSelect(event)" style="font-size: 0.675rem; padding: 0.15rem 0.45rem; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; border-radius: 3px; cursor: pointer;">✕</button>
                       </div>
                     </div>
 
                     <!-- Quick Search input inside stage popover -->
                     <div style="margin-bottom: 0.5rem; position: relative;">
-                      <input type="text" id="wipStageSearchInput" placeholder="Tìm nhanh công đoạn..." oninput="window.filterWipStageList(this.value)" style="width: 100%; box-sizing: border-box; padding: 0.35rem 0.6rem; font-size: 0.8rem; background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: var(--radius-sm); color: var(--text-primary); font-weight: 700;">
+                      <input type="text" id="wipStageSearchInput" placeholder="Tìm nhanh công đoạn..." oninput="window.filterWipStageList(this.value)" style="width: 100%; box-sizing: border-box; padding: 0.3rem 0.6rem; font-size: 0.75rem; background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: var(--radius-sm); color: #f8fafc;">
                     </div>
 
                     <!-- Quick Bundle Shortcuts -->
-                    <div style="display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.65rem; padding-bottom: 0.5rem; border-bottom: 1px dashed #cbd5e1;">
-                      <button type="button" onclick="window.setWipStageBundle(['ASSEMBLY', 'HARD TEST', 'OPTICS ASM', 'A IMP ASM', 'FOCUS'], event)" style="font-size: 0.7rem; font-weight: 800; padding: 0.2rem 0.45rem; background: #e0f2fe; border: 1px solid #0284c7; color: var(--text-primary); border-radius: 3px; cursor: pointer;" title="Chọn nhóm SFPD: Assembly, Hard Test, Optics, A Imp, Focus">
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.65rem; padding-bottom: 0.5rem; border-bottom: 1px dashed rgba(255, 255, 255, 0.1);">
+                      <button type="button" onclick="window.setWipStageBundle(['ASSEMBLY', 'HARD TEST', 'OPTICS ASM', 'A IMP ASM', 'FOCUS'], event)" style="font-size: 0.65rem; padding: 0.15rem 0.4rem; background: rgba(139, 92, 246, 0.2); border: 1px solid rgba(139, 92, 246, 0.4); color: #c4b5fd; border-radius: 3px; cursor: pointer;" title="Chọn nhóm SFPD: Assembly, Hard Test, Optics, A Imp, Focus">
                         ⭐ Cụm SFPD (5 c/đ)
                       </button>
-                      <button type="button" onclick="window.setWipStageBundle(['LONG TEST', 'TEST ROOM', 'QC', 'PKG'], event)" style="font-size: 0.7rem; font-weight: 800; padding: 0.2rem 0.45rem; background: var(--bg-card-header, #fff3cc); border: 1px solid #f59e0b; color: var(--text-primary); border-radius: 3px; cursor: pointer;" title="Chọn nhóm FPD: Long Test, Test Room, QC, PKG">
+                      <button type="button" onclick="window.setWipStageBundle(['LONG TEST', 'TEST ROOM', 'QC', 'PKG'], event)" style="font-size: 0.65rem; padding: 0.15rem 0.4rem; background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.4); color: #fde68a; border-radius: 3px; cursor: pointer;" title="Chọn nhóm FPD: Long Test, Test Room, QC, PKG">
                         📦 Cụm FPD (4 c/đ)
                       </button>
-                      <button type="button" onclick="window.setWipStageBundle(['COM PKG', 'COM PKG AUTO', 'MB'], event)" style="font-size: 0.7rem; font-weight: 800; padding: 0.2rem 0.45rem; background: #e0f2fe; border: 1px solid #0284c7; color: var(--text-primary); border-radius: 3px; cursor: pointer;" title="Chọn nhóm Masterbox: COM PKG, COM PKG AUTO, MB">
+                      <button type="button" onclick="window.setWipStageBundle(['COM PKG', 'COM PKG AUTO', 'MB'], event)" style="font-size: 0.65rem; padding: 0.15rem 0.4rem; background: rgba(6, 182, 212, 0.2); border: 1px solid rgba(6, 182, 212, 0.4); color: #a5f3fc; border-radius: 3px; cursor: pointer;" title="Chọn nhóm Masterbox: COM PKG, COM PKG AUTO, MB">
                         💻 MasterBox (3 c/đ)
                       </button>
-                      <button type="button" onclick="window.setWipStageBundle(['SMD', 'DIP', 'DIP. Selectiv', 'DIP. Selectiv.post', 'DIP. Selectiv.pre'], event)" style="font-size: 0.7rem; font-weight: 800; padding: 0.2rem 0.45rem; background: var(--bg-card-header, #fff3cc); border: 1px solid #f59e0b; color: var(--text-primary); border-radius: 3px; cursor: pointer;" title="Chọn nhóm Bo Mạch: SMD & DIP">
+                      <button type="button" onclick="window.setWipStageBundle(['SMD', 'DIP', 'DIP. Selectiv', 'DIP. Selectiv.post', 'DIP. Selectiv.pre'], event)" style="font-size: 0.65rem; padding: 0.15rem 0.4rem; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: #93c5fd; border-radius: 3px; cursor: pointer;" title="Chọn nhóm Bo Mạch: SMD & DIP">
                         ⚡ SMD &amp; DIP
                       </button>
                     </div>
@@ -1496,8 +1487,8 @@
 
               <!-- Group Model Filter -->
               <div style="display: flex; align-items: center; gap: 0.35rem;">
-                <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-primary);">📋 Group Model:</span>
-                <select id="wipModelFilter" class="select-filter font-bold" style="min-width: 170px; padding: 0.35rem 0.6rem; font-size: 0.8rem; background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800;" onchange="window.handleWipModelChange(this.value)">
+                <span style="font-size: 0.75rem; font-weight: 700; color: #38bdf8;">📋 Group Model:</span>
+                <select id="wipModelFilter" class="select-filter font-bold" style="min-width: 170px; padding: 0.3rem 0.55rem; font-size: 0.775rem;" onchange="window.handleWipModelChange(this.value)">
                   <option value="ALL">Tất cả Model (${distinctModels.length})</option>
                   ${distinctModels.map(m => `<option value="${m}" ${m === window.WipStore.modelFilter ? 'selected' : ''}>${m}</option>`).join('')}
                 </select>
@@ -1505,8 +1496,8 @@
 
               <!-- Last Step Filter -->
               <div style="display: flex; align-items: center; gap: 0.35rem;">
-                <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-primary);">🔄 Last Step:</span>
-                <select id="wipLastStepFilter" class="select-filter font-bold" style="min-width: 160px; padding: 0.35rem 0.6rem; font-size: 0.8rem; background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800;" onchange="window.handleWipLastStepChange(this.value)">
+                <span style="font-size: 0.75rem; font-weight: 700; color: #fbbf24;">🔄 Last Step:</span>
+                <select id="wipLastStepFilter" class="select-filter font-bold" style="min-width: 160px; padding: 0.3rem 0.55rem; font-size: 0.775rem;" onchange="window.handleWipLastStepChange(this.value)">
                   <option value="ALL">Tất cả Last Step</option>
                   <option value="__EMPTY__" ${window.WipStore.lastStepFilter === '__EMPTY__' ? 'selected' : ''}>-- Chưa gán Last Step --</option>
                   ${distinctLastSteps.map(ls => `<option value="${ls}" ${ls === window.WipStore.lastStepFilter ? 'selected' : ''}>${ls}</option>`).join('')}
@@ -1515,8 +1506,8 @@
 
               <!-- Status Filter -->
               <div style="display: flex; align-items: center; gap: 0.35rem;">
-                <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-primary);">🏷️ Trạng Thái:</span>
-                <select id="wipStatusFilter" class="select-filter font-bold" style="padding: 0.35rem 0.6rem; font-size: 0.8rem; background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800;" onchange="window.handleWipStatusChange(this.value)">
+                <span style="font-size: 0.75rem; font-weight: 700; color: #34d399;">🏷️ Trạng Thái:</span>
+                <select id="wipStatusFilter" class="select-filter font-bold" style="padding: 0.3rem 0.55rem; font-size: 0.775rem;" onchange="window.handleWipStatusChange(this.value)">
                   <option value="ALL">Tất cả trạng thái</option>
                   <option value="COMPLETED" ${window.WipStore.statusFilter === 'COMPLETED' ? 'selected' : ''}>✓ Đạt Kế Hoạch</option>
                   <option value="IN_PROGRESS" ${window.WipStore.statusFilter === 'IN_PROGRESS' ? 'selected' : ''}>⏳ Đang Chạy (Còn Thiếu)</option>
@@ -1527,8 +1518,8 @@
 
               <!-- Gap Filter (< 0, All, > 0, = 0, HAS_GAP) -->
               <div style="display: flex; align-items: center; gap: 0.35rem;">
-                <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-primary);">⚖️ Chênh Lệch:</span>
-                <select id="wipGapFilter" class="select-filter font-bold" style="padding: 0.35rem 0.6rem; font-size: 0.8rem; border: 1.5px solid var(--border-glass); background: var(--bg-card); color: var(--text-primary); font-weight: 800;" onchange="window.handleWipGapFilterChange(this.value)">
+                <span style="font-size: 0.75rem; font-weight: 700; color: #f87171;">⚖️ Chênh Lệch:</span>
+                <select id="wipGapFilter" class="select-filter font-bold" style="padding: 0.3rem 0.55rem; font-size: 0.775rem; border-color: ${window.WipStore.gapFilter === 'HAS_GAP' || window.WipStore.gapFilter === 'NEGATIVE' ? 'rgba(239, 68, 68, 0.6)' : 'var(--border-glass)'}; background: ${window.WipStore.gapFilter === 'HAS_GAP' || window.WipStore.gapFilter === 'NEGATIVE' ? 'rgba(239, 68, 68, 0.12)' : 'var(--surface-card)'};" onchange="window.handleWipGapFilterChange(this.value)">
                   <option value="HAS_GAP" ${window.WipStore.gapFilter === 'HAS_GAP' ? 'selected' : ''}>⚡ Chỉ Mã Có GAP (≠ 0)</option>
                   <option value="ALL" ${window.WipStore.gapFilter === 'ALL' ? 'selected' : ''}>Tất cả (Kể cả = 0)</option>
                   <option value="NEGATIVE" ${window.WipStore.gapFilter === 'NEGATIVE' ? 'selected' : ''}>🔴 Model âm (&lt; 0) - Thiếu Hụt</option>
@@ -1539,8 +1530,8 @@
 
               <!-- Sort By Filter -->
               <div style="display: flex; align-items: center; gap: 0.35rem;">
-                <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-primary);">🔃 Sắp Xếp:</span>
-                <select id="wipSortBy" class="select-filter font-bold" style="padding: 0.35rem 0.6rem; font-size: 0.8rem; background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800;" onchange="window.handleWipSortChange(this.value)">
+                <span style="font-size: 0.75rem; font-weight: 700; color: #38bdf8;">🔃 Sắp Xếp:</span>
+                <select id="wipSortBy" class="select-filter font-bold" style="padding: 0.3rem 0.55rem; font-size: 0.775rem;" onchange="window.handleWipSortChange(this.value)">
                   <option value="DEFAULT" ${window.WipStore.sortBy === 'DEFAULT' ? 'selected' : ''}>Mặc định danh mục</option>
                   <option value="GAP_ASC" ${window.WipStore.sortBy === 'GAP_ASC' ? 'selected' : ''}>🔴 Âm nhiều nhất lên đầu</option>
                   <option value="GAP_DESC" ${window.WipStore.sortBy === 'GAP_DESC' ? 'selected' : ''}>🟢 Dương nhiều nhất lên đầu</option>
@@ -1551,8 +1542,8 @@
 
               <!-- Warehouse 1C Filter (Tách theo từng kho trong sheet Inventory 1C) -->
               <div style="display: flex; align-items: center; gap: 0.35rem;">
-                <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-primary);">📦 Kho 1C:</span>
-                <select id="wipWarehouseFilter" class="select-filter font-bold" style="padding: 0.35rem 0.6rem; font-size: 0.8rem; border: 1.5px solid var(--border-glass); background: var(--bg-card); color: var(--text-primary); font-weight: 800;" onchange="window.handleWipWarehouseChange(this.value)" title="Chọn kho để tra cứu tồn kho Final Balance từ Sheet Inventory 1C">
+                <span style="font-size: 0.75rem; font-weight: 700; color: #34d399;">📦 Kho 1C:</span>
+                <select id="wipWarehouseFilter" class="select-filter font-bold" style="padding: 0.3rem 0.55rem; font-size: 0.775rem; border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.1); color: #34d399;" onchange="window.handleWipWarehouseChange(this.value)" title="Chọn kho để tra cứu tồn kho Final Balance từ Sheet Inventory 1C">
                   <option value="ALL" ${window.WipStore.warehouseFilter === 'ALL' ? 'selected' : ''}>📦 Tất cả kho (Tổng hợp)</option>
                   <option value="WH ASSEMBLY_VTP" ${window.WipStore.warehouseFilter === 'WH ASSEMBLY_VTP' ? 'selected' : ''}>🏭 WH ASSEMBLY_VTP</option>
                   <option value="PKG_VTP" ${window.WipStore.warehouseFilter === 'PKG_VTP' ? 'selected' : ''}>📦 PKG_VTP</option>
@@ -1568,14 +1559,14 @@
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; flex: 1; max-width: 620px;">
                 <div class="search-wrap" style="flex: 1; min-width: 240px;">
                   <span class="search-icon">🔍</span>
-                  <input type="text" id="wipSearchInput" class="input-search" placeholder="Tìm theo Tên 1C, Model, Norm Key, Công Đoạn..." value="${window.WipStore.search}" style="background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 700; font-size: 0.8rem;" oninput="window.handleWipSearch(this.value)">
+                  <input type="text" id="wipSearchInput" class="input-search" placeholder="Tìm theo Tên 1C, Model, Norm Key, Công Đoạn..." value="${window.WipStore.search}" oninput="window.handleWipSearch(this.value)">
                 </div>
 
                 <!-- Quick Filter Pill: Model < 0 -->
                 <button type="button" 
                   class="btn btn-sm" 
                   onclick="window.toggleWipNegativeGapFilter()" 
-                  style="font-size: 0.8rem; font-weight: 800; padding: 0.35rem 0.8rem; border-radius: var(--radius-sm); border: 1.5px solid ${window.WipStore.gapFilter === 'NEGATIVE' ? '#ef4444' : '#cbd5e1'}; background: ${window.WipStore.gapFilter === 'NEGATIVE' ? '#fff3cc' : '#ffffff'}; color: ${window.WipStore.gapFilter === 'NEGATIVE' ? '#ff0000' : '#000000'}; display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; transition: all 0.2s ease;"
+                  style="font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.75rem; border-radius: var(--radius-sm); border: 1px solid ${window.WipStore.gapFilter === 'NEGATIVE' ? 'rgba(239, 68, 68, 0.8)' : 'rgba(239, 68, 68, 0.3)'}; background: ${window.WipStore.gapFilter === 'NEGATIVE' ? 'rgba(239, 68, 68, 0.25)' : 'rgba(239, 68, 68, 0.08)'}; color: #fca5a5; display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; transition: all 0.2s ease;"
                   title="Bật/Tắt nhanh chế độ chỉ hiển thị các model âm (< 0) và sắp xếp âm nhiều nhất lên đầu">
                   <span>🔥</span>
                   <span>${window.WipStore.gapFilter === 'NEGATIVE' ? 'Đang lọc: Model < 0' : 'Lọc nhanh: Model < 0'}</span>
@@ -1583,33 +1574,34 @@
               </div>
 
               <!-- Date Range Tool: Từ ngày -> Đến ngày -->
-              <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; background: var(--bg-card); padding: 0.35rem 0.65rem; border-radius: var(--radius-sm); border: 1.5px solid var(--border-glass);">
-                <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 0.25rem;">
+              <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; background: rgba(15, 23, 42, 0.4); padding: 0.35rem 0.65rem; border-radius: var(--radius-sm); border: 1px solid rgba(96, 165, 250, 0.3);">
+                <span style="font-size: 0.75rem; font-weight: 800; color: #60a5fa; display: flex; align-items: center; gap: 0.25rem;">
                   📅 Kế Hoạch:
                 </span>
-                <span style="font-size: 0.775rem; color: var(--text-primary); font-weight: 700;">Từ</span>
+                <span style="font-size: 0.725rem; color: var(--text-muted); font-weight: 600;">Từ</span>
                 <input type="date" 
                   id="wipFromDate" 
                   class="select-filter font-mono font-bold" 
                   value="${curFromDate}" 
-                  style="padding: 0.25rem 0.45rem; font-size: 0.8rem; min-width: 125px; border-radius: var(--radius-sm); border: 1.5px solid var(--border-glass); background: var(--bg-card); color: var(--text-primary); font-weight: 800;" 
+                  style="padding: 0.25rem 0.45rem; font-size: 0.775rem; min-width: 125px; border-radius: var(--radius-sm); border: 1px solid rgba(96, 165, 250, 0.4); background: rgba(15, 23, 42, 0.6); color: #f8fafc;" 
                   onchange="window.handleWipDateRangeChange()" 
                   title="Ngày bắt đầu khoảng kế hoạch">
-                <span style="font-size: 0.775rem; color: var(--text-primary); font-weight: 700;">Đến</span>
+                <span style="font-size: 0.725rem; color: var(--text-muted); font-weight: 600;">Đến</span>
                 <input type="date" 
                   id="wipToDate" 
                   class="select-filter font-mono font-bold" 
                   value="${curToDate}" 
-                  style="padding: 0.25rem 0.45rem; font-size: 0.8rem; min-width: 125px; border-radius: var(--radius-sm); border: 1.5px solid var(--border-glass); background: var(--bg-card); color: var(--text-primary); font-weight: 800;" 
+                  style="padding: 0.25rem 0.45rem; font-size: 0.775rem; min-width: 125px; border-radius: var(--radius-sm); border: 1px solid rgba(96, 165, 250, 0.4); background: rgba(15, 23, 42, 0.6); color: #f8fafc;" 
                   onchange="window.handleWipDateRangeChange()" 
                   title="Ngày kết thúc khoảng kế hoạch (mốc kiểm kê tồn kho)">
+
 
                 <button type="button" 
                   id="btnWipLoadData" 
                   class="btn btn-sm btn-primary" 
                   onclick="window.handleWipLoadData()" 
                   title="Tra cứu kế hoạch và tải lại dữ liệu tồn kho WIP theo khoảng ngày đã chọn" 
-                  style="font-size: 0.8rem; padding: 0.3rem 0.75rem; font-weight: 800; background: #0284c7; color: #ffffff; border: 1.5px solid #0284c7; border-radius: var(--radius-sm); display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; box-shadow: 0 2px 4px rgba(2, 132, 199, 0.25); margin-left: 0.25rem;">
+                  style="font-size: 0.75rem; padding: 0.3rem 0.7rem; font-weight: 700; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #ffffff; border: 1px solid rgba(59, 130, 246, 0.5); border-radius: var(--radius-sm); display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25); margin-left: 0.25rem;">
                   <span id="wipLoadIcon" style="display: inline-block;">📥</span>
                   <span id="wipLoadText">Tra Cứu</span>
                 </button>
@@ -1621,15 +1613,15 @@
         <!-- ========================================== -->
         <!-- 2b. TỔNG HỢP CHỈ SỐ & TỔNG CHÊNH LỆCH TRÊN CÙNG -->
         <!-- ========================================== -->
-        <div class="card-glass" style="padding: 0.75rem 1.25rem; border-radius: var(--radius-md); border: 1.5px solid var(--border-glass); background: var(--bg-card-header, #fff3cc);">
+        <div class="card-glass" style="padding: 0.75rem 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass); background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.5) 100%);">
           <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
             <!-- Cụm bên trái: Tiêu đề & Tổng Model -->
             <div style="display: flex; align-items: center; gap: 0.65rem;">
-              <span style="font-size: 0.825rem; font-weight: 800; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.04em; display: flex; align-items: center; gap: 0.35rem;">
+              <span style="font-size: 0.775rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.04em; display: flex; align-items: center; gap: 0.35rem;">
                 <span>📊 TỔNG HỢP KỲ:</span>
-                <span style="color: var(--text-primary); font-weight: 800;">${dataResult.dateRangeText || ''}</span>
+                <span style="color: #cbd5e1; font-weight: 700;">${dataResult.dateRangeText || ''}</span>
               </span>
-              <span class="badge" style="background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-size: 0.775rem; font-weight: 800;">
+              <span class="badge" style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.35); color: #93c5fd; font-size: 0.75rem; font-weight: 800;">
                 📦 ${(dataResult.totalItems || 0).toLocaleString('vi-VN')} Model
               </span>
             </div>
@@ -1637,44 +1629,44 @@
             <!-- Cụm các thẻ chỉ số chính: Kế hoạch, Thực tế, TỔNG CHÊNH LỆCH, Tồn kho 1C -->
             <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.65rem;">
               <!-- 1. Tổng Kế Hoạch -->
-              <div style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.7rem; background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 6px;">
-                <span style="font-size: 0.75rem; color: var(--text-primary); font-weight: 800;">📅 Kế Hoạch:</span>
-                <span class="font-mono" style="font-size: 0.9rem; font-weight: 900; color: var(--color-plan-blue, #0000ff);">
+              <div style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.65rem; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 6px;">
+                <span style="font-size: 0.725rem; color: #93c5fd; font-weight: 700;">📅 Kế Hoạch:</span>
+                <span class="font-mono" style="font-size: 0.825rem; font-weight: 900; color: #60a5fa;">
                   ${(stats.totalPlan || 0).toLocaleString('vi-VN')}
                 </span>
               </div>
 
               <!-- 2. Tổng Thực Tế -->
-              <div style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.7rem; background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 6px;">
-                <span style="font-size: 0.75rem; color: var(--text-primary); font-weight: 800;">🏭 Thực Tế:</span>
-                <span class="font-mono" style="font-size: 0.9rem; font-weight: 900; color: var(--text-primary);">
+              <div style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.65rem; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px;">
+                <span style="font-size: 0.725rem; color: #a7f3d0; font-weight: 700;">🏭 Thực Tế:</span>
+                <span class="font-mono" style="font-size: 0.825rem; font-weight: 900; color: #34d399;">
                   ${(stats.totalFact || 0).toLocaleString('vi-VN')}
                 </span>
               </div>
 
               <!-- 3. TỔNG CHÊNH LỆCH (CARD NỔI BẬT NHẤT THEO YÊU CẦU CỦA USER) -->
-              <div style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.35rem 0.9rem; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); background: var(--bg-card); border: 1.5px solid ${stats.totalGap < 0 ? '#ef4444' : (stats.totalGap > 0 ? '#0284c7' : '#cbd5e1')};">
-                <span style="font-size: 0.8rem; font-weight: 800; color: ${stats.totalGap < 0 ? '#ff0000' : (stats.totalGap > 0 ? '#0000ff' : '#000000')};">
+              <div style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.3rem 0.85rem; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); ${stats.totalGap < 0 ? 'background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(185, 28, 28, 0.35)); border: 1px solid rgba(239, 68, 68, 0.7);' : (stats.totalGap > 0 ? 'background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.35)); border: 1px solid rgba(16, 185, 129, 0.7);' : 'background: rgba(100, 116, 139, 0.2); border: 1px solid rgba(100, 116, 139, 0.4);')}">
+                <span style="font-size: 0.775rem; font-weight: 800; color: ${stats.totalGap < 0 ? '#fca5a5' : (stats.totalGap > 0 ? '#6ee7b7' : '#cbd5e1')};">
                   ⚖️ TỔNG CHÊNH LỆCH:
                 </span>
-                <span class="font-mono" style="font-size: 1rem; font-weight: 900; letter-spacing: 0.02em; color: ${stats.totalGap < 0 ? '#ff0000' : (stats.totalGap > 0 ? '#0000ff' : '#000000')};">
+                <span class="font-mono" style="font-size: 0.95rem; font-weight: 900; letter-spacing: 0.02em; color: ${stats.totalGap < 0 ? '#f87171' : (stats.totalGap > 0 ? '#34d399' : '#f8fafc')};">
                   ${stats.totalGap > 0 ? '+' : ''}${(stats.totalGap || 0).toLocaleString('vi-VN')}
                 </span>
                 ${stats.totalGap < 0 ? `
-                  <span class="badge" style="background: var(--bg-card-header, #fff3cc); color: var(--color-alert-red, #ff0000); font-size: 0.725rem; font-weight: 800; padding: 0.15rem 0.5rem; border: 1.5px solid #ef4444; border-radius: 4px;">
+                  <span class="badge" style="background: #ef4444; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.1rem 0.35rem; border-radius: 3px;">
                     ⚠️ Thiếu ${Math.abs(stats.totalGap).toLocaleString('vi-VN')}
                   </span>
                 ` : (stats.totalGap > 0 ? `
-                  <span class="badge" style="background: #e0f2fe; color: var(--color-plan-blue, #0000ff); font-size: 0.725rem; font-weight: 800; padding: 0.15rem 0.5rem; border: 1.5px solid #0284c7; border-radius: 4px;">
+                  <span class="badge" style="background: #10b981; color: #ffffff; font-size: 0.65rem; font-weight: 800; padding: 0.1rem 0.35rem; border-radius: 3px;">
                     ✅ Vượt ${stats.totalGap.toLocaleString('vi-VN')}
                   </span>
                 ` : '')}
               </div>
 
               <!-- 4. Tổng Tồn Kho 1C -->
-              <div style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.7rem; background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 6px;">
-                <span style="font-size: 0.75rem; color: var(--text-primary); font-weight: 800;">📦 Tồn Kho 1C:</span>
-                <span class="font-mono" style="font-size: 0.9rem; font-weight: 900; color: var(--text-primary);">
+              <div style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.65rem; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px;">
+                <span style="font-size: 0.725rem; color: #6ee7b7; font-weight: 700;">📦 Tồn Kho 1C:</span>
+                <span class="font-mono" style="font-size: 0.825rem; font-weight: 900; color: #34d399;">
                   ${(stats.totalStock1C || 0).toLocaleString('vi-VN')}
                 </span>
               </div>
@@ -1685,50 +1677,50 @@
         <!-- ========================================== -->
         <!-- 3. WIP DATA TABLE WITH STOCK 1C            -->
         <!-- ========================================== -->
-        <div class="card-glass" style="border-radius: var(--radius-md); border: 1.5px solid var(--border-glass); background: var(--bg-card); overflow: hidden;">
+        <div class="card-glass" style="border-radius: var(--radius-md); border: 1px solid var(--border-glass); overflow: hidden;">
           <div class="table-container" style="max-height: 720px; overflow-y: auto;">
             <table class="datamass-table wip-table" style="width: 100%; border-collapse: separate; border-spacing: 0;">
               <thead>
                 <tr class="wip-header-group-row">
-                  <th rowspan="2" class="sticky-col-1" style="width: 45px; text-align: center; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">STT</th>
-                  <th rowspan="2" class="sticky-col-2" style="width: 110px; text-align: left; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">Công Đoạn</th>
-                  <th rowspan="2" style="width: 125px; text-align: left; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">Group Model</th>
-                  <th rowspan="2" style="width: 260px; text-align: left; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">Model (Mã 1C)</th>
-                  <th rowspan="2" style="width: 95px; text-align: right; background: var(--bg-card-header, #fff3cc) !important; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800; border: 1px solid var(--border-glass);" title="Kế hoạch sản xuất (${datesCount} ng)">
-                    KẾ HOẠCH<br><span style="font-size: 0.65rem; font-weight: 800;">(PLAN)</span>
+                  <th rowspan="2" class="sticky-col-1" style="width: 45px; text-align: center;">STT</th>
+                  <th rowspan="2" class="sticky-col-2" style="width: 110px; text-align: left;">Công Đoạn</th>
+                  <th rowspan="2" style="width: 125px; text-align: left;">Group Model</th>
+                  <th rowspan="2" style="width: 260px; text-align: left;">Model (Mã 1C)</th>
+                  <th rowspan="2" style="width: 95px; text-align: right; color: #60a5fa;" title="Kế hoạch sản xuất (${datesCount} ng)">
+                    KẾ HOẠCH<br><span style="font-size: 0.65rem; font-weight: 600;">(PLAN)</span>
                   </th>
-                  <th rowspan="2" style="width: 95px; text-align: right; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);" title="Thực tế sản xuất (${datesCount} ng)">
-                    THỰC TẾ<br><span style="font-size: 0.65rem; font-weight: 800;">(FACT)</span>
+                  <th rowspan="2" style="width: 95px; text-align: right; color: #34d399;" title="Thực tế sản xuất (${datesCount} ng)">
+                    THỰC TẾ<br><span style="font-size: 0.65rem; font-weight: 600;">(FACT)</span>
                   </th>
-                  <th rowspan="2" style="width: 105px; text-align: right; cursor: pointer; user-select: none; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);" onclick="window.toggleWipGapSort()" title="Bấm để đảo chiều sắp xếp chênh lệch (Âm nhiều nhất ➔ Dương nhiều nhất ➔ Mặc định)">
+                  <th rowspan="2" style="width: 105px; text-align: right; cursor: pointer; user-select: none;" onclick="window.toggleWipGapSort()" title="Bấm để đảo chiều sắp xếp chênh lệch (Âm nhiều nhất ➔ Dương nhiều nhất ➔ Mặc định)">
                     <div style="display: flex; align-items: center; justify-content: flex-end; gap: 0.25rem;">
-                      <span style="color: var(--text-primary); font-weight: 800;">
-                        CHÊNH LỆCH<br><span style="font-size: 0.65rem; font-weight: 800;">(GAP)</span>
+                      <span style="color: ${window.WipStore.sortBy === 'GAP_ASC' ? '#f87171' : (window.WipStore.sortBy === 'GAP_DESC' ? '#34d399' : '#f8fafc')};">
+                        CHÊNH LỆCH<br><span style="font-size: 0.65rem; font-weight: 600;">(GAP)</span>
                       </span>
-                      <span style="font-size: 0.75rem; color: var(--text-primary);">
+                      <span style="font-size: 0.75rem;">
                         ${window.WipStore.sortBy === 'GAP_ASC' ? '▲' : (window.WipStore.sortBy === 'GAP_DESC' ? '▼' : '↕')}
                       </span>
                     </div>
                   </th>
-                  <th rowspan="2" style="width: 125px; text-align: left; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">Specification Code</th>
-                  <th rowspan="2" style="width: 80px; text-align: center; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">Last Step</th>
+                  <th rowspan="2" style="width: 125px; text-align: left; background: rgba(59, 130, 246, 0.04);">Specification Code</th>
+                  <th rowspan="2" style="width: 80px; text-align: center; background: rgba(245, 158, 11, 0.04); color: #fbbf24;">Last Step</th>
                   <!-- 4 CỘT DỮ LIỆU BOM TỪ SHEET BOM-PLAN -->
-                  <th rowspan="2" style="width: 115px; text-align: left; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">Material_Code</th>
-                  <th rowspan="2" style="width: 290px; text-align: left; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">Nomenclature</th>
-                  <th rowspan="2" style="width: 70px; text-align: right; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">Quantity</th>
-                  <th rowspan="2" style="width: 80px; text-align: center; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);">Catagory</th>
+                  <th rowspan="2" style="width: 115px; text-align: left; background: rgba(245, 158, 11, 0.05); color: #fbbf24;">Material_Code</th>
+                  <th rowspan="2" style="width: 290px; text-align: left; background: rgba(245, 158, 11, 0.05); color: #fbbf24;">Nomenclature</th>
+                  <th rowspan="2" style="width: 70px; text-align: right; background: rgba(245, 158, 11, 0.05); color: #fbbf24;">Quantity</th>
+                  <th rowspan="2" style="width: 80px; text-align: center; background: rgba(245, 158, 11, 0.05); color: #fbbf24;">Catagory</th>
                   ${showSfgCols ? `
                     <!-- NHÓM CỘT MỚI: TRA CỨU SFG NGAY BÊN CẠNH CỘT CATAGORY -->
-                    <th colspan="4" class="wip-sfg-group-header" style="text-align: center; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; font-size: 0.8rem; border-left: 2px solid #f59e0b; border-bottom: 1px solid var(--border-glass); border-top: 1px solid var(--border-glass); border-right: 1px solid var(--border-glass); padding: 0.35rem 0.65rem; letter-spacing: 0.03em; position: sticky !important; top: 0 !important; z-index: 30 !important; height: 42px; box-sizing: border-box;">
+                    <th colspan="4" class="wip-sfg-group-header" style="text-align: center; background: #1f1708 !important; color: #fbbf24; font-weight: 800; font-size: 0.775rem; border-left: 2px solid #f59e0b; border-bottom: 1px solid rgba(245, 158, 11, 0.45); padding: 0.35rem 0.65rem; letter-spacing: 0.03em; position: sticky !important; top: 0 !important; z-index: 30 !important; height: 42px; box-sizing: border-box;">
                       <span>🔍 TRA CỨU SFG (CÔNG ĐOẠN TRƯỚC)</span>
                     </th>
                   ` : ''}
                   <!-- NHÓM CỘT TỒN KHO 1C GROUP THEO CÁC KHO ĐƯỢC CHỌN HIỂN THỊ (ĐÓNG BĂNG TIÊU ĐỀ CHUẨN XÁC) -->
-                  <th colspan="${activeWhList.length}" class="wip-stock-group-header" style="text-align: center; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; font-size: 0.8rem; border-left: 2px solid #0284c7; border-bottom: 1px solid var(--border-glass); border-top: 1px solid var(--border-glass); border-right: 1px solid var(--border-glass); padding: 0.35rem 0.65rem; letter-spacing: 0.03em; position: sticky !important; top: 0 !important; z-index: 30 !important; height: 42px; box-sizing: border-box;">
+                  <th colspan="${activeWhList.length}" class="wip-stock-group-header" style="text-align: center; background: #0c182a !important; color: #34d399; font-weight: 800; font-size: 0.775rem; border-left: 2px solid #10b981; border-bottom: 1px solid rgba(16, 185, 129, 0.4); padding: 0.35rem 0.65rem; letter-spacing: 0.03em; position: sticky !important; top: 0 !important; z-index: 30 !important; height: 42px; box-sizing: border-box;">
                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
                       <div style="display: flex; align-items: center; gap: 0.45rem;">
-                        <span style="font-size: 0.825rem; font-weight: 800; color: var(--text-primary);">📦 TỒN KHO 1C THEO KHO (STOCK 1C GROUP)</span>
-                        <span style="font-size: 0.725rem; font-weight: 800; background: #e0f2fe; color: var(--text-primary); padding: 0.1rem 0.45rem; border-radius: 4px; border: 1px solid #0284c7;">
+                        <span style="font-size: 0.8rem; font-weight: 800;">📦 TỒN KHO 1C THEO KHO (STOCK 1C GROUP)</span>
+                        <span style="font-size: 0.675rem; font-weight: 800; background: rgba(16, 185, 129, 0.25); color: #a7f3d0; padding: 0.1rem 0.45rem; border-radius: 4px; border: 1px solid rgba(16, 185, 129, 0.4);">
                           ${activeWhList.length}/${STOCK_WAREHOUSES_DEF.length} kho
                         </span>
                       </div>
@@ -1740,33 +1732,33 @@
                           class="stage-multiselect-trigger" 
                           onclick="window.toggleWipWarehouseMultiSelect(event)" 
                           title="Nhấn để mở Bộ lọc kho 1C" 
-                          style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.25rem 0.65rem; background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 0.775rem; font-weight: 800; cursor: pointer; transition: all 0.2s ease;">
+                          style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.25rem 0.65rem; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(16, 185, 129, 0.5); border-radius: var(--radius-sm); color: #6ee7b7; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.4);">
                           <span>👁️ Mở rộng kho:</span>
-                          <span style="background: #0284c7; color: #ffffff; padding: 0.05rem 0.4rem; border-radius: 3px; font-size: 0.725rem; font-weight: 800;">
+                          <span style="background: #059669; color: #ffffff; padding: 0.05rem 0.4rem; border-radius: 3px; font-size: 0.7rem; font-weight: 800;">
                             ${activeWhList.length}/${STOCK_WAREHOUSES_DEF.length}
                           </span>
-                          <span style="font-size: 0.65rem; color: var(--text-primary);">▼</span>
+                          <span style="font-size: 0.6rem; color: #34d399;">▼</span>
                         </button>
 
-                        <!-- Popover Menu Bộ Lọc Kho 1C -->
-                        <div id="wipWhMultiSelectMenu" class="stage-multiselect-menu" onclick="event.stopPropagation()" style="display: none; position: absolute; top: calc(100% + 6px); right: 0; z-index: 1000; width: 320px; max-width: 90vw; background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: var(--radius-md); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1); padding: 0.75rem; text-align: left;">
-                          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; margin-bottom: 0.5rem; border-bottom: 1px solid var(--border-glass);">
-                            <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 0.35rem;">
+                        <!-- Popover Menu Bộ Lọc Kho 1C thiết kế tối giản chuẩn theo Ảnh số 2 -->
+                        <div id="wipWhMultiSelectMenu" class="stage-multiselect-menu" onclick="event.stopPropagation()" style="display: none; position: absolute; top: calc(100% + 6px); right: 0; z-index: 1000; width: 320px; max-width: 90vw; background: #0f172a; border: 1px solid rgba(16, 185, 129, 0.5); border-radius: var(--radius-md); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.85), 0 8px 10px -6px rgba(0, 0, 0, 0.6); padding: 0.75rem; backdrop-filter: blur(12px); text-align: left;">
+                          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; margin-bottom: 0.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                            <span style="font-size: 0.775rem; font-weight: 800; color: #a7f3d0; display: flex; align-items: center; gap: 0.35rem;">
                               📦 BỘ LỌC KHO 1C (${STOCK_WAREHOUSES_DEF.length})
                             </span>
                             <div style="display: flex; gap: 0.3rem;">
-                              <button type="button" class="btn btn-xs btn-outline" onclick="window.handleWipWarehouseSelectAll(event)" style="font-size: 0.7rem; font-weight: 800; padding: 0.15rem 0.45rem; background: #e0f2fe; border: 1px solid #0284c7; color: #0284c7; border-radius: 3px; cursor: pointer;">✓ Chọn Hết</button>
-                              <button type="button" class="btn btn-xs btn-outline" onclick="window.handleWipWarehouseClearAll(event)" style="font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.45rem; background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); border-radius: 3px; cursor: pointer;">✗ Bỏ Chọn</button>
-                              <button type="button" class="btn btn-xs btn-outline" onclick="window.closeWipWarehouseMultiSelect(event)" style="font-size: 0.7rem; font-weight: 800; padding: 0.15rem 0.45rem; background: var(--bg-card); border: 1px solid #ef4444; color: var(--color-alert-red, #ff0000); border-radius: 3px; cursor: pointer;">✕</button>
+                              <button type="button" class="btn btn-xs btn-outline" onclick="window.handleWipWarehouseSelectAll(event)" style="font-size: 0.675rem; padding: 0.15rem 0.45rem; background: rgba(16, 185, 129, 0.18); border: 1px solid rgba(16, 185, 129, 0.35); color: #6ee7b7; border-radius: 3px; cursor: pointer;">✓ Chọn Hết</button>
+                              <button type="button" class="btn btn-xs btn-outline" onclick="window.handleWipWarehouseClearAll(event)" style="font-size: 0.675rem; padding: 0.15rem 0.45rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); color: #94a3b8; border-radius: 3px; cursor: pointer;">✗ Bỏ Chọn</button>
+                              <button type="button" class="btn btn-xs btn-outline" onclick="window.closeWipWarehouseMultiSelect(event)" style="font-size: 0.675rem; padding: 0.15rem 0.45rem; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; border-radius: 3px; cursor: pointer;">✕</button>
                             </div>
                           </div>
 
                           <!-- Quick Search input inside warehouse popover -->
                           <div style="margin-bottom: 0.5rem; position: relative;">
-                            <input type="text" id="wipWhSearchInput" placeholder="Tìm nhanh kho..." oninput="window.filterWipWarehouseList(this.value)" style="width: 100%; box-sizing: border-box; padding: 0.35rem 0.6rem; font-size: 0.8rem; background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: var(--radius-sm); color: var(--text-primary); outline: none; font-weight: 700;">
+                            <input type="text" id="wipWhSearchInput" placeholder="Tìm nhanh kho..." oninput="window.filterWipWarehouseList(this.value)" style="width: 100%; box-sizing: border-box; padding: 0.35rem 0.6rem; font-size: 0.75rem; background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.5); border-radius: var(--radius-sm); color: #f8fafc; outline: none; box-shadow: 0 0 6px rgba(16, 185, 129, 0.3);">
                           </div>
 
-                          <!-- Scrollable Checkbox List -->
+                          <!-- Scrollable Checkbox List tối giản theo Ảnh 2 -->
                           <div id="wipWhItemsList" style="max-height: 260px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.25rem;">
                             ${warehouseCheckboxItems}
                           </div>
@@ -1777,15 +1769,16 @@
                 </tr>
                 <tr class="wip-header-subrow">
                   ${showSfgCols ? `
-                    <th class="wip-sfg-sub-header" style="width: 118px; min-width: 118px; text-align: center; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; border-left: 2px solid #f59e0b; border-bottom: 2px solid #f59e0b !important; border: 1px solid var(--border-glass); font-size: 0.75rem; font-weight: 800; position: sticky !important; top: 42px !important; z-index: 29 !important; height: 34px; box-sizing: border-box; white-space: nowrap; padding: 0.25rem 0.45rem;" title="Công đoạn trước sản xuất trực tiếp mã SFG này (VD: Hardtest cho Assembly, DIP cho Hardtest)">CÔNG ĐOẠN</th>
-                    <th class="wip-sfg-sub-header" style="width: 90px; min-width: 90px; text-align: right; background: var(--bg-card-header, #fff3cc) !important; color: var(--color-plan-blue, #0000ff) !important; border-bottom: 2px solid #f59e0b !important; border: 1px solid var(--border-glass); font-size: 0.75rem; font-weight: 800; position: sticky !important; top: 42px !important; z-index: 29 !important; height: 34px; box-sizing: border-box; white-space: nowrap; padding: 0.25rem 0.45rem;" title="Tổng Kế hoạch (Plan) của mã SFG ở công đoạn trước trong kỳ đang chọn">KẾ HOẠCH</th>
-                    <th class="wip-sfg-sub-header" style="width: 90px; min-width: 90px; text-align: right; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; border-bottom: 2px solid #f59e0b !important; border: 1px solid var(--border-glass); font-size: 0.75rem; font-weight: 800; position: sticky !important; top: 42px !important; z-index: 29 !important; height: 34px; box-sizing: border-box; white-space: nowrap; padding: 0.25rem 0.45rem;" title="Tổng Thực tế (Fact) của mã SFG ở công đoạn trước trong kỳ đang chọn">THỰC TẾ</th>
-                    <th class="wip-sfg-sub-header" style="width: 90px; min-width: 90px; text-align: right; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; border-bottom: 2px solid #f59e0b !important; border: 1px solid var(--border-glass); font-size: 0.75rem; font-weight: 800; position: sticky !important; top: 42px !important; z-index: 29 !important; height: 34px; box-sizing: border-box; white-space: nowrap; padding: 0.25rem 0.45rem;" title="Chênh lệch (Gap = Thực tế - Kế hoạch) của mã SFG ở công đoạn trước">GAP</th>
+                    <th class="wip-sfg-sub-header" style="width: 118px; min-width: 118px; text-align: center; background: #1a140b !important; color: #fbbf24; border-left: 2px solid #f59e0b; border-bottom: 2px solid #f59e0b !important; font-size: 0.7rem; font-weight: 800; position: sticky !important; top: 42px !important; z-index: 29 !important; height: 34px; box-sizing: border-box; white-space: nowrap; padding: 0.25rem 0.45rem;" title="Công đoạn trước sản xuất trực tiếp mã SFG này (VD: Hardtest cho Assembly, DIP cho Hardtest)">CÔNG ĐOẠN</th>
+                    <th class="wip-sfg-sub-header" style="width: 90px; min-width: 90px; text-align: right; background: #1a140b !important; color: #60a5fa; border-bottom: 2px solid #f59e0b !important; font-size: 0.7rem; font-weight: 800; position: sticky !important; top: 42px !important; z-index: 29 !important; height: 34px; box-sizing: border-box; white-space: nowrap; padding: 0.25rem 0.45rem;" title="Tổng Kế hoạch (Plan) của mã SFG ở công đoạn trước trong kỳ đang chọn">KẾ HOẠCH</th>
+                    <th class="wip-sfg-sub-header" style="width: 90px; min-width: 90px; text-align: right; background: #1a140b !important; color: #34d399; border-bottom: 2px solid #f59e0b !important; font-size: 0.7rem; font-weight: 800; position: sticky !important; top: 42px !important; z-index: 29 !important; height: 34px; box-sizing: border-box; white-space: nowrap; padding: 0.25rem 0.45rem;" title="Tổng Thực tế (Fact) của mã SFG ở công đoạn trước trong kỳ đang chọn">THỰC TẾ</th>
+                    <th class="wip-sfg-sub-header" style="width: 90px; min-width: 90px; text-align: right; background: #1a140b !important; color: #f87171; border-bottom: 2px solid #f59e0b !important; font-size: 0.7rem; font-weight: 800; position: sticky !important; top: 42px !important; z-index: 29 !important; height: 34px; box-sizing: border-box; white-space: nowrap; padding: 0.25rem 0.45rem;" title="Chênh lệch (Gap = Thực tế - Kế hoạch) của mã SFG ở công đoạn trước">GAP</th>
                   ` : ''}
                   ${activeWhList.map((w, wIdx) => {
+                    const subBg = w.id === 'all' ? '#0f2e47' : (w.id === 'whHardTest' ? '#252412' : '#0e2438');
                     const minW = w.id === 'all' ? '105px' : (w.id === 'whHardTest' ? '115px' : '95px');
                     return `
-                      <th class="wip-stock-sub-header" style="width: ${minW}; min-width: ${minW}; text-align: right; background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; ${wIdx === 0 ? 'border-left: 2px solid #0284c7;' : ''} border-bottom: 2px solid #0284c7 !important; border: 1px solid var(--border-glass); font-size: 0.775rem; font-weight: 800; position: sticky !important; top: 42px !important; z-index: 29 !important; height: 34px; box-sizing: border-box; white-space: nowrap; padding: 0.25rem 0.55rem;" title="${w.title}">
+                      <th class="wip-stock-sub-header" style="width: ${minW}; min-width: ${minW}; text-align: right; background: ${subBg} !important; color: ${w.color}; ${wIdx === 0 ? 'border-left: 2px solid #10b981;' : ''} border-bottom: 2px solid #10b981 !important; font-size: 0.725rem; font-weight: 800; position: sticky !important; top: 42px !important; z-index: 29 !important; height: 34px; box-sizing: border-box; white-space: nowrap; padding: 0.25rem 0.55rem;" title="${w.title}">
                         ${w.shortName}
                       </th>
                     `;
@@ -1793,29 +1786,29 @@
                 </tr>
 
                 <!-- HÀNG TỔNG CỘNG ĐÓNG BĂNG TRÊN ĐẦU BẢNG (STICKY GRAND TOTAL ROW) -->
-                <tr class="wip-grand-total-row" style="position: sticky; top: 76px; z-index: 28; background: var(--bg-card-header, #fff3cc) !important; border-bottom: 2px solid #cbd5e1;">
-                  <th colspan="4" style="text-align: right; padding: 0.5rem 0.85rem; font-size: 0.825rem; font-weight: 800; color: var(--text-primary); border: 1px solid var(--border-glass); background: var(--bg-card-header, #fff3cc) !important;">
+                <tr class="wip-grand-total-row" style="position: sticky; top: 76px; z-index: 28; background: #0c182a !important; border-bottom: 2px solid #3b82f6; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);">
+                  <th colspan="4" style="text-align: right; padding: 0.5rem 0.85rem; font-size: 0.8rem; font-weight: 800; color: #f8fafc; border-right: 1px solid var(--border-glass); background: #0c182a !important;">
                     📊 TỔNG CỘNG (${(dataResult.totalItems || 0).toLocaleString('vi-VN')} Model Khớp Lọc):
                   </th>
                   <!-- KẾ HOẠCH -->
-                  <th class="font-mono" style="text-align: right; color: var(--color-plan-blue, #0000ff); font-size: 0.9rem; font-weight: 900; padding: 0.5rem 0.65rem; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass);">
+                  <th class="font-mono" style="text-align: right; color: #60a5fa; font-size: 0.875rem; font-weight: 900; padding: 0.5rem 0.65rem; background: #0c182a !important;">
                     ${(stats.totalPlan || 0).toLocaleString('vi-VN')}
                   </th>
                   <!-- THỰC TẾ -->
-                  <th class="font-mono" style="text-align: right; color: var(--text-primary); font-size: 0.9rem; font-weight: 900; padding: 0.5rem 0.65rem; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass);">
+                  <th class="font-mono" style="text-align: right; color: #f8fafc; font-size: 0.875rem; font-weight: 900; padding: 0.5rem 0.65rem; background: #0c182a !important;">
                     ${(stats.totalFact || 0).toLocaleString('vi-VN')}
                   </th>
                   <!-- CHÊNH LỆCH (TỔNG CHÊNH LỆCH ĐÓNG BĂNG TRÊN ĐẦU CỘT GAP) -->
-                  <th class="font-mono" style="text-align: right; font-size: 0.95rem; font-weight: 900; padding: 0.5rem 0.65rem; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass); color: ${stats.totalGap < 0 ? '#ff0000' : (stats.totalGap > 0 ? '#0000ff' : '#000000')};">
+                  <th class="font-mono" style="text-align: right; font-size: 0.925rem; font-weight: 900; padding: 0.5rem 0.65rem; background: ${stats.totalGap < 0 ? 'rgba(239, 68, 68, 0.25)' : (stats.totalGap > 0 ? 'rgba(16, 185, 129, 0.25)' : '#0c182a')} !important; color: ${stats.totalGap < 0 ? '#f87171' : (stats.totalGap > 0 ? '#34d399' : '#94a3b8')};">
                     ${stats.totalGap > 0 ? '+' : ''}${(stats.totalGap || 0).toLocaleString('vi-VN')}
                   </th>
                   <!-- Specification Code & Last Step & 4 Cột BOM (6 cột) -->
-                  <th colspan="6" style="text-align: left; padding: 0.5rem 0.75rem; font-size: 0.8rem; color: ${stats.totalGap < 0 ? '#ff0000' : '#000000'}; font-weight: 800; background: var(--bg-card-header, #fff3cc) !important; border: 1px solid var(--border-glass);">
+                  <th colspan="6" style="text-align: left; padding: 0.5rem 0.75rem; font-size: 0.75rem; color: #fbbf24; font-weight: 700; background: #0c182a !important;">
                     ${stats.totalGap < 0 ? `⚠️ Thiếu hụt: ${Math.abs(stats.totalGap).toLocaleString('vi-VN')} pcs (${stats.deficitCount || 0} Model âm)` : `✅ Tiến độ đạt cân đối`}
                   </th>
                   ${showSfgCols ? `
                     <!-- 4 CỘT SFG -->
-                    <th colspan="4" style="text-align: center; color: var(--text-primary); font-size: 0.8rem; font-weight: 800; border-left: 2px solid #f59e0b; border: 1px solid var(--border-glass); background: var(--bg-card-header, #fff3cc) !important;">—</th>
+                    <th colspan="4" style="text-align: center; color: #a1a1aa; font-size: 0.75rem; border-left: 2px solid rgba(245, 158, 11, 0.45); background: #0c182a !important;">—</th>
                   ` : ''}
                   <!-- CÁC CỘT TỒN KHO 1C THEO NHÓM KHO -->
                   ${activeWhList.map((w, wIdx) => {
@@ -1830,7 +1823,7 @@
                     }
                     const minW = w.id === 'all' ? '105px' : (w.id === 'whHardTest' ? '115px' : '95px');
                     return `
-                      <th class="font-mono" style="text-align: right; width: ${minW}; min-width: ${minW}; color: var(--text-primary); font-size: 0.825rem; font-weight: 800; padding: 0.5rem 0.55rem; ${wIdx === 0 ? 'border-left: 2px solid #0284c7;' : ''} border: 1px solid var(--border-glass); background: var(--bg-card-header, #fff3cc) !important;">
+                      <th class="font-mono" style="text-align: right; width: ${minW}; min-width: ${minW}; color: #34d399; font-size: 0.8rem; font-weight: 800; padding: 0.5rem 0.55rem; ${wIdx === 0 ? 'border-left: 2px solid #10b981;' : ''} background: #0c182a !important;">
                         ${whTotal > 0 ? whTotal.toLocaleString('vi-VN') : '0'}
                       </th>
                     `;
@@ -1852,7 +1845,7 @@
                   const stageStyle = getStageBadgeStyle(it.stage);
                   const isGapNeg = it.gapQty < 0;
                   const isGapPos = it.gapQty > 0;
-                  const gapColor = isGapNeg ? '#ff0000' : (isGapPos ? '#0000ff' : '#000000');
+                  const gapColor = isGapNeg ? '#f87171' : (isGapPos ? '#34d399' : '#94a3b8');
 
                   // Kiểm tra tồn kho Stock 1C của thành phẩm theo kho đang chọn (dùng khi sản phẩm không có BOM)
                   const fgStockInfo = getMaterialStock1CInfo(it.productName1C, it.specCode, window.WipStore.warehouseFilter);
@@ -1890,20 +1883,20 @@
                   // Render 4 cell BOM + 4 cell Tra cứu SFG (nếu bật) + N cell Nhóm Tồn Kho (Stock 1C Group)
                   const renderBomCells = (mat) => {
                     const emptySfgCells = showSfgCols ? `
-                      <td style="text-align: center; color: var(--text-primary); font-size: 0.8rem; border-left: 2px solid #f59e0b; border: 1px solid var(--border-glass); background: var(--bg-card) !important;">—</td>
-                      <td style="text-align: right; color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--border-glass); background: var(--bg-card) !important;">—</td>
-                      <td style="text-align: right; color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--border-glass); background: var(--bg-card) !important;">—</td>
-                      <td style="text-align: right; color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--border-glass); background: var(--bg-card) !important;">—</td>
+                      <td style="text-align: center; color: var(--text-muted); font-size: 0.775rem; border-left: 2px solid rgba(245, 158, 11, 0.35);">—</td>
+                      <td style="text-align: right; color: var(--text-muted); font-size: 0.775rem;">—</td>
+                      <td style="text-align: right; color: var(--text-muted); font-size: 0.775rem;">—</td>
+                      <td style="text-align: right; color: var(--text-muted); font-size: 0.775rem;">—</td>
                     ` : '';
                     if (!mat) {
                       return `
-                        <td style="text-align: center; color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--border-glass); background: var(--bg-card) !important;">—</td>
-                        <td style="color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--border-glass); background: var(--bg-card) !important;">—</td>
-                        <td style="text-align: center; color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--border-glass); background: var(--bg-card) !important;">—</td>
-                        <td style="text-align: center; color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--border-glass); background: var(--bg-card) !important;">—</td>
+                        <td style="text-align: center; color: var(--text-muted); font-size: 0.775rem;">—</td>
+                        <td style="color: var(--text-muted); font-size: 0.775rem;">—</td>
+                        <td style="text-align: center; color: var(--text-muted); font-size: 0.775rem;">—</td>
+                        <td style="text-align: center; color: var(--text-muted); font-size: 0.775rem;">—</td>
                         ${emptySfgCells}
                         ${activeWhList.map((w, wIdx) => `
-                          <td style="text-align: center; color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--border-glass); background: var(--bg-card) !important; ${wIdx === 0 ? 'border-left: 2px solid #0284c7;' : ''}">—</td>
+                          <td style="text-align: center; color: var(--text-muted); font-size: 0.775rem; ${wIdx === 0 ? 'border-left: 2px solid rgba(16, 185, 129, 0.4);' : ''}">—</td>
                         `).join('')}
                       `;
                     }
@@ -1913,10 +1906,14 @@
                     const isSfg = cleanNomen.toLowerCase().startsWith('ajax');
 
                     const sfgCellStyle = isSfg 
-                      ? 'background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; border: 1px solid var(--border-glass);' 
-                      : 'background: var(--bg-card) !important; color: var(--text-primary) !important; font-weight: 700; border: 1px solid var(--border-glass);';
-                    const sfgCodeStyle = 'color: var(--text-primary) !important; font-weight: 800;';
-                    const sfgTextStyle = 'color: var(--text-primary) !important; font-weight: 700;';
+                      ? 'background: #facc15 !important; color: #0f172a !important; font-weight: 700;' 
+                      : '';
+                    const sfgCodeStyle = isSfg 
+                      ? 'color: #0f172a !important; font-weight: 800;' 
+                      : 'color: #60a5fa; font-weight: 700;';
+                    const sfgTextStyle = isSfg 
+                      ? 'color: #0f172a !important; font-weight: 700;' 
+                      : 'color: #cbd5e1;';
 
                     const qtyVal = mat.quantity !== undefined && mat.quantity !== null 
                       ? mat.quantity 
@@ -1927,14 +1924,15 @@
 
                     // Style riêng cho các ô tồn kho của nhóm kho
                     const sfgStockStyle = isSfg
-                      ? 'background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 800; font-size: 0.825rem; text-align: right; border: 1px solid var(--border-glass);'
-                      : 'text-align: right; background: var(--bg-card) !important; color: var(--text-primary) !important; font-family: monospace; font-size: 0.825rem; font-weight: 800; border: 1px solid var(--border-glass);';
+                      ? 'background: #facc15 !important; color: #0f172a !important; font-weight: 800; font-size: 0.8rem; text-align: right;'
+                      : 'text-align: right; background: rgba(16, 185, 129, 0.04); font-family: monospace; font-size: 0.775rem; font-weight: 700;';
 
                     const renderStockVal = (v) => {
                       if (v > 0) {
-                        return `<span class="font-mono" style="color: var(--text-primary) !important; font-weight: 800;">${v.toLocaleString('vi-VN')}</span>`;
+                        const col = isSfg ? '#0f172a' : '#34d399';
+                        return `<span class="font-mono" style="color: ${col}; font-weight: 800;">${v.toLocaleString('vi-VN')}</span>`;
                       }
-                      return `<span style="color: var(--text-primary); font-weight: 600;">—</span>`;
+                      return `<span style="color: ${isSfg ? 'rgba(15, 23, 42, 0.45)' : '#64748b'};">—</span>`;
                     };
 
                     const stockCellsHtml = activeWhList.map((w, wIdx) => {
@@ -1946,7 +1944,7 @@
                       else if (w.id === 'whRepairBoard') val = st.whRepairBoard;
                       else if (w.id === 'whHardTest') val = st.whHardTest;
 
-                      const borderStyle = wIdx === 0 ? 'border-left: 2px solid #0284c7;' : '';
+                      const borderStyle = wIdx === 0 ? 'border-left: 2px solid rgba(16, 185, 129, 0.4);' : '';
                       const minW = w.id === 'all' ? '105px' : (w.id === 'whHardTest' ? '115px' : '95px');
                       return `
                         <td style="${sfgStockStyle} white-space: nowrap; width: ${minW}; min-width: ${minW}; ${borderStyle}" title="${w.label}: ${Number(val).toLocaleString('vi-VN')} pcs">
@@ -1959,33 +1957,33 @@
                       <!-- 10. Material_Code -->
                       <td style="${sfgCellStyle} white-space: nowrap;">
                         <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.35rem;">
-                          <span class="font-mono" style="font-size: 0.8rem; ${sfgCodeStyle} letter-spacing: 0.02em;" title="Material Code: ${mat.materialCode}">
+                          <span class="font-mono" style="font-size: 0.775rem; ${sfgCodeStyle} letter-spacing: 0.02em;" title="Material Code: ${mat.materialCode}">
                             ${mat.materialCode}
                           </span>
-                          <button type="button" class="btn-copy-mini" onclick="window.copyToClipboard('${mat.materialCode}', 'Đã copy Material Code: ${mat.materialCode}')" title="Sao chép Material Code" style="background: transparent; border: none; cursor: pointer; opacity: 0.8; padding: 1px 3px; font-size: 0.75rem; transition: opacity 0.15s ease;">
+                          <button type="button" class="btn-copy-mini" onclick="window.copyToClipboard('${mat.materialCode}', 'Đã copy Material Code: ${mat.materialCode}')" title="Sao chép Material Code" style="background: transparent; border: none; cursor: pointer; opacity: ${isSfg ? '0.85' : '0.6'}; padding: 1px 3px; font-size: 0.7rem; transition: opacity 0.15s ease;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='${isSfg ? '0.85' : '0.6'}'">
                             📋
                           </button>
                         </div>
                       </td>
 
                       <!-- 11. Nomenclature -->
-                      <td style="${sfgCellStyle} font-size: 0.8rem; ${sfgTextStyle} line-height: 1.3;" title="${cleanNomen}">
+                      <td style="${sfgCellStyle} font-size: 0.775rem; ${sfgTextStyle} line-height: 1.3;" title="${cleanNomen}">
                         ${cleanNomen}
                       </td>
 
                       <!-- 12. Quantity -->
-                      <td class="font-mono font-bold" style="${sfgCellStyle} text-align: right; font-size: 0.825rem; ${sfgCodeStyle}">
+                      <td class="font-mono font-bold" style="${sfgCellStyle} text-align: right; font-size: 0.8rem; ${sfgCodeStyle}">
                         ${qtyVal}
                       </td>
 
                       <!-- 13. Catagory (SFG / Material) -->
                       <td style="${sfgCellStyle} text-align: center; white-space: nowrap;">
                         ${isSfg ? `
-                          <span class="badge" style="background: var(--bg-card-header, #fff3cc); border: 1.5px solid #f59e0b; color: var(--text-primary); font-weight: 900; font-size: 0.75rem; padding: 0.15rem 0.5rem; letter-spacing: 0.03em;">
+                          <span class="badge" style="background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(0, 0, 0, 0.4); color: #000000; font-weight: 900; font-size: 0.725rem; padding: 0.15rem 0.5rem; letter-spacing: 0.03em;">
                             SFG
                           </span>
                         ` : `
-                          <span class="badge" style="background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); font-size: 0.725rem; font-weight: 700; padding: 0.12rem 0.4rem;">
+                          <span class="badge" style="background: rgba(148, 163, 184, 0.12); border: 1px solid rgba(148, 163, 184, 0.25); color: #94a3b8; font-size: 0.7rem; padding: 0.12rem 0.4rem;">
                             Material
                           </span>
                         `}
@@ -1994,37 +1992,37 @@
                       ${showSfgCols ? (() => {
                         if (!isSfg) {
                           return `
-                            <td style="text-align: center; color: var(--text-primary); font-size: 0.75rem; border-left: 2px solid #f59e0b; border: 1px solid var(--border-glass); background: var(--bg-card) !important;">—</td>
-                            <td style="text-align: right; color: var(--text-primary); font-size: 0.75rem; border: 1px solid var(--border-glass); background: var(--bg-card) !important;">—</td>
-                            <td style="text-align: right; color: var(--text-primary); font-size: 0.75rem; border: 1px solid var(--border-glass); background: var(--bg-card) !important;">—</td>
-                            <td style="text-align: right; color: var(--text-primary); font-size: 0.75rem; border: 1px solid var(--border-glass); background: var(--bg-card) !important;">—</td>
+                            <td style="text-align: center; color: var(--text-muted); font-size: 0.72rem; border-left: 2px solid rgba(245, 158, 11, 0.22);">—</td>
+                            <td style="text-align: right; color: var(--text-muted); font-size: 0.72rem;">—</td>
+                            <td style="text-align: right; color: var(--text-muted); font-size: 0.72rem;">—</td>
+                            <td style="text-align: right; color: var(--text-muted); font-size: 0.72rem;">—</td>
                           `;
                         }
                         const upstream = resolveUpstreamSfgEntry(cleanNomen, it.stage, sfgLookupIndex, it.productName1C);
                         if (!upstream) {
                           return `
-                            <td style="${sfgCellStyle} text-align: center; border-left: 2px solid #f59e0b; font-size: 0.75rem; color: var(--text-primary); font-weight: 700;" title="Không tìm thấy mã SFG này trong Data_Mass trong khoảng ngày đang lọc">Chưa có</td>
-                            <td style="${sfgCellStyle} text-align: right; color: var(--text-primary); font-weight: 700;">—</td>
-                            <td style="${sfgCellStyle} text-align: right; color: var(--text-primary); font-weight: 700;">—</td>
-                            <td style="${sfgCellStyle} text-align: right; color: var(--text-primary); font-weight: 700;">—</td>
+                            <td style="${sfgCellStyle} text-align: center; border-left: 2px solid rgba(180, 83, 9, 0.45); font-size: 0.72rem; color: #78350f; font-weight: 700;" title="Không tìm thấy mã SFG này trong Data_Mass trong khoảng ngày đang lọc">Chưa có</td>
+                            <td style="${sfgCellStyle} text-align: right; color: #78350f; font-weight: 700;">—</td>
+                            <td style="${sfgCellStyle} text-align: right; color: #78350f; font-weight: 700;">—</td>
+                            <td style="${sfgCellStyle} text-align: right; color: #78350f; font-weight: 700;">—</td>
                           `;
                         }
                         const sPlanStr = Math.round(upstream.planQty).toLocaleString('vi-VN');
                         const sFactStr = Math.round(upstream.factQty).toLocaleString('vi-VN');
                         const sGapVal = Math.round(upstream.gapQty);
                         const sGapStr = (sGapVal > 0 ? '+' : '') + sGapVal.toLocaleString('vi-VN');
-                        const sGapColor = sGapVal < 0 ? '#ff0000' : (sGapVal > 0 ? '#0000ff' : '#000000');
+                        const sGapColor = sGapVal < 0 ? '#b91c1c' : (sGapVal > 0 ? '#047857' : '#0f172a');
                         const encNomen = encodeURIComponent(cleanNomen);
                         const encUpStage = encodeURIComponent(upstream.stage);
                         return `
-                          <td style="${sfgCellStyle} text-align: center; white-space: nowrap; border-left: 2px solid #f59e0b;">
-                            <button type="button" class="wip-sfg-trace-btn" onclick="window.openSfgLookupFromRow(decodeURIComponent('${encNomen}'), decodeURIComponent('${encUpStage}'))" title="Xem chuỗi công đoạn trước của ${escapeWipHtml(upstream.productName1C || cleanNomen)}" style="background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); font-weight: 800; font-size: 0.75rem; padding: 0.15rem 0.45rem; border-radius: 4px; cursor: pointer;">
+                          <td style="${sfgCellStyle} text-align: center; white-space: nowrap; border-left: 2px solid rgba(180, 83, 9, 0.55);">
+                            <button type="button" class="wip-sfg-trace-btn" onclick="window.openSfgLookupFromRow(decodeURIComponent('${encNomen}'), decodeURIComponent('${encUpStage}'))" title="Xem chuỗi công đoạn trước của ${escapeWipHtml(upstream.productName1C || cleanNomen)}">
                               🔍 ${escapeWipHtml(upstream.stage)}
                             </button>
                           </td>
-                          <td style="${sfgCellStyle} text-align: right; font-weight: 800; color: var(--color-plan-blue, #0000ff) !important; font-variant-numeric: tabular-nums; font-size: 0.85rem;">${sPlanStr}</td>
-                          <td style="${sfgCellStyle} text-align: right; font-weight: 800; color: var(--text-primary) !important; font-variant-numeric: tabular-nums; font-size: 0.85rem;">${sFactStr}</td>
-                          <td style="${sfgCellStyle} text-align: right; font-weight: 900; color: ${sGapColor} !important; font-variant-numeric: tabular-nums; font-size: 0.875rem;">${sGapStr}</td>
+                          <td style="${sfgCellStyle} text-align: right; font-weight: 800; color: #1d4ed8; font-variant-numeric: tabular-nums;">${sPlanStr}</td>
+                          <td style="${sfgCellStyle} text-align: right; font-weight: 800; color: #0f172a; font-variant-numeric: tabular-nums;">${sFactStr}</td>
+                          <td style="${sfgCellStyle} text-align: right; font-weight: 900; color: ${sGapColor}; font-variant-numeric: tabular-nums;">${sGapStr}</td>
                         `;
                       })() : ''}
 
@@ -2038,112 +2036,112 @@
 
                   // Render dòng sản phẩm chính (9 ô sản phẩm bên trái + 4 ô BOM rỗng + N ô kho rỗng)
                   const mainRowHtml = `
-                    <tr class="wip-row wip-prod-header-row" style="background: var(--bg-card); border-top: 1.5px solid #cbd5e1; transition: background 0.15s ease;">
+                    <tr class="wip-row wip-prod-header-row" style="background: rgba(30, 41, 59, 0.4); border-top: 2px solid rgba(59, 130, 246, 0.4); transition: background 0.15s ease;">
                       <!-- 1. STT -->
-                      <td style="text-align: center; font-size: 0.825rem; color: var(--text-primary); font-weight: 800; position: sticky; left: 0; background: var(--bg-card) !important; border-right: 1px solid var(--border-glass); border: 1px solid var(--border-glass);">
+                      <td style="text-align: center; font-size: 0.775rem; color: #94a3b8; font-weight: 700; position: sticky; left: 0; background: var(--surface-card); border-right: 1px solid var(--border-glass);">
                         ${stt}
                       </td>
 
                       <!-- 2. Công Đoạn -->
-                      <td style="position: sticky; left: 45px; background: var(--bg-card) !important; border-right: 1px solid var(--border-glass); border: 1px solid var(--border-glass); white-space: nowrap;">
-                        <span class="badge" style="background: ${stageStyle.bg}; border: 1.5px solid ${stageStyle.border}; color: ${stageStyle.color}; font-weight: 800; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.25rem; cursor: pointer;" onclick="window.setWipStageQuickFilter('${it.stage}')" title="Bấm để chỉ lọc công đoạn ${it.stage}">
+                      <td style="position: sticky; left: 45px; background: var(--surface-card); border-right: 1px solid var(--border-glass); white-space: nowrap;">
+                        <span class="badge" style="background: ${stageStyle.bg}; border: 1px solid ${stageStyle.border}; color: ${stageStyle.color}; font-weight: 700; font-size: 0.725rem; display: inline-flex; align-items: center; gap: 0.25rem; cursor: pointer;" onclick="window.setWipStageQuickFilter('${it.stage}')" title="Bấm để chỉ lọc công đoạn ${it.stage}">
                           <span>${stageStyle.icon}</span>
                           <span>${it.stage}</span>
                         </span>
                       </td>
 
                       <!-- 3. Group Model -->
-                      <td style="font-size: 0.825rem; font-weight: 800; color: var(--text-primary); white-space: nowrap; border: 1px solid var(--border-glass);">
+                      <td style="font-size: 0.8rem; font-weight: 700; color: #38bdf8; white-space: nowrap;">
                         <span style="cursor: pointer; text-decoration: underline dotted;" onclick="window.setWipModelQuickFilter('${it.model}')" title="Bấm để lọc Model: ${it.model}">
                           ${it.model}
                         </span>
                       </td>
 
                       <!-- 4. Model (Mã 1C) -->
-                      <td style="font-size: 0.825rem; font-weight: 800; color: var(--text-primary); line-height: 1.35; border: 1px solid var(--border-glass);" title="${it.productName1C}">
+                      <td style="font-size: 0.8rem; font-weight: 600; color: #f8fafc; line-height: 1.35;" title="${it.productName1C}">
                         ${it.productName1C}
                       </td>
 
                       <!-- 5. KẾ HOẠCH (PLAN) -->
-                      <td style="text-align: right; font-size: 0.85rem; font-weight: 800; color: var(--color-plan-blue, #0000ff) !important; font-family: monospace; border: 1px solid var(--border-glass);">
+                      <td style="text-align: right; font-size: 0.825rem; font-weight: 700; color: #38bdf8; font-family: monospace;">
                         ${it.planQty > 0 ? it.planQty.toLocaleString('vi-VN') : '0'}
                       </td>
 
                       <!-- 6. THỰC TẾ (FACT) -->
-                      <td style="text-align: right; font-size: 0.85rem; font-weight: 800; color: var(--text-primary) !important; font-family: monospace; border: 1px solid var(--border-glass);">
+                      <td style="text-align: right; font-size: 0.825rem; font-weight: 700; color: #f8fafc; font-family: monospace;">
                         ${it.factQty > 0 ? it.factQty.toLocaleString('vi-VN') : '0'}
                       </td>
 
                       <!-- 7. CHÊNH LỆCH (GAP) -->
-                      <td style="text-align: right; font-size: 0.875rem; font-weight: 900; color: ${gapColor} !important; font-family: monospace; border: 1px solid var(--border-glass);">
+                      <td style="text-align: right; font-size: 0.825rem; font-weight: 700; color: ${gapColor}; font-family: monospace;">
                         ${it.gapQty > 0 ? '+' : ''}${it.gapQty.toLocaleString('vi-VN')}
                       </td>
 
                       <!-- 8. Specification Code -->
-                      <td style="white-space: nowrap; border: 1px solid var(--border-glass);">
+                      <td style="white-space: nowrap;">
                         ${displaySpecCode ? `
                           <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.35rem;">
                             <div style="display: flex; flex-direction: column; gap: 1px;">
-                              <span class="font-mono font-bold" style="font-size: 0.8rem; color: var(--text-primary); font-weight: 800; letter-spacing: 0.02em;" title="Specification Code gốc trong DataMass: ${displaySpecCode}">
+                              <span class="font-mono font-bold" style="font-size: 0.775rem; color: #60a5fa; letter-spacing: 0.02em;" title="Specification Code gốc trong DataMass: ${displaySpecCode}">
                                 ${displaySpecCode}
                               </span>
                               ${(bomItem && bomItem.specCode && String(bomItem.specCode).replace(/^0+/, '') !== String(displaySpecCode).replace(/^0+/, '')) ? `
-                                <span style="font-size: 0.7rem; color: var(--text-primary); font-family: monospace; font-weight: 700;" title="Đã đổi sang mã BOM mới: 0000${String(bomItem.specCode).replace(/^0+/, '')}">
+                                <span style="font-size: 0.65rem; color: #38bdf8; font-family: monospace; font-weight: 600;" title="Đã đổi sang mã BOM mới: 0000${String(bomItem.specCode).replace(/^0+/, '')}">
                                   ➔ 0000${String(bomItem.specCode).replace(/^0+/, '')}
                                 </span>
                               ` : ''}
                             </div>
-                            <button type="button" class="btn-copy-mini" onclick="window.copyToClipboard('${displaySpecCode}', 'Đã copy Spec Code: ${displaySpecCode}')" title="Sao chép Specification Code" style="background: transparent; border: none; cursor: pointer; opacity: 0.8; padding: 1px 3px; font-size: 0.75rem; transition: opacity 0.15s ease;">
+                            <button type="button" class="btn-copy-mini" onclick="window.copyToClipboard('${displaySpecCode}', 'Đã copy Spec Code: ${displaySpecCode}')" title="Sao chép Specification Code" style="background: transparent; border: none; cursor: pointer; opacity: 0.6; padding: 1px 3px; font-size: 0.7rem; transition: opacity 0.15s ease;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
                               📋
                             </button>
                           </div>
                         ` : (bomItem && bomItem.specCode ? `
                           <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.35rem;">
-                            <span class="font-mono font-bold" style="font-size: 0.8rem; color: var(--text-primary); font-weight: 800; letter-spacing: 0.02em;" title="Specification Code (BOM): 0000${String(bomItem.specCode).replace(/^0+/, '')}">
+                            <span class="font-mono font-bold" style="font-size: 0.775rem; color: #60a5fa; letter-spacing: 0.02em;" title="Specification Code (BOM): 0000${String(bomItem.specCode).replace(/^0+/, '')}">
                               0000${String(bomItem.specCode).replace(/^0+/, '')}
                             </span>
-                            <button type="button" class="btn-copy-mini" onclick="window.copyToClipboard('${bomItem.specCode}', 'Đã copy Spec Code: ${bomItem.specCode}')" title="Sao chép Specification Code" style="background: transparent; border: none; cursor: pointer; opacity: 0.8; padding: 1px 3px; font-size: 0.75rem; transition: opacity 0.15s ease;">
+                            <button type="button" class="btn-copy-mini" onclick="window.copyToClipboard('${bomItem.specCode}', 'Đã copy Spec Code: ${bomItem.specCode}')" title="Sao chép Specification Code" style="background: transparent; border: none; cursor: pointer; opacity: 0.6; padding: 1px 3px; font-size: 0.7rem; transition: opacity 0.15s ease;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
                               📋
                             </button>
                           </div>
                         ` : `
-                          <span style="color: var(--text-primary); font-size: 0.8rem;">—</span>
+                          <span style="color: var(--text-muted); font-size: 0.775rem;">—</span>
                         `)}
                       </td>
 
                       <!-- 9. Last Step -->
-                      <td style="text-align: center; white-space: nowrap; font-weight: 800; color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--border-glass);">
+                      <td style="text-align: center; white-space: nowrap; font-weight: 700; color: #fbbf24; font-size: 0.775rem;">
                         ${lastStepVal || '—'}
                       </td>
 
-                      <!-- DẢI CỘT BÊN PHẢI CỦA DÒNG SẢN PHẨM: Dải trắng viền xám nếu có BOM, hoặc hiển thị tồn kho nếu không có BOM -->
+                      <!-- DẢI CỘT BÊN PHẢI CỦA DÒNG SẢN PHẨM: Dải màu xám đậm rỗng nếu có BOM, hoặc hiển thị tồn kho nếu không có BOM -->
                       ${hasBom ? `
-                        <td style="background: var(--bg-card) !important; border: 1px solid var(--border-glass); height: 26px;"></td>
-                        <td style="background: var(--bg-card) !important; border: 1px solid var(--border-glass);"></td>
-                        <td style="background: var(--bg-card) !important; border: 1px solid var(--border-glass);"></td>
-                        <td style="background: var(--bg-card) !important; border: 1px solid var(--border-glass);"></td>
+                        <td style="background: #475569 !important; border: 1px solid #64748b; height: 26px;"></td>
+                        <td style="background: #475569 !important; border: 1px solid #64748b;"></td>
+                        <td style="background: #475569 !important; border: 1px solid #64748b;"></td>
+                        <td style="background: #475569 !important; border: 1px solid #64748b;"></td>
                         ${showSfgCols ? `
-                          <td style="background: var(--bg-card) !important; border: 1px solid var(--border-glass);"></td>
-                          <td style="background: var(--bg-card) !important; border: 1px solid var(--border-glass);"></td>
-                          <td style="background: var(--bg-card) !important; border: 1px solid var(--border-glass);"></td>
-                          <td style="background: var(--bg-card) !important; border: 1px solid var(--border-glass);"></td>
+                          <td style="background: #475569 !important; border: 1px solid #64748b;"></td>
+                          <td style="background: #475569 !important; border: 1px solid #64748b;"></td>
+                          <td style="background: #475569 !important; border: 1px solid #64748b;"></td>
+                          <td style="background: #475569 !important; border: 1px solid #64748b;"></td>
                         ` : ''}
                         ${activeWhList.map((w, wIdx) => {
                           const minW = w.id === 'all' ? '105px' : (w.id === 'whHardTest' ? '115px' : '95px');
                           return `
-                            <td style="background: var(--bg-card) !important; border: 1px solid var(--border-glass); width: ${minW}; min-width: ${minW}; ${wIdx === 0 ? 'border-left: 2px solid #0284c7;' : ''}"></td>
+                            <td style="background: #475569 !important; border: 1px solid #64748b; width: ${minW}; min-width: ${minW}; ${wIdx === 0 ? 'border-left: 2px solid rgba(16, 185, 129, 0.4);' : ''}"></td>
                           `;
                         }).join('')}
                       ` : `
-                        <td style="text-align: center; color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--border-glass);">—</td>
-                        <td style="color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--border-glass);">—</td>
-                        <td style="text-align: center; color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--border-glass);">—</td>
-                        <td style="text-align: center; color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--border-glass);">—</td>
+                        <td style="text-align: center; color: var(--text-muted); font-size: 0.775rem;">—</td>
+                        <td style="color: var(--text-muted); font-size: 0.775rem;">—</td>
+                        <td style="text-align: center; color: var(--text-muted); font-size: 0.775rem;">—</td>
+                        <td style="text-align: center; color: var(--text-muted); font-size: 0.775rem;">—</td>
                         ${showSfgCols ? `
-                          <td style="text-align: center; color: var(--text-primary); font-size: 0.8rem; border-left: 2px solid #f59e0b; border: 1px solid var(--border-glass);">—</td>
-                          <td style="text-align: right; color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--border-glass);">—</td>
-                          <td style="text-align: right; color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--border-glass);">—</td>
-                          <td style="text-align: right; color: var(--text-primary); font-size: 0.8rem; border: 1px solid var(--border-glass);">—</td>
+                          <td style="text-align: center; color: var(--text-muted); font-size: 0.775rem; border-left: 2px solid rgba(245, 158, 11, 0.22);">—</td>
+                          <td style="text-align: right; color: var(--text-muted); font-size: 0.775rem;">—</td>
+                          <td style="text-align: right; color: var(--text-muted); font-size: 0.775rem;">—</td>
+                          <td style="text-align: right; color: var(--text-muted); font-size: 0.775rem;">—</td>
                         ` : ''}
                         ${activeWhList.map((w, wIdx) => {
                           let val = 0;
@@ -2154,11 +2152,12 @@
                           else if (w.id === 'whRepairBoard') val = fgStocks.whRepairBoard;
                           else if (w.id === 'whHardTest') val = fgStocks.whHardTest;
 
-                          const borderStyle = wIdx === 0 ? 'border-left: 2px solid #0284c7;' : '';
+                          const borderStyle = wIdx === 0 ? 'border-left: 2px solid rgba(16, 185, 129, 0.35);' : '';
+                          const col = w.id === 'whHardTest' ? '#fde047' : '#34d399';
                           const minW = w.id === 'all' ? '105px' : (w.id === 'whHardTest' ? '115px' : '95px');
                           return `
-                            <td style="text-align: right; background: var(--bg-card) !important; border: 1px solid var(--border-glass); white-space: nowrap; width: ${minW}; min-width: ${minW}; ${borderStyle}">
-                              <span class="font-mono font-bold" style="color: var(--text-primary); font-weight: 800; font-size: 0.825rem;">${val > 0 ? val.toLocaleString('vi-VN') : '—'}</span>
+                            <td style="text-align: right; background: rgba(16, 185, 129, 0.05); white-space: nowrap; width: ${minW}; min-width: ${minW}; ${borderStyle}">
+                              <span class="font-mono font-bold" style="color: ${col};">${val > 0 ? val.toLocaleString('vi-VN') : '—'}</span>
                             </td>
                           `;
                         }).join('')}
@@ -2170,17 +2169,17 @@
                   let subRowsHtml = '';
                   if (hasBom) {
                     subRowsHtml = materials.map(mat => `
-                      <tr class="wip-row wip-bom-subrow" style="transition: background 0.15s ease; background: var(--bg-card);">
+                      <tr class="wip-row wip-bom-subrow" style="transition: background 0.15s ease;">
                         <!-- 9 ô trống bên trái theo đúng bảng concept Excel -->
-                        <td style="border: 1px solid var(--border-glass); background: var(--bg-card) !important; position: sticky; left: 0;"></td>
-                        <td style="border: 1px solid var(--border-glass); background: var(--bg-card) !important; position: sticky; left: 45px;"></td>
-                        <td style="border: 1px solid var(--border-glass); background: var(--bg-card) !important;"></td>
-                        <td style="border: 1px solid var(--border-glass); background: var(--bg-card) !important;"></td>
-                        <td style="border: 1px solid var(--border-glass); background: var(--bg-card) !important;"></td>
-                        <td style="border: 1px solid var(--border-glass); background: var(--bg-card) !important;"></td>
-                        <td style="border: 1px solid var(--border-glass); background: var(--bg-card) !important;"></td>
-                        <td style="border: 1px solid var(--border-glass); background: var(--bg-card) !important;"></td>
-                        <td style="border: 1px solid var(--border-glass); background: var(--bg-card) !important;"></td>
+                        <td style="border: 1px solid rgba(255, 255, 255, 0.05); background: var(--surface-card); position: sticky; left: 0;"></td>
+                        <td style="border: 1px solid rgba(255, 255, 255, 0.05); background: var(--surface-card); position: sticky; left: 45px;"></td>
+                        <td style="border: 1px solid rgba(255, 255, 255, 0.05);"></td>
+                        <td style="border: 1px solid rgba(255, 255, 255, 0.05);"></td>
+                        <td style="border: 1px solid rgba(255, 255, 255, 0.05);"></td>
+                        <td style="border: 1px solid rgba(255, 255, 255, 0.05);"></td>
+                        <td style="border: 1px solid rgba(255, 255, 255, 0.05);"></td>
+                        <td style="border: 1px solid rgba(255, 255, 255, 0.05);"></td>
+                        <td style="border: 1px solid rgba(255, 255, 255, 0.05);"></td>
                         <!-- 9 ô nguyên vật liệu & nhóm 5 kho bên phải -->
                         ${renderBomCells(mat)}
                       </tr>
@@ -2196,28 +2195,28 @@
           <!-- ========================================== -->
           <!-- 4. PAGINATION FOOTER BAR                   -->
           <!-- ========================================== -->
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; padding: 0.85rem 1.25rem; background: var(--bg-card); border-top: 1.5px solid #cbd5e1; gap: 0.75rem;">
-            <div style="font-size: 0.825rem; color: var(--text-primary); font-weight: 700;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; padding: 0.85rem 1.25rem; background: var(--surface-card); border-top: 1px solid var(--border-glass); gap: 0.75rem;">
+            <div style="font-size: 0.775rem; color: var(--text-secondary);">
               Hiển thị từ <strong>${items.length === 0 ? 0 : (dataResult.currentPage * dataResult.pageSize + 1)}</strong> đến <strong>${Math.min(dataResult.totalItems, (dataResult.currentPage + 1) * dataResult.pageSize)}</strong> trong tổng số <strong>${dataResult.totalItems.toLocaleString('vi-VN')}</strong> bản ghi
-              <span style="margin-left: 0.5rem; color: var(--text-primary); font-size: 0.775rem;">(Ngày kiểm kê: ${dataResult.dateRangeText || curDate})</span>
+              <span style="margin-left: 0.5rem; color: var(--text-muted); font-size: 0.725rem;">(Ngày kiểm kê: ${dataResult.dateRangeText || curDate})</span>
             </div>
 
             <div style="display: flex; align-items: center; gap: 0.4rem;">
-              <button class="btn btn-secondary btn-sm" onclick="window.setWipPage(0)" ${dataResult.currentPage === 0 ? 'disabled style="opacity: 0.4; cursor: not-allowed; background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800;"' : 'style="background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800;"'}>
+              <button class="btn btn-secondary btn-sm" onclick="window.setWipPage(0)" ${dataResult.currentPage === 0 ? 'disabled style="opacity: 0.4; cursor: not-allowed;"' : ''}>
                 ⏮ Đầu
               </button>
-              <button class="btn btn-secondary btn-sm" onclick="window.setWipPage(${dataResult.currentPage - 1})" ${dataResult.currentPage === 0 ? 'disabled style="opacity: 0.4; cursor: not-allowed; background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800;"' : 'style="background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800;"'}>
+              <button class="btn btn-secondary btn-sm" onclick="window.setWipPage(${dataResult.currentPage - 1})" ${dataResult.currentPage === 0 ? 'disabled style="opacity: 0.4; cursor: not-allowed;"' : ''}>
                 ◀ Trước
               </button>
               
-              <span style="font-size: 0.825rem; font-weight: 800; color: var(--text-primary); padding: 0.2rem 0.5rem;">
+              <span style="font-size: 0.775rem; font-weight: 700; color: #f8fafc; padding: 0.2rem 0.5rem;">
                 Trang ${dataResult.currentPage + 1} / ${dataResult.totalPages}
               </span>
 
-              <button class="btn btn-secondary btn-sm" onclick="window.setWipPage(${dataResult.currentPage + 1})" ${dataResult.currentPage >= dataResult.totalPages - 1 ? 'disabled style="opacity: 0.4; cursor: not-allowed; background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800;"' : 'style="background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800;"'}>
+              <button class="btn btn-secondary btn-sm" onclick="window.setWipPage(${dataResult.currentPage + 1})" ${dataResult.currentPage >= dataResult.totalPages - 1 ? 'disabled style="opacity: 0.4; cursor: not-allowed;"' : ''}>
                 Sau ▶
               </button>
-              <button class="btn btn-secondary btn-sm" onclick="window.setWipPage(${dataResult.totalPages - 1})" ${dataResult.currentPage >= dataResult.totalPages - 1 ? 'disabled style="opacity: 0.4; cursor: not-allowed; background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800;"' : 'style="background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800;"'}>
+              <button class="btn btn-secondary btn-sm" onclick="window.setWipPage(${dataResult.totalPages - 1})" ${dataResult.currentPage >= dataResult.totalPages - 1 ? 'disabled style="opacity: 0.4; cursor: not-allowed;"' : ''}>
                 Cuối ⏭
               </button>
             </div>

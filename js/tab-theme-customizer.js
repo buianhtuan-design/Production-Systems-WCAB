@@ -94,6 +94,14 @@
         document.head.appendChild(styleTag);
       }
 
+      // CHỈ ÁP DỤNG TÙY BIẾN KHI Ở GIAO DIỆN SÁNG (DATA-THEME="LIGHT")
+      // Giao diện Tối được bảo toàn 100% nguyên gốc không bị can thiệp
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+      if (currentTheme !== 'light') {
+        styleTag.textContent = '';
+        return;
+      }
+
       let css = '/* DYNAMIC TAB THEMES APPLIED VIA ADMIN CUSTOMIZER */\n';
 
       // 1. Nếu có cấu hình "all"

@@ -541,17 +541,17 @@
 
     const isOk = (level === 5);
     const levelColors = {
-      5: { bg: '#e0f2fe', text: '#0000ff', border: '#0284c7' },
-      4: { bg: '#e0f2fe', text: '#0284c7', border: '#0284c7' },
-      3: { bg: '#fff3cc', text: '#000000', border: '#f59e0b' },
-      2: { bg: '#fff3cc', text: '#000000', border: '#f59e0b' },
-      1: { bg: '#ffffff', text: '#ff0000', border: '#ef4444' }
+      5: { bg: 'rgba(16, 185, 129, 0.2)', text: '#34d399', border: 'rgba(16, 185, 129, 0.4)' },
+      4: { bg: 'rgba(56, 189, 248, 0.18)', text: '#38bdf8', border: 'rgba(56, 189, 248, 0.4)' },
+      3: { bg: 'rgba(245, 158, 11, 0.18)', text: '#fbbf24', border: 'rgba(245, 158, 11, 0.4)' },
+      2: { bg: 'rgba(251, 146, 60, 0.18)', text: '#fb923c', border: 'rgba(251, 146, 60, 0.4)' },
+      1: { bg: 'rgba(239, 68, 68, 0.18)', text: '#f87171', border: 'rgba(239, 68, 68, 0.4)' }
     };
     const c = levelColors[level] || levelColors[1];
-    const levelBadgeHtml = `<span class="badge" style="background: ${c.bg}; color: ${c.text}; border: 1.5px solid ${c.border}; font-size: 0.825rem; font-weight: 800; padding: 0.15rem 0.5rem; border-radius: 4px;">Level ${level}</span>`;
+    const levelBadgeHtml = `<span class="badge" style="background: ${c.bg}; color: ${c.text}; border: 1px solid ${c.border}; font-size: 0.7rem; font-weight: 800; padding: 0.1rem 0.45rem; border-radius: 4px;">Level ${level}</span>`;
     const conclusionBadgeHtml = isOk 
-      ? `<span class="badge badge-green" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: var(--color-plan-blue, #0000ff); font-size: 0.85rem; font-weight: 800; padding: 0.15rem 0.6rem; border-radius: 4px;">🟢 OK</span>`
-      : `<span class="badge badge-red" style="background: var(--bg-card); border: 1.5px solid #ef4444; color: var(--color-alert-red, #ff0000); font-size: 0.85rem; font-weight: 800; padding: 0.15rem 0.6rem; border-radius: 4px;">🔴 NG</span>`;
+      ? `<span class="badge badge-green" style="font-size: 0.725rem; font-weight: 800; padding: 0.12rem 0.55rem; border-radius: 4px; box-shadow: 0 0 8px rgba(16, 185, 129, 0.25);">🟢 OK</span>`
+      : `<span class="badge badge-red" style="font-size: 0.725rem; font-weight: 800; padding: 0.12rem 0.55rem; border-radius: 4px; box-shadow: 0 0 8px rgba(239, 68, 68, 0.25);">🔴 NG</span>`;
 
     return {
       level: level,
@@ -793,52 +793,52 @@
     });
 
     return `
-      <!-- KHỐI TỔNG HỢP CÁC CHỈ SỐ KPI -->
+      <!-- KHỐI TỔNG HỢP CÁC CHỈ SỐ KPI (THEO ĐÚNG CONCEPT ẢNH SỐ 1 - DARK GLASS TỐI ƯU) -->
       <div class="kpi-summary-container">
         
         <!-- Header Bar của Bảng Tổng Hợp KPI -->
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.75rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.65rem;">
           <div style="display: flex; align-items: center; gap: 0.6rem;">
-            <span style="font-size: 1.25rem;">📋</span>
-            <h4 style="font-size: 1.05rem; font-weight: 900; color: var(--text-primary); margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
+            <span style="font-size: 1.15rem;">📋</span>
+            <h4 style="font-size: 0.95rem; font-weight: 900; color: #f8fafc; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
               TỔNG HỢP CÁC CHỈ SỐ KPI
             </h4>
-            <span class="badge" style="background: #e0f2fe; color: var(--color-plan-blue, #0000ff); border: 1.5px solid #0284c7; font-size: 0.785rem; font-weight: 800; padding: 0.15rem 0.55rem;">
+            <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); font-size: 0.675rem; font-weight: 800; padding: 0.1rem 0.45rem;">
               LEVEL 1 - 5 EVALUATION
             </span>
-            <span style="font-size: 0.85rem; color: var(--text-primary); font-weight: 700;">
-              (Đạt Level 5 ➔ <strong style="color: var(--color-plan-blue, #0000ff);">OK</strong>, còn lại ➔ <strong style="color: var(--color-alert-red, #ff0000);">NG</strong>)
+            <span style="font-size: 0.7rem; color: #94a3b8; font-weight: 600;">
+              (Đạt Level 5 ➔ <strong style="color: #34d399;">OK</strong>, còn lại ➔ <strong style="color: #f87171;">NG</strong>)
             </span>
           </div>
 
           <div style="display: flex; align-items: center; gap: 0.4rem;">
-            <button type="button" class="btn btn-sm btn-outline" onclick="handleCopyKpiSummaryTable()" style="font-size: 0.825rem; font-weight: 800; padding: 0.35rem 0.75rem; color: var(--text-primary); border: 1px solid var(--border-glass); background: var(--bg-card);" title="Copy bảng Tổng Hợp KPI vào clipboard (dán Google Sheets / Excel)">
+            <button type="button" class="btn btn-sm btn-outline" onclick="handleCopyKpiSummaryTable()" style="font-size: 0.725rem; font-weight: 700; padding: 0.25rem 0.6rem; color: #38bdf8; border-color: rgba(56, 189, 248, 0.4);" title="Copy bảng Tổng Hợp KPI vào clipboard (dán Google Sheets / Excel)">
               <span>📋 Copy Bảng KPI</span>
             </button>
-            <button type="button" class="btn btn-sm btn-outline" onclick="handleResetKpiSummaryOverrides()" style="font-size: 0.825rem; font-weight: 800; padding: 0.35rem 0.75rem; color: var(--text-primary); border: 1px solid var(--border-glass); background: var(--bg-card);" title="Khôi phục lại các giá trị Result tự động từ dữ liệu cập nhật">
+            <button type="button" class="btn btn-sm btn-outline" onclick="handleResetKpiSummaryOverrides()" style="font-size: 0.725rem; font-weight: 700; padding: 0.25rem 0.6rem; color: #94a3b8; border-color: rgba(148, 163, 184, 0.3);" title="Khôi phục lại các giá trị Result tự động từ dữ liệu cập nhật">
               <span>🔄 Reset Data Gốc</span>
             </button>
           </div>
         </div>
 
-        <!-- Bảng 13 Cột Chuẩn - Nền Vàng Nhạt, Chữ Đen Sắc Nét -->
+        <!-- Bảng 13 Cột Chuẩn Image 1 - Giao diện Dark Glass tinh tế -->
         <div class="kpi-summary-table-wrap">
           <table class="kpi-summary-table" id="kpiSummaryLevelTable">
             <thead>
               <tr>
-                <th class="th-cyan" style="width: 85px;">Month</th>
-                <th class="th-cyan" style="width: 75px;">Team</th>
-                <th class="th-cyan" style="width: 110px;">Process</th>
-                <th class="th-cyan" style="min-width: 180px; text-align: left; padding-left: 0.75rem;">Indicators</th>
-                <th class="th-cyan" style="width: 50px;"><></th>
-                <th class="th-cyan" style="width: 85px;">Level 1</th>
-                <th class="th-cyan" style="width: 85px;">Level 2</th>
-                <th class="th-cyan" style="width: 85px;">Level 3</th>
-                <th class="th-cyan" style="width: 85px;">Level 4</th>
-                <th class="th-level-5" style="width: 95px;">Level 5 (Goal)</th>
-                <th class="th-yellow" style="width: 110px;">Result</th>
-                <th class="th-cyan" style="width: 105px;">Đánh Giá</th>
-                <th class="th-magenta" style="width: 95px;">Kết Luận</th>
+                <th class="th-cyan" style="width: 80px;">Month</th>
+                <th class="th-cyan" style="width: 65px;">Team</th>
+                <th class="th-cyan" style="width: 100px;">Process</th>
+                <th class="th-cyan" style="min-width: 170px; text-align: left; padding-left: 0.75rem;">Indicators</th>
+                <th class="th-cyan" style="width: 45px;"><></th>
+                <th class="th-cyan" style="width: 80px;">Level 1</th>
+                <th class="th-cyan" style="width: 80px;">Level 2</th>
+                <th class="th-cyan" style="width: 80px;">Level 3</th>
+                <th class="th-cyan" style="width: 80px;">Level 4</th>
+                <th class="th-level-5" style="width: 85px;">Level 5 (Goal)</th>
+                <th class="th-yellow" style="width: 100px;">Result</th>
+                <th class="th-cyan" style="width: 95px;">Đánh Giá</th>
+                <th class="th-magenta" style="width: 85px;">Kết Luận</th>
               </tr>
             </thead>
             <tbody>
@@ -1704,11 +1704,11 @@
 
                     const clipTarget = getMetricTarget('clip', item.district, item.stage, item.team, 95);
 
-                    const rowBg = '';
-                    const teamColor = '#000000';
+                    const rowBg = idx % 2 === 0 ? 'background: rgba(255, 255, 255, 0.015);' : '';
+                    const teamColor = item.team.toUpperCase().includes('WORKCELL A') ? '#60a5fa' : '#c084fc';
 
                     return `
-                      <tr style="border-bottom: 1px solid var(--border-glass);" 
+                      <tr style="border-bottom: 1px solid var(--border-glass); ${rowBg}" 
                           data-is-team="true"
                           data-stage-group="${group.stage}"
                           data-district="${item.district}"
@@ -1722,19 +1722,19 @@
                           data-blocked-target="${blockedTargetNum !== null ? blockedTargetNum : ''}">
                         
                         <!-- District -->
-                        <td style="padding: 0.35rem 0.5rem; font-weight: 800; color: var(--text-primary); white-space: nowrap;">
+                        <td style="padding: 0.35rem 0.5rem; font-weight: 600; color: #cbd5e1; white-space: nowrap;">
                           ${item.district || '-'}
                         </td>
 
                         <!-- Stage -->
                         <td style="padding: 0.35rem 0.5rem; white-space: nowrap;">
-                          <span style="color: var(--text-primary); font-weight: 800;">
+                          <span style="color: ${item.stage === 'Focus' ? '#38bdf8' : (item.stage === 'HardTest' ? '#fbbf24' : '#34d399')}; font-weight: 700;">
                             ${item.stage || '-'}
                           </span>
                         </td>
 
                         <!-- Team -->
-                        <td style="padding: 0.35rem 0.6rem; font-weight: 800; color: var(--text-primary); white-space: nowrap;">
+                        <td style="padding: 0.35rem 0.6rem; font-weight: 600; color: ${teamColor}; white-space: nowrap;">
                           ${item.team}
                         </td>
 
