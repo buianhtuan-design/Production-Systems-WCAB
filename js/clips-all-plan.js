@@ -720,58 +720,56 @@
   }
 
   /**
-   * Định dạng tỉ lệ hoàn thành %
+   * Định dạng tỉ lệ hoàn thành %: < 100% màu đỏ (#ff0000), >= 100% màu xanh (#0000ff)
    */
   function formatClipsRate(rate) {
     if (rate === null || rate === undefined || isNaN(rate)) {
-      return '<span class="text-muted rate-val">-</span>';
+      return '<span class="rate-val font-mono" style="color: var(--text-primary); font-weight: 700;">-</span>';
     }
     const val = Number(rate);
     const formatted = val.toLocaleString('vi-VN', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%';
-    let cls = 'rate-ok';
-    if (val >= 90) cls = 'text-success rate-ok';
-    else if (val >= 75) cls = 'text-warning rate-warning';
-    else cls = 'text-danger rate-danger';
-    return `<span class="${cls} rate-val font-mono">${formatted}</span>`;
+    const color = val >= 100 ? '#0000ff !important;' : '#ff0000 !important;';
+    const cls = val >= 100 ? 'rate-ok' : 'rate-danger';
+    return `<span class="${cls} rate-val font-mono" style="font-weight: 800; color: ${color}">${formatted}</span>`;
   }
 
   /**
-   * Tạo micro-badge hiển thị chênh lệch trong từng cell
+   * Tạo micro-badge hiển thị chênh lệch trong từng cell: < 0 đỏ, > 0 xanh, = 0 đen
    */
   function renderCellDelta(curPlan, nextPlan, label) {
     if (curPlan === 0 && nextPlan === 0) return '';
     const delta = curPlan - nextPlan;
     if (delta === 0) {
-      return `<div class="clips-cell-delta delta-zero" title="${label}: Cân bằng (0)">0</div>`;
+      return `<div class="clips-cell-delta delta-zero" style="color: var(--text-primary); font-weight: 700;" title="${label}: Cân bằng (0)">0</div>`;
     } else if (delta < 0) {
-      return `<div class="clips-cell-delta delta-neg" title="${label}: Thiếu ${Math.abs(delta).toLocaleString('vi-VN')} pcs">${delta.toLocaleString('vi-VN')}</div>`;
+      return `<div class="clips-cell-delta delta-neg" style="color: var(--color-alert-red, #ff0000) !important; font-weight: 900;" title="${label}: Thiếu ${Math.abs(delta).toLocaleString('vi-VN')} pcs">${delta.toLocaleString('vi-VN')}</div>`;
     } else {
-      return `<div class="clips-cell-delta delta-pos" title="${label}: Dôi dư +${delta.toLocaleString('vi-VN')} pcs">+${delta.toLocaleString('vi-VN')}</div>`;
+      return `<div class="clips-cell-delta delta-pos" style="color: var(--color-plan-blue, #0000ff) !important; font-weight: 900;" title="${label}: Dôi dư +${delta.toLocaleString('vi-VN')} pcs">+${delta.toLocaleString('vi-VN')}</div>`;
     }
   }
 
   /**
-   * Định dạng số lượng kế hoạch hoặc thực tế (bỏ 0 hiển thị dấu gạch ngang nhẹ nhàng)
+   * Định dạng số lượng kế hoạch hoặc thực tế (bỏ 0 hiển thị dấu gạch ngang nhẹ nhàng màu đen)
    */
   function formatClipsQty(v) {
-    if (v === null || v === undefined || v === 0) return '<span class="text-muted">-</span>';
+    if (v === null || v === undefined || v === 0) return '<span style="color: var(--text-primary); font-weight: 700;">-</span>';
     return Number(v).toLocaleString('vi-VN');
   }
 
   /**
-   * Định dạng chênh lệch Gap = Fact - Plan
+   * Định dạng chênh lệch Gap = Fact - Plan: < 0 đỏ (#ff0000), > 0 xanh (#0000ff), = 0 đen (#000000)
    */
   function formatClipsGap(gap, plan, fact) {
     if ((plan === 0 || plan === null || plan === undefined) && (fact === 0 || fact === null || fact === undefined)) {
-      return '<span class="text-muted">-</span>';
+      return '<span style="color: var(--text-primary); font-weight: 700;">-</span>';
     }
     const num = Number(gap) || 0;
     if (num === 0) {
-      return '<span class="gap-val gap-zero font-mono">0</span>';
+      return '<span class="gap-val gap-zero font-mono" style="color: var(--text-primary); font-weight: 700;">0</span>';
     } else if (num < 0) {
-      return `<span class="gap-val gap-neg font-mono text-danger font-bold">${num.toLocaleString('vi-VN')}</span>`;
+      return `<span class="gap-val gap-neg font-mono text-danger font-bold" style="color: var(--color-alert-red, #ff0000) !important; font-weight: 900;">${num.toLocaleString('vi-VN')}</span>`;
     } else {
-      return `<span class="gap-val gap-pos font-mono text-success font-bold">+${num.toLocaleString('vi-VN')}</span>`;
+      return `<span class="gap-val gap-pos font-mono text-success font-bold" style="color: var(--color-plan-blue, #0000ff) !important; font-weight: 900;">+${num.toLocaleString('vi-VN')}</span>`;
     }
   }
 
@@ -912,11 +910,12 @@
             </div>
 
             <!-- BỘ LỌC THỜI GIAN VÀ KỲ LỊCH SỬ CLIPS ALL (THEO THÁNG) -->
-            <div class="clips-date-filter-wrap">
-              <div class="clips-history-select-wrap">
-                <span class="date-label">📁 Kỳ Plan:</span>
+            <div class="clips-date-filter-wrap" style="background: var(--bg-card); border: 1.5px solid var(--border-glass); padding: 0.35rem 0.75rem; border-radius: 8px;">
+              <div class="clips-history-select-wrap" style="border-right: 1px solid var(--border-glass);">
+                <span class="date-label" style="color: var(--text-primary); font-weight: 800;">📁 Kỳ Plan:</span>
                 <select id="clipsHistoryMonthSelect" 
                   class="clips-history-select" 
+                  style="background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800; border-radius: 6px; padding: 0.3rem 0.55rem;"
                   onchange="window.handleClipsHistoryMonthChange(this.value)" 
                   title="Chọn kỳ lưu trữ lịch sử kế hoạch Clips All (Tháng 10/2026: 01/Oct - 31/Oct)">
                   <option value="2026-10" ${store.selectedHistoryMonth === '2026-10' ? 'selected' : ''}>Tháng 10/2026 (01/Oct - 31/Oct) [Đã lưu]</option>
@@ -926,19 +925,21 @@
               </div>
 
               <div class="clips-date-inputs">
-                <span class="date-label">📅 Từ:</span>
+                <span class="date-label" style="color: var(--text-primary); font-weight: 800;">📅 Từ:</span>
                 <input type="date" 
                   id="clipsFromDate" 
                   class="clips-date-input" 
+                  style="background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800; border-radius: 6px; padding: 0.3rem 0.55rem;"
                   value="${store.fromDate || ''}" 
                   onchange="window.handleClipsDateChange('from', this.value)" 
                   title="Chọn ngày bắt đầu lọc kế hoạch"
                 />
-                <span class="date-sep">➔</span>
-                <span class="date-label">Đến:</span>
+                <span class="date-sep" style="color: var(--text-primary); font-weight: 800;">➔</span>
+                <span class="date-label" style="color: var(--text-primary); font-weight: 800;">Đến:</span>
                 <input type="date" 
                   id="clipsToDate" 
                   class="clips-date-input" 
+                  style="background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800; border-radius: 6px; padding: 0.3rem 0.55rem;"
                   value="${store.toDate || ''}" 
                   onchange="window.handleClipsDateChange('to', this.value)" 
                   title="Chọn ngày kết thúc lọc kế hoạch"
@@ -948,10 +949,11 @@
 
             <!-- ACTION BUTTONS -->
             <div class="clips-actions-wrap">
-              <!-- Nút Loading Plan Mới (Chuẩn bị cho T11) -->
+              <!-- Nút Loading Plan Mới -->
               <button type="button" 
                 id="btnLoadingClipsPlan"
-                class="btn btn-sm btn-accent clips-btn-action clips-btn-loading-plan"
+                class="btn btn-sm clips-btn-action"
+                style="background: #0284c7; border: 1.5px solid #0284c7; color: #ffffff !important; font-weight: 800; border-radius: 6px;"
                 onclick="window.handleOpenLoadingClipsPlanModal()"
                 title="Tải / Nạp Kế Hoạch Clips All mới (Ví dụ: Tháng 11/2026 khi Google Sheet được cập nhật)">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
@@ -961,7 +963,8 @@
               <!-- Nút Copy Google Sheet -->
               <button type="button" 
                 id="btnCopyClipsSheet"
-                class="btn btn-sm btn-primary clips-btn-action"
+                class="btn btn-sm clips-btn-action"
+                style="background: #f59e0b; border: 1.5px solid #d97706; color: var(--text-primary) !important; font-weight: 800; border-radius: 6px;"
                 onclick="window.handleCopyClipsGoogleSheet()"
                 title="Sao chép toàn bộ bảng với số thuần túy (pure number), có đơn vị tính ở tiêu đề, sạch emoji, sẵn sàng dán trực tiếp vào Google Sheets">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
@@ -971,7 +974,8 @@
               <!-- Nút Xuất CSV -->
               <button type="button" 
                 id="btnExportClipsCsv"
-                class="btn btn-sm btn-secondary clips-btn-action"
+                class="btn btn-sm clips-btn-action"
+                style="background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary) !important; font-weight: 800; border-radius: 6px;"
                 onclick="window.handleExportClipsCSV()"
                 title="Tải xuống tệp CSV định dạng chuẩn UTF-8 tương thích tốt với Excel và Google Sheets">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
@@ -980,7 +984,8 @@
 
               <!-- Đặt lại bộ lọc -->
               <button type="button" 
-                class="btn btn-sm btn-secondary clips-btn-action"
+                class="btn btn-sm clips-btn-action"
+                style="background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary) !important; font-weight: 800; border-radius: 6px;"
                 onclick="window.handleResetClipsFilters()"
                 title="Đặt lại toàn bộ bộ lọc về trạng thái ban đầu">
                 <span>↺ Đặt lại</span>
@@ -990,21 +995,21 @@
         </div>
 
         <!-- THANH TỔNG HỢP CLIPS ALL THEO SHEET CLIP ALLS (1 HÀNG DUY NHẤT) -->
-        <div class="clips-summary-banner clips-summary-single-line">
+        <div class="clips-summary-banner clips-summary-single-line" style="background: var(--bg-card-header, #fff3cc); border: 1.8px solid #cbd5e1; border-radius: 10px; padding: 0.65rem 1rem;">
           <!-- 1. Tiêu đề tinh gọn kèm kỳ Plan -->
           <div class="clips-sum-title-col">
-            <span class="summary-badge-icon">📊</span>
+            <span class="summary-badge-icon" style="background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 6px; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center;">📊</span>
             <div class="clips-sum-title-text-wrap">
-              <span class="summary-title-main">Tổng Hợp Clips All</span>
-              <span class="clips-history-badge" title="Kỳ kế hoạch Clips All đang kích hoạt: ${stats.clipsMasterPeriodName}">📁 ${stats.clipsMasterPeriodName}</span>
+              <span class="summary-title-main" style="color: var(--text-primary) !important; font-weight: 850;">Tổng Hợp Clips All</span>
+              <span class="clips-history-badge" style="background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); font-weight: 800;" title="Kỳ kế hoạch Clips All đang kích hoạt: ${stats.clipsMasterPeriodName}">📁 ${stats.clipsMasterPeriodName}</span>
             </div>
           </div>
 
           <!-- 2. Chỉ số tổng sản lượng & Clip (all plant) -->
           <div class="clips-sum-metrics-col">
-            <span class="tag-meta" title="Tổng Plan chi tiết của 213 mã Device: 464.094 pcs (Ô tổng kết quả sheet Clip Alls: 505.629 pcs)">Tổng Plan: <strong>${stats.sumClipsAllPlan.toLocaleString('vi-VN')} pcs</strong></span>
-            <span class="tag-meta" title="Tổng Fact Clips All lấy từ sheet Data_Mass (bằng đúng Fact MB): ${stats.sumClipsAllFact.toLocaleString('vi-VN')} pcs">Tổng Fact: <strong>${stats.sumClipsAllFact.toLocaleString('vi-VN')} pcs</strong></span>
-            <span class="tag-meta highlight-clip-green" title="Clip (all plant) = Total Done (${stats.qtyDoneDevice}) / Total Device (${stats.qtyAllDevice})">Clip (all plant): <strong>${stats.clipAllPlantRate}</strong></span>
+            <span class="tag-meta" style="background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800;" title="Tổng Plan chi tiết của 213 mã Device: 464.094 pcs">Tổng Plan: <strong style="color: var(--color-plan-blue, #0000ff) !important; font-weight: 900;">${stats.sumClipsAllPlan.toLocaleString('vi-VN')} pcs</strong></span>
+            <span class="tag-meta" style="background: var(--bg-card); border: 1.5px solid var(--border-glass); color: var(--text-primary); font-weight: 800;" title="Tổng Fact Clips All lấy từ sheet Data_Mass: ${stats.sumClipsAllFact.toLocaleString('vi-VN')} pcs">Tổng Fact: <strong style="color: var(--text-primary) !important; font-weight: 900;">${stats.sumClipsAllFact.toLocaleString('vi-VN')} pcs</strong></span>
+            <span class="tag-meta" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: var(--text-primary); font-weight: 800;" title="Clip (all plant) = Total Done (${stats.qtyDoneDevice}) / Total Device (${stats.qtyAllDevice})">Clip (all plant): <strong style="color: var(--color-plan-blue, #0000ff) !important; font-weight: 950; font-size: 1.25rem;">${stats.clipAllPlantRate}</strong></span>
           </div>
 
           <!-- 3. Các pill lọc tương tác gọn nhẹ trên cùng 1 hàng theo đúng Sheet Clip Alls -->
@@ -1013,6 +1018,7 @@
             <button type="button" 
               class="clips-sum-pill ${store.gapFilter === 'CLIPS_ALL_DEVICE' || store.gapFilter === 'CLIPS_HAS_PLAN' ? 'selected' : ''}" 
               onclick="window.handleClipsGapFilter('${store.gapFilter === 'CLIPS_ALL_DEVICE' || store.gapFilter === 'CLIPS_HAS_PLAN' ? 'ALL' : 'CLIPS_ALL_DEVICE'}')" 
+              style="background: ${store.gapFilter === 'CLIPS_ALL_DEVICE' || store.gapFilter === 'CLIPS_HAS_PLAN' ? '#0284c7' : '#ffffff'}; border: 1.5px solid ${store.gapFilter === 'CLIPS_ALL_DEVICE' || store.gapFilter === 'CLIPS_HAS_PLAN' ? '#0284c7' : '#cbd5e1'}; color: ${store.gapFilter === 'CLIPS_ALL_DEVICE' || store.gapFilter === 'CLIPS_HAS_PLAN' ? '#ffffff' : '#000000'}; font-weight: 800;"
               title="Bấm để lọc danh sách các mã Total Device">
               <span class="pill-dot">📋</span>
               <span class="pill-label">Total Device:</span>
@@ -1024,22 +1030,24 @@
             <button type="button" 
               class="clips-sum-pill pill-success ${store.gapFilter === 'CLIPS_DONE_DEVICE' || store.gapFilter === 'CLIPS_GT_90' ? 'selected' : ''}" 
               onclick="window.handleClipsGapFilter('${store.gapFilter === 'CLIPS_DONE_DEVICE' || store.gapFilter === 'CLIPS_GT_90' ? 'ALL' : 'CLIPS_DONE_DEVICE'}')" 
+              style="background: ${store.gapFilter === 'CLIPS_DONE_DEVICE' || store.gapFilter === 'CLIPS_GT_90' ? '#0284c7' : '#ffffff'}; border: 1.5px solid ${store.gapFilter === 'CLIPS_DONE_DEVICE' || store.gapFilter === 'CLIPS_GT_90' ? '#0284c7' : '#0284c7'}; color: ${store.gapFilter === 'CLIPS_DONE_DEVICE' || store.gapFilter === 'CLIPS_GT_90' ? '#ffffff' : '#0000ff'}; font-weight: 800;"
               title="Bấm để lọc ${stats.qtyDoneDevice} mã Total Done có tỉ lệ hoàn thành > 90% (${stats.clipAllPlantRate})">
               <span class="pill-dot">🟢</span>
               <span class="pill-label">Total Done:</span>
-              <span class="pill-number text-success font-bold">${stats.qtyDoneDevice} mã</span>
-              <span class="pill-pct text-success font-bold">(${stats.clipAllPlantRate})</span>
+              <span class="pill-number font-bold">${stats.qtyDoneDevice} mã</span>
+              <span class="pill-pct font-bold">(${stats.clipAllPlantRate})</span>
             </button>
 
             <!-- Pill 3: Pending -->
             <button type="button" 
               class="clips-sum-pill pill-danger ${store.gapFilter === 'CLIPS_NOT_DONE_DEVICE' || store.gapFilter === 'CLIPS_LT_90' ? 'selected' : ''}" 
               onclick="window.handleClipsGapFilter('${store.gapFilter === 'CLIPS_NOT_DONE_DEVICE' || store.gapFilter === 'CLIPS_LT_90' ? 'ALL' : 'CLIPS_NOT_DONE_DEVICE'}')" 
+              style="background: ${store.gapFilter === 'CLIPS_NOT_DONE_DEVICE' || store.gapFilter === 'CLIPS_LT_90' ? '#fff3cc' : '#ffffff'}; border: 1.5px solid #ef4444; color: var(--color-alert-red, #ff0000); font-weight: 800;"
               title="Bấm để lọc ${stats.qtyNotDoneDevice} mã Pending chưa đạt tỉ lệ hoàn thành < 90% (${stats.notDoneRate})">
               <span class="pill-dot">🔴</span>
               <span class="pill-label">Pending:</span>
-              <span class="pill-number text-danger font-bold">${stats.qtyNotDoneDevice} mã</span>
-              <span class="pill-pct text-danger font-bold">(${stats.notDoneRate})</span>
+              <span class="pill-number font-bold" style="color: var(--color-alert-red, #ff0000) !important;">${stats.qtyNotDoneDevice} mã</span>
+              <span class="pill-pct font-bold" style="color: var(--color-alert-red, #ff0000) !important;">(${stats.notDoneRate})</span>
             </button>
           </div>
         </div>
@@ -1171,29 +1179,29 @@
             </div>
 
             <!-- DÒNG CHỈ DẪN QUY TRÌNH (PRODUCTION PIPELINE FLOW BAR - CLIPS ALL TRƯỚC MB) -->
-            <div class="clips-flow-legend">
-              <span class="legend-title">Dòng sản xuất:</span>
-              <span class="step-pill" style="border-color: #38bdf8; color: #38bdf8;">SMD</span>
-              <span class="arrow">➔</span>
-              <span class="step-pill" style="border-color: #fbbf24; color: #fbbf24;">DIP</span>
-              <span class="arrow">➔</span>
-              <span class="step-pill" style="border-color: #06b6d4; color: #06b6d4;">LAQ.Line</span>
-              <span class="arrow">➔</span>
-              <span class="step-pill" style="border-color: #10b981; color: #10b981;">HARD TEST</span>
-              <span class="arrow">➔</span>
-              <span class="step-pill" style="border-color: #a855f7; color: #a855f7;">ASSEMBLY</span>
-              <span class="arrow">➔</span>
-              <span class="step-pill" style="border-color: #f43f5e; color: #f43f5e;">LONG TEST</span>
-              <span class="arrow">➔</span>
-              <span class="step-pill" style="border-color: #f97316; color: #f97316;">TEST ROOM</span>
-              <span class="arrow">➔</span>
-              <span class="step-pill" style="border-color: #6366f1; color: #6366f1;">QC</span>
-              <span class="arrow">➔</span>
-              <span class="step-pill" style="border-color: #8b5cf6; color: #8b5cf6;">PKG</span>
-              <span class="arrow">➔</span>
-              <span class="step-pill" style="border-color: #06b6d4; color: #38bdf8; font-weight: 800; background: rgba(6, 182, 212, 0.15);" title="Clips All (Kế hoạch tổng thể sheet Clip Alls - Fact update theo MB)">Clips All</span>
-              <span class="arrow">➔</span>
-              <span class="step-pill" style="border-color: #0284c7; color: #38bdf8; font-weight: 800;" title="MasterBox (Đóng thùng thành phẩm xuất kho)">MB (Thành phẩm)</span>
+            <div class="clips-flow-legend" style="background: var(--bg-card); border: 1.5px solid var(--border-glass); padding: 0.4rem 0.75rem; border-radius: 8px;">
+              <span class="legend-title" style="color: var(--text-primary); font-weight: 800;">Dòng sản xuất:</span>
+              <span class="step-pill" style="border: 1px solid var(--border-glass); background: var(--bg-card); color: var(--text-primary); font-weight: 800;">SMD</span>
+              <span class="arrow" style="color: var(--text-primary); font-weight: 800;">➔</span>
+              <span class="step-pill" style="border: 1px solid var(--border-glass); background: var(--bg-card); color: var(--text-primary); font-weight: 800;">DIP</span>
+              <span class="arrow" style="color: var(--text-primary); font-weight: 800;">➔</span>
+              <span class="step-pill" style="border: 1px solid var(--border-glass); background: var(--bg-card); color: var(--text-primary); font-weight: 800;">LAQ.Line</span>
+              <span class="arrow" style="color: var(--text-primary); font-weight: 800;">➔</span>
+              <span class="step-pill" style="border: 1px solid var(--border-glass); background: var(--bg-card); color: var(--text-primary); font-weight: 800;">HARD TEST</span>
+              <span class="arrow" style="color: var(--text-primary); font-weight: 800;">➔</span>
+              <span class="step-pill" style="border: 1px solid var(--border-glass); background: var(--bg-card); color: var(--text-primary); font-weight: 800;">ASSEMBLY</span>
+              <span class="arrow" style="color: var(--text-primary); font-weight: 800;">➔</span>
+              <span class="step-pill" style="border: 1px solid var(--border-glass); background: var(--bg-card); color: var(--text-primary); font-weight: 800;">LONG TEST</span>
+              <span class="arrow" style="color: var(--text-primary); font-weight: 800;">➔</span>
+              <span class="step-pill" style="border: 1px solid var(--border-glass); background: var(--bg-card); color: var(--text-primary); font-weight: 800;">TEST ROOM</span>
+              <span class="arrow" style="color: var(--text-primary); font-weight: 800;">➔</span>
+              <span class="step-pill" style="border: 1px solid var(--border-glass); background: var(--bg-card); color: var(--text-primary); font-weight: 800;">QC</span>
+              <span class="arrow" style="color: var(--text-primary); font-weight: 800;">➔</span>
+              <span class="step-pill" style="border: 1px solid var(--border-glass); background: var(--bg-card); color: var(--text-primary); font-weight: 800;">PKG</span>
+              <span class="arrow" style="color: var(--text-primary); font-weight: 800;">➔</span>
+              <span class="step-pill" style="border: 1.5px solid #0284c7; background: #e0f2fe; color: var(--color-plan-blue, #0000ff); font-weight: 800;" title="Clips All (Kế hoạch tổng thể sheet Clip Alls - Fact update theo MB)">Clips All</span>
+              <span class="arrow" style="color: var(--text-primary); font-weight: 800;">➔</span>
+              <span class="step-pill" style="border: 1.5px solid #f59e0b; background: var(--bg-card-header, #fff3cc); color: var(--text-primary); font-weight: 800;" title="MasterBox (Đóng thùng thành phẩm xuất kho)">MB (Thành phẩm)</span>
             </div>
           </div>
         </div>
@@ -1236,25 +1244,25 @@
                     <th class="sub-col plan">Plan</th><th class="sub-col fact">Fact</th><th class="sub-col gap">Gap</th><th class="sub-col rate stage-sep">% HT</th>
                   </tr>
                   <!-- HÀNG TỔNG CỘNG ĐÓNG BĂNG CÙNG HÀNG TIÊU ĐỀ -->
-                  <tr class="clips-grand-total-row">
-                    <th class="col-stt sticky-left-1 grand-total-th font-mono">∑</th>
-                    <th class="col-name sticky-left-2 grand-total-th">
+                  <tr class="clips-grand-total-row" style="background: var(--bg-card-header, #fff3cc) !important;">
+                    <th class="col-stt sticky-left-1 grand-total-th font-mono" style="background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 900;">∑</th>
+                    <th class="col-name sticky-left-2 grand-total-th" style="background: var(--bg-card-header, #fff3cc) !important;">
                       <div class="product-cell-wrap grand-total-cell-wrap">
-                        <span class="product-title grand-total-title">📊 TỔNG CỘNG</span>
+                        <span class="product-title grand-total-title" style="color: var(--text-primary) !important; font-weight: 900;">📊 TỔNG CỘNG</span>
                         <div class="product-tags">
-                          <span class="tag-meta highlight-clip-green" style="font-weight: 700;">${filteredDeviceCount} Device</span>
-                          <span class="tag-meta" style="font-weight: 700;">${filtered.length} mã</span>
+                          <span class="tag-meta" style="background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); font-weight: 800;">${filteredDeviceCount} Device</span>
+                          <span class="tag-meta" style="background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); font-weight: 800;">${filtered.length} mã</span>
                         </div>
                       </div>
                     </th>
                     ${stageKeys.map(stg => `
-                      <th class="col-metric metric-plan font-mono font-bold grand-total-th">${formatClipsQty(grandTotals[stg].plan)}</th>
-                      <th class="col-metric metric-fact font-mono font-bold text-cyan grand-total-th">${formatClipsQty(grandTotals[stg].fact)}</th>
+                      <th class="col-metric metric-plan font-mono font-bold grand-total-th" style="color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;">${formatClipsQty(grandTotals[stg].plan)}</th>
+                      <th class="col-metric metric-fact font-mono font-bold grand-total-th" style="color: var(--text-primary) !important; font-weight: 800;">${formatClipsQty(grandTotals[stg].fact)}</th>
                       <th class="col-metric metric-gap font-bold grand-total-th">${formatClipsGap(grandTotals[stg].gap, grandTotals[stg].plan, grandTotals[stg].fact)}</th>
                       <th class="col-metric metric-rate stage-sep font-bold grand-total-th">${formatClipsRate(grandTotals[stg].rate)}</th>
                     `).join('')}
-                    <th class="col-status header-status-final grand-total-th">
-                      <span class="badge ${grandTotals['MB'].gap < 0 ? 'badge-warning' : 'badge-success'}">
+                    <th class="col-status header-status-final grand-total-th" style="background: var(--bg-card-header, #fff3cc) !important;">
+                      <span class="badge" style="${grandTotals['MB'].gap < 0 ? 'background: var(--bg-card) !important; border: 1.5px solid #ef4444 !important; color: var(--color-alert-red, #ff0000) !important; font-weight: 800;' : 'background: #e0f2fe !important; border: 1.5px solid #0284c7 !important; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;'}">
                         ${grandTotals['MB'].gap < 0 ? '⚠️ Cần bù' : '🟢 Tiến độ tốt'}: ${grandTotals['MB'].rate !== null && grandTotals['MB'].rate !== undefined ? grandTotals['MB'].rate.toFixed(1) + '%' : '-'}
                       </span>
                     </th>
@@ -1277,34 +1285,37 @@
                     <th class="col-status header-status-final" title="Đánh giá tổng thể chuỗi cung ứng linh kiện và bán thành phẩm">Đánh Giá Chuỗi</th>
                   </tr>
                   <!-- HÀNG TỔNG CỘNG ĐÓNG BĂNG CÙNG HÀNG TIÊU ĐỀ (CHẾ ĐỘ THU GỌN) -->
-                  <tr class="clips-grand-total-row">
-                    <th class="col-stt sticky-left-1 grand-total-th font-mono">∑</th>
-                    <th class="col-name sticky-left-2 grand-total-th">
+                  <tr class="clips-grand-total-row" style="background: var(--bg-card-header, #fff3cc) !important;">
+                    <th class="col-stt sticky-left-1 grand-total-th font-mono" style="background: var(--bg-card-header, #fff3cc) !important; color: var(--text-primary) !important; font-weight: 900;">∑</th>
+                    <th class="col-name sticky-left-2 grand-total-th" style="background: var(--bg-card-header, #fff3cc) !important;">
                       <div class="product-cell-wrap grand-total-cell-wrap">
-                        <span class="product-title grand-total-title">📊 TỔNG CỘNG</span>
+                        <span class="product-title grand-total-title" style="color: var(--text-primary) !important; font-weight: 900;">📊 TỔNG CỘNG</span>
                         <div class="product-tags">
-                          <span class="tag-meta highlight-clip-green" style="font-weight: 700;">${filteredDeviceCount} Device</span>
-                          <span class="tag-meta" style="font-weight: 700;">${filtered.length} mã</span>
+                          <span class="tag-meta" style="background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); font-weight: 800;">${filteredDeviceCount} Device</span>
+                          <span class="tag-meta" style="background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); font-weight: 800;">${filtered.length} mã</span>
                         </div>
                       </div>
                     </th>
                     ${stageKeys.map(stg => {
                       const obj = grandTotals[stg] || {};
                       let content = '';
-                      let isSpecial = stg === 'CLIPS_ALL' ? 'text-cyan font-bold' : (stg === 'ASSEMBLY' ? 'text-assy font-bold' : (stg === 'HARD_TEST' ? 'text-ht font-bold' : 'font-bold'));
                       if (store.metricView === 'RATE') {
                         content = formatClipsRate(obj.rate);
                       } else if (store.metricView === 'GAP') {
                         content = formatClipsGap(obj.gap, obj.plan, obj.fact);
                       } else if (store.metricView === 'FACT') {
-                        content = `<span class="text-cyan font-mono font-bold">${formatClipsQty(obj.fact)}</span>`;
+                        content = `<span class="font-mono font-bold" style="color: var(--text-primary) !important;">${formatClipsQty(obj.fact)}</span>`;
                       } else {
-                        content = `<span class="font-mono font-bold">${formatClipsQty(obj.plan)}</span>`;
+                        content = `<span class="font-mono font-bold" style="color: var(--color-plan-blue, #0000ff) !important;">${formatClipsQty(obj.plan)}</span>`;
                       }
-                      return `<th class="col-metric stage-sep grand-total-th ${isSpecial}">${content}</th>`;
+                      return `<th class="col-metric stage-sep grand-total-th">${content}</th>`;
                     }).join('')}
-                    <th class="col-status header-status-final grand-total-th">
-                      <span class="badge ${grandTotals['MB'].gap < 0 ? 'badge-warning' : 'badge-success'}">
+                    <th class="col-status header-status-final grand-total-th" style="background: var(--bg-card-header, #fff3cc) !important;">
+                      <span class="badge" style="${grandTotals['MB'].gap < 0 ? 'background: var(--bg-card) !important; border: 1.5px solid #ef4444 !important; color: var(--color-alert-red, #ff0000) !important; font-weight: 800;' : 'background: #e0f2fe !important; border: 1.5px solid #0284c7 !important; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;'}">
+                        ${grandTotals['MB'].gap < 0 ? '⚠️ Cần bù' : '🟢 Tiến độ tốt'}: ${grandTotals['MB'].rate !== null && grandTotals['MB'].rate !== undefined ? grandTotals['MB'].rate.toFixed(1) + '%' : '-'}
+                      </span>
+                    </th>
+                  </tr>
                         ${grandTotals['MB'].rate !== null && grandTotals['MB'].rate !== undefined ? grandTotals['MB'].rate.toFixed(1) + '%' : '-'}
                       </span>
                     </th>
@@ -1327,89 +1338,89 @@
                   if (store.metricView === 'ALL') {
                     return `
                       <tr class="clips-row ${r.status === 'DEFICIT' ? 'row-deficit' : ''}" onclick="window.handleOpenClipsDetailModal('${escapeHtml(r.productName1C)}')">
-                        <td class="col-stt sticky-left-1 font-mono">${displayIndex}</td>
+                        <td class="col-stt sticky-left-1 font-mono" style="color: var(--text-primary) !important; font-weight: 800;">${displayIndex}</td>
                         <td class="col-name sticky-left-2" title="${escapeHtml(r.productName1C)}">
                           <div class="product-cell-wrap">
-                            <span class="product-title">${escapeHtml(r.productName1C)}</span>
+                            <span class="product-title" style="color: var(--text-primary) !important; font-weight: 800;">${escapeHtml(r.productName1C)}</span>
                             <div class="product-tags">
-                              ${r.baseModel ? `<span class="tag-model">${escapeHtml(r.baseModel)}</span>` : ''}
-                              ${r.color ? `<span class="tag-color ${r.color.toLowerCase()}">${r.color}</span>` : ''}
-                              ${r.freq ? `<span class="tag-freq">${r.freq}</span>` : ''}
-                              ${r.normKeyShort ? `<span class="tag-key" title="Mã bo: ${escapeHtml(r.normKeyShort)}">🔑 ${escapeHtml(r.normKeyShort)}</span>` : ''}
-                              ${r.isClipDevice ? `<span class="tag-key" style="border-color: #06b6d4; color: #38bdf8;" title="Mã Device trong Sheet Clip Alls (Done: ${r.isClipDone ? 'Đạt >90%' : 'Chưa đạt'})">📎 Device</span>` : ''}
+                              ${r.baseModel ? `<span class="tag-model" style="background: var(--bg-card-header, #fff3cc); border: 1px solid #f59e0b; color: var(--text-primary); font-weight: 800;">${escapeHtml(r.baseModel)}</span>` : ''}
+                              ${r.color ? `<span class="tag-color" style="background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); font-weight: 800;">${r.color}</span>` : ''}
+                              ${r.freq ? `<span class="tag-freq" style="background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); font-weight: 800;">${r.freq}</span>` : ''}
+                              ${r.normKeyShort ? `<span class="tag-key" style="background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); font-weight: 800;" title="Mã bo: ${escapeHtml(r.normKeyShort)}">🔑 ${escapeHtml(r.normKeyShort)}</span>` : ''}
+                              ${r.isClipDevice ? `<span class="tag-key" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: var(--color-plan-blue, #0000ff); font-weight: 800;" title="Mã Device trong Sheet Clip Alls (Done: ${r.isClipDone ? 'Đạt >90%' : 'Chưa đạt'})">📎 Device</span>` : ''}
                             </div>
                           </div>
                         </td>
 
-                        <!-- 1. CLIPS ALL (CÔNG ĐOẠN TRƯỚC MB - PLAN TỪ SHEET CLIP ALLS, FACT UPDATE THEO MB) -->
-                        <td class="col-metric metric-plan font-mono">${formatClipsQty(r.CLIPS_ALL.plan)}</td>
-                        <td class="col-metric metric-fact font-mono text-cyan">${formatClipsQty(r.CLIPS_ALL.fact)}</td>
-                        <td class="col-metric metric-gap">${formatClipsGap(r.CLIPS_ALL.gap, r.CLIPS_ALL.plan, r.CLIPS_ALL.fact)}</td>
-                        <td class="col-metric metric-rate stage-sep">${formatClipsRate(r.CLIPS_ALL.rate)}</td>
+                        <!-- 1. CLIPS ALL -->
+                        <td class="col-metric metric-plan font-mono font-bold" style="color: var(--color-plan-blue, #0000ff) !important;">${formatClipsQty(r.CLIPS_ALL.plan)}</td>
+                        <td class="col-metric metric-fact font-mono font-bold" style="color: var(--text-primary) !important;">${formatClipsQty(r.CLIPS_ALL.fact)}</td>
+                        <td class="col-metric metric-gap font-bold">${formatClipsGap(r.CLIPS_ALL.gap, r.CLIPS_ALL.plan, r.CLIPS_ALL.fact)}</td>
+                        <td class="col-metric metric-rate stage-sep font-bold">${formatClipsRate(r.CLIPS_ALL.rate)}</td>
 
                         <!-- 2. MB -->
-                        <td class="col-metric metric-plan font-mono">${formatClipsQty(r.MB.plan)}</td>
-                        <td class="col-metric metric-fact font-mono text-cyan">${formatClipsQty(r.MB.fact)}</td>
-                        <td class="col-metric metric-gap">${formatClipsGap(r.MB.gap, r.MB.plan, r.MB.fact)}</td>
-                        <td class="col-metric metric-rate stage-sep">${formatClipsRate(r.MB.rate)}</td>
+                        <td class="col-metric metric-plan font-mono font-bold" style="color: var(--color-plan-blue, #0000ff) !important;">${formatClipsQty(r.MB.plan)}</td>
+                        <td class="col-metric metric-fact font-mono font-bold" style="color: var(--text-primary) !important;">${formatClipsQty(r.MB.fact)}</td>
+                        <td class="col-metric metric-gap font-bold">${formatClipsGap(r.MB.gap, r.MB.plan, r.MB.fact)}</td>
+                        <td class="col-metric metric-rate stage-sep font-bold">${formatClipsRate(r.MB.rate)}</td>
 
                         <!-- 3. PKG -->
-                        <td class="col-metric metric-plan font-mono">${formatClipsQty(r.PKG.plan)}</td>
-                        <td class="col-metric metric-fact font-mono text-cyan">${formatClipsQty(r.PKG.fact)}</td>
-                        <td class="col-metric metric-gap">${formatClipsGap(r.PKG.gap, r.PKG.plan, r.PKG.fact)}</td>
-                        <td class="col-metric metric-rate stage-sep">${formatClipsRate(r.PKG.rate)}</td>
+                        <td class="col-metric metric-plan font-mono font-bold" style="color: var(--color-plan-blue, #0000ff) !important;">${formatClipsQty(r.PKG.plan)}</td>
+                        <td class="col-metric metric-fact font-mono font-bold" style="color: var(--text-primary) !important;">${formatClipsQty(r.PKG.fact)}</td>
+                        <td class="col-metric metric-gap font-bold">${formatClipsGap(r.PKG.gap, r.PKG.plan, r.PKG.fact)}</td>
+                        <td class="col-metric metric-rate stage-sep font-bold">${formatClipsRate(r.PKG.rate)}</td>
 
                         <!-- 4. QC -->
-                        <td class="col-metric metric-plan font-mono">${formatClipsQty(r.QC.plan)}</td>
-                        <td class="col-metric metric-fact font-mono text-cyan">${formatClipsQty(r.QC.fact)}</td>
-                        <td class="col-metric metric-gap">${formatClipsGap(r.QC.gap, r.QC.plan, r.QC.fact)}</td>
-                        <td class="col-metric metric-rate stage-sep">${formatClipsRate(r.QC.rate)}</td>
+                        <td class="col-metric metric-plan font-mono font-bold" style="color: var(--color-plan-blue, #0000ff) !important;">${formatClipsQty(r.QC.plan)}</td>
+                        <td class="col-metric metric-fact font-mono font-bold" style="color: var(--text-primary) !important;">${formatClipsQty(r.QC.fact)}</td>
+                        <td class="col-metric metric-gap font-bold">${formatClipsGap(r.QC.gap, r.QC.plan, r.QC.fact)}</td>
+                        <td class="col-metric metric-rate stage-sep font-bold">${formatClipsRate(r.QC.rate)}</td>
 
                         <!-- 5. TEST ROOM -->
-                        <td class="col-metric metric-plan font-mono">${formatClipsQty(r.TEST_ROOM.plan)}</td>
-                        <td class="col-metric metric-fact font-mono text-cyan">${formatClipsQty(r.TEST_ROOM.fact)}</td>
-                        <td class="col-metric metric-gap">${formatClipsGap(r.TEST_ROOM.gap, r.TEST_ROOM.plan, r.TEST_ROOM.fact)}</td>
-                        <td class="col-metric metric-rate stage-sep">${formatClipsRate(r.TEST_ROOM.rate)}</td>
+                        <td class="col-metric metric-plan font-mono font-bold" style="color: var(--color-plan-blue, #0000ff) !important;">${formatClipsQty(r.TEST_ROOM.plan)}</td>
+                        <td class="col-metric metric-fact font-mono font-bold" style="color: var(--text-primary) !important;">${formatClipsQty(r.TEST_ROOM.fact)}</td>
+                        <td class="col-metric metric-gap font-bold">${formatClipsGap(r.TEST_ROOM.gap, r.TEST_ROOM.plan, r.TEST_ROOM.fact)}</td>
+                        <td class="col-metric metric-rate stage-sep font-bold">${formatClipsRate(r.TEST_ROOM.rate)}</td>
 
                         <!-- 6. LONG TEST -->
-                        <td class="col-metric metric-plan font-mono">${formatClipsQty(r.LONG_TEST.plan)}</td>
-                        <td class="col-metric metric-fact font-mono text-cyan">${formatClipsQty(r.LONG_TEST.fact)}</td>
-                        <td class="col-metric metric-gap">${formatClipsGap(r.LONG_TEST.gap, r.LONG_TEST.plan, r.LONG_TEST.fact)}</td>
-                        <td class="col-metric metric-rate stage-sep">${formatClipsRate(r.LONG_TEST.rate)}</td>
+                        <td class="col-metric metric-plan font-mono font-bold" style="color: var(--color-plan-blue, #0000ff) !important;">${formatClipsQty(r.LONG_TEST.plan)}</td>
+                        <td class="col-metric metric-fact font-mono font-bold" style="color: var(--text-primary) !important;">${formatClipsQty(r.LONG_TEST.fact)}</td>
+                        <td class="col-metric metric-gap font-bold">${formatClipsGap(r.LONG_TEST.gap, r.LONG_TEST.plan, r.LONG_TEST.fact)}</td>
+                        <td class="col-metric metric-rate stage-sep font-bold">${formatClipsRate(r.LONG_TEST.rate)}</td>
 
                         <!-- 7. ASSEMBLY -->
-                        <td class="col-metric metric-plan font-mono font-bold text-assy">${formatClipsQty(r.ASSEMBLY.plan)}</td>
-                        <td class="col-metric metric-fact font-mono font-bold text-assy">${formatClipsQty(r.ASSEMBLY.fact)}</td>
+                        <td class="col-metric metric-plan font-mono font-bold" style="color: var(--color-plan-blue, #0000ff) !important;">${formatClipsQty(r.ASSEMBLY.plan)}</td>
+                        <td class="col-metric metric-fact font-mono font-bold" style="color: var(--text-primary) !important;">${formatClipsQty(r.ASSEMBLY.fact)}</td>
                         <td class="col-metric metric-gap font-bold">${formatClipsGap(r.ASSEMBLY.gap, r.ASSEMBLY.plan, r.ASSEMBLY.fact)}</td>
                         <td class="col-metric metric-rate stage-sep font-bold">${formatClipsRate(r.ASSEMBLY.rate)}</td>
 
                         <!-- 8. HARD TEST -->
-                        <td class="col-metric metric-plan font-mono font-bold text-ht">${formatClipsQty(r.HARD_TEST.plan)}</td>
-                        <td class="col-metric metric-fact font-mono font-bold text-ht">${formatClipsQty(r.HARD_TEST.fact)}</td>
+                        <td class="col-metric metric-plan font-mono font-bold" style="color: var(--color-plan-blue, #0000ff) !important;">${formatClipsQty(r.HARD_TEST.plan)}</td>
+                        <td class="col-metric metric-fact font-mono font-bold" style="color: var(--text-primary) !important;">${formatClipsQty(r.HARD_TEST.fact)}</td>
                         <td class="col-metric metric-gap font-bold">${formatClipsGap(r.HARD_TEST.gap, r.HARD_TEST.plan, r.HARD_TEST.fact)}</td>
                         <td class="col-metric metric-rate stage-sep font-bold">${formatClipsRate(r.HARD_TEST.rate)}</td>
 
                         <!-- 9. LAQ.Line -->
-                        <td class="col-metric metric-plan font-mono">${formatClipsQty(r.LAQ_LINE.plan)}</td>
-                        <td class="col-metric metric-fact font-mono text-cyan">${formatClipsQty(r.LAQ_LINE.fact)}</td>
-                        <td class="col-metric metric-gap">${formatClipsGap(r.LAQ_LINE.gap, r.LAQ_LINE.plan, r.LAQ_LINE.fact)}</td>
-                        <td class="col-metric metric-rate stage-sep">${formatClipsRate(r.LAQ_LINE.rate)}</td>
+                        <td class="col-metric metric-plan font-mono font-bold" style="color: var(--color-plan-blue, #0000ff) !important;">${formatClipsQty(r.LAQ_LINE.plan)}</td>
+                        <td class="col-metric metric-fact font-mono font-bold" style="color: var(--text-primary) !important;">${formatClipsQty(r.LAQ_LINE.fact)}</td>
+                        <td class="col-metric metric-gap font-bold">${formatClipsGap(r.LAQ_LINE.gap, r.LAQ_LINE.plan, r.LAQ_LINE.fact)}</td>
+                        <td class="col-metric metric-rate stage-sep font-bold">${formatClipsRate(r.LAQ_LINE.rate)}</td>
 
                         <!-- 10. DIP -->
-                        <td class="col-metric metric-plan font-mono">${formatClipsQty(r.DIP.plan)}</td>
-                        <td class="col-metric metric-fact font-mono text-cyan">${formatClipsQty(r.DIP.fact)}</td>
-                        <td class="col-metric metric-gap">${formatClipsGap(r.DIP.gap, r.DIP.plan, r.DIP.fact)}</td>
-                        <td class="col-metric metric-rate stage-sep">${formatClipsRate(r.DIP.rate)}</td>
+                        <td class="col-metric metric-plan font-mono font-bold" style="color: var(--color-plan-blue, #0000ff) !important;">${formatClipsQty(r.DIP.plan)}</td>
+                        <td class="col-metric metric-fact font-mono font-bold" style="color: var(--text-primary) !important;">${formatClipsQty(r.DIP.fact)}</td>
+                        <td class="col-metric metric-gap font-bold">${formatClipsGap(r.DIP.gap, r.DIP.plan, r.DIP.fact)}</td>
+                        <td class="col-metric metric-rate stage-sep font-bold">${formatClipsRate(r.DIP.rate)}</td>
 
                         <!-- 11. SMD -->
-                        <td class="col-metric metric-plan font-mono">${formatClipsQty(r.SMD.plan)}</td>
-                        <td class="col-metric metric-fact font-mono text-cyan">${formatClipsQty(r.SMD.fact)}</td>
-                        <td class="col-metric metric-gap">${formatClipsGap(r.SMD.gap, r.SMD.plan, r.SMD.fact)}</td>
-                        <td class="col-metric metric-rate stage-sep">${formatClipsRate(r.SMD.rate)}</td>
+                        <td class="col-metric metric-plan font-mono font-bold" style="color: var(--color-plan-blue, #0000ff) !important;">${formatClipsQty(r.SMD.plan)}</td>
+                        <td class="col-metric metric-fact font-mono font-bold" style="color: var(--text-primary) !important;">${formatClipsQty(r.SMD.fact)}</td>
+                        <td class="col-metric metric-gap font-bold">${formatClipsGap(r.SMD.gap, r.SMD.plan, r.SMD.fact)}</td>
+                        <td class="col-metric metric-rate stage-sep font-bold">${formatClipsRate(r.SMD.rate)}</td>
 
                         <!-- CỘT DUY NHẤT Ở CUỐI: ĐÁNH GIÁ CHUỖI -->
                         <td class="col-status">
-                          <span class="badge ${r.statusBadgeClass}">${r.statusText}</span>
+                          <span class="badge" style="${r.status === 'DEFICIT' ? 'background: var(--bg-card) !important; border: 1.5px solid #ef4444 !important; color: var(--color-alert-red, #ff0000) !important; font-weight: 800;' : (r.status === 'BALANCED' ? 'background: #e0f2fe !important; border: 1.5px solid #0284c7 !important; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;' : 'background: var(--bg-card-header, #fff3cc) !important; border: 1.5px solid #f59e0b !important; color: var(--text-primary) !important; font-weight: 800;')}">${r.statusText}</span>
                         </td>
                       </tr>
                     `;
@@ -1419,16 +1430,16 @@
                     const stageKeys = ['CLIPS_ALL', 'MB', 'PKG', 'QC', 'TEST_ROOM', 'LONG_TEST', 'ASSEMBLY', 'HARD_TEST', 'LAQ_LINE', 'DIP', 'SMD'];
                     return `
                       <tr class="clips-row ${r.status === 'DEFICIT' ? 'row-deficit' : ''}" onclick="window.handleOpenClipsDetailModal('${escapeHtml(r.productName1C)}')">
-                        <td class="col-stt sticky-left-1 font-mono">${displayIndex}</td>
+                        <td class="col-stt sticky-left-1 font-mono" style="color: var(--text-primary) !important; font-weight: 800;">${displayIndex}</td>
                         <td class="col-name sticky-left-2" title="${escapeHtml(r.productName1C)}">
                           <div class="product-cell-wrap">
-                            <span class="product-title">${escapeHtml(r.productName1C)}</span>
+                            <span class="product-title" style="color: var(--text-primary) !important; font-weight: 800;">${escapeHtml(r.productName1C)}</span>
                             <div class="product-tags">
-                              ${r.baseModel ? `<span class="tag-model">${escapeHtml(r.baseModel)}</span>` : ''}
-                              ${r.color ? `<span class="tag-color ${r.color.toLowerCase()}">${r.color}</span>` : ''}
-                              ${r.freq ? `<span class="tag-freq">${r.freq}</span>` : ''}
-                              ${r.normKeyShort ? `<span class="tag-key" title="Mã bo: ${escapeHtml(r.normKeyShort)}">🔑 ${escapeHtml(r.normKeyShort)}</span>` : ''}
-                              ${r.isClipDevice ? `<span class="tag-key" style="border-color: #06b6d4; color: #38bdf8;" title="Mã Device trong Sheet Clip Alls (Done: ${r.isClipDone ? 'Đạt >90%' : 'Chưa đạt'})">📎 Device</span>` : ''}
+                              ${r.baseModel ? `<span class="tag-model" style="background: var(--bg-card-header, #fff3cc); border: 1px solid #f59e0b; color: var(--text-primary); font-weight: 800;">${escapeHtml(r.baseModel)}</span>` : ''}
+                              ${r.color ? `<span class="tag-color" style="background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); font-weight: 800;">${r.color}</span>` : ''}
+                              ${r.freq ? `<span class="tag-freq" style="background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); font-weight: 800;">${r.freq}</span>` : ''}
+                              ${r.normKeyShort ? `<span class="tag-key" style="background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary); font-weight: 800;" title="Mã bo: ${escapeHtml(r.normKeyShort)}">🔑 ${escapeHtml(r.normKeyShort)}</span>` : ''}
+                              ${r.isClipDevice ? `<span class="tag-key" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: var(--color-plan-blue, #0000ff); font-weight: 800;" title="Mã Device trong Sheet Clip Alls (Done: ${r.isClipDone ? 'Đạt >90%' : 'Chưa đạt'})">📎 Device</span>` : ''}
                             </div>
                           </div>
                         </td>
@@ -1441,12 +1452,12 @@
                             return `<td class="col-metric stage-sep">${formatClipsGap(obj.gap, obj.plan, obj.fact)}</td>`;
                           }
                           const val = obj[mKey];
-                          const isSpecial = stg === 'CLIPS_ALL' ? 'text-cyan font-bold' : (stg === 'ASSEMBLY' ? 'text-assy font-bold' : (stg === 'HARD_TEST' ? 'text-ht font-bold' : (mKey === 'fact' ? 'text-cyan' : '')));
-                          return `<td class="col-metric stage-sep font-mono ${isSpecial}">${formatClipsQty(val)}</td>`;
+                          const colorStyle = mKey === 'plan' ? 'color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;' : 'color: var(--text-primary) !important; font-weight: 800;';
+                          return `<td class="col-metric stage-sep font-mono font-bold" style="${colorStyle}">${formatClipsQty(val)}</td>`;
                         }).join('')}
                         <!-- CỘT DUY NHẤT Ở CUỐI: ĐÁNH GIÁ CHUỖI -->
                         <td class="col-status">
-                          <span class="badge ${r.statusBadgeClass}">${r.statusText}</span>
+                          <span class="badge" style="${r.status === 'DEFICIT' ? 'background: var(--bg-card) !important; border: 1.5px solid #ef4444 !important; color: var(--color-alert-red, #ff0000) !important; font-weight: 800;' : (r.status === 'BALANCED' ? 'background: #e0f2fe !important; border: 1.5px solid #0284c7 !important; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;' : 'background: var(--bg-card-header, #fff3cc) !important; border: 1.5px solid #f59e0b !important; color: var(--text-primary) !important; font-weight: 800;')}">${r.statusText}</span>
                         </td>
                       </tr>
                     `;
@@ -2511,19 +2522,19 @@
           const gapPrefix = st.gap > 0 ? '+' : '';
           const rateFormatted = st.rate !== null && st.rate !== undefined ? st.rate.toFixed(1) + '%' : '-';
           return `
-            <div class="chain-step-card">
-              <div class="chain-step-header" style="border-left: 4px solid ${st.color};">
-                <span class="chain-step-name">${st.name}</span>
+            <div class="chain-step-card" style="background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 8px;">
+              <div class="chain-step-header" style="border-left: 4px solid #0284c7; background: var(--bg-card-header, #fff3cc); padding: 0.5rem 0.75rem;">
+                <span class="chain-step-name" style="color: var(--text-primary); font-weight: 800;">${st.name}</span>
                 <div class="chain-step-metrics font-mono">
-                  <span class="badge-modal-metric plan" title="Kế hoạch">Plan: <strong>${st.plan.toLocaleString('vi-VN')}</strong></span>
-                  <span class="badge-modal-metric fact" title="Thực tế">Fact: <strong>${st.fact.toLocaleString('vi-VN')}</strong></span>
-                  <span class="badge-modal-metric gap ${gapClass}" title="Chênh lệch Fact - Plan">Gap: <strong>${gapPrefix}${st.gap.toLocaleString('vi-VN')}</strong></span>
-                  <span class="badge-modal-metric rate" title="Tỉ lệ hoàn thành %">% HT: <strong>${rateFormatted}</strong></span>
+                  <span class="badge-modal-metric plan" style="color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;" title="Kế hoạch">Plan: <strong>${st.plan.toLocaleString('vi-VN')}</strong></span>
+                  <span class="badge-modal-metric fact" style="color: var(--text-primary) !important; font-weight: 800;" title="Thực tế">Fact: <strong>${st.fact.toLocaleString('vi-VN')}</strong></span>
+                  <span class="badge-modal-metric gap" style="color: ${st.gap < 0 ? '#ff0000 !important;' : (st.gap > 0 ? '#0000ff !important;' : '#000000;')}; font-weight: 900;" title="Chênh lệch Fact - Plan">Gap: <strong>${gapPrefix}${st.gap.toLocaleString('vi-VN')}</strong></span>
+                  <span class="badge-modal-metric rate" style="color: ${st.rate !== null && st.rate < 100 ? '#ff0000 !important;' : '#0000ff !important;'}; font-weight: 800;" title="Tỉ lệ hoàn thành %">% HT: <strong>${rateFormatted}</strong></span>
                 </div>
               </div>
-              <div class="chain-step-detail">
-                <span class="label">Mã 1C công đoạn:</span>
-                <span class="val font-mono">${escapeHtml(itemName)}</span>
+              <div class="chain-step-detail" style="padding: 0.4rem 0.75rem; background: var(--bg-card);">
+                <span class="label" style="color: var(--text-primary); font-weight: 800;">Mã 1C công đoạn:</span>
+                <span class="val font-mono" style="color: var(--text-primary); font-weight: 700;">${escapeHtml(itemName)}</span>
               </div>
             </div>
           `;

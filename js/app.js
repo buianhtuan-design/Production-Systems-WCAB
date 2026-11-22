@@ -178,6 +178,16 @@ window.UserAuth = {
       }
     }
 
+    // Toggle Customizer Buttons
+    const tabCustBtn = document.getElementById('btnTabCustomizer');
+    if (tabCustBtn) {
+      tabCustBtn.style.display = 'inline-flex';
+    }
+    const visualInspBtn = document.getElementById('btnVisualInspectorToggle');
+    if (visualInspBtn) {
+      visualInspBtn.style.display = 'inline-flex';
+    }
+
     // Toggle Auto Assign Button
     const autoAssignBtn = document.getElementById('btnAutoAssignAll') || document.querySelector('button[onclick="handleAutoAssignAll()"]');
     if (autoAssignBtn) {
@@ -1116,6 +1126,10 @@ function initNavigation() {
           t.classList.remove('active');
         }
       });
+
+      if (typeof document !== 'undefined' && document.body) {
+        document.body.classList.toggle('tab-datamass-active', targetTab === 'datamass');
+      }
 
       if (targetTab === 'capacity' && window.renderCapacityView) {
         window.renderCapacityView('capacityContainer');
@@ -2267,16 +2281,16 @@ function renderDataMassView() {
         const wkCls = d.isWeekend ? 'weekend-cell' : '';
         if (isSplit) {
           return `
-            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 700; color: #fbbf24; font-size: 0.8rem;" title="Plan Ca Ngày: ${d.planDay}">
+            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 700; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.8rem;" title="Plan Ca Ngày: ${d.planDay}">
               ${d.planDay > 0 ? d.planDay.toFixed(1) : '0'}
             </td>
-            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 700; color: #f59e0b; font-size: 0.8rem;" title="Plan Ca Đêm: ${d.planNight}">
+            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 700; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.8rem;" title="Plan Ca Đêm: ${d.planNight}">
               ${d.planNight > 0 ? d.planNight.toFixed(1) : '0'}
             </td>
           `;
         }
         return `
-          <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 700; color: #fbbf24; font-size: 0.85rem;" title="Plan Ngày: ${d.planVal}">
+          <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 700; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.85rem;" title="Plan Ngày: ${d.planVal}">
             ${d.planVal > 0 ? d.planVal.toFixed(1) : '0'}
           </td>
         `;
@@ -2289,12 +2303,12 @@ function renderDataMassView() {
           if (isAutoSumRow) {
             return `
               <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; padding: 0.25rem 0.35rem;">
-                <span class="badge-auto-sum" title="Tự động tính tổng từ các công đoạn con (Ca Ngày: ${d.actDay})">
+                <span class="badge-auto-sum" style="color: var(--text-primary) !important; font-weight: 700;" title="Tự động tính tổng từ các công đoạn con (Ca Ngày: ${d.actDay})">
                   ${d.actDay > 0 ? d.actDay.toFixed(1) : '0.0'}
                 </span>
               </td>
               <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; padding: 0.25rem 0.35rem;">
-                <span class="badge-auto-sum" title="Tự động tính tổng từ các công đoạn con (Ca Đêm: ${d.actNight})">
+                <span class="badge-auto-sum" style="color: var(--text-primary) !important; font-weight: 700;" title="Tự động tính tổng từ các công đoạn con (Ca Đêm: ${d.actNight})">
                   ${d.actNight > 0 ? d.actNight.toFixed(1) : '0.0'}
                 </span>
               </td>
@@ -2304,13 +2318,13 @@ function renderDataMassView() {
           const nightDetail = window.AppStore.getManpowerDetailText ? window.AppStore.getManpowerDetailText(d.date, 'Night', targetSaveStage) : '';
           return `
             <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; padding: 0.2rem 0.25rem;">
-              <input type="number" step="0.5" class="input-manpower-actual" style="width: 52px; font-size: 0.775rem;" 
+              <input type="number" step="0.5" class="input-manpower-actual" style="width: 52px; font-size: 0.775rem; color: var(--text-primary) !important; font-weight: 700;" 
                      value="${d.actDay > 0 ? d.actDay : ''}" placeholder="${d.planDay || '0'}" 
                      title="${dayDetail}" 
                      onchange="handleActualAttendanceEdit('${d.date}', 'Day', '${targetSaveStage}', this.value, this)" />
             </td>
             <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; padding: 0.2rem 0.25rem;">
-              <input type="number" step="0.5" class="input-manpower-actual" style="width: 52px; font-size: 0.775rem;" 
+              <input type="number" step="0.5" class="input-manpower-actual" style="width: 52px; font-size: 0.775rem; color: var(--text-primary) !important; font-weight: 700;" 
                      value="${d.actNight > 0 ? d.actNight : ''}" placeholder="${d.planNight || '0'}" 
                      title="${nightDetail}" 
                      onchange="handleActualAttendanceEdit('${d.date}', 'Night', '${targetSaveStage}', this.value, this)" />
@@ -2321,7 +2335,7 @@ function renderDataMassView() {
         if (isAutoSumRow) {
           return `
             <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; padding: 0.25rem 0.45rem;">
-              <span class="badge-auto-sum" title="Tự động tính tổng từ các công đoạn con (${d.actVal})">
+              <span class="badge-auto-sum" style="color: var(--text-primary) !important; font-weight: 700;" title="Tự động tính tổng từ các công đoạn con (${d.actVal})">
                 ${d.actVal > 0 ? d.actVal.toFixed(1) : '0.0'}
               </span>
             </td>
@@ -2342,8 +2356,8 @@ function renderDataMassView() {
       const balanceCells = dailyMetrics.map(d => {
         const wkCls = d.isWeekend ? 'weekend-cell' : '';
         if (isSplit) {
-          const clsDay = d.balDay < 0 ? 'color: #ef4444; font-weight: 800; background: rgba(239, 68, 68, 0.05);' : 'color: #10b981; font-weight: 800;';
-          const clsNight = d.balNight < 0 ? 'color: #ef4444; font-weight: 800; background: rgba(239, 68, 68, 0.05);' : 'color: #10b981; font-weight: 800;';
+          const clsDay = d.balDay < 0 ? 'color: var(--color-alert-red, #ff0000) !important; font-weight: 800; background: #fff1f2;' : (d.balDay > 0 ? 'color: var(--color-plan-blue, #0000ff) !important; font-weight: 800; background: #e0f2fe;' : 'color: var(--text-primary);');
+          const clsNight = d.balNight < 0 ? 'color: var(--color-alert-red, #ff0000) !important; font-weight: 800; background: #fff1f2;' : (d.balNight > 0 ? 'color: var(--color-plan-blue, #0000ff) !important; font-weight: 800; background: #e0f2fe;' : 'color: var(--text-primary);');
           return `
             <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-size: 0.8rem; ${clsDay}">
               ${d.balDay.toFixed(1)}
@@ -2353,7 +2367,7 @@ function renderDataMassView() {
             </td>
           `;
         }
-        const cls = d.bal < 0 ? 'color: #ef4444; font-weight: 800; background: rgba(239, 68, 68, 0.05);' : 'color: #10b981; font-weight: 800;';
+        const cls = d.bal < 0 ? 'color: var(--color-alert-red, #ff0000) !important; font-weight: 800; background: #fff1f2;' : (d.bal > 0 ? 'color: var(--color-plan-blue, #0000ff) !important; font-weight: 800; background: #e0f2fe;' : 'color: var(--text-primary);');
         return `
           <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-size: 0.85rem; ${cls}">
             ${d.bal.toFixed(1)}
@@ -2361,22 +2375,22 @@ function renderDataMassView() {
         `;
       }).join('');
 
-      // Build Row 4: Số Người Cần Bổ Sung (Shortage Headcount)
+      // Build Row 4: Số Cần Thêm (Shortage Headcount)
       const shortageCells = dailyMetrics.map(d => {
         const wkCls = d.isWeekend ? 'weekend-cell' : '';
         if (isSplit) {
           return `
             <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: center; font-size: 0.775rem;">
-              ${d.shortDay > 0 ? `<span class="badge-mp-shortage" title="Ca Ngày thiếu: ${d.shortDay}">${d.shortDay.toFixed(1)}</span>` : `<span style="color: var(--text-muted); font-size: 0.75rem;">0</span>`}
+              ${d.shortDay > 0 ? `<span class="badge-mp-shortage" style="color: var(--color-alert-red, #ff0000) !important; border: 1.5px solid #ff0000; background: #fff1f2; font-weight: 800;" title="Ca Ngày thiếu: ${d.shortDay}">${d.shortDay.toFixed(1)}</span>` : `<span style="color: var(--text-primary); font-size: 0.75rem;">0</span>`}
             </td>
             <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: center; font-size: 0.775rem;">
-              ${d.shortNight > 0 ? `<span class="badge-mp-shortage" title="Ca Đêm thiếu: ${d.shortNight}">${d.shortNight.toFixed(1)}</span>` : `<span style="color: var(--text-muted); font-size: 0.75rem;">0</span>`}
+              ${d.shortNight > 0 ? `<span class="badge-mp-shortage" style="color: var(--color-alert-red, #ff0000) !important; border: 1.5px solid #ff0000; background: #fff1f2; font-weight: 800;" title="Ca Đêm thiếu: ${d.shortNight}">${d.shortNight.toFixed(1)}</span>` : `<span style="color: var(--text-primary); font-size: 0.75rem;">0</span>`}
             </td>
           `;
         }
         return `
           <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: center; font-size: 0.825rem;">
-            ${d.short > 0 ? `<span class="badge-mp-shortage" title="Thiếu: ${d.short}">${d.short.toFixed(1)}</span>` : `<span class="badge-mp-ok">0</span>`}
+            ${d.short > 0 ? `<span class="badge-mp-shortage" style="color: var(--color-alert-red, #ff0000) !important; border: 1.5px solid #ff0000; background: #fff1f2; font-weight: 800;" title="Thiếu: ${d.short}">${d.short.toFixed(1)}</span>` : `<span style="color: var(--text-primary); font-weight: 600;">0</span>`}
           </td>
         `;
       }).join('');
@@ -2471,17 +2485,17 @@ function renderDataMassView() {
           const lDay = d.planDay > 0 ? (d.planDay / 14).toFixed(1) : '0';
           const lNight = d.planNight > 0 ? (d.planNight / 14).toFixed(1) : '0';
           return `
-            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 800; color: #fbbf24; font-size: 0.8rem; background: rgba(245, 158, 11, 0.04);" title="Plan Ca Ngày: ${d.planDay} ng ÷ 14 = ${lDay} Line">
+            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 800; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.8rem; background: rgba(59, 130, 246, 0.04);" title="Plan Ca Ngày: ${d.planDay} ng ÷ 14 = ${lDay} Line">
               ${lDay}
             </td>
-            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 800; color: #f59e0b; font-size: 0.8rem; background: rgba(245, 158, 11, 0.04);" title="Plan Ca Đêm: ${d.planNight} ng ÷ 14 = ${lNight} Line">
+            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 800; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.8rem; background: rgba(59, 130, 246, 0.04);" title="Plan Ca Đêm: ${d.planNight} ng ÷ 14 = ${lNight} Line">
               ${lNight}
             </td>
           `;
         }
         const lVal = d.planVal > 0 ? (d.planVal / 14).toFixed(1) : '0';
         return `
-          <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 800; color: #fbbf24; font-size: 0.85rem; background: rgba(245, 158, 11, 0.04);" title="Plan Ngày: ${d.planVal} ng ÷ 14 = ${lVal} Line">
+          <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 800; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.85rem; background: rgba(59, 130, 246, 0.04);" title="Plan Ngày: ${d.planVal} ng ÷ 14 = ${lVal} Line">
             ${lVal}
           </td>
         `;
@@ -2494,17 +2508,17 @@ function renderDataMassView() {
           const lDay = d.actDay > 0 ? (d.actDay / 14).toFixed(1) : '0';
           const lNight = d.actNight > 0 ? (d.actNight / 14).toFixed(1) : '0';
           return `
-            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 800; color: #34d399; font-size: 0.8rem; background: rgba(16, 185, 129, 0.04);" title="Thực tế Ca Ngày: ${d.actDay} ng ÷ 14 = ${lDay} Line">
+            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 800; color: var(--text-primary) !important; font-size: 0.8rem; background: rgba(0, 0, 0, 0.03);" title="Thực tế Ca Ngày: ${d.actDay} ng ÷ 14 = ${lDay} Line">
               ${lDay}
             </td>
-            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 800; color: #34d399; font-size: 0.8rem; background: rgba(16, 185, 129, 0.04);" title="Thực tế Ca Đêm: ${d.actNight} ng ÷ 14 = ${lNight} Line">
+            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 800; color: var(--text-primary) !important; font-size: 0.8rem; background: rgba(0, 0, 0, 0.03);" title="Thực tế Ca Đêm: ${d.actNight} ng ÷ 14 = ${lNight} Line">
               ${lNight}
             </td>
           `;
         }
         const lVal = d.actVal > 0 ? (d.actVal / 14).toFixed(1) : '0';
         return `
-          <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 800; color: #34d399; font-size: 0.85rem; background: rgba(16, 185, 129, 0.04);" title="Thực tế Ngày: ${d.actVal} ng ÷ 14 = ${lVal} Line">
+          <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 800; color: var(--text-primary) !important; font-size: 0.85rem; background: rgba(0, 0, 0, 0.03);" title="Thực tế Ngày: ${d.actVal} ng ÷ 14 = ${lVal} Line">
             ${lVal}
           </td>
         `;
@@ -2519,12 +2533,12 @@ function renderDataMassView() {
 
       const evalHtml = cumShortage > 0 
         ? `<div style="margin-top: 0.35rem;">
-             <span class="badge-mp-shortage" style="font-size: 0.72rem; padding: 0.15rem 0.45rem;">
+             <span class="badge-mp-shortage" style="font-size: 0.72rem; padding: 0.15rem 0.45rem; color: var(--color-alert-red, #ff0000) !important; border: 1.5px solid #ff0000; background: #fff1f2; font-weight: 800;">
                🚨 Thiếu: <strong>${cumShortage.toFixed(1)}</strong> lượt ng
              </span>
            </div>`
         : `<div style="margin-top: 0.35rem;">
-             <span class="badge-mp-ok" style="font-size: 0.72rem; padding: 0.15rem 0.45rem;">
+             <span class="badge-mp-ok" style="font-size: 0.72rem; padding: 0.15rem 0.45rem; color: var(--color-plan-blue, #0000ff) !important; border: 1px solid #0000ff; background: #e0f2fe; font-weight: 800;">
                ✅ Đủ nhân sự
              </span>
            </div>`;
@@ -2545,17 +2559,17 @@ function renderDataMassView() {
           </td>
           <td class="sticky-col-metric" style="text-align: center;">
             <span class="metric-pill metric-manpower" title="Kế hoạch nhân lực cần lấy trực tiếp từ dòng Product name 1C: People">
-              👷 1. Kế Hoạch Cần (Plan)
+              👷 1. Kế Hoạch Cần
             </span>
           </td>
           ${planCells}
-          <td class="font-mono" style="text-align: right; font-weight: 800; color: #fbbf24; font-size: 0.875rem;">
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.875rem;">
             ${cumPlan.toFixed(1)}
           </td>
-          <td class="font-mono week-summary-col" style="font-weight: 800; color: #fbbf24; font-size: 0.875rem; text-align: right;">
+          <td class="font-mono week-summary-col" style="font-weight: 800; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.875rem; text-align: right;">
             ${avgPlanVal.toFixed(1)}
           </td>
-          <td style="text-align: center; font-size: 0.775rem; color: var(--text-secondary);">
+          <td style="text-align: center; font-size: 0.775rem; color: var(--text-primary) !important; font-weight: 600;">
             Kế hoạch định biên
           </td>
         </tr>
@@ -2564,18 +2578,18 @@ function renderDataMassView() {
           <!-- Hàng 1b: Kế Hoạch Cần Số Line (14 ng/Line) -->
           <tr class="${stageCls} row-manpower-plan-lines">
             <td class="sticky-col-metric" style="text-align: center;">
-              <span class="metric-pill" style="background: rgba(245, 158, 11, 0.12); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.35);" title="Số Line cần theo kế hoạch định biên (1 Line = 14 người)">
+              <span class="metric-pill" style="background: rgba(59, 130, 246, 0.12); color: var(--text-primary); border: 1px solid rgba(59, 130, 246, 0.35);" title="Số Line cần theo kế hoạch định biên (1 Line = 14 người)">
                 🏭 1b. Kế Hoạch Cần Số Line
               </span>
             </td>
             ${planLineCells}
-            <td class="font-mono" style="text-align: right; font-weight: 800; color: #fbbf24; font-size: 0.875rem;">
+            <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.875rem;">
               ${cumPlanLines}
             </td>
-            <td class="font-mono week-summary-col" style="font-weight: 800; color: #fbbf24; font-size: 0.875rem; text-align: right;">
+            <td class="font-mono week-summary-col" style="font-weight: 800; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.875rem; text-align: right;">
               ${avgPlanLines}
             </td>
-            <td style="text-align: center; font-size: 0.775rem; color: #fbbf24; font-weight: 600;">
+            <td style="text-align: center; font-size: 0.775rem; color: var(--text-primary) !important; font-weight: 600;">
               Định biên: 14 ng/Line
             </td>
           </tr>
@@ -2584,18 +2598,18 @@ function renderDataMassView() {
         <!-- Hàng 2: Nhân Lực Có Mặt (Thực Tế - Editable hoặc Auto-Sum) -->
         <tr class="${stageCls} row-manpower-actual">
           <td class="sticky-col-metric" style="text-align: center;">
-            <span class="metric-pill" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);" title="Nhập số người thực tế đi làm từng ngày">
-              👥 2. Nhân Lực Có (Thực Tế)
+            <span class="metric-pill" style="background: rgba(16, 185, 129, 0.15); color: var(--text-primary); border: 1px solid rgba(16, 185, 129, 0.35);" title="Nhập số người thực tế đi làm từng ngày">
+              👥 2. Nhân Lực Có
             </span>
           </td>
           ${actualCells}
-          <td class="font-mono" style="text-align: right; font-weight: 800; color: #34d399; font-size: 0.875rem;">
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary) !important; font-size: 0.875rem;">
             ${cumAct.toFixed(1)}
           </td>
-          <td class="font-mono week-summary-col" style="font-weight: 800; color: #34d399; font-size: 0.875rem; text-align: right;">
+          <td class="font-mono week-summary-col" style="font-weight: 800; color: var(--text-primary) !important; font-size: 0.875rem; text-align: right;">
             ${avgActVal.toFixed(1)}
           </td>
-          <td style="text-align: center; font-size: 0.775rem; color: #34d399; font-weight: 700;">
+          <td style="text-align: center; font-size: 0.775rem; color: var(--text-primary) !important; font-weight: 700;">
             ${isAutoSumRow ? '⚡ Tự động tính tổng (Auto-Sum)' : 'Điền trực tiếp từng ngày'}
           </td>
         </tr>
@@ -2604,21 +2618,21 @@ function renderDataMassView() {
           <!-- Hàng 2b: Thực Tế Có Số Line (14 ng/Line) -->
           <tr class="${stageCls} row-manpower-actual-lines">
             <td class="sticky-col-metric" style="text-align: center;">
-              <span class="metric-pill" style="background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);" title="Số Line thực tế có thể chạy tương ứng với nhân lực có mặt (1 Line = 14 người)">
+              <span class="metric-pill" style="background: rgba(16, 185, 129, 0.12); color: var(--text-primary); border: 1px solid rgba(16, 185, 129, 0.35);" title="Số Line thực tế có thể chạy tương ứng với nhân lực có mặt (1 Line = 14 người)">
                 🏭 2b. Thực Tế Có Số Line
               </span>
             </td>
             ${actualLineCells}
-            <td class="font-mono" style="text-align: right; font-weight: 800; color: #34d399; font-size: 0.875rem;">
+            <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary) !important; font-size: 0.875rem;">
               ${cumActLines}
             </td>
-            <td class="font-mono week-summary-col" style="font-weight: 800; color: #34d399; font-size: 0.875rem; text-align: right;">
+            <td class="font-mono week-summary-col" style="font-weight: 800; color: var(--text-primary) !important; font-size: 0.875rem; text-align: right;">
               ${avgActLines}
             </td>
             <td style="text-align: center; font-size: 0.775rem;">
               ${lineDiff >= 0 
-                ? `<span class="badge-mp-ok" style="font-size: 0.75rem;">✅ Đủ số Line (${avgActLines} Line)</span>` 
-                : `<span class="badge-mp-shortage" style="font-size: 0.75rem;">⚠️ Hụt ${Math.abs(lineDiff).toFixed(1)} Line</span>`}
+                ? `<span class="badge-mp-ok" style="font-size: 0.75rem; color: var(--color-plan-blue, #0000ff) !important; border: 1px solid #0000ff; background: #e0f2fe; font-weight: 800;">✅ Đủ số Line (${avgActLines} Line)</span>` 
+                : `<span class="badge-mp-shortage" style="font-size: 0.75rem; color: var(--color-alert-red, #ff0000) !important; border: 1.5px solid #ff0000; background: #fff1f2; font-weight: 800;">⚠️ Hụt ${Math.abs(lineDiff).toFixed(1)} Line</span>`}
             </td>
           </tr>
         ` : ''}
@@ -2626,39 +2640,39 @@ function renderDataMassView() {
         <!-- Hàng 3: Chênh Lệch Nhân Lực (Balance = Có - Cần) -->
         <tr class="${stageCls} row-manpower-balance" style="${isCompact ? 'border-bottom: 2px solid var(--border-glass);' : ''}">
           <td class="sticky-col-metric" style="text-align: center;">
-            <span class="metric-pill" style="background: rgba(96, 165, 250, 0.15); color: #60a5fa; border: 1px solid rgba(96, 165, 250, 0.35);" title="Chênh lệch = Nhân Lực Có - Kế Hoạch Cần">
-              ⚖️ 3. Chênh Lệch (Balance)
+            <span class="metric-pill" style="background: rgba(96, 165, 250, 0.15); color: var(--text-primary); border: 1px solid rgba(96, 165, 250, 0.35);" title="Chênh lệch = Nhân Lực Có - Kế Hoạch Cần">
+              ⚖️ 3. Chênh Lệch
             </span>
           </td>
           ${balanceCells}
-          <td class="font-mono" style="text-align: right; font-weight: 900; font-size: 0.875rem; ${cumAct - cumPlan < 0 ? 'color: #ef4444;' : 'color: #10b981;'}">
+          <td class="font-mono" style="text-align: right; font-weight: 900; font-size: 0.875rem; ${cumAct - cumPlan < 0 ? 'color: var(--color-alert-red, #ff0000) !important;' : (cumAct - cumPlan > 0 ? 'color: var(--color-plan-blue, #0000ff) !important;' : 'color: var(--text-primary) !important;')}">
             ${(cumAct - cumPlan).toFixed(1)}
           </td>
-          <td class="font-mono week-summary-col" style="font-weight: 900; font-size: 0.875rem; text-align: right; ${avgBalVal < 0 ? 'color: #ef4444;' : 'color: #10b981;'}">
+          <td class="font-mono week-summary-col" style="font-weight: 900; font-size: 0.875rem; text-align: right; ${avgBalVal < 0 ? 'color: var(--color-alert-red, #ff0000) !important;' : (avgBalVal > 0 ? 'color: var(--color-plan-blue, #0000ff) !important;' : 'color: var(--text-primary) !important;')}">
             ${avgBalVal.toFixed(1)}
           </td>
-          <td style="text-align: center; font-size: 0.775rem; ${cumAct - cumPlan < 0 ? 'color: #ef4444; font-weight: 700;' : 'color: #10b981; font-weight: 700;'}">
-            ${cumAct - cumPlan < 0 ? 'Thiếu hụt (-)' : 'Cân đối đủ (+)'}
+          <td style="text-align: center; font-size: 0.775rem; ${cumAct - cumPlan < 0 ? 'color: var(--color-alert-red, #ff0000) !important; font-weight: 800;' : (cumAct - cumPlan > 0 ? 'color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;' : 'color: var(--text-primary) !important; font-weight: 700;')}">
+            ${cumAct - cumPlan < 0 ? 'Thiếu hụt (-)' : (cumAct - cumPlan > 0 ? 'Cân đối đủ (+)' : 'Cân đối (0)')}
           </td>
         </tr>
 
         ${!isCompact ? `
-          <!-- Hàng 4: Số Người Cần Bổ Sung (Thiếu hụt) -->
+          <!-- Hàng 4: Số Cần Thêm (Thiếu hụt) -->
           <tr class="${stageCls} row-manpower-shortage" style="border-bottom: 2px solid var(--border-glass);">
             <td class="sticky-col-metric" style="text-align: center;">
-              <span class="metric-pill" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35);" title="Số người cần bổ sung khi chênh lệch âm">
-                🚨 4. Người Cần Bổ Sung
+              <span class="metric-pill" style="background: rgba(239, 68, 68, 0.15); color: var(--text-primary); border: 1px solid rgba(239, 68, 68, 0.35);" title="Số người cần bổ sung khi chênh lệch âm">
+                🚨 4. Số Cần Thêm
               </span>
             </td>
             ${shortageCells}
-            <td class="font-mono" style="text-align: right; font-weight: 800; font-size: 0.875rem; color: ${cumShortage > 0 ? '#f87171' : '#34d399'};">
+            <td class="font-mono" style="text-align: right; font-weight: 800; font-size: 0.875rem; color: ${cumShortage > 0 ? '#ff0000 !important' : '#000000 !important'};">
               ${cumShortage.toFixed(1)}
             </td>
-            <td class="font-mono week-summary-col" style="font-weight: 800; font-size: 0.875rem; text-align: right; color: ${avgShortVal > 0 ? '#f87171' : 'var(--text-muted)'};">
+            <td class="font-mono week-summary-col" style="font-weight: 800; font-size: 0.875rem; text-align: right; color: ${avgShortVal > 0 ? '#ff0000 !important' : '#000000 !important'};">
               ${avgShortVal.toFixed(1)}
             </td>
             <td style="text-align: center; font-size: 0.75rem;">
-              ${cumShortage > 0 ? '<span class="badge-mp-shortage">Cần tuyển / điều động</span>' : '<span class="badge-mp-ok">Đạt chuẩn</span>'}
+              ${cumShortage > 0 ? '<span class="badge-mp-shortage" style="color: var(--color-alert-red, #ff0000) !important; border: 1.5px solid #ff0000; background: #fff1f2; font-weight: 800;">Cần tuyển / điều động</span>' : '<span class="badge-mp-ok" style="color: var(--color-plan-blue, #0000ff) !important; border: 1px solid #0000ff; background: #e0f2fe; font-weight: 800;">Đạt chuẩn</span>'}
             </td>
           </tr>
         ` : ''}
@@ -2761,11 +2775,11 @@ function renderDataMassView() {
               ${dayHeaders}
               <th style="text-align: right; min-width: 120px;">
                 TỔNG LŨY KẾ<br>
-                <span style="font-size: 0.78rem; font-weight: 600; color: #cbd5e1;">(${selCount}/${totCount} ngày)</span>
+                <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-primary);">(${selCount}/${totCount} ngày)</span>
               </th>
               <th class="week-summary-header" style="text-align: right; min-width: 110px;">
                 TRUNG BÌNH / NGÀY<br>
-                <span style="font-size: 0.78rem; font-weight: 600; color: #cbd5e1;">(Bình quân mỗi ngày)</span>
+                <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-primary);">(Bình quân mỗi ngày)</span>
               </th>
               <th style="text-align: center; min-width: 130px;">
                 ĐÁNH GIÁ &amp; KHUYẾN NGHỊ
@@ -2788,11 +2802,11 @@ function renderDataMassView() {
               ${dayHeaders}
               <th style="text-align: right; min-width: 120px;">
                 TỔNG LŨY KẾ<br>
-                <span style="font-size: 0.78rem; font-weight: 600; color: #cbd5e1;">(${selCount}/${totCount} ngày)</span>
+                <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-primary);">(${selCount}/${totCount} ngày)</span>
               </th>
               <th class="week-summary-header" style="text-align: right; min-width: 110px;">
                 TRUNG BÌNH / NGÀY<br>
-                <span style="font-size: 0.78rem; font-weight: 600; color: #cbd5e1;">(Bình quân mỗi ngày)</span>
+                <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-primary);">(Bình quân mỗi ngày)</span>
               </th>
               <th style="text-align: center; min-width: 130px;">
                 ĐÁNH GIÁ &amp; KHUYẾN NGHỊ
@@ -2824,20 +2838,26 @@ function renderDataMassView() {
     // 1. Kế hoạch nhân lực cần: Hiển thị TỔNG LŨY KẾ
     if (elMpPlan) {
       elMpPlan.textContent = `${topPlanMp.toFixed(1)} lượt ng`;
+      elMpPlan.style.color = '#0000ff';
+      elMpPlan.style.fontWeight = '800';
     }
     // 2. Nhân lực có mặt thực tế: Hiển thị TỔNG LŨY KẾ
     if (elMpActual) {
       elMpActual.textContent = `${topActMp.toFixed(1)} lượt ng`;
+      elMpActual.style.color = '#000000';
+      elMpActual.style.fontWeight = '800';
     }
     // 3. Chênh lệch nhân lực: Hiển thị TỔNG LŨY KẾ (Có - Cần)
     if (elMpBalance) {
       elMpBalance.textContent = (cumDiffTop > 0 ? '+' : '') + cumDiffTop.toFixed(1) + ' lượt ng';
-      elMpBalance.style.color = cumDiffTop < 0 ? '#ef4444' : '#10b981';
+      elMpBalance.style.color = cumDiffTop < 0 ? '#ff0000' : (cumDiffTop > 0 ? '#0000ff' : '#000000');
+      elMpBalance.style.fontWeight = '800';
     }
     // 4. Số người cần bổ sung: Hiển thị TỔNG LŨY KẾ lượt người thiếu
     if (elMpShortage) {
       elMpShortage.textContent = topShortage > 0 ? `${topShortage.toFixed(1)} lượt ng` : '0 lượt ng (Đủ)';
-      elMpShortage.style.color = topShortage > 0 ? '#ef4444' : '#34d399';
+      elMpShortage.style.color = topShortage > 0 ? '#ff0000' : '#0000ff';
+      elMpShortage.style.fontWeight = '800';
     }
     // 5. Thực tế số người bổ sung: Hiển thị TỔNG LŨY KẾ
     if (elMpSupplement) {
@@ -2960,17 +2980,17 @@ function renderDataMassView() {
         const wkCls = isWk ? 'weekend-cell' : '';
         if (isSplit) {
           return `
-            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 700; color: #60a5fa; font-size: 0.8rem;" title="Plan Ca Ngày: ${d.planDay}">
-              ${d.planDay > 0 ? d.planDay.toLocaleString('vi-VN') : '<span style="color: var(--text-muted);">--</span>'}
+            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 700; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.8rem;" title="Plan Ca Ngày: ${d.planDay}">
+              ${d.planDay > 0 ? d.planDay.toLocaleString('vi-VN') : '<span style="color: var(--text-primary);">--</span>'}
             </td>
-            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 700; color: #93c5fd; font-size: 0.8rem;" title="Plan Ca Đêm: ${d.planNight}">
-              ${d.planNight > 0 ? d.planNight.toLocaleString('vi-VN') : '<span style="color: var(--text-muted);">--</span>'}
+            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 700; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.8rem;" title="Plan Ca Đêm: ${d.planNight}">
+              ${d.planNight > 0 ? d.planNight.toLocaleString('vi-VN') : '<span style="color: var(--text-primary);">--</span>'}
             </td>
           `;
         }
         return `
-          <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 700; color: #60a5fa; font-size: 0.85rem;">
-            ${d.plan > 0 ? d.plan.toLocaleString('vi-VN') : '<span style="color: var(--text-muted);">--</span>'}
+          <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 700; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.85rem;">
+            ${d.plan > 0 ? d.plan.toLocaleString('vi-VN') : '<span style="color: var(--text-primary);">--</span>'}
           </td>
         `;
       }).join('');
@@ -2982,17 +3002,17 @@ function renderDataMassView() {
         const wkCls = isWk ? 'weekend-cell' : '';
         if (isSplit) {
           return `
-            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 700; color: #34d399; font-size: 0.8rem;" title="Fact Ca Ngày: ${d.factDay}">
-              ${d.factDay > 0 ? d.factDay.toLocaleString('vi-VN') : '<span style="color: var(--text-muted);">--</span>'}
+            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 700; color: var(--text-primary) !important; font-size: 0.8rem;" title="Fact Ca Ngày: ${d.factDay}">
+              ${d.factDay > 0 ? d.factDay.toLocaleString('vi-VN') : '<span style="color: var(--text-primary);">--</span>'}
             </td>
-            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 700; color: #6ee7b7; font-size: 0.8rem;" title="Fact Ca Đêm: ${d.factNight}">
-              ${d.factNight > 0 ? d.factNight.toLocaleString('vi-VN') : '<span style="color: var(--text-muted);">--</span>'}
+            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 700; color: var(--text-primary) !important; font-size: 0.8rem;" title="Fact Ca Đêm: ${d.factNight}">
+              ${d.factNight > 0 ? d.factNight.toLocaleString('vi-VN') : '<span style="color: var(--text-primary);">--</span>'}
             </td>
           `;
         }
         return `
-          <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 700; color: #34d399; font-size: 0.85rem;">
-            ${d.fact > 0 ? d.fact.toLocaleString('vi-VN') : '<span style="color: var(--text-muted);">--</span>'}
+          <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-weight: 700; color: var(--text-primary) !important; font-size: 0.85rem;">
+            ${d.fact > 0 ? d.fact.toLocaleString('vi-VN') : '<span style="color: var(--text-primary);">--</span>'}
           </td>
         `;
       }).join('');
@@ -3005,8 +3025,8 @@ function renderDataMassView() {
         if (isSplit) {
           const gapDay = (d.factDay || 0) - (d.planDay || 0);
           const gapNight = (d.factNight || 0) - (d.planNight || 0);
-          const clsDay = gapDay < 0 ? 'color: var(--danger); font-weight: 700;' : gapDay > 0 ? 'color: var(--success); font-weight: 700;' : 'color: var(--text-muted);';
-          const clsNight = gapNight < 0 ? 'color: var(--danger); font-weight: 700;' : gapNight > 0 ? 'color: var(--success); font-weight: 700;' : 'color: var(--text-muted);';
+          const clsDay = gapDay < 0 ? 'color: var(--color-alert-red, #ff0000) !important; font-weight: 800; background: #fff1f2;' : gapDay > 0 ? 'color: var(--color-plan-blue, #0000ff) !important; font-weight: 800; background: #e0f2fe;' : 'color: var(--text-primary);';
+          const clsNight = gapNight < 0 ? 'color: var(--color-alert-red, #ff0000) !important; font-weight: 800; background: #fff1f2;' : gapNight > 0 ? 'color: var(--color-plan-blue, #0000ff) !important; font-weight: 800; background: #e0f2fe;' : 'color: var(--text-primary);';
           return `
             <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-size: 0.775rem; ${clsDay}">
               ${gapDay !== 0 ? (gapDay > 0 ? '+' : '') + gapDay.toLocaleString('vi-VN') : '0'}
@@ -3017,9 +3037,9 @@ function renderDataMassView() {
           `;
         }
         if (d.plan === 0 && d.fact === 0) {
-          return `<td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; color: var(--text-muted); font-size: 0.8rem;">--</td>`;
+          return `<td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; color: var(--text-primary); font-size: 0.8rem;">--</td>`;
         }
-        const cls = d.gap < 0 ? 'color: var(--danger); font-weight: 700;' : d.gap > 0 ? 'color: var(--success); font-weight: 700;' : 'color: var(--text-muted);';
+        const cls = d.gap < 0 ? 'color: var(--color-alert-red, #ff0000) !important; font-weight: 800; background: #fff1f2;' : d.gap > 0 ? 'color: var(--color-plan-blue, #0000ff) !important; font-weight: 800; background: #e0f2fe;' : 'color: var(--text-primary);';
         return `
           <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-size: 0.8rem; ${cls}">
             ${d.gap !== 0 ? (d.gap > 0 ? '+' : '') + d.gap.toLocaleString('vi-VN') : '0'}
@@ -3057,21 +3077,21 @@ function renderDataMassView() {
         if (isSplit) {
           const rDay = (d.planDay || 0) > 0 ? Math.round(((d.factDay || 0) / d.planDay) * 100) : ((d.factDay || 0) > 0 ? 100 : 0);
           const rNight = (d.planNight || 0) > 0 ? Math.round(((d.factNight || 0) / d.planNight) * 100) : ((d.factNight || 0) > 0 ? 100 : 0);
-          const clsDay = rDay >= 100 ? 'color: #34d399;' : rDay >= 80 ? 'color: #60a5fa;' : 'color: #f87171;';
-          const clsNight = rNight >= 100 ? 'color: #34d399;' : rNight >= 80 ? 'color: #60a5fa;' : 'color: #f87171;';
+          const clsDay = rDay >= 100 ? 'color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;' : 'color: var(--color-alert-red, #ff0000) !important; font-weight: 800;';
+          const clsNight = rNight >= 100 ? 'color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;' : 'color: var(--color-alert-red, #ff0000) !important; font-weight: 800;';
           return `
-            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-size: 0.775rem; font-weight: 700; ${clsDay}">
+            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-size: 0.775rem; font-weight: 800; ${clsDay}">
               ${d.planDay > 0 || d.factDay > 0 ? rDay + '%' : '--'}
             </td>
-            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-size: 0.775rem; font-weight: 700; ${clsNight}">
+            <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-size: 0.775rem; font-weight: 800; ${clsNight}">
               ${d.planNight > 0 || d.factNight > 0 ? rNight + '%' : '--'}
             </td>
           `;
         }
         const r = d.plan > 0 ? Math.round((d.fact / d.plan) * 100) : (d.fact > 0 ? 100 : 0);
-        const cls = r >= 100 ? 'color: #34d399;' : r >= 80 ? 'color: #60a5fa;' : 'color: #f87171;';
+        const cls = r >= 100 ? 'color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;' : 'color: var(--color-alert-red, #ff0000) !important; font-weight: 800;';
         return `
-          <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-size: 0.8rem; font-weight: 700; ${cls}">
+          <td class="font-mono ${d.isSelected ? '' : 'day-col-inactive'} ${wkCls}" style="text-align: right; font-size: 0.8rem; font-weight: 800; ${cls}">
             ${d.plan > 0 || d.fact > 0 ? r + '%' : '--'}
           </td>
         `;
@@ -3086,18 +3106,18 @@ function renderDataMassView() {
           <td rowspan="4" class="sticky-col-prod" style="vertical-align: top; padding-top: 0.85rem;">
             <div style="margin-bottom: 0.4rem;">${stageBadgeHtml}</div>
             <div style="font-weight: 800; color: var(--text-primary); font-size: 0.95rem;">${stageName}</div>
-            <div style="font-size: 0.725rem; color: var(--text-secondary); margin-top: 0.25rem;">
-              Tiến độ: <strong style="color: ${sum.rate >= 100 ? '#34d399' : sum.rate >= 80 ? '#60a5fa' : '#f87171'};">${sum.rate}%</strong>
+            <div style="font-size: 0.725rem; color: var(--text-primary); margin-top: 0.25rem;">
+              Tiến độ: <strong style="color: ${sum.rate >= 100 ? '#0000ff !important;' : '#ff0000 !important;'};">${sum.rate}%</strong>
             </div>
           </td>
           <td class="sticky-col-metric" style="text-align: center;">
             <span class="metric-pill metric-plan">📋 Kế Hoạch Cần</span>
           </td>
           ${planCells}
-          <td class="font-mono week-summary-col" style="font-weight: 800; color: #60a5fa; font-size: 0.9rem; text-align: right;">
+          <td class="font-mono week-summary-col" style="font-weight: 800; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.9rem; text-align: right;">
             ${sum.cumPlan.toLocaleString('vi-VN')}
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 700; color: #60a5fa;">
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--color-plan-blue, #0000ff) !important;">
             ${sum.avgPlan.toLocaleString('vi-VN')} pcs/ng
           </td>
         </tr>
@@ -3108,10 +3128,10 @@ function renderDataMassView() {
             <span class="metric-pill metric-fact">🏭 Thực Tế Đạt</span>
           </td>
           ${factCells}
-          <td class="font-mono week-summary-col" style="font-weight: 800; color: #34d399; font-size: 0.9rem; text-align: right;">
+          <td class="font-mono week-summary-col" style="font-weight: 800; color: var(--text-primary) !important; font-size: 0.9rem; text-align: right;">
             ${sum.cumFact.toLocaleString('vi-VN')}
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 700; color: #34d399;">
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary) !important;">
             ${sum.avgFact.toLocaleString('vi-VN')} pcs/ng
           </td>
         </tr>
@@ -3122,10 +3142,10 @@ function renderDataMassView() {
             <span class="metric-pill metric-gap">📉 Chênh Lệch</span>
           </td>
           ${gapCells}
-          <td class="font-mono week-summary-col" style="font-weight: 800; font-size: 0.9rem; text-align: right; ${sum.cumGap < 0 ? 'color: var(--danger);' : 'color: var(--success);'}">
+          <td class="font-mono week-summary-col" style="font-weight: 800; font-size: 0.9rem; text-align: right; ${sum.cumGap < 0 ? 'color: var(--color-alert-red, #ff0000) !important;' : (sum.cumGap > 0 ? 'color: var(--color-plan-blue, #0000ff) !important;' : 'color: var(--text-primary) !important;')}">
             ${sum.cumGap !== 0 ? (sum.cumGap > 0 ? '+' : '') + sum.cumGap.toLocaleString('vi-VN') : '0'}
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 700; ${sum.cumGap < 0 ? 'color: var(--danger);' : 'color: var(--success);'}">
+          <td class="font-mono" style="text-align: right; font-weight: 800; ${sum.cumGap < 0 ? 'color: var(--color-alert-red, #ff0000) !important;' : 'color: var(--color-plan-blue, #0000ff) !important;'}">
             ${sum.cumGap < 0 ? 'Thiếu ' + Math.abs(sum.cumGap).toLocaleString('vi-VN') : 'Đạt'}
           </td>
         </tr>
@@ -3133,14 +3153,14 @@ function renderDataMassView() {
         <!-- Hàng 4: Tỷ Lệ Đạt (%) -->
         <tr class="${stageCls}" style="border-bottom: 2px solid var(--border-glass);">
           <td class="sticky-col-metric" style="text-align: center;">
-            <span class="metric-pill" style="background: rgba(139, 92, 246, 0.15); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.35);">🎯 % Hoàn Thành</span>
+            <span class="metric-pill" style="background: rgba(59, 130, 246, 0.12); color: var(--text-primary); border: 1px solid rgba(59, 130, 246, 0.35);">🎯 % Hoàn Thành</span>
           </td>
           ${rateCells}
-          <td class="font-mono week-summary-col" style="font-weight: 800; font-size: 0.85rem; text-align: right; color: ${sum.rate >= 100 ? '#34d399' : sum.rate >= 80 ? '#60a5fa' : '#f87171'};">
+          <td class="font-mono week-summary-col" style="font-weight: 800; font-size: 0.85rem; text-align: right; color: ${sum.rate >= 100 ? '#0000ff !important;' : '#ff0000 !important;'};">
             ${sum.rate}%
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 700; color: ${sum.rate >= 100 ? '#34d399' : sum.rate >= 80 ? '#60a5fa' : '#f87171'};">
-            ${sum.rate >= 100 ? '✅ Hoàn thành' : (sum.rate >= 80 ? '⚡ Tiến độ tốt' : '⚠️ Cần đẩy mạnh')}
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: ${sum.rate >= 100 ? '#0000ff !important;' : '#ff0000 !important;'};">
+            ${sum.rate >= 100 ? '✅ Hoàn thành' : '⚠️ Cần đẩy mạnh'}
           </td>
         </tr>
       `;
@@ -3363,7 +3383,7 @@ function renderDataMassView() {
       if (!sr.hasReasons && sr.items.length === 0) {
         return `
           <div style="display: flex; align-items: center; gap: 0.35rem;">
-            <span class="badge" style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35); color: #fbbf24; font-size: 0.72rem; padding: 0.2rem 0.5rem; font-weight: 700;">
+            <span class="badge badge-red" style="font-size: 0.82rem; padding: 0.25rem 0.65rem; font-weight: 800; border: 1.5px solid #ff0000 !important; border-radius: 9999px; background: var(--bg-card) !important; color: var(--color-alert-red, #ff0000) !important;">
               ⚠️ Thiếu hụt — Chưa cập nhật lý do
             </span>
           </div>
@@ -3388,16 +3408,16 @@ function renderDataMassView() {
         const lineStr = r.line ? ` [${r.line}]` : '';
 
         return `
-          <div class="shortage-reason-item" style="font-size: 0.735rem; line-height: 1.35; padding: 0.25rem 0.5rem; background: rgba(239, 68, 68, 0.08); border-left: 3px solid #ef4444; border-radius: 4px; color: #fca5a5; margin-bottom: 0.2rem;">
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.3rem; margin-bottom: 0.1rem;">
-              <span style="font-weight: 700; color: #f87171; font-size: 0.7rem;">
+          <div class="shortage-reason-item" style="font-size: 0.8rem; line-height: 1.35; padding: 0.35rem 0.6rem; background: var(--bg-card) !important; border: 1.5px solid #ff0000 !important; border-radius: 8px; color: var(--text-primary) !important; margin-bottom: 0.3rem; box-shadow: 0 1px 3px rgba(255,0,0,0.06);">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.3rem; margin-bottom: 0.15rem;">
+              <span style="font-weight: 800; color: var(--color-alert-red, #ff0000) !important; font-size: 0.78rem;">
                 📅 ${dateLabel} · ${shiftLabel}${lineStr}
               </span>
-              <span style="font-family: monospace; font-weight: 800; color: #ef4444; font-size: 0.72rem;">
+              <span style="font-family: monospace; font-weight: 900; color: var(--color-alert-red, #ff0000) !important; font-size: 0.82rem;">
                 ${gapStr}
               </span>
             </div>
-            <div style="color: #f1f5f9; font-size: 0.735rem; word-break: break-word;">
+            <div style="color: var(--text-primary) !important; font-size: 0.82rem; font-weight: 600; word-break: break-word;">
               ${r.reason || 'Chưa có ghi chú chi tiết'}
             </div>
           </div>
@@ -3411,19 +3431,19 @@ function renderDataMassView() {
       return `
         <div class="shortage-reasons-wrap" style="display: flex; flex-direction: column; gap: 0.2rem; min-width: 270px; max-width: 380px;">
           ${displayItems.length > 1 ? `
-            <div style="font-size: 0.675rem; color: #94a3b8; font-weight: 700; display: flex; align-items: center; justify-content: space-between; gap: 0.3rem; margin-bottom: 0.05rem;">
+            <div style="font-size: 0.75rem; color: var(--text-primary); font-weight: 800; display: flex; align-items: center; justify-content: space-between; gap: 0.3rem; margin-bottom: 0.05rem;">
               <span>📋 Tổng hợp ${displayItems.length} ca có ghi nhận lý do:</span>
               <button type="button" 
                       onclick="openModelShortageHistoryModal('${encodeURIComponent(it.productName1C)}', '${encodeURIComponent(it.stage)}', '${encodeURIComponent(it.specCode || '')}')" 
                       title="Mở toàn bộ danh sách ở dạng bảng chi tiết (Popup Modal)"
-                      style="background: transparent; border: none; color: #38bdf8; font-size: 0.675rem; font-weight: 700; cursor: pointer; padding: 0; text-decoration: underline;">
+                      style="background: transparent; border: none; color: var(--color-plan-blue, #0000ff); font-size: 0.75rem; font-weight: 800; cursor: pointer; padding: 0; text-decoration: underline;">
                 Bảng chi tiết ↗
               </button>
             </div>
           ` : ''}
           ${topItemsHtml}
           ${hiddenCount > 0 ? `
-            <div id="${listId}" class="more-shortage-list" style="display: none; max-height: 280px; overflow-y: auto; padding-right: 4px; border-top: 1px dashed rgba(239, 68, 68, 0.35); padding-top: 0.3rem; margin-top: 0.1rem;">
+            <div id="${listId}" class="more-shortage-list" style="display: none; max-height: 280px; overflow-y: auto; padding-right: 4px; border-top: 1.5px solid #ff0000; padding-top: 0.3rem; margin-top: 0.1rem;">
               ${hiddenItemsHtml}
             </div>
             <div style="display: flex; align-items: center; gap: 0.35rem; margin-top: 0.15rem; flex-wrap: wrap;">
@@ -3431,13 +3451,13 @@ function renderDataMassView() {
                       id="btn-toggle-${listId}"
                       class="btn-more-reasons" 
                       onclick="toggleShortageReasonsList('${listId}', ${hiddenCount})" 
-                      style="background: rgba(147, 51, 234, 0.15); border: 1px dashed rgba(147, 51, 234, 0.5); color: #c084fc; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; cursor: pointer; text-align: left; transition: all 0.2s ease;">
+                      style="background: var(--bg-card-header, #fff3cc); border: 1.5px solid #ff0000; color: var(--color-alert-red, #ff0000); font-size: 0.78rem; font-weight: 800; padding: 0.25rem 0.55rem; border-radius: 6px; cursor: pointer; text-align: left; transition: all 0.2s ease;">
                 🔍 Xem thêm +${hiddenCount} lý do khác trong kỳ...
               </button>
               <button type="button" 
                       onclick="openModelShortageHistoryModal('${encodeURIComponent(it.productName1C)}', '${encodeURIComponent(it.stage)}', '${encodeURIComponent(it.specCode || '')}')" 
                       title="Mở toàn bộ danh sách ở dạng bảng chi tiết (Popup Modal)"
-                      style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.35); color: #38bdf8; font-size: 0.675rem; font-weight: 700; padding: 0.2rem 0.45rem; border-radius: 4px; cursor: pointer; white-space: nowrap;">
+                      style="background: var(--bg-card); border: 1.5px solid #000000; color: var(--text-primary); font-size: 0.75rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 4px; cursor: pointer; white-space: nowrap;">
                 📋 Popup ↗
               </button>
             </div>
@@ -3631,30 +3651,30 @@ function renderDataMassView() {
 
         const shortageCellHtml = renderShortageReasonsCell(it);
         const evalCellHtml = renderEvaluationCell(it);
-        const gapColor = it.cumGapQty < 0 ? 'color: var(--danger);' : it.cumGapQty > 0 ? 'color: var(--success);' : 'color: var(--text-muted);';
+        const gapColor = it.cumGapQty < 0 ? 'color: var(--color-alert-red, #ff0000) !important; font-weight: 800;' : it.cumGapQty > 0 ? 'color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;' : 'color: var(--text-primary) !important; font-weight: 600;';
 
         return `
           <tr class="hover-row">
-            <td class="sticky-t2-stt" style="color: var(--text-muted); font-size: 0.75rem; text-align: center;">${idx + 1}</td>
+            <td class="sticky-t2-stt" style="color: var(--text-primary); font-size: 0.75rem; text-align: center;">${idx + 1}</td>
             <td class="sticky-t2-stage" style="text-align: center; white-space: nowrap;">
               <span class="badge ${stageBadgeClass}" style="font-size: 0.72rem; padding: 0.25rem 0.6rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.3rem;">
                 <span>${stageIcon}</span><span>${it.stage}</span>
               </span>
             </td>
             <td class="sticky-t2-group" style="white-space: nowrap;">
-              <div style="font-weight: 800; color: #f8fafc; font-size: 0.875rem;">
+              <div style="font-weight: 800; color: var(--text-primary) !important; font-size: 0.875rem;">
                 ${it.model || '--'}
               </div>
             </td>
             <td class="sticky-t2-model sticky-t2-model-end" style="min-width: 260px;">
-              <div style="font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 0.775rem; font-weight: 600; color: #93c5fd; word-break: break-all; line-height: 1.45;">
+              <div style="font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 0.775rem; font-weight: 700; color: var(--text-primary) !important; word-break: break-all; line-height: 1.45;">
                 ${it.productName1C}
               </div>
             </td>
-            <td class="font-mono week-summary-col" style="text-align: right; font-weight: 700; color: #60a5fa; font-size: 0.9rem;">
+            <td class="font-mono week-summary-col" style="text-align: right; font-weight: 800; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.9rem;">
               ${it.cumPlanQty.toLocaleString('vi-VN')}
             </td>
-            <td class="font-mono week-summary-col" style="text-align: right; font-weight: 700; color: #34d399; font-size: 0.9rem;">
+            <td class="font-mono week-summary-col" style="text-align: right; font-weight: 700; color: var(--text-primary) !important; font-size: 0.9rem;">
               ${it.cumFactQty.toLocaleString('vi-VN')}
             </td>
             <td class="font-mono week-summary-col" style="text-align: right; font-weight: 800; font-size: 0.9rem; ${gapColor}">
@@ -3678,43 +3698,43 @@ function renderDataMassView() {
               <th class="sticky-t2-stage" style="text-align: center; min-width: 110px;">Công Đoạn</th>
               <th class="sticky-t2-group" style="min-width: 130px;">Group Model</th>
               <th class="sticky-t2-model sticky-t2-model-end" style="min-width: 260px;">Model (Mã 1C)</th>
-              <th class="week-summary-header" style="text-align: right; min-width: 125px; color: #60a5fa;">
+              <th class="week-summary-header" style="text-align: right; min-width: 125px; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;">
                 KẾ HOẠCH (PLAN)<br>
-                <span style="font-size: 0.78rem; font-weight: 600; color: #cbd5e1;">(${selCount}/${totCount} ngày chọn)</span>
+                <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-primary);">(${selCount}/${totCount} ngày chọn)</span>
               </th>
-              <th class="week-summary-header" style="text-align: right; min-width: 125px; color: #34d399;">
+              <th class="week-summary-header" style="text-align: right; min-width: 125px; color: var(--text-primary) !important; font-weight: 800;">
                 THỰC TẾ (FACT)<br>
-                <span style="font-size: 0.78rem; font-weight: 600; color: #cbd5e1;">(${selCount}/${totCount} ngày chọn)</span>
+                <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-primary);">(${selCount}/${totCount} ngày chọn)</span>
               </th>
-              <th class="week-summary-header" style="text-align: right; min-width: 125px;">
+              <th class="week-summary-header" style="text-align: right; min-width: 125px; color: var(--text-primary) !important; font-weight: 800;">
                 CHÊNH LỆCH (GAP)<br>
-                <span style="font-size: 0.78rem; font-weight: 600; color: #cbd5e1;">(Fact - Plan)</span>
+                <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-primary);">(Fact - Plan)</span>
               </th>
-              <th style="text-align: left; min-width: 280px; max-width: 380px; background: rgba(239, 68, 68, 0.12); border-left: 2px solid #ef4444;">
+              <th style="text-align: left; min-width: 280px; max-width: 380px; background: #fff1f2; border-left: 2px solid #ff0000; color: var(--color-alert-red, #ff0000) !important; font-weight: 800;">
                 NGUYÊN NHÂN ÂM (THEO CA & NGÀY)<br>
-                <span style="font-size: 0.75rem; font-weight: 600; color: #fca5a5;">(Cập nhật từ Sheet Mass-History)</span>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--color-alert-red, #ff0000) !important;">(Cập nhật từ Sheet Mass-History)</span>
               </th>
-              <th style="text-align: center; min-width: 145px; background: rgba(56, 189, 248, 0.12); border-left: 1px solid rgba(56, 189, 248, 0.3);">
+              <th style="text-align: center; min-width: 145px; background: var(--bg-card-header, #fff3cc); border-left: 1px solid var(--border-glass); color: var(--text-primary) !important; font-weight: 800;">
                 ĐÁNH GIÁ<br>
-                <span style="font-size: 0.75rem; font-weight: 600; color: #7dd3fc;">(Tiến độ & Trạng thái)</span>
+                <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-primary);">(Tiến độ & Trạng thái)</span>
               </th>
             </tr>
             <!-- HÀNG TỔNG CỘNG CHUYỂN LÊN TRÊN & ĐÓNG BĂNG CÙNG TIÊU ĐỀ -->
             <tr class="sticky-grand-total-row">
-              <th colspan="4" class="sticky-grand-total-label" style="text-align: right; padding: 0.65rem 1rem;">
+              <th colspan="4" class="sticky-grand-total-label" style="text-align: right; padding: 0.65rem 1rem; color: var(--text-primary); font-weight: 800;">
                 TỔNG CỘNG (${schedule.items.length} MODEL):
               </th>
-              <th class="font-mono" style="text-align: right; color: #60a5fa; font-size: 0.95rem; font-weight: 800;">
+              <th class="font-mono" style="text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.95rem; font-weight: 900;">
                 ${grandPlan.toLocaleString('vi-VN')}
               </th>
-              <th class="font-mono" style="text-align: right; color: #34d399; font-size: 0.95rem; font-weight: 800;">
+              <th class="font-mono" style="text-align: right; color: var(--text-primary) !important; font-size: 0.95rem; font-weight: 900;">
                 ${grandFact.toLocaleString('vi-VN')}
               </th>
-              <th class="font-mono" style="text-align: right; font-size: 0.95rem; font-weight: 800; ${grandGap < 0 ? 'color: var(--danger);' : grandGap > 0 ? 'color: var(--success);' : 'color: var(--text-muted);'}">
+              <th class="font-mono" style="text-align: right; font-size: 0.95rem; font-weight: 900; ${grandGap < 0 ? 'color: var(--color-alert-red, #ff0000) !important;' : grandGap > 0 ? 'color: var(--color-plan-blue, #0000ff) !important;' : 'color: var(--text-primary) !important;'}">
                 ${grandGap !== 0 ? (grandGap > 0 ? '+' : '') + grandGap.toLocaleString('vi-VN') : '0'}
               </th>
-              <th style="text-align: left; font-size: 0.8rem; color: #94a3b8; padding: 0.5rem 0.75rem; font-weight: 700;">
-                ${totalDeficitModels > 0 ? `<span style="color: #fca5a5; font-weight: 700;">⚠️ ${totalDeficitModels} Model thiếu hụt</span> (${totalExplainedModels} đã ghi nhận lý do)` : `<span style="color: #34d399; font-weight: 700;">✅ Tất cả đạt tiến độ</span>`}
+              <th style="text-align: left; font-size: 0.8rem; color: var(--text-primary); padding: 0.5rem 0.75rem; font-weight: 700;">
+                ${totalDeficitModels > 0 ? `<span style="color: var(--color-alert-red, #ff0000) !important; font-weight: 800;">⚠️ ${totalDeficitModels} Model thiếu hụt</span> (${totalExplainedModels} đã ghi nhận lý do)` : `<span style="color: var(--text-primary); font-weight: 700;">✅ Tất cả đạt tiến độ</span>`}
               </th>
               <th style="text-align: center;">
                 <span class="badge ${grandGap < 0 ? 'badge-red' : 'badge-green'}" style="font-weight: 800;">
@@ -3880,21 +3900,21 @@ function renderDataMassView() {
 
             <!-- Cột 2: Group Model -->
             <td rowspan="3" class="sticky-t2-group" style="vertical-align: top; padding-top: 0.85rem; border-bottom: 2px solid var(--border-glass); white-space: nowrap;">
-              <div style="font-weight: 800; color: #f8fafc; font-size: 0.875rem; letter-spacing: -0.01em;">
+              <div style="font-weight: 800; color: var(--text-primary) !important; font-size: 0.875rem; letter-spacing: -0.01em;">
                 ${it.model || '--'}
               </div>
             </td>
 
             <!-- Cột 3: Model (Mã 1C) -->
             <td rowspan="3" class="sticky-t2-model" style="vertical-align: top; padding-top: 0.85rem; border-bottom: 2px solid var(--border-glass); min-width: 260px;">
-              <div style="font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 0.775rem; font-weight: 600; color: #93c5fd; word-break: break-all; line-height: 1.45;">
+              <div style="font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 0.775rem; font-weight: 700; color: var(--text-primary) !important; word-break: break-all; line-height: 1.45;">
                 ${it.productName1C}
               </div>
             </td>
 
-            <td class="sticky-t2-type" style="text-align: center;"><span class="type-indicator type-plan">Plan</span></td>
+            <td class="sticky-t2-type" style="text-align: center;"><span class="type-indicator type-plan" style="color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;">Plan</span></td>
             ${planCells}
-            <td class="font-mono week-summary-col" style="font-weight: 700; color: #60a5fa; font-size: 0.9rem; text-align: right;">
+            <td class="font-mono week-summary-col" style="font-weight: 800; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.9rem; text-align: right;">
               ${it.cumPlanQty.toLocaleString('vi-VN')}
             </td>
             <td rowspan="3" style="vertical-align: middle; padding: 0.4rem 0.6rem; border-bottom: 2px solid var(--border-glass);">
@@ -3907,18 +3927,18 @@ function renderDataMassView() {
 
           <!-- Row 2: Fact Qty -->
           <tr class="row-fact">
-            <td class="sticky-t2-type" style="text-align: center;"><span class="type-indicator type-fact">Fact</span></td>
+            <td class="sticky-t2-type" style="text-align: center;"><span class="type-indicator type-fact" style="color: var(--text-primary) !important; font-weight: 800;">Fact</span></td>
             ${factCells}
-            <td class="font-mono week-summary-col" style="font-weight: 700; color: #34d399; font-size: 0.9rem; text-align: right;">
+            <td class="font-mono week-summary-col" style="font-weight: 700; color: var(--text-primary) !important; font-size: 0.9rem; text-align: right;">
               ${it.cumFactQty.toLocaleString('vi-VN')}
             </td>
           </tr>
 
           <!-- Row 3: Gap Qty -->
           <tr class="row-gap">
-            <td class="sticky-t2-type" style="text-align: center;"><span class="type-indicator type-gap">Gap</span></td>
+            <td class="sticky-t2-type" style="text-align: center;"><span class="type-indicator type-gap" style="color: var(--text-primary) !important; font-weight: 800;">Gap</span></td>
             ${gapCells}
-            <td class="font-mono week-summary-col" style="font-weight: 800; font-size: 0.9rem; text-align: right; ${it.cumGapQty < 0 ? 'color: var(--danger);' : it.cumGapQty > 0 ? 'color: var(--success);' : 'color: var(--text-muted);'}">
+            <td class="font-mono week-summary-col" style="font-weight: 800; font-size: 0.9rem; text-align: right; ${it.cumGapQty < 0 ? 'color: var(--color-alert-red, #ff0000) !important;' : it.cumGapQty > 0 ? 'color: var(--color-plan-blue, #0000ff) !important;' : 'color: var(--text-primary) !important;'}">
               ${it.cumGapQty !== 0 ? (it.cumGapQty > 0 ? '+' : '') + it.cumGapQty.toLocaleString('vi-VN') : '0'}
             </td>
           </tr>
@@ -3951,16 +3971,16 @@ function renderDataMassView() {
 
         if (isSplit) {
           return `
-            <th class="font-mono ${wkCls}" style="text-align: right; color: #60a5fa; font-size: 0.775rem; font-weight: 800;">
+            <th class="font-mono ${wkCls}" style="text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.775rem; font-weight: 800;">
               ${pDay > 0 ? pDay.toLocaleString('vi-VN') : '--'}
             </th>
-            <th class="font-mono ${wkCls}" style="text-align: right; color: #60a5fa; font-size: 0.775rem; font-weight: 800;">
+            <th class="font-mono ${wkCls}" style="text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.775rem; font-weight: 800;">
               ${pNight > 0 ? pNight.toLocaleString('vi-VN') : '--'}
             </th>
           `;
         }
         return `
-          <th class="font-mono ${wkCls}" style="text-align: right; color: #60a5fa; font-size: 0.85rem; font-weight: 800;">
+          <th class="font-mono ${wkCls}" style="text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.85rem; font-weight: 800;">
             ${pTot > 0 ? pTot.toLocaleString('vi-VN') : '--'}
           </th>
         `;
@@ -3976,31 +3996,31 @@ function renderDataMassView() {
               <th class="sticky-t2-model" style="min-width: 260px;">Model (Mã 1C)</th>
               <th class="sticky-t2-type" style="text-align: center; width: 65px;">Loại</th>
               ${dayHeaders}
-              <th class="week-summary-header" style="text-align: right; min-width: 120px;">
+              <th class="week-summary-header" style="text-align: right; min-width: 120px; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;">
                 TỔNG LŨY KẾ<br>
-                <span style="font-size: 0.78rem; font-weight: 600; color: #cbd5e1;">(${selCount}/${totCount} ngày)</span>
+                <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-primary);">(${selCount}/${totCount} ngày)</span>
               </th>
-              <th style="text-align: left; min-width: 280px; max-width: 380px; background: rgba(239, 68, 68, 0.12); border-left: 2px solid #ef4444;">
+              <th style="text-align: left; min-width: 280px; max-width: 380px; background: #fff1f2; border-left: 2px solid #ff0000; color: var(--color-alert-red, #ff0000) !important; font-weight: 800;">
                 NGUYÊN NHÂN ÂM (THEO CA & NGÀY)<br>
-                <span style="font-size: 0.72rem; font-weight: 600; color: #fca5a5;">(Sheet Mass-History)</span>
+                <span style="font-size: 0.72rem; font-weight: 700; color: var(--color-alert-red, #ff0000) !important;">(Sheet Mass-History)</span>
               </th>
-              <th style="text-align: center; min-width: 145px; background: rgba(56, 189, 248, 0.12); border-left: 1px solid rgba(56, 189, 248, 0.3);">
+              <th style="text-align: center; min-width: 145px; background: var(--bg-card-header, #fff3cc); border-left: 1px solid var(--border-glass); color: var(--text-primary) !important; font-weight: 800;">
                 ĐÁNH GIÁ<br>
-                <span style="font-size: 0.72rem; font-weight: 600; color: #7dd3fc;">(Tiến độ & Trạng thái)</span>
+                <span style="font-size: 0.72rem; font-weight: 600; color: var(--text-primary);">(Tiến độ & Trạng thái)</span>
               </th>
             </tr>
             ${splitSubHeaderRow}
             <!-- HÀNG TỔNG CỘNG CHUYỂN LÊN TRÊN & ĐÓNG BĂNG CHO DAILY VIEW -->
             <tr class="sticky-grand-total-row">
-              <th colspan="5" class="sticky-grand-total-label" style="text-align: right; padding: 0.65rem 1rem;">
+              <th colspan="5" class="sticky-grand-total-label" style="text-align: right; padding: 0.65rem 1rem; color: var(--text-primary); font-weight: 800;">
                 TỔNG CỘNG (${schedule.items.length} MODEL):
               </th>
               ${dailyGrandCells}
-              <th class="font-mono" style="text-align: right; color: #60a5fa; font-size: 0.95rem; font-weight: 800;">
+              <th class="font-mono" style="text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.95rem; font-weight: 900;">
                 ${grandPlan.toLocaleString('vi-VN')}
               </th>
-              <th style="text-align: left; font-size: 0.8rem; color: #94a3b8; padding: 0.5rem 0.75rem; font-weight: 700;">
-                ${totalDeficitModels > 0 ? `<span style="color: #fca5a5; font-weight: 700;">⚠️ ${totalDeficitModels} Model thiếu</span>` : `<span style="color: #34d399; font-weight: 700;">✅ Tất cả đạt</span>`}
+              <th style="text-align: left; font-size: 0.8rem; color: var(--text-primary); padding: 0.5rem 0.75rem; font-weight: 700;">
+                ${totalDeficitModels > 0 ? `<span style="color: var(--color-alert-red, #ff0000) !important; font-weight: 800;">⚠️ ${totalDeficitModels} Model thiếu</span>` : `<span style="color: var(--text-primary); font-weight: 700;">✅ Tất cả đạt</span>`}
               </th>
               <th style="text-align: center;">
                 <span class="badge ${grandGap < 0 ? 'badge-red' : 'badge-green'}" style="font-weight: 800;">
@@ -4304,18 +4324,18 @@ window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, is
     const mpVal = Math.round(st * maxMp);
     const pctVal = Math.round(st * maxPct);
     return `
-      <line x1="${padLeft}" y1="${y}" x2="${svgWidth - padRight}" y2="${y}" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
-      <text x="${padLeft - 8}" y="${y + 4}" fill="#64748b" font-size="9.5" font-family="monospace" text-anchor="end">${mpVal}</text>
-      <text x="${svgWidth - padRight + 8}" y="${y + 4}" fill="#64748b" font-size="9.5" font-family="monospace" text-anchor="start">${pctVal}%</text>
+      <line x1="${padLeft}" y1="${y}" x2="${svgWidth - padRight}" y2="${y}" stroke="rgba(0,0,0,0.08)" stroke-width="1" />
+      <text x="${padLeft - 8}" y="${y + 4}" fill="#000000" font-size="9.5" font-weight="700" font-family="monospace" text-anchor="end">${mpVal}</text>
+      <text x="${svgWidth - padRight + 8}" y="${y + 4}" fill="#000000" font-size="9.5" font-weight="700" font-family="monospace" text-anchor="start">${pctVal}%</text>
     `;
   }).join('');
 
   // 100% Target Baseline Line
   const baseline100Html = `
     <line x1="${padLeft}" y1="${y100}" x2="${svgWidth - padRight}" y2="${y100}" 
-          stroke="#38bdf8" stroke-dasharray="6 4" stroke-width="1.6" opacity="0.85" />
-    <rect x="${svgWidth - padRight - 84}" y="${y100 - 9}" width="80" height="17" rx="4" fill="rgba(8, 14, 29, 0.9)" stroke="rgba(56, 189, 248, 0.6)" stroke-width="1.2" />
-    <text x="${svgWidth - padRight - 44}" y="${y100 + 2.5}" fill="#38bdf8" font-size="9" font-weight="800" text-anchor="middle">🎯 100% Chuẩn</text>
+          stroke="#0284c7" stroke-dasharray="6 4" stroke-width="1.6" opacity="0.9" />
+    <rect x="${svgWidth - padRight - 84}" y="${y100 - 9}" width="80" height="17" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" />
+    <text x="${svgWidth - padRight - 44}" y="${y100 + 2.5}" fill="#000000" font-size="9" font-weight="800" text-anchor="middle">🎯 100% Chuẩn</text>
   `;
 
   // Bars, Points, Badges, and Hover areas
@@ -4349,26 +4369,26 @@ window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, is
     const actValStr = d.actVal > 0 ? (d.actVal % 1 === 0 ? d.actVal.toFixed(0) : d.actVal.toFixed(1)) : '0';
     const numFontSize = isExpanded ? 8.5 : 7.2;
 
-    // Số người Kế hoạch ở chân cột (Xanh)
+    // Số người Kế hoạch ở chân cột (Xanh) - Đổi chữ sang màu đen nét đậm theo quy chuẩn
     let planFootLabelHtml = '';
     if (d.planVal > 0) {
       if (hPlan >= 15) {
-        planFootLabelHtml = `<text x="${cxPlan}" y="${yBase - 4}" fill="#ffffff" font-size="${numFontSize}" font-weight="900" font-family="'JetBrains Mono', monospace" text-anchor="middle" style="paint-order: stroke; stroke: rgba(2,132,199,0.9); stroke-width: 2px;">${planValStr}</text>`;
+        planFootLabelHtml = `<text x="${cxPlan}" y="${yBase - 4}" fill="#000000" font-size="${numFontSize}" font-weight="900" font-family="'JetBrains Mono', monospace" text-anchor="middle" style="paint-order: stroke; stroke: #ffffff; stroke-width: 2.5px;">${planValStr}</text>`;
       } else {
-        planFootLabelHtml = `<text x="${cxPlan}" y="${yPlan - 3}" fill="#38bdf8" font-size="${numFontSize}" font-weight="900" font-family="'JetBrains Mono', monospace" text-anchor="middle">${planValStr}</text>`;
+        planFootLabelHtml = `<text x="${cxPlan}" y="${yPlan - 3}" fill="#000000" font-size="${numFontSize}" font-weight="900" font-family="'JetBrains Mono', monospace" text-anchor="middle">${planValStr}</text>`;
       }
     }
 
-    // Số người Nhân lực có ở chân cột (Cam)
+    // Số người Nhân lực có ở chân cột (Cam) - Đổi chữ sang màu đen nét đậm theo quy chuẩn
     let actFootLabelHtml = '';
     if (d.actVal > 0) {
       if (hAct >= 15) {
-        actFootLabelHtml = `<text x="${cxAct}" y="${yBase - 4}" fill="#ffffff" font-size="${numFontSize}" font-weight="900" font-family="'JetBrains Mono', monospace" text-anchor="middle" style="paint-order: stroke; stroke: rgba(234,88,12,0.9); stroke-width: 2px;">${actValStr}</text>`;
+        actFootLabelHtml = `<text x="${cxAct}" y="${yBase - 4}" fill="#000000" font-size="${numFontSize}" font-weight="900" font-family="'JetBrains Mono', monospace" text-anchor="middle" style="paint-order: stroke; stroke: #ffffff; stroke-width: 2.5px;">${actValStr}</text>`;
       } else {
-        actFootLabelHtml = `<text x="${cxAct}" y="${yAct - 3}" fill="#fb923c" font-size="${numFontSize}" font-weight="900" font-family="'JetBrains Mono', monospace" text-anchor="middle">${actValStr}</text>`;
+        actFootLabelHtml = `<text x="${cxAct}" y="${yAct - 3}" fill="#000000" font-size="${numFontSize}" font-weight="900" font-family="'JetBrains Mono', monospace" text-anchor="middle">${actValStr}</text>`;
       }
     } else if (d.planVal > 0) {
-      actFootLabelHtml = `<text x="${cxAct}" y="${yBase - 4}" fill="#fca5a5" font-size="${numFontSize}" font-weight="900" font-family="'JetBrains Mono', monospace" text-anchor="middle">0</text>`;
+      actFootLabelHtml = `<text x="${cxAct}" y="${yBase - 4}" fill="#ff0000" font-size="${numFontSize}" font-weight="900" font-family="'JetBrains Mono', monospace" text-anchor="middle">0</text>`;
     }
 
     barsHtml += `
@@ -4468,8 +4488,8 @@ window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, is
     const shortDate = `${String(dNum).padStart(2, '0')}/${String(mNum).padStart(2, '0')}`;
     const dayOfWeekMap = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
     const shortDayName = dayOfWeekMap[dObj.getDay()] || '';
-    const dayColor = d.isWeekend ? '#fbbf24' : (d.isSelected ? '#ffffff' : '#94a3b8');
-    const dayWeight = (d.isWeekend || d.isSelected) ? '800' : '600';
+    const dayColor = '#000000';
+    const dayWeight = '800';
     const rotText = d.rot ? `${d.rot.day}/${d.rot.night}` : '';
 
     // Badge báo số người thiếu (Đỏ) hoặc dư (Xanh) chuyển xuống dưới sát chân biểu đồ
@@ -4518,13 +4538,13 @@ window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, is
 
     barsHtml += `
       <g class="chart-xaxis-label">
-        <text x="${cx}" y="${yBase + 16}" fill="${dayColor}" font-size="${isExpanded ? '10' : '8.5'}" font-weight="${dayWeight}" font-family="monospace" text-anchor="middle">
+        <text x="${cx}" y="${yBase + 16}" fill="#000000" font-size="${isExpanded ? '10.5' : '9'}" font-weight="800" font-family="monospace" text-anchor="middle">
           ${shortDate}
         </text>
-        <text x="${cx}" y="${yBase + 28}" fill="${d.isWeekend ? '#f59e0b' : '#64748b'}" font-size="${isExpanded ? '9.5' : '8'}" font-weight="700" text-anchor="middle">
+        <text x="${cx}" y="${yBase + 28}" fill="#000000" font-size="${isExpanded ? '10' : '8.5'}" font-weight="800" text-anchor="middle">
           ${shortDayName}
         </text>
-        <text x="${cx}" y="${yBase + 39}" fill="#38bdf8" font-size="${isExpanded ? '8.5' : '7.5'}" font-weight="700" text-anchor="middle">
+        <text x="${cx}" y="${yBase + 39}" fill="#000000" font-size="${isExpanded ? '9.5' : '8'}" font-weight="800" text-anchor="middle">
           ${rotText}
         </text>
         ${balanceFootBadgeHtml}
@@ -4583,8 +4603,8 @@ window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, is
                 📐 Loading Plan (%) = 👷 Kế Hoạch Cần ÷ 👥 Nhân Lực Có × 100%
               </span>
             </div>
-            <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.2rem;">
-              Đang xem công đoạn: <strong style="color: #38bdf8;">${stageCleanLabel}</strong> • Đơn vị: <strong>Lượt người</strong> &amp; <strong>% Tải Kế Hoạch</strong>
+            <div style="font-size: 0.75rem; color: var(--text-primary); font-weight: 600; margin-top: 0.2rem;">
+              Đang xem công đoạn: <strong style="color: var(--text-primary); font-weight: 800;">${stageCleanLabel}</strong> • Đơn vị: <strong style="color: var(--text-primary);">Lượt người</strong> &amp; <strong style="color: var(--text-primary);">% Tải Kế Hoạch</strong>
             </div>
           </div>
         </div>
@@ -4628,29 +4648,29 @@ window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, is
       </div>
 
       <!-- Inline Summary & Legend Strip (Gọn gàng thay thế toàn bộ ảnh 2 và ảnh 3) -->
-      <div class="manpower-chart-inline-strip">
-        <div class="manpower-strip-kpis">
-          <span class="manpower-strip-item" style="border-left: 2.5px solid ${rateColor};">
-            📊 Loading TB: <strong style="color: ${rateColor}; font-size: 0.95rem;">${cumAct > 0 ? `${overallLoadingRate.toFixed(1)}%` : '--%'}</strong>
+      <div class="manpower-chart-inline-strip" style="background: var(--bg-card-header, #fff3cc); border: 1.5px solid var(--border-glass); color: var(--text-primary);">
+        <div class="manpower-strip-kpis" style="color: var(--text-primary);">
+          <span class="manpower-strip-item" style="border-left: 2.5px solid #000000; color: var(--text-primary);">
+            📊 Loading TB: <strong style="color: var(--text-primary); font-size: 0.95rem; font-weight: 900;">${cumAct > 0 ? `${overallLoadingRate.toFixed(1)}%` : '--%'}</strong>
             <span class="manpower-strip-tag" style="background: ${statusTagBg}; color: ${statusTagText};">${statusTagLabel}</span>
           </span>
-          <span class="manpower-strip-item" style="border-left: 2.5px solid #38bdf8;">
-            👷 Kế Hoạch Cần: <strong style="color: #38bdf8;">${cumPlan.toLocaleString('vi-VN')}</strong> <span style="font-size: 0.72rem; color: #cbd5e1;">(BQ: ${avgPlan}/ng)</span>
+          <span class="manpower-strip-item" style="border-left: 2.5px solid #0000ff; color: var(--text-primary);">
+            👷 Kế Hoạch Cần: <strong style="color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;">${cumPlan.toLocaleString('vi-VN')}</strong> <span style="font-size: 0.72rem; color: var(--text-primary); font-weight: 600;">(BQ: ${avgPlan}/ng)</span>
           </span>
-          <span class="manpower-strip-item" style="border-left: 2.5px solid #fb923c;">
-            👥 Nhân Lực Có: <strong style="color: #fb923c;">${cumAct.toLocaleString('vi-VN')}</strong> <span style="font-size: 0.72rem; color: #cbd5e1;">(BQ: ${avgAct}/ng)</span>
+          <span class="manpower-strip-item" style="border-left: 2.5px solid #fabd05; color: #000000;">
+            👥 Nhân Lực Có: <strong style="color: var(--text-primary); font-weight: 800;">${cumAct.toLocaleString('vi-VN')}</strong> <span style="font-size: 0.72rem; color: var(--text-primary); font-weight: 600;">(BQ: ${avgAct}/ng)</span>
           </span>
-          <span class="manpower-strip-item" style="border-left: 2.5px solid ${cumDiff < 0 ? '#ef4444' : '#10b981'};">
-            ⚖️ Cân Đối: <strong style="color: ${cumDiff < 0 ? '#f87171' : '#34d399'};">${cumDiff > 0 ? '+' : ''}${cumDiff.toFixed(1)}</strong> ng
+          <span class="manpower-strip-item" style="border-left: 2.5px solid ${cumDiff < 0 ? '#ff0000' : '#0000ff'}; color: var(--text-primary);">
+            ⚖️ Cân Đối: <strong style="color: ${cumDiff < 0 ? '#ff0000 !important' : '#0000ff !important'}; font-weight: 900;">${cumDiff > 0 ? '+' : ''}${cumDiff.toFixed(1)}</strong> ng
           </span>
         </div>
-        <div class="manpower-strip-legend">
-          <span class="strip-legend-item"><span class="strip-legend-dot" style="background: #38bdf8;"></span> Plan (người)</span>
-          <span class="strip-legend-item"><span class="strip-legend-dot" style="background: #fb923c;"></span> Nhân Lực Có (người)</span>
-          <span class="strip-legend-item"><span class="strip-legend-line" style="background: linear-gradient(90deg, #c084fc, #38bdf8);"></span> % Loading</span>
-          <span class="strip-legend-item"><span class="strip-legend-dot" style="background: #dc2626; border-radius: 2px;"></span> Thiếu ng (Over)</span>
-          <span class="strip-legend-item"><span class="strip-legend-dot" style="background: #059669; border-radius: 2px;"></span> Dư ng (Surplus)</span>
-          <span class="strip-legend-item"><span class="strip-legend-dash"></span> 100% Chuẩn</span>
+        <div class="manpower-strip-legend" style="color: var(--text-primary); font-weight: 700;">
+          <span class="strip-legend-item" style="color: var(--text-primary);"><span class="strip-legend-dot" style="background: #0000ff;"></span> Plan (người)</span>
+          <span class="strip-legend-item" style="color: var(--text-primary);"><span class="strip-legend-dot" style="background: #fabd05;"></span> Nhân Lực Có (người)</span>
+          <span class="strip-legend-item" style="color: var(--text-primary);"><span class="strip-legend-line" style="background: #000000;"></span> % Loading</span>
+          <span class="strip-legend-item" style="color: var(--text-primary);"><span class="strip-legend-dot" style="background: #ff0000; border-radius: 2px;"></span> Thiếu ng (Over)</span>
+          <span class="strip-legend-item" style="color: var(--text-primary);"><span class="strip-legend-dot" style="background: #0000ff; border-radius: 2px;"></span> Dư ng (Surplus)</span>
+          <span class="strip-legend-item" style="color: var(--text-primary);"><span class="strip-legend-dash" style="background: #000000;"></span> 100% Chuẩn</span>
         </div>
       </div>
 
@@ -5083,48 +5103,48 @@ window.renderAttentionPointsSection = function(schedule) {
 
     return `
       <tr class="hover-row">
-        <td style="text-align: center; color: var(--text-muted); font-size: 0.75rem;">${rowIdx}</td>
+        <td style="text-align: center; color: var(--text-primary); font-size: 0.82rem; font-weight: 700;">${rowIdx}</td>
         <td style="text-align: center; white-space: nowrap;">
-          <span class="badge ${stageBadgeClass}" style="font-size: 0.72rem; padding: 0.25rem 0.55rem; font-weight: 700;">
+          <span class="badge ${stageBadgeClass}" style="font-size: 0.78rem; padding: 0.25rem 0.55rem; font-weight: 700; background: var(--bg-card); border: 1px solid var(--border-glass); color: var(--text-primary);">
             ${stageIcon} ${m.stage}
           </span>
         </td>
-        <td style="white-space: nowrap; font-weight: 800; color: #f8fafc; font-size: 0.85rem;">
+        <td style="white-space: nowrap; font-weight: 800; color: var(--text-primary) !important; font-size: 0.88rem;">
           ${m.model || '--'}
         </td>
         <td style="min-width: 250px;">
-          <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.775rem; font-weight: 600; color: #93c5fd; word-break: break-all;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 700; color: var(--text-primary) !important; word-break: break-all;">
             ${m.productName1C}
           </div>
         </td>
         <td style="text-align: center; white-space: nowrap;">
-          <span class="badge badge-amber" style="font-weight: 800; font-size: 0.8rem; padding: 0.25rem 0.6rem;">
+          <span class="badge badge-amber" style="font-weight: 800; font-size: 0.82rem; padding: 0.25rem 0.6rem; background: var(--bg-card-header, #fff3cc); border: 1px solid var(--border-glass); color: var(--text-primary);">
             📅 ${dateFormatted}
           </span>
         </td>
-        <td class="font-mono" style="text-align: right; font-weight: 800; color: #38bdf8; font-size: 0.9rem;">
+        <td class="font-mono" style="text-align: right; font-weight: 900; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.95rem;">
           ${m.firstPlanQty.toLocaleString('vi-VN')}
         </td>
         <td style="text-align: right; min-width: 155px; vertical-align: middle;">
-          <div class="font-mono" style="font-weight: 800; color: #34d399; font-size: 0.925rem;">
-            ${m.totalUpcomingPlan.toLocaleString('vi-VN')} <span style="font-size: 0.72rem; font-weight: 600; color: #94a3b8;">pcs</span>
+          <div class="font-mono" style="font-weight: 900; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.95rem;">
+            ${m.totalUpcomingPlan.toLocaleString('vi-VN')} <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-primary);">pcs</span>
           </div>
-          <div style="font-size: 0.72rem; color: #fbbf24; margin-top: 3px; font-weight: 700; display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 0.25rem;">
+          <div style="font-size: 0.75rem; color: var(--text-primary); margin-top: 3px; font-weight: 700; display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 0.25rem;">
             <span>⚡ Ngày gần nhất:</span>
-            <span style="color: #fef08a;">${m.firstPlanDateFormatted}</span>
-            <span style="color: #38bdf8;">(${m.firstPlanQty.toLocaleString('vi-VN')} pcs)</span>
+            <span style="color: var(--text-primary); font-weight: 800;">${m.firstPlanDateFormatted}</span>
+            <span style="color: var(--color-plan-blue, #0000ff); font-weight: 800;">(${m.firstPlanQty.toLocaleString('vi-VN')} pcs)</span>
           </div>
           ${m.upcomingDaysCount > 1 ? `
-            <div style="font-size: 0.685rem; color: #94a3b8; margin-top: 2px;">
+            <div style="font-size: 0.72rem; color: var(--text-primary); margin-top: 2px;">
               (${m.upcomingDaysCount} đợt có kế hoạch)
             </div>
           ` : ''}
         </td>
-        <td style="font-size: 0.775rem; color: #cbd5e1; vertical-align: middle;">
-          <span style="display: inline-flex; align-items: center; gap: 0.35rem; color: #fef08a; font-weight: 700;">
+        <td style="font-size: 0.82rem; color: var(--text-primary); vertical-align: middle;">
+          <span style="display: inline-flex; align-items: center; gap: 0.35rem; color: #ea580c; font-weight: 800;">
             🚀 New Model
           </span>
-          <span style="color: #94a3b8; margin-left: 0.35rem;">(Chuẩn bị Jig, NVL, SOP & theo dõi Ramp-up)</span>
+          <span style="color: var(--text-primary); margin-left: 0.35rem; font-weight: 600;">(Chuẩn bị Jig, NVL, SOP & theo dõi Ramp-up)</span>
         </td>
       </tr>
     `;
@@ -5132,39 +5152,40 @@ window.renderAttentionPointsSection = function(schedule) {
 
   container.innerHTML = `
     <!-- KHỐI: CẢNH BÁO MODEL MỚI SẢN XUẤT (NEW MODELS) -->
-    <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 1rem 1.25rem;">
+    <div style="background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: var(--radius-md); padding: 1rem 1.25rem;">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.85rem;">
         <div>
-          <h3 style="font-size: 1rem; font-weight: 800; color: #fbbf24; display: flex; align-items: center; gap: 0.5rem; margin: 0; flex-wrap: wrap;">
+          <h3 style="font-size: 1.05rem; font-weight: 900; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; margin: 0; flex-wrap: wrap;">
             <span>🚀 CẢNH BÁO MODEL MỚI SẢN XUẤT (NEW MODELS)</span>
-            <span class="badge badge-amber" style="font-size: 0.75rem; font-weight: 800;">
+            <span class="badge badge-amber" style="font-size: 0.78rem; font-weight: 800; background: var(--bg-card-header, #fff3cc); border: 1px solid var(--border-glass); color: var(--text-primary);">
               ${filtered.length} / ${newModelsAll.length} Model
             </span>
             ${!isAllSelected ? `
-              <span class="badge badge-blue" style="font-size: 0.75rem; font-weight: 700;">
+              <span class="badge badge-blue" style="font-size: 0.78rem; font-weight: 800; background: #e0f2fe; border: 1px solid var(--border-glass); color: var(--color-plan-blue, #0000ff);">
                 Đã chọn ${selectedStages.length} công đoạn
               </span>
             ` : ''}
             ${(fromDate || toDate) ? `
-              <span class="badge badge-purple" style="font-size: 0.75rem; font-weight: 700;">
+              <span class="badge" style="font-size: 0.78rem; font-weight: 800; background: var(--bg-card-header, #fff3cc); border: 1px solid var(--border-glass); color: var(--text-primary);">
                 📅 Kế hoạch: ${fromDate ? formatStandardDate(fromDate) : '...'} → ${toDate ? formatStandardDate(toDate) : '...'}
               </span>
             ` : ''}
           </h3>
-          <p style="font-size: 0.75rem; color: #94a3b8; margin: 0.35rem 0 0 0;">
+          <p style="font-size: 0.8rem; color: var(--text-primary); margin: 0.35rem 0 0 0; font-weight: 500;">
             💡 <em>Nguyên tắc phân loại: Model chưa từng có Plan và Fact trong quá khứ (cả Sheet Mass-History lẫn các kỳ trước) nhưng có kế hoạch (Plan &gt; 0) trong thời gian sắp tới.</em>
           </p>
         </div>
       </div>
 
       <!-- Toolbar Lọc & Tìm Kiếm Model Mới (Công Đoạn, Thời Gian, Từ Khóa) -->
-      <div class="new-models-toolbar" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; padding: 0.65rem 0.85rem; background: rgba(30, 41, 59, 0.45); border-radius: var(--radius-md); border: 1px solid var(--border-glass); margin-bottom: 0.85rem;">
+      <div class="new-models-toolbar" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; padding: 0.65rem 0.85rem; background: var(--bg-card-header, #fff3cc); border-radius: var(--radius-md); border: 1.5px solid var(--border-glass); margin-bottom: 0.85rem;">
         <!-- Left: Lọc Công Đoạn -->
         <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
-          <span style="font-size: 0.75rem; font-weight: 700; color: #94a3b8; margin-right: 0.2rem;">Lọc Công Đoạn:</span>
+          <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-primary); margin-right: 0.2rem;">Lọc Công Đoạn:</span>
           <button type="button" class="stage-pill-btn ${isAllSelected ? 'all-active' : ''}" 
                   onclick="handleFilterNewModelsStage('ALL')"
-                  title="Hiển thị tất cả công đoạn">
+                  title="Hiển thị tất cả công đoạn"
+                  style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-glass); font-weight: 800; font-size: 0.8rem; padding: 0.25rem 0.6rem;">
             ${isAllSelected ? '✓ ' : ''}Tất cả
           </button>
           ${stageList.map(st => {
@@ -5172,14 +5193,15 @@ window.renderAttentionPointsSection = function(schedule) {
             return `
               <button type="button" class="stage-pill-btn ${isSelected ? 'active' : ''}" 
                       onclick="handleFilterNewModelsStage('${st}')"
-                      title="${isSelected ? 'Bỏ chọn công đoạn ' + st : 'Chọn công đoạn ' + st}">
+                      title="${isSelected ? 'Bỏ chọn công đoạn ' + st : 'Chọn công đoạn ' + st}"
+                      style="${isSelected ? 'background: #0284c7; color: #ffffff;' : 'background: var(--bg-card); color: var(--text-primary);'} border: 1px solid var(--border-glass); font-weight: 700; font-size: 0.8rem; padding: 0.25rem 0.55rem;">
                 ${isSelected ? '<span style="font-weight:900;">✓</span> ' : ''}${st}
               </button>
             `;
           }).join('')}
           ${!isAllSelected ? `
             <button type="button" onclick="handleFilterNewModelsStage('ALL')" 
-                    style="background: none; border: none; color: #94a3b8; font-size: 0.72rem; text-decoration: underline; cursor: pointer; padding: 0.2rem 0.4rem; margin-left: 0.3rem;"
+                    style="background: none; border: none; color: var(--text-primary); font-size: 0.78rem; text-decoration: underline; cursor: pointer; padding: 0.2rem 0.4rem; margin-left: 0.3rem; font-weight: 700;"
                     title="Xóa bộ lọc công đoạn">
               ✕ Bỏ lọc
             </button>
@@ -5189,22 +5211,22 @@ window.renderAttentionPointsSection = function(schedule) {
         <!-- Right: Tìm kiếm theo thời gian & Từ khóa -->
         <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
           <!-- Tìm kiếm theo thời gian -->
-          <div style="display: flex; align-items: center; gap: 0.35rem; background: rgba(15, 23, 42, 0.65); padding: 0.25rem 0.55rem; border-radius: 6px; border: 1px solid var(--border-glass);">
-            <span style="font-size: 0.75rem; font-weight: 700; color: #fbbf24; display: flex; align-items: center; gap: 0.25rem;">
+          <div style="display: flex; align-items: center; gap: 0.35rem; background: var(--bg-card); padding: 0.25rem 0.55rem; border-radius: 6px; border: 1.5px solid var(--border-glass);">
+            <span style="font-size: 0.78rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 0.25rem;">
               📅 Kế hoạch từ:
             </span>
             <input type="date" id="filterNewModelsFromDate" value="${fromDate || ''}" 
                    onchange="handleFilterNewModelsDateRange(this.value, document.getElementById('filterNewModelsToDate') ? document.getElementById('filterNewModelsToDate').value : '')"
                    title="Lọc Model Mới có kế hoạch từ ngày này"
-                   style="background: rgba(30, 41, 59, 0.85); border: 1px solid var(--border-glass); border-radius: 4px; padding: 0.25rem 0.45rem; color: #f8fafc; font-size: 0.75rem; outline: none; font-family: monospace;" />
-            <span style="font-size: 0.75rem; font-weight: 700; color: #94a3b8;">đến:</span>
+                   style="background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 4px; padding: 0.25rem 0.45rem; color: var(--text-primary); font-size: 0.8rem; outline: none; font-family: monospace; font-weight: 700;" />
+            <span style="font-size: 0.78rem; font-weight: 800; color: var(--text-primary);">đến:</span>
             <input type="date" id="filterNewModelsToDate" value="${toDate || ''}" 
                    onchange="handleFilterNewModelsDateRange(document.getElementById('filterNewModelsFromDate') ? document.getElementById('filterNewModelsFromDate').value : '', this.value)"
                    title="Lọc Model Mới có kế hoạch đến ngày này"
-                   style="background: rgba(30, 41, 59, 0.85); border: 1px solid var(--border-glass); border-radius: 4px; padding: 0.25rem 0.45rem; color: #f8fafc; font-size: 0.75rem; outline: none; font-family: monospace;" />
+                   style="background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 4px; padding: 0.25rem 0.45rem; color: var(--text-primary); font-size: 0.8rem; outline: none; font-family: monospace; font-weight: 700;" />
             ${(fromDate || toDate) ? `
               <button type="button" onclick="handleResetNewModelsDateFilter()" 
-                      style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; font-size: 0.72rem; font-weight: 700; cursor: pointer; padding: 0.2rem 0.45rem; border-radius: 4px; display: inline-flex; align-items: center; gap: 0.2rem;"
+                      style="background: var(--bg-card); border: 1.5px solid #ff0000; color: var(--color-alert-red, #ff0000); font-size: 0.78rem; font-weight: 800; cursor: pointer; padding: 0.2rem 0.45rem; border-radius: 4px; display: inline-flex; align-items: center; gap: 0.2rem;"
                       title="Xóa bộ lọc theo thời gian">
                 ✕ Xóa lọc
               </button>
@@ -5215,30 +5237,30 @@ window.renderAttentionPointsSection = function(schedule) {
           <div style="display: flex; align-items: center; gap: 0.35rem;">
             <input type="text" placeholder="🔍 Tìm Model / Mã 1C..." value="${searchKw}" 
                    oninput="handleSearchNewModels(this.value)"
-                   style="background: rgba(30, 41, 59, 0.85); border: 1px solid var(--border-glass); border-radius: 6px; padding: 0.35rem 0.65rem; color: #f8fafc; font-size: 0.775rem; min-width: 175px;" />
+                   style="background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 6px; padding: 0.35rem 0.65rem; color: var(--text-primary); font-size: 0.82rem; min-width: 175px; font-weight: 700;" />
           </div>
         </div>
       </div>
 
       <!-- Bảng Danh Sách Model Mới -->
-      <div class="table-container" style="max-height: 480px; overflow: auto; border-radius: var(--radius-md);">
+      <div class="table-container" style="max-height: 480px; overflow: auto; border-radius: var(--radius-md); border: 1.5px solid var(--border-glass);">
         <table class="data-table">
           <thead>
             <tr>
-              <th style="width: 45px; text-align: center;">STT</th>
-              <th style="text-align: center; min-width: 105px;">Công Đoạn</th>
-              <th style="min-width: 120px;">Group Model</th>
-              <th style="min-width: 230px;">Model (Mã 1C)</th>
-              <th style="text-align: center; min-width: 135px; color: #fbbf24;">
+              <th style="width: 45px; text-align: center; background: var(--bg-card-header, #fff3cc); color: var(--text-primary); font-weight: 800;">STT</th>
+              <th style="text-align: center; min-width: 105px; background: var(--bg-card-header, #fff3cc); color: var(--text-primary); font-weight: 800;">Công Đoạn</th>
+              <th style="min-width: 120px; background: var(--bg-card-header, #fff3cc); color: var(--text-primary); font-weight: 800;">Group Model</th>
+              <th style="min-width: 230px; background: var(--bg-card-header, #fff3cc); color: var(--text-primary); font-weight: 800;">Model (Mã 1C)</th>
+              <th style="text-align: center; min-width: 135px; background: var(--bg-card-header, #fff3cc); color: var(--text-primary); font-weight: 800;">
                 NGÀY GẦN NHẤT CÓ PLAN
               </th>
-              <th style="text-align: right; min-width: 115px; color: #38bdf8;">
+              <th style="text-align: right; min-width: 115px; background: var(--bg-card-header, #fff3cc); color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;">
                 PLAN NGÀY ĐẦU (PCS)
               </th>
-              <th style="text-align: right; min-width: 155px; color: #34d399;">
+              <th style="text-align: right; min-width: 155px; background: var(--bg-card-header, #fff3cc); color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;">
                 TỔNG KẾ HOẠCH ĐỢT TỚI
               </th>
-              <th style="text-align: left; min-width: 190px;">
+              <th style="text-align: left; min-width: 190px; background: var(--bg-card-header, #fff3cc); color: var(--text-primary); font-weight: 800;">
                 ĐÁNH GIÁ &amp; LƯU Ý CHUẨN BỊ
               </th>
             </tr>
@@ -5246,7 +5268,7 @@ window.renderAttentionPointsSection = function(schedule) {
           <tbody>
             ${tableRowsHtml || `
               <tr>
-                <td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                <td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-primary); font-weight: 700; background: var(--bg-card);">
                   Không tìm thấy Model Mới nào phù hợp với bộ lọc hiện tại.
                 </td>
               </tr>
@@ -5257,12 +5279,12 @@ window.renderAttentionPointsSection = function(schedule) {
 
       <!-- Pagination for New Models Table -->
       ${totalPages > 1 ? `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem; font-size: 0.775rem; color: var(--text-secondary);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem; font-size: 0.82rem; color: var(--text-primary); font-weight: 700;">
           <div>Hiển thị ${startIdx + 1} - ${Math.min(startIdx + NEW_MODELS_PAGE_SIZE, totalItems)} / ${totalItems} Model Mới</div>
           <div style="display: flex; gap: 0.35rem;">
-            <button class="btn btn-outline" style="font-size: 0.725rem; padding: 0.2rem 0.5rem;" ${currentPage <= 1 ? 'disabled' : ''} onclick="handleNewModelsPage(${currentPage - 1})">◀ Trang trước</button>
-            <span style="padding: 0.2rem 0.5rem; font-weight: 700; color: #38bdf8;">${currentPage} / ${totalPages}</span>
-            <button class="btn btn-outline" style="font-size: 0.725rem; padding: 0.2rem 0.5rem;" ${currentPage >= totalPages ? 'disabled' : ''} onclick="handleNewModelsPage(${currentPage + 1})">Trang sau ▶</button>
+            <button class="btn btn-outline" style="font-size: 0.78rem; padding: 0.25rem 0.6rem; background: var(--bg-card); border: 1.5px solid #000000; color: var(--text-primary); font-weight: 800;" ${currentPage <= 1 ? 'disabled' : ''} onclick="handleNewModelsPage(${currentPage - 1})">◀ Trang trước</button>
+            <span style="padding: 0.25rem 0.6rem; font-weight: 800; color: var(--text-primary);">${currentPage} / ${totalPages}</span>
+            <button class="btn btn-outline" style="font-size: 0.78rem; padding: 0.25rem 0.6rem; background: var(--bg-card); border: 1.5px solid #000000; color: var(--text-primary); font-weight: 800;" ${currentPage >= totalPages ? 'disabled' : ''} onclick="handleNewModelsPage(${currentPage + 1})">Trang sau ▶</button>
           </div>
         </div>
       ` : ''}

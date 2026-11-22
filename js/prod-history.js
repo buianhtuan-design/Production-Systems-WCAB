@@ -56,36 +56,36 @@
       shortLabel: 'DIP',
       rank: 1,
       stages: ['DIP', 'DIP. SELECTIV', 'DIP. SELECTIV.PRE', 'DIP. SELECTIV.POST'],
-      color: '#06b6d4',
-      bgHeader: 'rgba(6, 182, 212, 0.12)',
-      borderHeader: '#06b6d4'
+      color: '#000000',
+      bgHeader: '#fff3cc',
+      borderHeader: '#cbd5e1'
     },
     'HARD TEST': {
       label: 'HARD TEST (Kiểm Tra Mạch)',
       shortLabel: 'HARD TEST',
       rank: 2,
       stages: ['HARD TEST'],
-      color: '#3b82f6',
-      bgHeader: 'rgba(59, 130, 246, 0.12)',
-      borderHeader: '#3b82f6'
+      color: '#000000',
+      bgHeader: '#fff3cc',
+      borderHeader: '#cbd5e1'
     },
     'ASSEMBLY': {
       label: 'ASSEMBLY (Lắp Ráp)',
       shortLabel: 'ASSEMBLY',
       rank: 3,
       stages: ['ASSEMBLY'],
-      color: '#a855f7',
-      bgHeader: 'rgba(168, 85, 247, 0.12)',
-      borderHeader: '#a855f7'
+      color: '#000000',
+      bgHeader: '#fff3cc',
+      borderHeader: '#cbd5e1'
     },
     'PKG': {
       label: 'PKG (Đóng Gói)',
       shortLabel: 'PKG',
       rank: 4,
       stages: ['PKG', 'COM PKG', 'COM PKG AUTO'],
-      color: '#f59e0b',
-      bgHeader: 'rgba(245, 158, 11, 0.12)',
-      borderHeader: '#f59e0b'
+      color: '#000000',
+      bgHeader: '#fff3cc',
+      borderHeader: '#cbd5e1'
     }
   };
 
@@ -708,12 +708,12 @@
    */
   function renderGapBadge(gapValue) {
     if (gapValue === 0) {
-      return `<span class="ph-gap-zero">0</span>`;
+      return `<span class="ph-gap-zero" style="color: var(--text-primary); font-weight: 700; font-size: 0.9rem;">0</span>`;
     }
     if (gapValue > 0) {
-      return `<span class="ph-gap-pos" title="Công đoạn 1 nhiều hơn +${gapValue.toLocaleString('vi-VN')}">+${gapValue.toLocaleString('vi-VN')}</span>`;
+      return `<span class="ph-gap-pos" style="color: var(--color-plan-blue, #0000ff) !important; background: #e0f2fe; border: 1.5px solid #0284c7; font-weight: 800; font-size: 0.9rem; padding: 2px 8px; border-radius: 4px;" title="Công đoạn 1 nhiều hơn +${gapValue.toLocaleString('vi-VN')}">+${gapValue.toLocaleString('vi-VN')}</span>`;
     }
-    return `<span class="ph-gap-neg" title="Công đoạn 1 ít hơn ${gapValue.toLocaleString('vi-VN')}">${gapValue.toLocaleString('vi-VN')}</span>`;
+    return `<span class="ph-gap-neg" style="color: var(--color-alert-red, #ff0000) !important; background: var(--bg-card); border: 1.5px solid #ef4444; font-weight: 800; font-size: 0.9rem; padding: 2px 8px; border-radius: 4px;" title="Công đoạn 1 ít hơn ${gapValue.toLocaleString('vi-VN')}">${gapValue.toLocaleString('vi-VN')}</span>`;
   }
 
   /**
@@ -824,8 +824,8 @@
           display: flex;
           flex-direction: column;
           gap: 14px;
-          background: var(--bg-card, #1e293b);
-          border: 1px solid var(--border-color, #334155);
+          background: var(--bg-card);
+          border: 1px solid var(--border-glass);
           border-radius: 12px;
           padding: 16px 20px;
           box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -841,7 +841,7 @@
           margin: 0;
           font-size: 1.3rem;
           font-weight: 700;
-          color: var(--text-primary, #f8fafc);
+          color: var(--text-primary);
           display: flex;
           align-items: center;
           gap: 10px;
@@ -851,10 +851,10 @@
           flex-wrap: wrap;
           align-items: center;
           gap: 10px;
-          background: rgba(15, 23, 42, 0.6);
+          background: var(--bg-card);
           padding: 8px 12px;
           border-radius: 10px;
-          border: 1px solid var(--border-color, #334155);
+          border: 1px solid var(--border-glass);
         }
         .ph-stage-select-box {
           display: flex;
@@ -862,9 +862,9 @@
           gap: 6px;
         }
         .ph-stage-select {
-          background: #1e293b;
-          border: 1px solid #475569;
-          color: #f8fafc;
+          background: var(--bg-card);
+          border: 1px solid var(--border-glass);
+          color: var(--text-primary);
           padding: 6px 12px;
           border-radius: 6px;
           font-size: 0.85rem;
@@ -872,9 +872,9 @@
           cursor: pointer;
         }
         .ph-swap-btn {
-          background: #334155;
-          color: #f8fafc;
-          border: 1px solid #475569;
+          background: var(--bg-card);
+          color: var(--text-primary);
+          border: 1px solid var(--border-glass);
           padding: 6px 10px;
           border-radius: 6px;
           cursor: pointer;
@@ -883,13 +883,13 @@
           transition: all 0.2s;
         }
         .ph-swap-btn:hover {
-          background: #475569;
+          background: var(--bg-card-header, #fff3cc);
           transform: scale(1.05);
         }
         .ph-preset-btn {
-          background: rgba(51, 65, 85, 0.5);
+          background: var(--bg-card);
           border: 1px solid rgba(255, 255, 255, 0.1);
-          color: #94a3b8;
+          color: var(--text-primary);
           padding: 5px 10px;
           border-radius: 6px;
           font-size: 0.76rem;
@@ -910,9 +910,9 @@
           padding: 2px 0;
         }
         .ph-qfilter-btn {
-          background: rgba(15, 23, 42, 0.7);
-          border: 1px solid var(--border-color, #334155);
-          color: #94a3b8;
+          background: var(--bg-card);
+          border: 1px solid var(--border-glass);
+          color: var(--text-primary);
           padding: 6px 12px;
           border-radius: 8px;
           font-size: 0.8rem;
@@ -924,14 +924,14 @@
           gap: 6px;
         }
         .ph-qfilter-btn:hover {
-          border-color: #64748b;
-          color: #f8fafc;
+          border-color: var(--text-primary);
+          color: var(--text-primary);
           transform: translateY(-1px);
         }
         .ph-qfilter-btn.active {
-          background: #334155;
-          color: #f8fafc;
-          border-color: #94a3b8;
+          background: var(--bg-card);
+          color: var(--text-primary);
+          border-color: var(--text-primary);
         }
         .ph-qfilter-excess {
           border-color: rgba(245, 158, 11, 0.4);
@@ -947,12 +947,12 @@
         .ph-qfilter-deficit:hover, .ph-qfilter-deficit.active {
           background: rgba(239, 68, 68, 0.2) !important;
           border-color: #ef4444 !important;
-          color: #f87171 !important;
+          color: var(--color-alert-red, #ff0000) !important;
         }
         .ph-qfilter-balanced:hover, .ph-qfilter-balanced.active {
           background: rgba(16, 185, 129, 0.2) !important;
           border-color: #10b981 !important;
-          color: #34d399 !important;
+          color: var(--color-plan-blue, #0000ff) !important;
         }
         .ph-th-sortable {
           cursor: pointer;
@@ -977,7 +977,7 @@
         }
         .ph-sort-inactive {
           opacity: 0.35;
-          color: #94a3b8;
+          color: var(--text-primary);
         }
         .ph-toolbar-controls {
           display: flex;
@@ -989,32 +989,32 @@
           display: flex;
           align-items: center;
           gap: 6px;
-          background: rgba(15, 23, 42, 0.6);
+          background: var(--bg-card);
           padding: 5px 8px;
           border-radius: 8px;
-          border: 1px solid var(--border-color, #334155);
+          border: 1px solid var(--border-glass);
         }
         .ph-date-inputs input[type="date"] {
           background: transparent;
           border: 1px solid rgba(255, 255, 255, 0.15);
-          color: var(--text-primary, #f8fafc);
+          color: var(--text-primary);
           padding: 4px 6px;
           border-radius: 4px;
           font-size: 0.8rem;
         }
         .ph-search-input {
-          background: rgba(15, 23, 42, 0.6);
-          border: 1px solid var(--border-color, #334155);
-          color: var(--text-primary, #f8fafc);
+          background: var(--bg-card);
+          border: 1px solid var(--border-glass);
+          color: var(--text-primary);
           padding: 7px 12px;
           border-radius: 8px;
           font-size: 0.85rem;
           min-width: 240px;
         }
         .ph-select {
-          background: rgba(15, 23, 42, 0.6);
-          border: 1px solid var(--border-color, #334155);
-          color: var(--text-primary, #f8fafc);
+          background: var(--bg-card);
+          border: 1px solid var(--border-glass);
+          color: var(--text-primary);
           padding: 7px 10px;
           border-radius: 8px;
           font-size: 0.85rem;
@@ -1042,16 +1042,16 @@
           box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
         }
         .ph-btn-secondary {
-          background: rgba(51, 65, 85, 0.7);
-          color: var(--text-primary, #f8fafc);
-          border-color: #475569;
+          background: var(--bg-card);
+          color: var(--text-primary);
+          border-color: var(--text-primary);
         }
         .ph-btn-secondary:hover {
-          background: rgba(71, 85, 105, 0.9);
+          background: var(--bg-card-header, #fff3cc);
         }
         .ph-table-wrap {
-          background: var(--bg-card, #1e293b);
-          border: 1px solid var(--border-color, #334155);
+          background: var(--bg-card);
+          border: 1px solid var(--border-glass);
           border-radius: 12px;
           overflow: auto;
           max-height: calc(100vh - 275px);
@@ -1072,8 +1072,8 @@
           vertical-align: top;
         }
         .ph-table th {
-          background: #0f172a;
-          color: var(--text-secondary, #94a3b8);
+          background: var(--bg-card-header, #fff3cc);
+          color: var(--text-primary);
           font-weight: 600;
           position: sticky;
           top: 0;
@@ -1089,25 +1089,25 @@
           max-width: 48px;
           text-align: center;
           z-index: 15;
-          background: #1e293b;
+          background: var(--bg-card);
         }
         th.ph-col-stt {
           top: 0;
           z-index: 35;
-          background: #0f172a !important;
+          background: var(--bg-card-header, #fff3cc) !important;
         }
         .ph-col-model {
           position: sticky;
           left: 48px;
           min-width: 145px;
           z-index: 15;
-          background: #1e293b;
+          background: var(--bg-card);
           box-shadow: 3px 0 8px rgba(0,0,0,0.3);
         }
         th.ph-col-model {
           top: 0;
           z-index: 35;
-          background: #0f172a !important;
+          background: var(--bg-card-header, #fff3cc) !important;
           box-shadow: 3px 0 8px rgba(0,0,0,0.3);
         }
         .ph-table tr:hover td {
@@ -1115,7 +1115,7 @@
         }
         .ph-table tr:hover td.ph-col-stt,
         .ph-table tr:hover td.ph-col-model {
-          background: #253346 !important;
+          background: var(--bg-card-header, #fff3cc) !important;
         }
         .ph-th-stage-a {
           background: ${stageAConf.bgHeader} !important;
@@ -1129,7 +1129,7 @@
         }
         .ph-th-gap {
           background: rgba(16, 185, 129, 0.08) !important;
-          color: #6ee7b7 !important;
+          color: var(--color-plan-blue, #0000ff) !important;
           border-bottom: 2px solid #10b981 !important;
           text-align: center;
         }
@@ -1147,7 +1147,7 @@
           font-variant-numeric: tabular-nums;
         }
         .ph-gap-pos {
-          color: #34d399;
+          color: var(--color-plan-blue, #0000ff);
           background: rgba(16, 185, 129, 0.15);
           padding: 2px 7px;
           border-radius: 4px;
@@ -1156,7 +1156,7 @@
           border: 1px solid rgba(16, 185, 129, 0.3);
         }
         .ph-gap-neg {
-          color: #f87171;
+          color: var(--color-alert-red, #ff0000);
           background: rgba(239, 68, 68, 0.15);
           padding: 2px 7px;
           border-radius: 4px;
@@ -1190,7 +1190,7 @@
           align-items: baseline;
           gap: 5px;
           font-size: 0.77rem;
-          color: #cbd5e1;
+          color: var(--text-primary);
           line-height: 1.35;
         }
         .ph-dot {
@@ -1204,7 +1204,7 @@
         }
         .badge-flow-balanced {
           background: rgba(16, 185, 129, 0.15);
-          color: #34d399;
+          color: var(--color-plan-blue, #0000ff);
           border: 1px solid rgba(16, 185, 129, 0.35);
           padding: 3px 8px;
           border-radius: 6px;
@@ -1224,7 +1224,7 @@
         }
         .badge-flow-deficit {
           background: rgba(239, 68, 68, 0.15);
-          color: #f87171;
+          color: var(--color-alert-red, #ff0000);
           border: 1px solid rgba(239, 68, 68, 0.35);
           padding: 3px 8px;
           border-radius: 6px;
@@ -1242,10 +1242,10 @@
           justify-content: space-between;
           flex-wrap: wrap;
           padding: 12px 16px;
-          background: var(--bg-card, #1e293b);
+          background: var(--bg-card);
           border-top: 1px solid var(--border-color, #334155);
           font-size: 0.82rem;
-          color: var(--text-secondary, #94a3b8);
+          color: var(--text-primary);
         }
         .ph-page-buttons {
           display: flex;
@@ -1253,9 +1253,9 @@
           gap: 6px;
         }
         .ph-page-btn {
-          background: rgba(15, 23, 42, 0.6);
-          border: 1px solid var(--border-color, #334155);
-          color: var(--text-primary, #f8fafc);
+          background: var(--bg-card);
+          border: 1px solid var(--border-glass);
+          color: var(--text-primary);
           padding: 4px 10px;
           border-radius: 6px;
           cursor: pointer;
@@ -1278,8 +1278,8 @@
           padding: 20px;
         }
         .ph-modal-content {
-          background: #1e293b;
-          border: 1px solid #475569;
+          background: var(--bg-card);
+          border: 1px solid var(--border-glass);
           border-radius: 14px;
           max-width: 860px;
           width: 100%;
@@ -1289,7 +1289,7 @@
           display: flex;
           flex-direction: column;
           z-index: 100051;
-          color: #f8fafc;
+          color: var(--text-primary);
         }
         .ph-modal-header {
           padding: 16px 20px;
@@ -1301,7 +1301,7 @@
         .ph-modal-header h3 {
           margin: 0;
           font-size: 1.15rem;
-          color: #f8fafc;
+          color: var(--text-primary);
         }
         .ph-modal-body {
           padding: 20px;
@@ -1321,7 +1321,7 @@
 
             <!-- BỘ CHỌN 2 CÔNG ĐOẠN SO SÁNH -->
             <div class="ph-stage-comparator-bar">
-              <span style="font-size: 0.8rem; color: #94a3b8; font-weight: 600;">So sánh:</span>
+              <span style="font-size: 0.8rem; color: var(--text-primary); font-weight: 600;">So sánh:</span>
 
               <div class="ph-stage-select-box">
                 <select class="ph-stage-select" style="color: ${stageAConf.color}; border-color: ${stageAConf.borderHeader};" onchange="window.handleProdHistoryStageAChange(this.value)">
@@ -1356,7 +1356,7 @@
 
           <!-- BỘ NÚT LỌC NHANH TRẠNG THÁI (ĐẶC BIỆT TẬP TRUNG PKG > ASSEMBLY) -->
           <div class="ph-quick-filters">
-            <span style="font-size: 0.8rem; color: #94a3b8; font-weight: 600; margin-right: 4px;">⚡ Lọc nhanh:</span>
+            <span style="font-size: 0.8rem; color: var(--text-primary); font-weight: 600; margin-right: 4px;">⚡ Lọc nhanh:</span>
             <button class="ph-qfilter-btn ${store.gapFilter === 'ALL' ? 'active' : ''}" onclick="window.setProdHistoryGapFilter('ALL')">
               📦 Tất cả (${data.stats.total})
             </button>
@@ -1374,9 +1374,9 @@
           <div class="ph-toolbar-controls">
             <!-- CHỌN KHOẢNG NGÀY (Từ ngày ... Đến ngày ...) -->
             <div class="ph-date-inputs">
-              <span style="font-size: 0.78rem; color: #94a3b8;">Từ:</span>
+              <span style="font-size: 0.78rem; color: var(--text-primary);">Từ:</span>
               <input type="date" id="phFromDate" value="${toHtmlDateValue(store.fromDate)}" onchange="window.handleProdHistoryDateChange()" />
-              <span style="font-size: 0.78rem; color: #94a3b8;">Đến:</span>
+              <span style="font-size: 0.78rem; color: var(--text-primary);">Đến:</span>
               <input type="date" id="phToDate" value="${toHtmlDateValue(store.toDate)}" onchange="window.handleProdHistoryDateChange()" />
               ${(store.fromDate !== '2025-09-22' || store.toDate !== getTodayIsoString()) ? `
                 <button class="ph-preset-btn" style="padding: 2px 6px;" onclick="window.resetProdHistoryDefaultDates()" title="Quay về khoảng ngày mặc định (22/09/2025 - nay)">↺ Mặc định</button>
@@ -1448,14 +1448,14 @@
             <tbody>
               ${pageRows.length === 0 ? `
                 <tr>
-                  <td colspan="11" style="text-align: center; padding: 40px; color: #94a3b8;">
+                  <td colspan="11" style="text-align: center; padding: 40px; color: var(--text-primary);">
                     Không tìm thấy dữ liệu phù hợp với điều kiện lọc hiện tại.
                   </td>
                 </tr>
               ` : pageRows.map((r, idx) => `
                 <tr>
-                  <td class="ph-col-stt" style="text-align: center; color: #94a3b8;">${startIndex + idx + 1}</td>
-                  <td class="ph-col-model"><strong style="color: #f8fafc;">${r.model}</strong></td>
+                  <td class="ph-col-stt" style="text-align: center; color: var(--text-primary);">${startIndex + idx + 1}</td>
+                  <td class="ph-col-model"><strong style="color: var(--text-primary);">${r.model}</strong></td>
 
                   <!-- CỘT CÔNG ĐOẠN 1 (A) -->
                   <td>
@@ -1471,7 +1471,7 @@
                         `).join('')}
                       </div>
                     ` : `
-                      <div style="font-weight: 600; color: #f8fafc; line-height: 1.4;">${r.nameA}</div>
+                      <div style="font-weight: 600; color: var(--text-primary); line-height: 1.4;">${r.nameA}</div>
                     `}
                   </td>
                   <td class="ph-num-col" style="color: ${stageAConf.color};">
@@ -1492,7 +1492,7 @@
                         `).join('')}
                       </div>
                     ` : `
-                      <div style="color: #cbd5e1; font-size: 0.82rem; line-height: 1.4;">${r.nameB}</div>
+                      <div style="color: var(--text-primary); font-size: 0.82rem; line-height: 1.4;">${r.nameB}</div>
                     `}
                   </td>
                   <td class="ph-num-col" style="color: ${stageBConf.color};">
@@ -1501,7 +1501,7 @@
 
                   <!-- CHÊNH LỆCH GAP & TỶ LỆ -->
                   <td class="ph-gap-col">${renderGapBadge(r.gap)}</td>
-                  <td class="ph-gap-col" style="color: #94a3b8; font-size: 0.78rem;">
+                  <td class="ph-gap-col" style="color: var(--text-primary); font-size: 0.78rem;">
                     ${r.factB > 0 ? `${r.ratio.toFixed(1)}%` : '-'}
                   </td>
 
@@ -1510,7 +1510,7 @@
                     <span class="${r.statusClass}">${r.statusText}</span>
                   </td>
                   <td>
-                    <code style="background: rgba(15, 23, 42, 0.6); padding: 2px 6px; border-radius: 4px; color: #94a3b8; font-size: 0.76rem;">
+                    <code style="background: var(--bg-card); padding: 2px 6px; border-radius: 4px; color: var(--text-primary); font-size: 0.76rem;">
                       ${r.normKeyShort || '-'}
                     </code>
                   </td>
@@ -1580,8 +1580,8 @@
           </div>
           <div class="ph-modal-body">
             <div style="background: rgba(15, 23, 42, 0.5); padding: 12px 16px; border-radius: 8px; border: 1px solid #334155;">
-              <div style="font-size: 0.95rem; font-weight: 700; color: #f8fafc; margin-bottom: 4px;">Model: ${item.model}</div>
-              <div style="font-size: 0.8rem; color: #94a3b8;">
+              <div style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Model: ${item.model}</div>
+              <div style="font-size: 0.8rem; color: var(--text-primary);">
                 Mã Bo Mạch: <code style="color: #60a5fa;">${item.normKeyShort || 'N/A'}</code> |
                 Trạng Thái: <span class="${item.statusClass}">${item.statusText}</span>
               </div>
@@ -1589,7 +1589,7 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
               <!-- BÊN TRÁI: CÔNG ĐOẠN 1 -->
-              <div style="background: #0f172a; border: 1px solid #334155; border-top: 3px solid ${stageAConf.color}; border-radius: 10px; padding: 14px;">
+              <div style="background: var(--bg-card-header, #fff3cc); border: 1px solid #334155; border-top: 3px solid ${stageAConf.color}; border-radius: 10px; padding: 14px;">
                 <span style="font-size: 0.75rem; font-weight: 700; color: ${stageAConf.color}; text-transform: uppercase;">1. CÔNG ĐOẠN: ${stageAConf.label}</span>
                 <div style="font-size: 1.5rem; font-weight: 700; color: ${stageAConf.color}; margin: 8px 0;">${item.factA.toLocaleString('vi-VN')}</div>
                 <div style="font-size: 0.8rem; color: #e2e8f0; line-height: 1.4;">
@@ -1609,7 +1609,7 @@
               </div>
 
               <!-- BÊN PHẢI: CÔNG ĐOẠN 2 -->
-              <div style="background: #0f172a; border: 1px solid #334155; border-top: 3px solid ${stageBConf.color}; border-radius: 10px; padding: 14px;">
+              <div style="background: var(--bg-card-header, #fff3cc); border: 1px solid #334155; border-top: 3px solid ${stageBConf.color}; border-radius: 10px; padding: 14px;">
                 <span style="font-size: 0.75rem; font-weight: 700; color: ${stageBConf.color}; text-transform: uppercase;">2. CÔNG ĐOẠN: ${stageBConf.label}</span>
                 <div style="font-size: 1.5rem; font-weight: 700; color: ${stageBConf.color}; margin: 8px 0;">${item.factB.toLocaleString('vi-VN')}</div>
                 <div style="font-size: 0.8rem; color: #e2e8f0; line-height: 1.4; word-break: break-word;">
@@ -1630,9 +1630,9 @@
             </div>
 
             <!-- PHÂN TÍCH CHÊNH LỆCH -->
-            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 14px;">
-              <h4 style="margin: 0 0 10px 0; color: #f8fafc; font-size: 0.9rem;">Kết Quả So Sánh Chênh Lệch:</h4>
-              <ul style="margin: 0; padding-left: 20px; font-size: 0.82rem; color: #cbd5e1; line-height: 1.7;">
+            <div style="background: var(--bg-card-header, #fff3cc); border: 1px solid #334155; border-radius: 10px; padding: 14px;">
+              <h4 style="margin: 0 0 10px 0; color: var(--text-primary); font-size: 0.9rem;">Kết Quả So Sánh Chênh Lệch:</h4>
+              <ul style="margin: 0; padding-left: 20px; font-size: 0.82rem; color: var(--text-primary); line-height: 1.7;">
                 <li><strong>Chênh Lệch (GAP):</strong> <span style="font-weight: 700;">${item.gap > 0 ? `+${item.gap.toLocaleString('vi-VN')}` : item.gap.toLocaleString('vi-VN')}</span> (${stageAConf.shortLabel} vs ${stageBConf.shortLabel})</li>
                 <li><strong>Tỷ Lệ Hoàn Thiện:</strong> ${item.factB > 0 ? `${item.ratio.toFixed(1)}%` : 'Không xác định'}</li>
                 <li><strong>Phân Tích Dòng Chảy:</strong> ${item.gap > 0 ? `${stageAConf.shortLabel} có sản lượng nhiều hơn ${stageBConf.shortLabel} (+${item.gap.toLocaleString('vi-VN')} đơn vị). Điều này thể hiện việc sử dụng tồn cũ của ${stageBConf.shortLabel} để hoàn thiện ${stageAConf.shortLabel}.` : item.gap < 0 ? `${stageBConf.shortLabel} có sản lượng nhiều hơn ${stageAConf.shortLabel} (${item.gap.toLocaleString('vi-VN')} đơn vị). Điều này thể hiện có bán thành phẩm của ${stageBConf.shortLabel} đang dôi dư chờ hoàn thiện sang ${stageAConf.shortLabel}.` : 'Hai công đoạn hoàn toàn cân bằng sản lượng (GAP = 0).'}</li>

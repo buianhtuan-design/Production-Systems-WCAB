@@ -97,30 +97,30 @@
             <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.2rem;">
               <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
                 <span style="font-size: 1.25rem;">⚡</span>
-                <h2 style="margin: 0; font-size: 1.15rem; font-weight: 900; color: #f8fafc; letter-spacing: -0.01em;">
+                <h2 style="margin: 0; font-size: 1.2rem; font-weight: 900; color: var(--text-primary); letter-spacing: -0.01em;">
                   BẢNG QUẢN TRỊ NĂNG LỰC SẢN XUẤT (CAPACITY PLANNING)
                 </h2>
-                <span class="badge badge-purple" style="font-weight: 800; font-size: 0.75rem;">
+                <span class="badge" style="font-weight: 800; font-size: 0.82rem; background: var(--bg-card-header, #fff3cc); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; padding: 0.2rem 0.55rem;">
                   ${currentStage === 'TOTAL_HARDTEST' ? 'ĐỊNH MỨC TEST BLOCK &amp; UPH' : 'ĐỊNH MỨC IE &amp; PERFORMANCE LINE'}
                 </span>
 
                 <!-- 📅 VÙNG CHỌN NGÀY NẰM BÊN CẠNH CHỮ "ĐỊNH MỨC IE & PERFORMANCE LINE" -->
-                <div style="display: inline-flex; align-items: center; gap: 0.3rem; background: rgba(15, 23, 42, 0.75); padding: 0.15rem 0.55rem; border-radius: 16px; border: 1px solid rgba(56, 189, 248, 0.35); margin-left: 0.25rem;">
-                  <span style="font-size: 0.775rem; font-weight: 800; color: #38bdf8; display: inline-flex; align-items: center; gap: 0.2rem;">
+                <div style="display: inline-flex; align-items: center; gap: 0.3rem; background: var(--bg-card); padding: 0.15rem 0.55rem; border-radius: 8px; border: 1.5px solid var(--border-glass); margin-left: 0.25rem;">
+                  <span style="font-size: 0.82rem; font-weight: 800; color: var(--text-primary); display: inline-flex; align-items: center; gap: 0.2rem;">
                     📅 Ngày:
                   </span>
-                  <span style="font-size: 0.725rem; color: #cbd5e1; font-weight: 600;">Từ</span>
+                  <span style="font-size: 0.8rem; color: var(--text-primary); font-weight: 700;">Từ</span>
                   <input type="date" 
                     id="simFromDateInput"
                     class="font-mono select-filter" 
-                    style="padding: 0.15rem 0.45rem; font-size: 0.75rem; color: #f8fafc; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 12px; outline: none; cursor: pointer;" 
+                    style="padding: 0.15rem 0.45rem; font-size: 0.82rem; color: var(--text-primary); background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 6px; outline: none; cursor: pointer; font-weight: 700;" 
                     value="${simFromDate}" 
                     onchange="handleSimFromDateChange(this.value)">
-                  <span style="font-size: 0.725rem; color: #cbd5e1; font-weight: 600;">Đến</span>
+                  <span style="font-size: 0.8rem; color: var(--text-primary); font-weight: 700;">Đến</span>
                   <input type="date" 
                     id="simToDateInput"
                     class="font-mono select-filter" 
-                    style="padding: 0.15rem 0.45rem; font-size: 0.75rem; color: #f8fafc; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 12px; outline: none; cursor: pointer;" 
+                    style="padding: 0.15rem 0.45rem; font-size: 0.82rem; color: var(--text-primary); background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 6px; outline: none; cursor: pointer; font-weight: 700;" 
                     value="${simToDate}" 
                     onchange="handleSimToDateChange(this.value)">
                 </div>
@@ -129,7 +129,7 @@
           </div>
 
           <!-- Controls Bar: View Mode Switcher + Stage Selection Tabs (Tối ưu sát lên trên) -->
-          <div class="capacity-stage-nav" style="margin-top: 0.35rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.35rem; display: flex; align-items: center; justify-content: flex-start; flex-wrap: wrap; gap: 0.65rem;">
+          <div class="capacity-stage-nav" style="margin-top: 0.35rem; border-top: 1.5px solid #cbd5e1; padding-top: 0.35rem; display: flex; align-items: center; justify-content: flex-start; flex-wrap: wrap; gap: 0.65rem;">
             <!-- View Mode Switcher (Đẩy về bên trái) -->
             <div class="btn-group" id="capacityViewModeGroup" style="display: inline-flex; align-items: center;">
               <button type="button" class="btn-mode ${viewMode === 'MATRIX' ? 'active' : ''}" onclick="handleCapacityModeChange('MATRIX')" title="Ma trận năng lực chi tiết">
@@ -141,8 +141,8 @@
             </div>
 
             <!-- Stage Selection Buttons -->
-            <div style="display: inline-flex; align-items: center; gap: 0.4rem; border-left: 1px solid rgba(255,255,255,0.12); padding-left: 0.85rem;">
-              <span style="font-size: 0.775rem; font-weight: 800; color: #a78bfa; margin-right: 0.25rem;">
+            <div style="display: inline-flex; align-items: center; gap: 0.4rem; border-left: 1.5px solid #cbd5e1; padding-left: 0.85rem;">
+              <span style="font-size: 0.82rem; font-weight: 800; color: var(--text-primary); margin-right: 0.25rem;">
                 🏭 CÔNG ĐOẠN:
               </span>
               <button type="button" class="btn-capacity-stage ${currentStage === 'ASSEMBLY' ? 'active' : ''}" onclick="handleCapacityStageChange('ASSEMBLY')">
@@ -159,20 +159,20 @@
                 const meta = window.AppStore._lastSyncedPlanMeta;
                 if (meta && meta.id) {
                   return `
-                    <span class="badge" style="background: rgba(16, 185, 129, 0.14); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); font-size: 0.725rem; font-weight: 700; padding: 0.25rem 0.6rem; display: inline-flex; align-items: center; gap: 0.35rem;">
+                    <span class="badge" style="background: var(--bg-card-header, #fff3cc); color: var(--text-primary); border: 1.5px solid var(--border-glass); font-size: 0.8rem; font-weight: 800; padding: 0.25rem 0.6rem; display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 6px;">
                       <span>🟢 KH mới nhất:</span>
-                      <strong style="color: #f8fafc;">${meta.planner || 'Thành viên'}</strong>
-                      <span style="color: #a7f3d0;">(${meta.dateStr || ''} ${meta.timeStr || ''})</span>
+                      <strong style="color: var(--text-primary);">${meta.planner || 'Thành viên'}</strong>
+                      <span style="color: var(--text-primary);">(${meta.dateStr || ''} ${meta.timeStr || ''})</span>
                     </span>
                     ${viewMode !== 'SIMULATOR' ? `
-                      <button type="button" class="btn btn-primary" onclick="handleCapacityModeChange('SIMULATOR')" style="padding: 0.22rem 0.6rem; font-size: 0.725rem; font-weight: 800; background: linear-gradient(135deg, #059669, #10b981); border-color: #10b981; border-radius: 6px; color: #fff;">
+                      <button type="button" class="btn btn-primary" onclick="handleCapacityModeChange('SIMULATOR')" style="padding: 0.22rem 0.6rem; font-size: 0.8rem; font-weight: 800; background: #0284c7; border-color: #0284c7; border-radius: 6px; color: #ffffff;">
                         📋 Xem Kế Hoạch
                       </button>
                     ` : ''}
                   `;
                 }
                 return `
-                  <button type="button" class="btn btn-secondary" onclick="handleForceSyncLatestPlan()" style="padding: 0.22rem 0.6rem; font-size: 0.725rem; font-weight: 700; color: #34d399; border-color: rgba(52, 211, 153, 0.4); border-radius: 6px; background: rgba(52, 211, 153, 0.08);" title="Kiểm tra và đồng bộ bản kế hoạch mới nhất">
+                  <button type="button" class="btn btn-secondary" onclick="handleForceSyncLatestPlan()" style="padding: 0.22rem 0.6rem; font-size: 0.8rem; font-weight: 800; color: var(--text-primary); border-color: #cbd5e1; border-radius: 6px; background: var(--bg-card);" title="Kiểm tra và đồng bộ bản kế hoạch mới nhất">
                     🔄 Đồng Bộ KH Mới Nhất
                   </button>
                 `;
@@ -188,83 +188,83 @@
         html += `
           <!-- 2. KPI SUMMARY CARDS (TOTAL HARDTEST) -->
           <div class="capacity-kpi-grid">
-            <div class="capacity-kpi-card" style="--kpi-accent: linear-gradient(90deg, #06b6d4, #22d3ee);">
+            <div class="capacity-kpi-card">
               <div class="capacity-kpi-label">
                 <span>📦 Quy Mô Total Hardtest</span>
               </div>
-              <div class="capacity-kpi-val" style="color: #22d3ee;">
-                ${htUniqueGroups} <span style="font-size: 0.85rem; font-weight: 600; color: #94a3b8;">Nhóm</span> / ${htTotalBoards} <span style="font-size: 0.85rem; font-weight: 600; color: #94a3b8;">Mã</span>
+              <div class="capacity-kpi-val" style="color: var(--text-primary); font-weight: 900;">
+                ${htUniqueGroups} <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary);">Nhóm</span> / ${htTotalBoards} <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary);">Mã</span>
               </div>
-              <div class="capacity-kpi-sub">
+              <div class="capacity-kpi-sub" style="color: var(--text-primary);">
                 Bóc tách từ Sheet <strong>Hardtest Data</strong> (Hard Test, Optics, Focus)
               </div>
             </div>
 
-            <div class="capacity-kpi-card" style="--kpi-accent: linear-gradient(90deg, #0284c7, #38bdf8);">
+            <div class="capacity-kpi-card">
               <div class="capacity-kpi-label">
                 <span>🧪 Thiết Bị Test Block (TB Q'ty)</span>
               </div>
-              <div class="capacity-kpi-val" style="color: #38bdf8;">
-                ${htTotalTbQty} <span style="font-size: 0.85rem; font-weight: 600; color: #94a3b8;">Khối TB</span>
+              <div class="capacity-kpi-val" style="color: var(--text-primary); font-weight: 900;">
+                ${htTotalTbQty} <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary);">Khối TB</span>
               </div>
-              <div class="capacity-kpi-sub">
+              <div class="capacity-kpi-sub" style="color: var(--text-primary);">
                 Đã kế thừa chuẩn ô trộn cho các mã dùng chung
               </div>
             </div>
 
-            <div class="capacity-kpi-card" style="--kpi-accent: linear-gradient(90deg, #f59e0b, #fbbf24);">
+            <div class="capacity-kpi-card">
               <div class="capacity-kpi-label">
                 <span>⏱️ Cycle Time Tiêu Chuẩn (Norm)</span>
               </div>
-              <div class="capacity-kpi-val" style="color: #fbbf24;">
-                TB ${htAvgNorm}s <span style="font-size: 0.8rem; font-weight: 600; color: #94a3b8;">(${htMinNorm}s → ${htMaxNorm}s)</span>
+              <div class="capacity-kpi-val" style="color: var(--text-primary); font-weight: 900;">
+                TB ${htAvgNorm}s <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary);">(${htMinNorm}s → ${htMaxNorm}s)</span>
               </div>
-              <div class="capacity-kpi-sub">
+              <div class="capacity-kpi-sub" style="color: var(--text-primary);">
                 UPH tiêu chuẩn TB: <strong>${htAvgUphStd} pcs/h/khối</strong>
               </div>
             </div>
 
-            <div class="capacity-kpi-card" style="--kpi-accent: linear-gradient(90deg, #10b981, #34d399);">
+            <div class="capacity-kpi-card">
               <div class="capacity-kpi-label">
                 <span>🎯 Tỉ Lệ Pass FTT &amp; Downtime</span>
               </div>
-              <div class="capacity-kpi-val" style="color: #34d399;">
-                FTT ${htAvgFtt}% <span style="font-size: 0.8rem; font-weight: 600; color: #94a3b8;">• DT ${htAvgDt}%</span>
+              <div class="capacity-kpi-val" style="color: var(--text-primary); font-weight: 900;">
+                FTT ${htAvgFtt}% <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary);">• DT ${htAvgDt}%</span>
               </div>
-              <div class="capacity-kpi-sub">
+              <div class="capacity-kpi-sub" style="color: var(--text-primary);">
                 Downtime Máy: <strong>1.5%</strong> • Downtime Vật tư: <strong>1.0%</strong>
               </div>
             </div>
 
-            <div class="capacity-kpi-card" style="--kpi-accent: linear-gradient(90deg, #8b5cf6, #c084fc);">
+            <div class="capacity-kpi-card">
               <div class="capacity-kpi-label">
                 <span>💡 Quy Chuẩn Tính Toán (IE &amp; MES)</span>
               </div>
-              <div class="capacity-kpi-val" style="font-size: 1.05rem; color: #c084fc; font-weight: 800;">
+              <div class="capacity-kpi-val" style="font-size: 1.05rem; color: var(--text-primary); font-weight: 900;">
                 UPH = (3600 × TB) ÷ CT
               </div>
-              <div class="capacity-kpi-sub">
+              <div class="capacity-kpi-sub" style="color: var(--text-primary);">
                 Ca Ngày (10.83h) • Ca Đêm (10.58h) • Cả Ngày (21.41h)
               </div>
             </div>
           </div>
 
           <!-- 3. FILTER & TOOLBAR (TOTAL HARDTEST) -->
-          <div class="card" style="margin-bottom: 1.25rem; padding: 0.85rem 1.15rem; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-glass);">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+          <div class="card" style="margin-bottom: 0.5rem; padding: 0.5rem 0.85rem; background: var(--bg-card-header, #fff3cc); border: 1.5px solid var(--border-glass); border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.65rem;">
               <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap; flex: 1;">
                 <!-- Sub-Stage Select (Công đoạn) -->
                 <div style="display: flex; align-items: center; gap: 0.35rem;">
-                  <span style="font-size: 0.75rem; font-weight: 700; color: #22d3ee;">🔬 Công Đoạn:</span>
-                  <select id="capacityHardtestSubStageSelect" class="select-filter font-mono" style="font-size: 0.775rem; min-width: 170px;" onchange="handleHardtestSubStageChange(this.value)">
+                  <span style="font-size: 0.82rem; font-weight: 800; color: var(--text-primary);">🔬 Công Đoạn:</span>
+                  <select id="capacityHardtestSubStageSelect" class="select-filter font-mono" style="font-size: 0.82rem; min-width: 170px; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; padding: 0.2rem 0.45rem; font-weight: 700;" onchange="handleHardtestSubStageChange(this.value)">
                     ${(htData.subStages || []).map(st => `<option value="${st.id}" ${currentHtSubStage === st.id ? 'selected' : ''}>${st.name} (${st.count})</option>`).join('')}
                   </select>
                 </div>
 
                 <!-- Group Model Select -->
                 <div style="display: flex; align-items: center; gap: 0.35rem;">
-                  <span style="font-size: 0.75rem; font-weight: 700; color: #60a5fa;">🏷️ Group Model:</span>
-                  <select id="capacityHardtestGroupSelect" class="select-filter font-mono" style="font-size: 0.775rem; min-width: 175px;" onchange="handleHardtestGroupChange(this.value)">
+                  <span style="font-size: 0.82rem; font-weight: 800; color: var(--text-primary);">🏷️ Group Model:</span>
+                  <select id="capacityHardtestGroupSelect" class="select-filter font-mono" style="font-size: 0.82rem; min-width: 175px; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; padding: 0.2rem 0.45rem; font-weight: 700;" onchange="handleHardtestGroupChange(this.value)">
                     <option value="ALL" ${currentHtGroup === 'ALL' ? 'selected' : ''}>Tất cả Group Model (${(htData.groups || []).length})</option>
                     ${(htData.groups || []).map(g => `<option value="${g.group}" ${currentHtGroup === g.group ? 'selected' : ''}>${g.group} (${g.boardsCount} bo - ${g.tbQty} TB)</option>`).join('')}
                   </select>
@@ -272,8 +272,8 @@
 
                 <!-- Metric Mode Select (Thực tế vs Tiêu chuẩn vs Cả hai) -->
                 <div style="display: flex; align-items: center; gap: 0.35rem;">
-                  <span style="font-size: 0.75rem; font-weight: 700; color: #a78bfa;">📊 Hiển Thị:</span>
-                  <select id="capacityHardtestMetricModeSelect" class="select-filter font-mono" style="font-size: 0.775rem; min-width: 195px;" onchange="handleHardtestMetricModeChange(this.value)">
+                  <span style="font-size: 0.82rem; font-weight: 800; color: var(--text-primary);">📊 Hiển Thị:</span>
+                  <select id="capacityHardtestMetricModeSelect" class="select-filter font-mono" style="font-size: 0.82rem; min-width: 195px; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; padding: 0.2rem 0.45rem; font-weight: 700;" onchange="handleHardtestMetricModeChange(this.value)">
                     <option value="ACTUAL" ${currentHtMetricMode === 'ACTUAL' ? 'selected' : ''}>⚡ Năng Lực Thực Tế (sau FTT &amp; DT)</option>
                     <option value="STANDARD" ${currentHtMetricMode === 'STANDARD' ? 'selected' : ''}>⏱️ Năng Lực Tiêu Chuẩn (Norm)</option>
                     <option value="BOTH" ${currentHtMetricMode === 'BOTH' ? 'selected' : ''}>📊 Song Song (Tiêu Chuẩn / Thực Tế)</option>
@@ -283,21 +283,21 @@
                 <!-- Quick Search Input -->
                 <div class="search-box" style="min-width: 200px; flex: 1;">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                  <input id="capacitySearchInput" type="text" class="search-input" placeholder="Tìm theo Model, Bo mạch, Ghi chú..." value="${searchVal}" oninput="handleCapacitySearch(this.value)">
+                  <input id="capacitySearchInput" type="text" class="search-input" placeholder="Tìm theo Model, Bo mạch, Ghi chú..." value="${searchVal}" oninput="handleCapacitySearch(this.value)" style="background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; font-size: 0.82rem; padding: 0.2rem 0.5rem 0.2rem 1.8rem;">
                 </div>
 
                 <!-- Reset Button -->
-                <button type="button" class="btn btn-secondary" onclick="handleResetHardtestFilters()" style="padding: 0.35rem 0.65rem; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.3rem;" title="Đặt lại bộ lọc về mặc định">
+                <button type="button" class="btn btn-secondary" onclick="handleResetHardtestFilters()" style="padding: 0.25rem 0.65rem; font-size: 0.82rem; font-weight: 800; display: inline-flex; align-items: center; gap: 0.3rem; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px;" title="Đặt lại bộ lọc về mặc định">
                   <span>↺ Đặt lại</span>
                 </button>
               </div>
 
               <!-- Export Buttons for Hardtest Table -->
               <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <button type="button" class="sim-btn-export-sheet" onclick="handleExportHardtestCapacityCSV()" title="Xuất toàn bộ bảng Hardtest ra file CSV">
+                <button type="button" class="sim-btn-export-sheet" onclick="handleExportHardtestCapacityCSV()" title="Xuất toàn bộ bảng Hardtest ra file CSV" style="background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; padding: 0.25rem 0.6rem; font-size: 0.82rem; font-weight: 800;">
                   <span>📥 Xuất Sheet CSV</span>
                 </button>
-                <button type="button" class="sim-btn-copy-sheet" onclick="handleCopyHardtestCapacityClipboard()" title="Sao chép bảng Hardtest vào Clipboard để dán vào Google Sheets">
+                <button type="button" class="sim-btn-copy-sheet" onclick="handleCopyHardtestCapacityClipboard()" title="Sao chép bảng Hardtest vào Clipboard để dán vào Google Sheets" style="background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; padding: 0.25rem 0.6rem; font-size: 0.82rem; font-weight: 800;">
                   <span>📋 Sao Chép Google Sheets</span>
                 </button>
               </div>
@@ -314,63 +314,63 @@
         html += `
           <!-- 2. KPI SUMMARY CARDS (MATRIX MODE) -->
           <div class="capacity-kpi-grid">
-            <div class="capacity-kpi-card" style="--kpi-accent: linear-gradient(90deg, #3b82f6, #60a5fa);">
+            <div class="capacity-kpi-card">
               <div class="capacity-kpi-label">
                 <span>📦 Quy Mô Danh Mục</span>
               </div>
-              <div class="capacity-kpi-val">
-                ${uniqueGroups} <span style="font-size: 0.85rem; font-weight: 600; color: #94a3b8;">Nhóm</span> / ${totalBoards} <span style="font-size: 0.85rem; font-weight: 600; color: #94a3b8;">Bo Mạch</span>
+              <div class="capacity-kpi-val" style="color: var(--text-primary); font-weight: 900;">
+                ${uniqueGroups} <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary);">Nhóm</span> / ${totalBoards} <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary);">Bo Mạch</span>
               </div>
-              <div class="capacity-kpi-sub">
+              <div class="capacity-kpi-sub" style="color: var(--text-primary);">
                 Toàn bộ dữ liệu bóc tách từ Sheet <strong>Assembly Data</strong>
               </div>
             </div>
 
-            <div class="capacity-kpi-card" style="--kpi-accent: linear-gradient(90deg, #10b981, #34d399);">
+            <div class="capacity-kpi-card">
               <div class="capacity-kpi-label">
                 <span>⏱️ Cycle Time Tiêu Chuẩn (Norm)</span>
               </div>
-              <div class="capacity-kpi-val" style="color: #34d399;">
-                TB ${avgNorm}s <span style="font-size: 0.8rem; font-weight: 600; color: #94a3b8;">(${minNorm}s → ${maxNorm}s)</span>
+              <div class="capacity-kpi-val" style="color: var(--text-primary); font-weight: 900;">
+                TB ${avgNorm}s <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary);">(${minNorm}s → ${maxNorm}s)</span>
               </div>
-              <div class="capacity-kpi-sub">
+              <div class="capacity-kpi-sub" style="color: var(--text-primary);">
                 UPH tiêu chuẩn trung bình: <strong>${avgNorm > 0 ? Math.round(3600 / avgNorm) : 0} pcs/h/line</strong>
               </div>
             </div>
 
-            <div class="capacity-kpi-card" style="--kpi-accent: linear-gradient(90deg, #8b5cf6, #a855f7);">
+            <div class="capacity-kpi-card">
               <div class="capacity-kpi-label">
                 <span>🏭 Khả Năng Đáp Ứng Của Line</span>
               </div>
-              <div class="capacity-kpi-val" style="color: #c084fc;">
-                10/12 Line <span style="font-size: 0.8rem; font-weight: 600; color: #94a3b8;">Hoạt động</span>
+              <div class="capacity-kpi-val" style="color: var(--text-primary); font-weight: 900;">
+                10/12 Line <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary);">Hoạt động</span>
               </div>
-              <div class="capacity-kpi-sub">
+              <div class="capacity-kpi-sub" style="color: var(--text-primary);">
                 Top hiệu suất: <strong>Line 1D (96.5%)</strong>, <strong>Line 2C (92.9%)</strong>, <strong>Line 1C (90.4%)</strong>
               </div>
             </div>
 
-            <div class="capacity-kpi-card" style="--kpi-accent: linear-gradient(90deg, #f59e0b, #fbbf24);">
+            <div class="capacity-kpi-card">
               <div class="capacity-kpi-label">
                 <span>💡 Quy Chuẩn Tính Toán (IE)</span>
               </div>
-              <div class="capacity-kpi-val" style="font-size: 1.05rem; color: #fbbf24; font-weight: 800;">
+              <div class="capacity-kpi-val" style="font-size: 1.05rem; color: var(--text-primary); font-weight: 900;">
                 CT Thựctế = Norm ÷ Perf
               </div>
-              <div class="capacity-kpi-sub">
+              <div class="capacity-kpi-sub" style="color: var(--text-primary);">
                 Plan STD / Ngày = 77.076s (21.41h) ÷ Norm (Ngày: 10.83h | Đêm: 10.58h)
               </div>
             </div>
           </div>
 
           <!-- 3. FILTER & TOOLBAR (MATRIX MODE) -->
-          <div class="card" style="margin-bottom: 1.25rem; padding: 0.85rem 1.15rem; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-glass);">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+          <div class="card" style="margin-bottom: 0.5rem; padding: 0.5rem 0.85rem; background: var(--bg-card-header, #fff3cc); border: 1.5px solid var(--border-glass); border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.65rem;">
               <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap; flex: 1;">
                 <!-- Group Model Select -->
                 <div style="display: flex; align-items: center; gap: 0.35rem;">
-                  <span style="font-size: 0.75rem; font-weight: 700; color: #60a5fa;">🏷️ Group Model:</span>
-                  <select id="capacityGroupSelect" class="select-filter font-mono" style="font-size: 0.775rem; min-width: 175px;" onchange="handleCapacityGroupChange(this.value)">
+                  <span style="font-size: 0.82rem; font-weight: 800; color: var(--text-primary);">🏷️ Group Model:</span>
+                  <select id="capacityGroupSelect" class="select-filter font-mono" style="font-size: 0.82rem; min-width: 175px; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; padding: 0.2rem 0.45rem; font-weight: 700;" onchange="handleCapacityGroupChange(this.value)">
                     <option value="ALL" ${currentGroup === 'ALL' ? 'selected' : ''}>Tất cả Group Model (${allGroups.length})</option>
                     ${allGroups.map(g => `<option value="${g.group}" ${currentGroup === g.group ? 'selected' : ''}>${g.group} (${g.boardsCount} bo)</option>`).join('')}
                   </select>
@@ -378,8 +378,8 @@
 
                 <!-- Line Select -->
                 <div style="display: flex; align-items: center; gap: 0.35rem;">
-                  <span style="font-size: 0.75rem; font-weight: 700; color: #a78bfa;">🏭 Line:</span>
-                  <select id="capacityLineSelect" class="select-filter font-mono" style="font-size: 0.775rem; min-width: 145px;" onchange="handleCapacityLineChange(this.value)">
+                  <span style="font-size: 0.82rem; font-weight: 800; color: var(--text-primary);">🏭 Line:</span>
+                  <select id="capacityLineSelect" class="select-filter font-mono" style="font-size: 0.82rem; min-width: 145px; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; padding: 0.2rem 0.45rem; font-weight: 700;" onchange="handleCapacityLineChange(this.value)">
                     <option value="ALL" ${currentLine === 'ALL' ? 'selected' : ''}>Tất cả Line (${allLines.filter(l => l.supportedBoardsCount > 0).length})</option>
                     ${allLines.filter(l => l.supportedBoardsCount > 0).map(l => `<option value="${l.id}" ${currentLine === l.id ? 'selected' : ''}>${l.name} (${l.supportedBoardsCount} bo - TB ${l.avgPerfPct}%)</option>`).join('')}
                   </select>
@@ -387,8 +387,8 @@
 
                 <!-- Working Time Select -->
                 <div style="display: flex; align-items: center; gap: 0.35rem;">
-                  <span style="font-size: 0.75rem; font-weight: 700; color: #fbbf24;">⏱️ Thời Gian:</span>
-                  <select id="capacityShiftHoursSelect" class="select-filter font-mono" style="font-size: 0.775rem; min-width: 170px;" onchange="handleCapacityShiftHoursChange(this.value)">
+                  <span style="font-size: 0.82rem; font-weight: 800; color: var(--text-primary);">⏱️ Thời Gian:</span>
+                  <select id="capacityShiftHoursSelect" class="select-filter font-mono" style="font-size: 0.82rem; min-width: 170px; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; padding: 0.2rem 0.45rem; font-weight: 700;" onchange="handleCapacityShiftHoursChange(this.value)">
                     <option value="21.41" ${shiftHours === 21.41 ? 'selected' : ''}>Cả Ngày (21.41h: Ngày 10.83 + Đêm 10.58)</option>
                     <option value="10.83" ${shiftHours === 10.83 ? 'selected' : ''}>Ca Ngày (10.83 Giờ)</option>
                     <option value="10.58" ${shiftHours === 10.58 ? 'selected' : ''}>Ca Đêm (10.58 Giờ)</option>
@@ -399,11 +399,11 @@
                 <!-- Quick Search Input -->
                 <div class="search-box" style="min-width: 200px; flex: 1;">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                  <input id="capacitySearchInput" type="text" class="search-input" placeholder="Tìm theo Product Name 1C, Model hoặc Bo mạch..." value="${searchVal}" oninput="handleCapacitySearch(this.value)">
+                  <input id="capacitySearchInput" type="text" class="search-input" placeholder="Tìm theo Product Name 1C, Model hoặc Bo mạch..." value="${searchVal}" oninput="handleCapacitySearch(this.value)" style="background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; font-size: 0.82rem; padding: 0.2rem 0.5rem 0.2rem 1.8rem;">
                 </div>
 
                 <!-- Reset Button -->
-                <button type="button" class="btn btn-secondary" onclick="handleResetCapacityFilters()" style="padding: 0.35rem 0.65rem; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.3rem;" title="Đặt lại bộ lọc về mặc định">
+                <button type="button" class="btn btn-secondary" onclick="handleResetCapacityFilters()" style="padding: 0.25rem 0.65rem; font-size: 0.82rem; font-weight: 800; display: inline-flex; align-items: center; gap: 0.3rem; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px;" title="Đặt lại bộ lọc về mặc định">
                   <span>↺ Đặt lại</span>
                 </button>
               </div>
@@ -512,9 +512,23 @@
         }
 
         const pct = lineInfo.perfPct;
-        const pillClass = pct >= 100 ? 'perf-pill-100' :
-                          pct >= 85 ? 'perf-pill-85' :
-                          pct >= 65 ? 'perf-pill-70' : 'perf-pill-45';
+        // Quy chuẩn: 100% màu xanh, từ 85% màu vàng/cam, < 85% màu đỏ (không nền đỏ)
+        let perfColor = '#ff0000 !important;';
+        let perfBorder = '#ef4444';
+        let perfBg = '#ffffff';
+        if (pct >= 100) {
+          perfColor = '#0000ff !important;';
+          perfBorder = '#cbd5e1';
+          perfBg = '#ffffff';
+        } else if (pct >= 85) {
+          perfColor = '#d97706 !important;';
+          perfBorder = '#f59e0b';
+          perfBg = '#fff3cc';
+        } else {
+          perfColor = '#ff0000 !important;';
+          perfBorder = '#ef4444';
+          perfBg = '#ffffff';
+        }
 
         const dayCap = lineInfo.actualDayCapacity || lineInfo.actualShiftCapacity || 0;
         const dayShiftCap = lineInfo.actualDayShiftCapacity || Math.round(dayCap * (10.83 / 21.41));
@@ -525,10 +539,10 @@
         return `
           <td title="${tooltipText.replace(/"/g, '&quot;')}">
             <div class="perf-cell-content">
-              <span class="perf-pill ${pillClass}">${pct}%</span>
+              <span class="perf-pill" style="font-weight: 800; font-size: 0.82rem; padding: 0.15rem 0.45rem; border-radius: 6px; background: ${perfBg}; color: ${perfColor}; border: 1.5px solid ${perfBorder};">${pct}%</span>
               <div class="perf-stat-stack">
-                <span class="perf-stat-ct font-mono" title="Cycle time thực tế">⏱️ ${lineInfo.actualCycleTime}s</span>
-                <span class="perf-stat-cap font-mono" title="Plan thực tế / Ngày (21.41h)">📦 ${dayCap.toLocaleString('vi-VN')}<span class="perf-stat-cap-unit">/ng</span></span>
+                <span class="perf-stat-ct font-mono" title="Cycle time thực tế" style="color: var(--text-primary); font-weight: 700;">⏱️ ${lineInfo.actualCycleTime}s</span>
+                <span class="perf-stat-cap font-mono" title="Plan thực tế / Ngày (21.41h)" style="color: var(--text-primary); font-weight: 800;">📦 ${dayCap.toLocaleString('vi-VN')}<span class="perf-stat-cap-unit" style="color: var(--text-primary);">/ng</span></span>
               </div>
             </div>
           </td>
@@ -537,25 +551,25 @@
 
       return `
         <tr class="hover-row">
-          <td class="sticky-cap-stt" style="color: var(--text-muted); font-size: 0.75rem;">${idx + 1}</td>
+          <td class="sticky-cap-stt" style="color: var(--text-primary); font-size: 0.82rem; font-weight: 700;">${idx + 1}</td>
           <td class="sticky-cap-group">
-            <span style="font-weight: 800; color: #f8fafc; font-size: 0.825rem;">${it.group}</span>
+            <span style="font-weight: 800; color: var(--text-primary); font-size: 0.85rem;">${it.group}</span>
           </td>
           <td class="sticky-cap-product1c" title="${it.productName1C || ''}">
-            <span class="product-1c-badge">${it.productName1C || '--'}</span>
+            <span class="product-1c-badge" style="background: var(--bg-card-header, #fff3cc); color: var(--text-primary); border: 1px solid var(--border-glass); font-weight: 800;">${it.productName1C || '--'}</span>
           </td>
           <td class="sticky-cap-board">
-            <span class="font-mono" style="font-size: 0.775rem; color: #cbd5e1;" title="${it.board}">${it.board}</span>
+            <span class="font-mono" style="font-size: 0.82rem; color: var(--text-primary); font-weight: 700;" title="${it.board}">${it.board}</span>
           </td>
           <td class="sticky-cap-norm">
-            <span class="badge badge-amber font-mono" style="font-weight: 800; font-size: 0.8rem;">
+            <span class="badge font-mono" style="font-weight: 800; font-size: 0.82rem; background: var(--bg-card-header, #fff3cc); color: var(--text-primary); border: 1px solid var(--border-glass);">
               ${it.norm}s
             </span>
           </td>
-          <td style="text-align: right; font-weight: 700; color: #60a5fa;" class="font-mono">
+          <td style="text-align: right; font-weight: 800; color: var(--text-primary); font-size: 0.85rem;" class="font-mono">
             ${uphStdText}
           </td>
-          <td style="text-align: right; font-weight: 800; color: #34d399;" class="font-mono" title="Plan Tiêu Chuẩn / Ngày (21.41h): ${planDayStd.toLocaleString('vi-VN')} pcs\n  ☀️ Ca Ngày (10.83h): ${dayShiftStd.toLocaleString('vi-VN')} pcs\n  🌙 Ca Đêm (10.58h): ${nightShiftStd.toLocaleString('vi-VN')} pcs">
+          <td style="text-align: right; font-weight: 800; color: var(--text-primary) !important; font-size: 0.88rem;" class="font-mono" title="Plan Tiêu Chuẩn / Ngày (21.41h): ${planDayStd.toLocaleString('vi-VN')} pcs\n  ☀️ Ca Ngày (10.83h): ${dayShiftStd.toLocaleString('vi-VN')} pcs\n  🌙 Ca Đêm (10.58h): ${nightShiftStd.toLocaleString('vi-VN')} pcs">
             ${planDayStd.toLocaleString('vi-VN')}
           </td>
           ${lineCellsHtml}
@@ -565,13 +579,13 @@
 
     return `
       <div class="capacity-table-wrap">
-        <div style="padding: 0.65rem 1rem; background: rgba(11, 19, 41, 0.9); border-bottom: 1px solid var(--border-glass); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+        <div style="padding: 0.5rem 0.85rem; background: var(--bg-card-header, #fff3cc); border-bottom: 1.5px solid #cbd5e1; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
           <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <span style="font-weight: 800; color: #38bdf8; font-size: 0.875rem;">📋 MA TRẬN ĐỊNH MỨC CYCLE TIME &amp; TẢI LINE (ASSEMBLY)</span>
-            <span class="badge badge-blue" style="font-size: 0.72rem;">Đang hiển thị: ${items.length} Bo Mạch</span>
+            <span style="font-weight: 900; color: var(--text-primary); font-size: 0.9rem;">📋 MA TRẬN ĐỊNH MỨC CYCLE TIME &amp; TẢI LINE (ASSEMBLY)</span>
+            <span class="badge" style="font-size: 0.8rem; font-weight: 800; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; padding: 0.15rem 0.5rem;">Đang hiển thị: ${items.length} Bo Mạch</span>
           </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.75rem;">
-            <span>Chú thích ô Line: <span class="perf-pill perf-pill-100" style="font-size: 0.68rem; padding: 0.1rem 0.35rem;">Hiệu suất %</span> ➜ <span class="perf-stat-ct" style="font-size: 0.7rem;">⏱️ CT Thực tế</span> ➜ <span class="perf-stat-cap" style="font-size: 0.7rem;">📦 Plan / Ngày</span></span>
+          <div style="font-size: 0.8rem; color: var(--text-primary); font-weight: 700; display: flex; align-items: center; gap: 0.75rem;">
+            <span>Chú thích: <span style="font-size: 0.75rem; font-weight: 800; color: var(--color-plan-blue, #0000ff);">≥100% (Xanh)</span> | <span style="font-size: 0.75rem; font-weight: 800; color: #d97706;">từ 85% (Vàng)</span> | <span style="font-size: 0.75rem; font-weight: 800; color: var(--color-alert-red, #ff0000);">&lt;85% (Đỏ)</span> ➜ <span class="perf-stat-ct" style="font-size: 0.75rem; color: var(--text-primary); font-weight: 800;">⏱️ CT Thực tế</span> ➜ <span class="perf-stat-cap" style="font-size: 0.75rem; color: var(--text-primary); font-weight: 800;">📦 Plan / Ngày</span></span>
           </div>
         </div>
 
@@ -579,20 +593,20 @@
           <table class="capacity-matrix-table">
             <thead>
               <tr>
-                <th class="sticky-cap-stt">STT</th>
-                <th class="sticky-cap-group" style="text-align: left;">GROUP MODEL</th>
-                <th class="sticky-cap-product1c" style="text-align: left;">PRODUCT NAME 1C</th>
-                <th class="sticky-cap-board" style="text-align: left;">MÃ BO MẠCH (BOARD)</th>
-                <th class="sticky-cap-norm" title="Cycle time tiêu chuẩn từ sheet Assembly Data">NORM (s)</th>
-                <th style="min-width: 80px; color: #60a5fa;" title="Units Per Hour Tiêu Chuẩn (3600 / Norm)">UPH STD</th>
-                <th style="min-width: 120px; color: #34d399;" title="Plan Tiêu Chuẩn / Ngày khi đạt 100% hiệu suất (Ca Ngày 10.83h + Ca Đêm 10.58h = 21.41h = 77.076s)">
+                <th class="sticky-cap-stt" style="color: var(--text-primary); font-weight: 800;">STT</th>
+                <th class="sticky-cap-group" style="text-align: left; color: var(--text-primary); font-weight: 800;">GROUP MODEL</th>
+                <th class="sticky-cap-product1c" style="text-align: left; color: var(--text-primary); font-weight: 800;">PRODUCT NAME 1C</th>
+                <th class="sticky-cap-board" style="text-align: left; color: var(--text-primary); font-weight: 800;">MÃ BO MẠCH (BOARD)</th>
+                <th class="sticky-cap-norm" style="color: var(--text-primary); font-weight: 800;" title="Cycle time tiêu chuẩn từ sheet Assembly Data">NORM (s)</th>
+                <th style="min-width: 80px; color: var(--text-primary); font-weight: 800;" title="Units Per Hour Tiêu Chuẩn (3600 / Norm)">UPH STD</th>
+                <th style="min-width: 120px; color: var(--text-primary) !important; font-weight: 800;" title="Plan Tiêu Chuẩn / Ngày khi đạt 100% hiệu suất (Ca Ngày 10.83h + Ca Đêm 10.58h = 21.41h = 77.076s)">
                   <div>PLAN STD / NGÀY</div>
-                  <div style="font-size: 0.65rem; font-weight: normal; color: #94a3b8;">(21.41h / Ngày)</div>
+                  <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-primary);">(21.41h / Ngày)</div>
                 </th>
                 ${allLines.map(l => `
                   <th style="min-width: 84px;" title="Line ${l.name}: Hỗ trợ ${l.supportedBoardsCount} bo mạch • Hiệu suất TB ${l.avgPerfPct}%">
-                    <div style="font-size: 0.85rem; font-weight: 800; color: #38bdf8;">${l.name}</div>
-                    <div style="font-size: 0.68rem; font-weight: normal; color: #94a3b8;">${l.avgPerfPct > 0 ? l.avgPerfPct + '%' : '--'}</div>
+                    <div style="font-size: 0.88rem; font-weight: 900; color: var(--text-primary);">${l.name}</div>
+                    <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-primary);">${l.avgPerfPct > 0 ? l.avgPerfPct + '%' : '--'}</div>
                   </th>
                 `).join('')}
               </tr>
@@ -673,22 +687,22 @@
       // UPH Cell HTML based on metricMode
       let uphCellHtml = '';
       if (metricMode === 'STANDARD') {
-        uphCellHtml = `<td style="text-align: right; font-weight: 800; color: #60a5fa;" class="font-mono" title="UPH Tiêu Chuẩn = (3600 × ${tbQty} TB) ÷ ${it.ctNorm}s">${uphStd.toLocaleString('vi-VN')}</td>`;
+        uphCellHtml = `<td style="text-align: right; font-weight: 800; color: var(--text-primary);" class="font-mono" title="UPH Tiêu Chuẩn = (3600 × ${tbQty} TB) ÷ ${it.ctNorm}s">${uphStd.toLocaleString('vi-VN')}</td>`;
       } else if (metricMode === 'BOTH') {
-        uphCellHtml = `<td style="text-align: right;" class="font-mono" title="Tiêu chuẩn: ${uphStd} | Thực tế: ${uphAct}"><span style="color: #60a5fa; font-weight: 700;">${uphStd.toLocaleString('vi-VN')}</span> <span style="color: #64748b;">/</span> <span style="color: #22d3ee; font-weight: 800;">${uphAct.toLocaleString('vi-VN')}</span></td>`;
+        uphCellHtml = `<td style="text-align: right;" class="font-mono" title="Tiêu chuẩn: ${uphStd} | Thực tế: ${uphAct}"><span style="color: var(--text-primary); font-weight: 700;">${uphStd.toLocaleString('vi-VN')}</span> <span style="color: #64748b;">/</span> <span style="color: var(--text-primary); font-weight: 800;">${uphAct.toLocaleString('vi-VN')}</span></td>`;
       } else {
-        uphCellHtml = `<td style="text-align: right; font-weight: 800; color: #22d3ee;" class="font-mono" title="UPH Thực Tế = (3600 × ${tbQty} TB) ÷ ${it.ctActual}s">${uphAct.toLocaleString('vi-VN')}</td>`;
+        uphCellHtml = `<td style="text-align: right; font-weight: 800; color: var(--text-primary);" class="font-mono" title="UPH Thực Tế = (3600 × ${tbQty} TB) ÷ ${it.ctActual}s">${uphAct.toLocaleString('vi-VN')}</td>`;
       }
 
       // Day Shift Cell HTML (10.83h)
       let dayShiftCellHtml = '';
       if (it.ctNorm > 0) {
         if (metricMode === 'STANDARD') {
-          dayShiftCellHtml = `<td style="text-align: right; font-weight: 800; color: #fbbf24;" class="font-mono" title="Ca Ngày Tiêu Chuẩn (10.83h = 38,988s) = (38,988 × ${tbQty}) ÷ ${it.ctNorm}s">${dayShiftStd.toLocaleString('vi-VN')}</td>`;
+          dayShiftCellHtml = `<td style="text-align: right; font-weight: 800; color: var(--text-primary);" class="font-mono" title="Ca Ngày Tiêu Chuẩn (10.83h = 38,988s) = (38,988 × ${tbQty}) ÷ ${it.ctNorm}s">${dayShiftStd.toLocaleString('vi-VN')}</td>`;
         } else if (metricMode === 'BOTH') {
-          dayShiftCellHtml = `<td style="text-align: right;" class="font-mono" title="Ca Ngày: Tiêu chuẩn ${dayShiftStd} | Thực tế ${dayShiftAct}"><span style="color: #94a3b8;">${dayShiftStd.toLocaleString('vi-VN')}</span> <span style="color: #64748b;">/</span> <span style="color: #fbbf24; font-weight: 800;">${dayShiftAct.toLocaleString('vi-VN')}</span></td>`;
+          dayShiftCellHtml = `<td style="text-align: right;" class="font-mono" title="Ca Ngày: Tiêu chuẩn ${dayShiftStd} | Thực tế ${dayShiftAct}"><span style="color: var(--text-primary); font-weight: 700;">${dayShiftStd.toLocaleString('vi-VN')}</span> <span style="color: #64748b;">/</span> <span style="color: var(--text-primary); font-weight: 800;">${dayShiftAct.toLocaleString('vi-VN')}</span></td>`;
         } else {
-          dayShiftCellHtml = `<td style="text-align: right; font-weight: 800; color: #fbbf24;" class="font-mono" title="Ca Ngày Thực Tế (10.83h = 38,988s) = (38,988 × ${tbQty}) ÷ ${it.ctActual}s">${dayShiftAct.toLocaleString('vi-VN')}</td>`;
+          dayShiftCellHtml = `<td style="text-align: right; font-weight: 800; color: var(--text-primary);" class="font-mono" title="Ca Ngày Thực Tế (10.83h = 38,988s) = (38,988 × ${tbQty}) ÷ ${it.ctActual}s">${dayShiftAct.toLocaleString('vi-VN')}</td>`;
         }
       } else {
         dayShiftCellHtml = `<td style="text-align: right; color: var(--text-muted); font-size: 0.75rem;">--</td>`;
@@ -698,11 +712,11 @@
       let nightShiftCellHtml = '';
       if (it.ctNorm > 0) {
         if (metricMode === 'STANDARD') {
-          nightShiftCellHtml = `<td style="text-align: right; font-weight: 800; color: #818cf8;" class="font-mono" title="Ca Đêm Tiêu Chuẩn (10.58h = 38,088s) = (38,088 × ${tbQty}) ÷ ${it.ctNorm}s">${nightShiftStd.toLocaleString('vi-VN')}</td>`;
+          nightShiftCellHtml = `<td style="text-align: right; font-weight: 800; color: var(--text-primary);" class="font-mono" title="Ca Đêm Tiêu Chuẩn (10.58h = 38,088s) = (38,088 × ${tbQty}) ÷ ${it.ctNorm}s">${nightShiftStd.toLocaleString('vi-VN')}</td>`;
         } else if (metricMode === 'BOTH') {
-          nightShiftCellHtml = `<td style="text-align: right;" class="font-mono" title="Ca Đêm: Tiêu chuẩn ${nightShiftStd} | Thực tế ${nightShiftAct}"><span style="color: #94a3b8;">${nightShiftStd.toLocaleString('vi-VN')}</span> <span style="color: #64748b;">/</span> <span style="color: #818cf8; font-weight: 800;">${nightShiftAct.toLocaleString('vi-VN')}</span></td>`;
+          nightShiftCellHtml = `<td style="text-align: right;" class="font-mono" title="Ca Đêm: Tiêu chuẩn ${nightShiftStd} | Thực tế ${nightShiftAct}"><span style="color: var(--text-primary); font-weight: 700;">${nightShiftStd.toLocaleString('vi-VN')}</span> <span style="color: #64748b;">/</span> <span style="color: var(--text-primary); font-weight: 800;">${nightShiftAct.toLocaleString('vi-VN')}</span></td>`;
         } else {
-          nightShiftCellHtml = `<td style="text-align: right; font-weight: 800; color: #818cf8;" class="font-mono" title="Ca Đêm Thực Tế (10.58h = 38,088s) = (38,088 × ${tbQty}) ÷ ${it.ctActual}s">${nightShiftAct.toLocaleString('vi-VN')}</td>`;
+          nightShiftCellHtml = `<td style="text-align: right; font-weight: 800; color: var(--text-primary);" class="font-mono" title="Ca Đêm Thực Tế (10.58h = 38,088s) = (38,088 × ${tbQty}) ÷ ${it.ctActual}s">${nightShiftAct.toLocaleString('vi-VN')}</td>`;
         }
       } else {
         nightShiftCellHtml = `<td style="text-align: right; color: var(--text-muted); font-size: 0.75rem;">--</td>`;
@@ -712,11 +726,11 @@
       let fullDayCellHtml = '';
       if (it.ctNorm > 0) {
         if (metricMode === 'STANDARD') {
-          fullDayCellHtml = `<td style="text-align: right; font-weight: 900; color: #34d399;" class="font-mono" title="Cả Ngày Tiêu Chuẩn (21.41h = 77,076s) = Ca Ngày (${dayShiftStd}) + Ca Đêm (${nightShiftStd})">${fullDayStd.toLocaleString('vi-VN')}</td>`;
+          fullDayCellHtml = `<td style="text-align: right; font-weight: 900; color: var(--text-primary);" class="font-mono" title="Cả Ngày Tiêu Chuẩn (21.41h = 77,076s) = Ca Ngày (${dayShiftStd}) + Ca Đêm (${nightShiftStd})">${fullDayStd.toLocaleString('vi-VN')}</td>`;
         } else if (metricMode === 'BOTH') {
-          fullDayCellHtml = `<td style="text-align: right;" class="font-mono" title="Cả Ngày: Tiêu chuẩn ${fullDayStd} | Thực tế ${fullDayAct}"><span style="color: #94a3b8;">${fullDayStd.toLocaleString('vi-VN')}</span> <span style="color: #64748b;">/</span> <span style="color: #34d399; font-weight: 900;">${fullDayAct.toLocaleString('vi-VN')}</span></td>`;
+          fullDayCellHtml = `<td style="text-align: right;" class="font-mono" title="Cả Ngày: Tiêu chuẩn ${fullDayStd} | Thực tế ${fullDayAct}"><span style="color: var(--text-primary); font-weight: 700;">${fullDayStd.toLocaleString('vi-VN')}</span> <span style="color: #64748b;">/</span> <span style="color: var(--text-primary); font-weight: 900;">${fullDayAct.toLocaleString('vi-VN')}</span></td>`;
         } else {
-          fullDayCellHtml = `<td style="text-align: right; font-weight: 900; color: #34d399;" class="font-mono" title="Cả Ngày Thực Tế (21.41h = 77,076s) = Ca Ngày (${dayShiftAct}) + Ca Đêm (${nightShiftAct})">${fullDayAct.toLocaleString('vi-VN')}</td>`;
+          fullDayCellHtml = `<td style="text-align: right; font-weight: 900; color: var(--text-primary);" class="font-mono" title="Cả Ngày Thực Tế (21.41h = 77,076s) = Ca Ngày (${dayShiftAct}) + Ca Đêm (${nightShiftAct})">${fullDayAct.toLocaleString('vi-VN')}</td>`;
         }
       } else {
         fullDayCellHtml = `<td style="text-align: right; color: var(--text-muted); font-size: 0.75rem;">--</td>`;
@@ -724,33 +738,33 @@
 
       return `
         <tr class="hover-row">
-          <td class="sticky-cap-stt" style="color: var(--text-muted); font-size: 0.75rem;">${idx + 1}</td>
+          <td class="sticky-cap-stt" style="color: var(--text-primary); font-size: 0.82rem; font-weight: 700;">${idx + 1}</td>
           <td style="text-align: center; white-space: nowrap;">
-            <span class="badge ${stageBadgeClass}">${it.stage}</span>
+            <span class="badge ${stageBadgeClass}" style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-glass); font-weight: 800;">${it.stage}</span>
           </td>
           <td class="sticky-ht-group">
-            <span style="font-weight: 800; color: #f8fafc; font-size: 0.825rem;">${it.group}</span>
+            <span style="font-weight: 800; color: var(--text-primary); font-size: 0.85rem;">${it.group}</span>
           </td>
           <td class="sticky-ht-board">
-            <span class="font-mono" style="font-size: 0.775rem; color: #cbd5e1;" title="${it.board}">${it.board}</span>
+            <span class="font-mono" style="font-size: 0.82rem; color: var(--text-primary); font-weight: 700;" title="${it.board}">${it.board}</span>
           </td>
           <td style="text-align: center; white-space: nowrap;">
             ${noteBadgeHtml}
           </td>
           <td style="text-align: center; white-space: nowrap;">
-            <span class="badge badge-ht-tb font-mono" title="Số lượng khối thiết bị Test Block tương ứng: ${tbQty} TB">${tbQty} TB</span>
+            <span class="badge badge-ht-tb font-mono" style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-glass); font-weight: 800;" title="Số lượng khối thiết bị Test Block tương ứng: ${tbQty} TB">${tbQty} TB</span>
           </td>
           <td class="sticky-cap-norm" style="text-align: right;">
-            ${it.ctNorm > 0 ? `<span class="badge badge-amber font-mono" style="font-weight: 800; font-size: 0.8rem;" title="Cycle Time on NOR 1 Test Block: ${it.ctNorm}s">${ctNormText}</span>` : `<span style="color: var(--text-muted); font-size: 0.75rem;">--</span>`}
+            ${it.ctNorm > 0 ? `<span class="badge font-mono" style="font-weight: 800; font-size: 0.82rem; background: var(--bg-card-header, #fff3cc); color: var(--text-primary); border: 1px solid var(--border-glass);" title="Cycle Time on NOR 1 Test Block: ${it.ctNorm}s">${ctNormText}</span>` : `<span style="color: var(--text-primary); font-size: 0.82rem;">--</span>`}
           </td>
           <td style="text-align: center;">
-            ${it.fttPct > 0 ? `<span class="badge ${fttBadgeClass} font-mono" style="font-weight: 800;" title="First Time Through (% Pass): ${it.fttPct.toFixed(2)}%">${fttText}</span>` : `<span style="color: var(--text-muted); font-size: 0.75rem;">--</span>`}
+            ${it.fttPct > 0 ? `<span class="badge font-mono" style="font-weight: 800; background: var(--bg-card); color: ${it.fttPct < 100 ? '#ff0000 !important;' : '#000000;'}; border: 1.5px solid ${it.fttPct < 100 ? '#ef4444;' : '#cbd5e1;'};" title="First Time Through (% Pass): ${it.fttPct.toFixed(2)}%">${fttText}</span>` : `<span style="color: var(--text-primary); font-size: 0.82rem;">--</span>`}
           </td>
           <td style="text-align: center;">
-            <span class="font-mono" style="font-size: 0.775rem; color: #f87171;" title="Downtime tổng hợp: Máy 1.5% + Vật tư 1.0% = ${dtText}">${dtText}</span>
+            <span class="font-mono" style="font-size: 0.82rem; color: ${(it.dtTotalPct || 0) > 0 ? '#ff0000 !important;' : '#000000;'}; font-weight: 800;" title="Downtime tổng hợp: Máy 1.5% + Vật tư 1.0% = ${dtText}">${dtText}</span>
           </td>
           <td style="text-align: right;" class="font-mono">
-            ${it.ctActual > 0 ? `<span style="font-weight: 800; color: #38bdf8; font-size: 0.8rem;" title="Cycle Time Thực Tế = CT_nor × (1 + (1 - FTT) + DT) = ${it.ctActual}s">${ctActualText}</span>` : `<span style="color: var(--text-muted); font-size: 0.75rem;">--</span>`}
+            ${it.ctActual > 0 ? `<span style="font-weight: 800; color: var(--text-primary); font-size: 0.82rem;" title="Cycle Time Thực Tế = CT_nor × (1 + (1 - FTT) + DT) = ${it.ctActual}s">${ctActualText}</span>` : `<span style="color: var(--text-primary); font-size: 0.82rem;">--</span>`}
           </td>
           ${uphCellHtml}
           ${dayShiftCellHtml}
@@ -767,13 +781,13 @@
 
     return `
       <div class="capacity-table-wrap">
-        <div style="padding: 0.65rem 1rem; background: rgba(11, 19, 41, 0.9); border-bottom: 1px solid var(--border-glass); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+        <div style="padding: 0.5rem 0.85rem; background: var(--bg-card-header, #fff3cc); border-bottom: 1.5px solid #cbd5e1; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
           <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <span style="font-weight: 800; color: #22d3ee; font-size: 0.875rem;">🔬 BẢNG ĐỊNH MỨC NĂNG LỰC TOTAL HARDTEST (TEST BLOCK &amp; UPH)</span>
-            <span class="badge badge-blue" style="font-size: 0.72rem;">Đang hiển thị: ${items.length} Mã</span>
+            <span style="font-weight: 900; color: var(--text-primary); font-size: 0.9rem;">🔬 BẢNG ĐỊNH MỨC NĂNG LỰC TOTAL HARDTEST (TEST BLOCK &amp; UPH)</span>
+            <span class="badge" style="font-size: 0.8rem; font-weight: 800; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; padding: 0.15rem 0.5rem;">Đang hiển thị: ${items.length} Mã</span>
           </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.75rem;">
-            <span>CT Thực Tế = CT_NOR × (1 + (1 - FTT) + DT) ➜ <span style="color: #22d3ee; font-weight: 700;">UPH = (3600 × TB) ÷ CT</span></span>
+          <div style="font-size: 0.8rem; color: var(--text-primary); font-weight: 700; display: flex; align-items: center; gap: 0.75rem;">
+            <span>CT Thực Tế = CT_NOR × (1 + (1 - FTT) + DT) ➜ <span style="color: var(--text-primary); font-weight: 800;">UPH = (3600 × TB) ÷ CT</span></span>
           </div>
         </div>
 
@@ -781,31 +795,31 @@
           <table class="capacity-matrix-table">
             <thead>
               <tr>
-                <th class="sticky-cap-stt">STT</th>
-                <th style="min-width: 100px; text-align: center;">CÔNG ĐOẠN</th>
-                <th class="sticky-ht-group" style="text-align: left;">NORMING GROUP</th>
-                <th class="sticky-ht-board" style="text-align: left;">BOARD OR OPERATION</th>
-                <th style="min-width: 95px; text-align: center;">GHI CHÚ</th>
-                <th style="min-width: 95px; text-align: center; color: #38bdf8;" title="Số lượng thiết bị Test Block tương ứng với mã (đã chuẩn hóa các mã dùng chung)">SỐ LƯỢNG TB</th>
-                <th class="sticky-cap-norm" style="min-width: 90px; text-align: right;" title="Thời gian tiêu chuẩn 1 Test Block (Cycle Time on NOR 1 Test Block)">CT NOR (s)</th>
-                <th style="min-width: 85px; text-align: center; color: #34d399;" title="Tỉ lệ pass kiểm tra lần đầu (First Time Through)">FTT (% PASS)</th>
-                <th style="min-width: 80px; text-align: center; color: #f87171;" title="Downtime: Máy 1.5% + Vật tư 1.0% = 2.5%">DOWNTIME</th>
-                <th style="min-width: 95px; text-align: right; color: #38bdf8;" title="Cycle Time Thực Tế sau bù hao phí FTT &amp; Downtime">CT THỰC TẾ</th>
-                <th style="min-width: 105px; text-align: right; color: #22d3ee;" title="Units Per Hour = (3600 × TB Q'ty) ÷ CT">
+                <th class="sticky-cap-stt" style="color: var(--text-primary); font-weight: 800;">STT</th>
+                <th style="min-width: 100px; text-align: center; color: var(--text-primary); font-weight: 800;">CÔNG ĐOẠN</th>
+                <th class="sticky-ht-group" style="text-align: left; color: var(--text-primary); font-weight: 800;">NORMING GROUP</th>
+                <th class="sticky-ht-board" style="text-align: left; color: var(--text-primary); font-weight: 800;">BOARD OR OPERATION</th>
+                <th style="min-width: 95px; text-align: center; color: var(--text-primary); font-weight: 800;">GHI CHÚ</th>
+                <th style="min-width: 95px; text-align: center; color: var(--text-primary); font-weight: 800;" title="Số lượng thiết bị Test Block tương ứng với mã (đã chuẩn hóa các mã dùng chung)">SỐ LƯỢNG TB</th>
+                <th class="sticky-cap-norm" style="min-width: 90px; text-align: right; color: var(--text-primary); font-weight: 800;" title="Thời gian tiêu chuẩn 1 Test Block (Cycle Time on NOR 1 Test Block)">CT NOR (s)</th>
+                <th style="min-width: 85px; text-align: center; color: var(--text-primary); font-weight: 800;" title="Tỉ lệ pass kiểm tra lần đầu (First Time Through)">FTT (% PASS)</th>
+                <th style="min-width: 80px; text-align: center; color: var(--text-primary); font-weight: 800;" title="Downtime: Máy 1.5% + Vật tư 1.0% = 2.5%">DOWNTIME</th>
+                <th style="min-width: 95px; text-align: right; color: var(--text-primary); font-weight: 800;" title="Cycle Time Thực Tế sau bù hao phí FTT &amp; Downtime">CT THỰC TẾ</th>
+                <th style="min-width: 105px; text-align: right; color: var(--text-primary); font-weight: 800;" title="Units Per Hour = (3600 × TB Q'ty) ÷ CT">
                   <div>UPH (PCS/H)</div>
-                  <div style="font-size: 0.65rem; font-weight: normal; color: #94a3b8;">${metricMode === 'STANDARD' ? '(Tiêu chuẩn)' : (metricMode === 'BOTH' ? '(STD / Thực tế)' : '(Thực tế)')}</div>
+                  <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-primary);">${metricMode === 'STANDARD' ? '(Tiêu chuẩn)' : (metricMode === 'BOTH' ? '(STD / Thực tế)' : '(Thực tế)')}</div>
                 </th>
-                <th style="min-width: 125px; text-align: right; color: #fbbf24;" title="Năng lực Ca Ngày (10.83 giờ = 38,988s) = (38,988 × TB Q'ty) ÷ CT">
+                <th style="min-width: 125px; text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;" title="Năng lực Ca Ngày (10.83 giờ = 38,988s) = (38,988 × TB Q'ty) ÷ CT">
                   <div>CAPA CA NGÀY</div>
-                  <div style="font-size: 0.65rem; font-weight: normal; color: #94a3b8;">(10.83 Giờ / Ca)</div>
+                  <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-primary);">(10.83 Giờ / Ca)</div>
                 </th>
-                <th style="min-width: 125px; text-align: right; color: #818cf8;" title="Năng lực Ca Đêm (10.58 giờ = 38,088s) = (38,088 × TB Q'ty) ÷ CT">
+                <th style="min-width: 125px; text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;" title="Năng lực Ca Đêm (10.58 giờ = 38,088s) = (38,088 × TB Q'ty) ÷ CT">
                   <div>CAPA CA ĐÊM</div>
-                  <div style="font-size: 0.65rem; font-weight: normal; color: #94a3b8;">(10.58 Giờ / Ca)</div>
+                  <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-primary);">(10.58 Giờ / Ca)</div>
                 </th>
-                <th style="min-width: 135px; text-align: right; color: #34d399;" title="Tổng năng lực Cả Ngày (Ca Ngày 10.83h + Ca Đêm 10.58h = 21.41h = 77,076s)">
+                <th style="min-width: 135px; text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;" title="Tổng năng lực Cả Ngày (Ca Ngày 10.83h + Ca Đêm 10.58h = 21.41h = 77,076s)">
                   <div>CAPA CẢ NGÀY</div>
-                  <div style="font-size: 0.65rem; font-weight: normal; color: #94a3b8;">(21.41 Giờ / Ngày)</div>
+                  <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-primary);">(21.41 Giờ / Ngày)</div>
                 </th>
               </tr>
             </thead>
@@ -813,22 +827,22 @@
               ${rowsHtml}
             </tbody>
             <tfoot>
-              <tr style="background: rgba(15, 23, 42, 0.95); font-weight: 800; border-top: 2px solid var(--border-glass);">
-                <td colspan="5" style="text-align: right; padding: 0.75rem 1rem; color: #f8fafc; font-size: 0.85rem;">
+              <tr style="background: var(--bg-card-header, #fff3cc); font-weight: 800; border-top: 1.5px solid #cbd5e1;">
+                <td colspan="5" style="text-align: right; padding: 0.5rem 0.85rem; color: var(--text-primary); font-size: 0.88rem; font-weight: 900;">
                   TỔNG CỘNG (${items.length} MÃ):
                 </td>
-                <td style="text-align: center; color: #38bdf8; font-family: var(--font-mono); font-size: 0.85rem;">
+                <td style="text-align: center; color: var(--text-primary); font-family: var(--font-mono); font-size: 0.88rem; font-weight: 800;">
                   ${totalTbQty} TB
                 </td>
-                <td colspan="4" style="text-align: center; color: var(--text-muted); font-size: 0.75rem;">--</td>
-                <td style="text-align: right; color: #22d3ee; font-family: var(--font-mono); font-size: 0.8rem;">--</td>
-                <td style="text-align: right; color: #fbbf24; font-family: var(--font-mono); font-size: 0.85rem;">
+                <td colspan="4" style="text-align: center; color: var(--text-primary); font-size: 0.82rem;">--</td>
+                <td style="text-align: right; color: var(--text-primary); font-family: var(--font-mono); font-size: 0.85rem; font-weight: 800;">--</td>
+                <td style="text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-family: var(--font-mono); font-size: 0.88rem; font-weight: 900;">
                   ${displayDayShiftTotal}
                 </td>
-                <td style="text-align: right; color: #818cf8; font-family: var(--font-mono); font-size: 0.85rem;">
+                <td style="text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-family: var(--font-mono); font-size: 0.88rem; font-weight: 900;">
                   ${displayNightShiftTotal}
                 </td>
-                <td style="text-align: right; color: #34d399; font-family: var(--font-mono); font-size: 0.9rem; font-weight: 900;">
+                <td style="text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-family: var(--font-mono); font-size: 0.92rem; font-weight: 900;">
                   ${displayFullDayTotal}
                 </td>
               </tr>
@@ -1010,28 +1024,20 @@
 
   function renderPlanDateAndShiftCellsHtml(meta) {
     const m = meta || { datePlanLabel: '--', shiftPlanLabel: '--', isCumNegative: false, pendingShifts: [] };
-    const dateBadgeClass = m.isCumNegative ? 'badge-amber' : 'badge-blue';
-
-    let shiftBadgeClass = '';
-    if (m.pendingShifts.length === 2 || m.shiftPlanLabel === 'Đủ Plan') {
-      shiftBadgeClass = 'badge-green';
-    } else if (m.pendingShifts[0] === 'Ngày') {
-      shiftBadgeClass = 'badge-blue';
-    } else if (m.pendingShifts[0] === 'Đêm') {
-      shiftBadgeClass = 'badge-purple';
-    }
+    const isNeg = m.isCumNegative || m.datePlanLabel === 'Âm luỹ kế';
 
     const dateHtml = m.datePlanLabel === '--'
-      ? `<span style="color: var(--text-muted); font-size: 0.775rem;">--</span>`
-      : `<span class="badge ${dateBadgeClass} font-mono" style="font-size: 0.725rem; font-weight: 800; padding: 0.15rem 0.45rem; border-radius: 6px; white-space: nowrap;">${m.datePlanLabel}</span>`;
+      ? `<span style="color: var(--text-primary); font-size: 0.8rem; font-weight: 700;">--</span>`
+      : `<span class="badge font-mono" style="font-size: 0.8rem; font-weight: 800; padding: 0.15rem 0.45rem; border-radius: 6px; white-space: nowrap; background: var(--bg-card); color: ${isNeg ? '#ff0000 !important;' : '#000000;'}; border: 1.5px solid ${isNeg ? '#ef4444;' : '#cbd5e1;'};">${m.datePlanLabel}</span>`;
 
+    const isFullPlan = m.shiftPlanLabel === 'Đủ Plan';
     const shiftHtml = m.shiftPlanLabel === '--'
-      ? `<span style="color: var(--text-muted); font-size: 0.775rem;">--</span>`
-      : `<span class="badge ${shiftBadgeClass}" style="font-size: 0.725rem; font-weight: 800; padding: 0.15rem 0.45rem; border-radius: 6px; white-space: nowrap;">${m.shiftPlanLabel}</span>`;
+      ? `<span style="color: var(--text-primary); font-size: 0.8rem; font-weight: 700;">--</span>`
+      : `<span class="badge" style="font-size: 0.8rem; font-weight: 800; padding: 0.15rem 0.45rem; border-radius: 6px; white-space: nowrap; background: var(--bg-card); color: ${isFullPlan ? '#0000ff !important;' : '#000000;'}; border: 1.5px solid var(--border-glass);">${m.shiftPlanLabel}</span>`;
 
     return `
-      <td style="text-align: center; white-space: nowrap; padding: 0.35rem 0.35rem;">${dateHtml}</td>
-      <td style="text-align: center; white-space: nowrap; padding: 0.35rem 0.35rem;">${shiftHtml}</td>
+      <td style="text-align: center; white-space: nowrap; padding: 0.25rem 0.35rem;">${dateHtml}</td>
+      <td style="text-align: center; white-space: nowrap; padding: 0.25rem 0.35rem;">${shiftHtml}</td>
     `;
   }
 
@@ -1112,19 +1118,14 @@
 
   function renderAccumulatedNegativeOriginCellHtml(negMeta) {
     if (!negMeta || !negMeta.originDate) {
-      return `<td style="text-align: center; color: var(--text-muted); font-size: 0.775rem; white-space: nowrap; padding: 0.35rem 0.35rem;">--</td>`;
+      return `<td style="text-align: center; color: var(--text-primary); font-size: 0.82rem; font-weight: 700; white-space: nowrap; padding: 0.35rem 0.35rem;">--</td>`;
     }
-    const shiftBadgeClass = negMeta.originShift === 'Ngày + Đêm'
-      ? 'badge-green'
-      : negMeta.originShift === 'Ngày'
-        ? 'badge-blue'
-        : 'badge-purple';
     const titleAttr = (negMeta.tooltip || '').replace(/"/g, '&quot;');
     return `
-      <td style="text-align: center; white-space: nowrap; padding: 0.35rem 0.4rem;" title="${titleAttr}">
-        <div style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem;">
-          <span class="badge badge-amber font-mono" style="font-size: 0.725rem; font-weight: 800; padding: 0.15rem 0.4rem; border-radius: 6px;">${negMeta.originDate}</span>
-          <span class="badge ${shiftBadgeClass}" style="font-size: 0.725rem; font-weight: 800; padding: 0.15rem 0.4rem; border-radius: 6px;">${negMeta.originShift}</span>
+      <td style="text-align: center; white-space: nowrap; padding: 0.25rem 0.35rem;" title="${titleAttr}">
+        <div style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; border: 1.5px solid #ef4444; border-radius: 6px; padding: 0.15rem 0.4rem; background: var(--bg-card-header, #fff3cc);">
+          <span class="font-mono" style="font-size: 0.82rem; font-weight: 800; color: var(--color-alert-red, #ff0000);">${negMeta.originDate}</span>
+          <span style="font-size: 0.8rem; font-weight: 800; color: var(--color-alert-red, #ff0000);">(${negMeta.originShift})</span>
         </div>
       </td>
     `;
@@ -2982,57 +2983,57 @@
         <table class="sim-mini-kpi-table">
           <thead>
             <tr>
-              <th class="mini-kpi-th-title" style="color: #38bdf8; font-weight: 800; padding: 0.2rem 0.5rem;" title="Bảng tổng hợp tiến độ bù thiếu và phân bổ kế hoạch">
+              <th class="mini-kpi-th-title" style="color: var(--text-primary); font-weight: 900; padding: 0.2rem 0.5rem;" title="Bảng tổng hợp tiến độ bù thiếu và phân bổ kế hoạch">
                 📊 Tổng Hợp KH
               </th>
-              <th class="mini-kpi-th-line" style="color: #f87171; min-width: 80px; text-align: center;" title="Tổng sản lượng chênh lệch cần bù">Chênh Lệch</th>
-              <th class="mini-kpi-th-line" style="color: #38bdf8; min-width: 82px; text-align: center;" title="Tổng sản lượng phân bổ Ca Ngày">Plan Ca Ngày</th>
-              <th class="mini-kpi-th-line" style="color: #c084fc; min-width: 82px; text-align: center;" title="Tổng sản lượng phân bổ Ca Đêm">Plan Ca Đêm</th>
-              <th class="mini-kpi-th-line" style="color: #f87171; min-width: 95px; text-align: center;" title="Tổng số lượng còn thiếu sau 2 ca">KH còn Thiếu Tổng</th>
+              <th class="mini-kpi-th-line" style="color: var(--text-primary); min-width: 80px; text-align: center; font-weight: 800;" title="Tổng sản lượng chênh lệch cần bù">Chênh Lệch</th>
+              <th class="mini-kpi-th-line" style="color: var(--color-plan-blue, #0000ff) !important; min-width: 82px; text-align: center; font-weight: 800;" title="Tổng sản lượng phân bổ Ca Ngày">Plan Ca Ngày</th>
+              <th class="mini-kpi-th-line" style="color: var(--color-plan-blue, #0000ff) !important; min-width: 82px; text-align: center; font-weight: 800;" title="Tổng sản lượng phân bổ Ca Đêm">Plan Ca Đêm</th>
+              <th class="mini-kpi-th-line" style="color: var(--color-alert-red, #ff0000) !important; min-width: 95px; text-align: center; font-weight: 800;" title="Tổng số lượng còn thiếu sau 2 ca">Số Cần Thêm</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class="mini-kpi-label">Sản Lượng (pcs)</td>
-              <td class="mini-kpi-val font-mono" style="color: #f87171; font-weight: 800;">
+              <td class="mini-kpi-label" style="color: var(--text-primary); font-weight: 800;">Sản Lượng (pcs)</td>
+              <td class="mini-kpi-val font-mono" style="font-weight: 900; ${grandGap < 0 ? 'color: var(--color-alert-red, #ff0000) !important;' : grandGap > 0 ? 'color: var(--color-plan-blue, #0000ff) !important;' : 'color: var(--text-primary) !important;'}">
                 ${grandGap !== 0 ? (grandGap > 0 ? '+' : '') + grandGap.toLocaleString('vi-VN') : '0'}
               </td>
-              <td class="mini-kpi-val font-mono" style="color: #38bdf8; font-weight: 800;">
+              <td class="mini-kpi-val font-mono" style="color: var(--color-plan-blue, #0000ff) !important; font-weight: 900;">
                 ${grandPlanDay > 0 ? '+' + grandPlanDay.toLocaleString('vi-VN') : '0'}
               </td>
-              <td class="mini-kpi-val font-mono" style="color: #c084fc; font-weight: 800;">
+              <td class="mini-kpi-val font-mono" style="color: var(--color-plan-blue, #0000ff) !important; font-weight: 900;">
                 ${grandPlanNight > 0 ? '+' + grandPlanNight.toLocaleString('vi-VN') : '0'}
               </td>
-              <td class="mini-kpi-val font-mono" style="color: #f87171; font-weight: 800;">
+              <td class="mini-kpi-val font-mono" style="color: var(--color-alert-red, #ff0000) !important; font-weight: 900;">
                 ${grandFinalShortage > 0 ? '-' + grandFinalShortage.toLocaleString('vi-VN') : '0'}
               </td>
             </tr>
             <tr>
-              <td class="mini-kpi-label">Tổng TG Máy (h)</td>
-              <td class="mini-kpi-val font-mono" style="color: #fbbf24; font-weight: 700;">
+              <td class="mini-kpi-label" style="color: var(--text-primary); font-weight: 800;">Tổng TG Máy (h)</td>
+              <td class="mini-kpi-val font-mono" style="color: var(--text-primary); font-weight: 800;">
                 ${grandStdHours > 0 ? grandStdHours.toFixed(1) + 'h' : '0.0h'}
               </td>
-              <td class="mini-kpi-val font-mono" style="color: #38bdf8; font-weight: 700;">
+              <td class="mini-kpi-val font-mono" style="color: var(--text-primary); font-weight: 800;">
                 ${grandActualHoursDay > 0 ? grandActualHoursDay.toFixed(1) + 'h' : '0.0h'}
               </td>
-              <td class="mini-kpi-val font-mono" style="color: #c084fc; font-weight: 700;">
+              <td class="mini-kpi-val font-mono" style="color: var(--text-primary); font-weight: 800;">
                 ${grandActualHoursNight > 0 ? grandActualHoursNight.toFixed(1) + 'h' : '0.0h'}
               </td>
-              <td class="mini-kpi-val font-mono" style="color: #94a3b8;">
+              <td class="mini-kpi-val font-mono" style="color: var(--text-primary); font-weight: 800;">
                 ${(grandPlanDay + grandPlanNight) > 0 ? (((grandPlanDay + grandPlanNight) / totalShortageQtyAbs) * 100).toFixed(1) + '%' : '0%'}
               </td>
             </tr>
             <tr>
-              <td class="mini-kpi-label">Hiệu Quả Bù</td>
-              <td class="mini-kpi-val font-mono" style="color: #94a3b8;">100%</td>
-              <td class="mini-kpi-val font-mono" style="color: #38bdf8; font-weight: 800;">
+              <td class="mini-kpi-label" style="color: var(--text-primary); font-weight: 800;">Hiệu Quả Bù</td>
+              <td class="mini-kpi-val font-mono" style="color: var(--text-primary); font-weight: 800;">100%</td>
+              <td class="mini-kpi-val font-mono" style="color: ${parseFloat(dayCoverPct) < 100 ? '#ff0000 !important;' : '#0000ff !important;'}; font-weight: 800;">
                 ${dayCoverPct}%
               </td>
-              <td class="mini-kpi-val font-mono" style="color: #c084fc; font-weight: 800;">
+              <td class="mini-kpi-val font-mono" style="color: ${parseFloat(nightCoverPct) < 100 ? '#ff0000 !important;' : '#0000ff !important;'}; font-weight: 800;">
                 ${nightCoverPct}%
               </td>
-              <td class="mini-kpi-val font-mono" style="${grandFinalShortage === 0 ? 'color: #34d399; font-weight: 800;' : 'color: #f87171; font-weight: 800;'}">
-                ${grandFinalShortage === 0 ? '✅ Hết thiếu' : '⚠️ Thiếu ' + remainShortagePct + '%'}
+              <td class="mini-kpi-val font-mono" style="${grandFinalShortage === 0 ? 'color: var(--color-plan-blue, #0000ff) !important; font-weight: 900;' : 'color: var(--color-alert-red, #ff0000) !important; font-weight: 900;'}">
+                ${grandFinalShortage === 0 ? '✅ Đủ kế hoạch' : '⚠️ Thiếu ' + remainShortagePct + '%'}
               </td>
             </tr>
           </tbody>
@@ -3079,15 +3080,17 @@
                 <td class="mini-kpi-label">Tổng TG có KH</td>
                 ${activeDayLines.map(lid => {
                   const h = dayLineHoursMap[lid] || 0;
-                  return `<td class="mini-kpi-val font-mono" style="${h > 0 ? 'color: #38bdf8; font-weight: 700;' : 'color: #64748b;'}">${h > 0 ? h.toFixed(2) : ''}</td>`;
+                  return `<td class="mini-kpi-val font-mono" style="${h > 0 ? 'color: var(--text-primary); font-weight: 800;' : 'color: var(--text-primary);'}">${h > 0 ? h.toFixed(2) : ''}</td>`;
                 }).join('')}
               </tr>
               <tr>
                 <td class="mini-kpi-label">Hiệu Suất</td>
                 ${activeDayLines.map(lid => {
                   const h = dayLineHoursMap[lid] || 0;
-                  const pct = h > 0 ? ((h / 10.83) * 100).toFixed(2) : null;
-                  return `<td class="mini-kpi-val font-mono" style="${pct ? 'color: #34d399; font-weight: 800;' : 'color: #64748b;'}">${pct ? pct + '%' : ''}</td>`;
+                  const pctNum = h > 0 ? (h / 10.83) * 100 : null;
+                  const pct = pctNum !== null ? pctNum.toFixed(2) : null;
+                  const effColor = pctNum !== null ? (pctNum < 100 ? '#ff0000 !important;' : '#0000ff !important;') : '#000000;';
+                  return `<td class="mini-kpi-val font-mono" style="${pct ? `color: ${effColor} font-weight: 800;` : 'color: var(--text-primary);'}">${pct ? pct + '%' : ''}</td>`;
                 }).join('')}
               </tr>
             </tbody>
@@ -3135,15 +3138,17 @@
                 <td class="mini-kpi-label">Tổng TG có KH</td>
                 ${activeNightLines.map(lid => {
                   const h = nightLineHoursMap[lid] || 0;
-                  return `<td class="mini-kpi-val font-mono" style="${h > 0 ? 'color: #c084fc; font-weight: 700;' : 'color: #64748b;'}">${h > 0 ? h.toFixed(2) : ''}</td>`;
+                  return `<td class="mini-kpi-val font-mono" style="${h > 0 ? 'color: var(--text-primary); font-weight: 800;' : 'color: var(--text-primary);'}">${h > 0 ? h.toFixed(2) : ''}</td>`;
                 }).join('')}
               </tr>
               <tr>
                 <td class="mini-kpi-label">Hiệu Suất</td>
                 ${activeNightLines.map(lid => {
                   const h = nightLineHoursMap[lid] || 0;
-                  const pct = h > 0 ? ((h / 10.58) * 100).toFixed(2) : null;
-                  return `<td class="mini-kpi-val font-mono" style="${pct ? 'color: #34d399; font-weight: 800;' : 'color: #64748b;'}">${pct ? pct + '%' : ''}</td>`;
+                  const pctNum = h > 0 ? (h / 10.58) * 100 : null;
+                  const pct = pctNum !== null ? pctNum.toFixed(2) : null;
+                  const effColor = pctNum !== null ? (pctNum < 100 ? '#ff0000 !important;' : '#0000ff !important;') : '#000000;';
+                  return `<td class="mini-kpi-val font-mono" style="${pct ? `color: ${effColor} font-weight: 800;` : 'color: var(--text-primary);'}">${pct ? pct + '%' : ''}</td>`;
                 }).join('')}
               </tr>
             </tbody>
@@ -3382,7 +3387,7 @@
       const parentRowKey = r.parentRowKey || '';
       const sttDisplay = r.sttDisplay || (idx + 1);
 
-      const gapColor = it.cumGapQty < 0 ? 'color: var(--danger);' : it.cumGapQty > 0 ? 'color: var(--success);' : 'color: var(--text-muted);';
+      const gapColor = it.cumGapQty < 0 ? 'color: var(--color-alert-red, #ff0000) !important;' : it.cumGapQty > 0 ? 'color: var(--color-plan-blue, #0000ff) !important;' : 'color: var(--text-primary);';
       const encodedRowKey = encodeSimRowKey(rowKey);
       const isAsmRowCumNeg = !!(planMeta && planMeta.isCumNegative && (it.cumGapQty || 0) < 0);
       const isAsmRowLocked = !!(asmGate && asmGate.isBlocked && !isAsmRowCumNeg);
@@ -3401,7 +3406,7 @@
 
       // Line dropdown for Day Shift
       const lineSelectDayHtml = `
-        <select class="sim-table-line-select${asmLockClass} font-mono" ${asmLockAttr} data-row-key="${encodedRowKey}" data-shift="day" onchange="handleTableLineDayChange(decodeURIComponent('${encodedRowKey}'), this.value)" style="padding: 0.15rem 0.25rem; font-size: 0.775rem; font-weight: 800; color: ${assignedDayLineId ? '#38bdf8' : '#64748b'}; background: rgba(15, 23, 42, 0.9); border: 1px solid ${assignedDayLineId ? 'rgba(56, 189, 248, 0.5)' : 'rgba(255, 255, 255, 0.15)'}; border-radius: 6px; outline: none; cursor: pointer; text-align: center; min-width: 58px;" title="${isAsmRowLocked ? '🔒' + asmLockTitleSuffix : 'Chọn Line SX Ca Ngày'}">
+        <select class="sim-table-line-select${asmLockClass} font-mono" ${asmLockAttr} data-row-key="${encodedRowKey}" data-shift="day" onchange="handleTableLineDayChange(decodeURIComponent('${encodedRowKey}'), this.value)" style="padding: 0.15rem 0.25rem; font-size: 0.82rem; font-weight: 800; color: var(--text-primary); background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 6px; outline: none; cursor: pointer; text-align: center; min-width: 58px;" title="${isAsmRowLocked ? '🔒' + asmLockTitleSuffix : 'Chọn Line SX Ca Ngày'}">
           <option value="" ${!assignedDayLineId ? 'selected' : ''}>--</option>
           ${uniqueLineOptions.map(lid => {
             return `<option value="${lid}" ${assignedDayLineId === lid ? 'selected' : ''}>${lid}</option>`;
@@ -3411,7 +3416,7 @@
 
       // Line dropdown for Night Shift
       const lineSelectNightHtml = `
-        <select class="sim-table-line-select${asmLockClass} font-mono" ${asmLockAttr} data-row-key="${encodedRowKey}" data-shift="night" onchange="handleTableLineNightChange(decodeURIComponent('${encodedRowKey}'), this.value)" style="padding: 0.15rem 0.25rem; font-size: 0.775rem; font-weight: 800; color: ${assignedNightLineId ? '#c084fc' : '#64748b'}; background: rgba(15, 23, 42, 0.9); border: 1px solid ${assignedNightLineId ? 'rgba(192, 132, 252, 0.5)' : 'rgba(255, 255, 255, 0.15)'}; border-radius: 6px; outline: none; cursor: pointer; text-align: center; min-width: 58px;" title="${isAsmRowLocked ? '🔒' + asmLockTitleSuffix : 'Chọn Line SX Ca Đêm'}">
+        <select class="sim-table-line-select${asmLockClass} font-mono" ${asmLockAttr} data-row-key="${encodedRowKey}" data-shift="night" onchange="handleTableLineNightChange(decodeURIComponent('${encodedRowKey}'), this.value)" style="padding: 0.15rem 0.25rem; font-size: 0.82rem; font-weight: 800; color: var(--text-primary); background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 6px; outline: none; cursor: pointer; text-align: center; min-width: 58px;" title="${isAsmRowLocked ? '🔒' + asmLockTitleSuffix : 'Chọn Line SX Ca Đêm'}">
           <option value="" ${!assignedNightLineId ? 'selected' : ''}>--</option>
           ${uniqueLineOptions.map(lid => {
             return `<option value="${lid}" ${assignedNightLineId === lid ? 'selected' : ''}>${lid}</option>`;
@@ -3427,121 +3432,125 @@
           <td class="sticky-sim-stt" style="color: ${isSubRow ? '#38bdf8' : 'var(--text-muted)'}; font-size: 0.8rem; text-align: center; font-weight: ${isSubRow ? '800' : 'normal'};">
             ${sttDisplay}
           </td>
-          <td class="sticky-sim-stage" style="text-align: center; white-space: nowrap; font-size: 0.8rem; font-weight: 700; color: #f8fafc;">
+          <td class="sticky-sim-stage" style="text-align: center; white-space: nowrap; font-size: 0.8rem; font-weight: 800; color: var(--text-primary);">
             ${isSubRow ? '<span style="opacity: 0.45; font-size: 0.85rem;" title="Chuyền phụ kế thừa công đoạn ASSEMBLY">↳</span>' : (it.stage || 'ASSEMBLY')}
           </td>
-          <td class="sticky-sim-group" style="white-space: nowrap; font-size: 0.825rem; font-weight: 700; color: #f8fafc;">
+          <td class="sticky-sim-group" style="white-space: nowrap; font-size: 0.825rem; font-weight: 800; color: var(--text-primary);">
             ${isSubRow ? '<span style="opacity: 0.45; font-size: 0.85rem;" title="Chuyền phụ kế thừa Group Model">↳</span>' : (it.model || '--')}
           </td>
           <td class="sticky-sim-model">
             ${isSubRow ? `
               <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.45rem; padding: 0.1rem 0;">
-                <span class="sim-subline-badge font-mono" style="font-size: 0.75rem; font-weight: 800; color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.45); border-radius: 5px; padding: 0.15rem 0.45rem; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.25rem;">
+                <span class="sim-subline-badge font-mono" style="font-size: 0.75rem; font-weight: 800; color: var(--text-primary); background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 5px; padding: 0.15rem 0.45rem; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.25rem;">
                   <span>↳ Chuyền ${subIdx + 1} (Song song)</span>
                 </span>
-                <button type="button" class="btn btn-xs btn-remove-subline" onclick="handleRemoveSubLine(decodeURIComponent('${encodeSimRowKey(parentRowKey)}'), ${subIdx})" style="padding: 0.12rem 0.45rem; font-size: 0.7rem; font-weight: 700; color: #f87171; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 4px; cursor: pointer; white-space: nowrap;" title="Hủy Chuyền song song này">
+                <button type="button" class="btn btn-xs btn-remove-subline" onclick="handleRemoveSubLine(decodeURIComponent('${encodeSimRowKey(parentRowKey)}'), ${subIdx})" style="padding: 0.12rem 0.45rem; font-size: 0.7rem; font-weight: 800; color: var(--color-alert-red, #ff0000); background: var(--bg-card); border: 1.5px solid #ef4444; border-radius: 4px; cursor: pointer; white-space: nowrap;" title="Hủy Chuyền song song này">
                   ❌ Hủy
                 </button>
               </div>
             ` : `
-              <div style="font-family: Arial, sans-serif; font-size: 0.825rem; font-weight: 600; color: #f1f5f9; word-break: break-word; line-height: 1.35;">
+              <div style="font-family: Arial, sans-serif; font-size: 0.825rem; font-weight: 800; color: var(--text-primary); word-break: break-word; line-height: 1.35;">
                 ${it.productName1C}
               </div>
               <div style="margin-top: 0.25rem;">
-                <button type="button" class="btn btn-xs btn-add-subline" onclick="handleAddSubLine(decodeURIComponent('${encodedRowKey}'))" style="padding: 0.12rem 0.45rem; font-size: 0.7rem; font-weight: 700; color: #38bdf8; background: rgba(56, 189, 248, 0.1); border: 1px dashed rgba(56, 189, 248, 0.55); border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.25rem;" title="Bố trí thêm Chuyền sản xuất song song cho Model này">
+                <button type="button" class="btn btn-xs btn-add-subline" onclick="handleAddSubLine(decodeURIComponent('${encodedRowKey}'))" style="padding: 0.12rem 0.45rem; font-size: 0.7rem; font-weight: 800; color: #0284c7; background: var(--bg-card); border: 1.5px dashed #0284c7; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.25rem;" title="Bố trí thêm Chuyền sản xuất song song cho Model này">
                   <span>➕ Thêm Chuyền</span>
                 </button>
               </div>
             `}
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 700; color: #60a5fa; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
-            ${isSubRow ? '<span style="color: var(--text-muted); opacity: 0.5;">--</span>' : (it.cumPlanQty || 0).toLocaleString('vi-VN')}
+          <td class="font-mono" style="text-align: right; font-weight: 700; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
+            ${isSubRow ? '<span style="color: var(--text-primary); opacity: 0.5;">--</span>' : (it.cumPlanQty || 0).toLocaleString('vi-VN')}
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 700; color: #34d399; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
-            ${isSubRow ? '<span style="color: var(--text-muted); opacity: 0.5;">--</span>' : (it.cumFactQty || 0).toLocaleString('vi-VN')}
+          <td class="font-mono" style="text-align: right; font-weight: 700; color: var(--text-primary) !important; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
+            ${isSubRow ? '<span style="color: var(--text-primary); opacity: 0.5;">--</span>' : (it.cumFactQty || 0).toLocaleString('vi-VN')}
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 800; font-size: 0.825rem; padding: 0.35rem 0.45rem; ${isSubRow ? (shortage > 0 ? 'color: var(--danger);' : 'color: var(--text-muted);') : gapColor}">
+          <td class="font-mono" style="text-align: right; font-weight: 800; font-size: 0.825rem; padding: 0.35rem 0.45rem; ${isSubRow ? (shortage > 0 ? 'color: var(--color-alert-red, #ff0000) !important;' : 'color: var(--text-primary);') : gapColor}">
             ${isSubRow 
               ? (shortage > 0 ? '-' + shortage.toLocaleString('vi-VN') : '0') 
               : (it.cumGapQty !== 0 ? (it.cumGapQty > 0 ? '+' : '') + it.cumGapQty.toLocaleString('vi-VN') : '0')
             }
           </td>
           ${renderPlanDateAndShiftCellsHtml(planMeta || resolvePlanDateAndShiftMeta(it, it.cumGapQty || 0, todayPlanRef, shiftFilter))}
-          <td class="font-mono" style="text-align: center; font-weight: 600; color: #cbd5e1; font-size: 0.825rem; padding: 0.35rem 0.35rem;">
+          <td class="font-mono" style="text-align: center; font-weight: 800; color: var(--text-primary); font-size: 0.825rem; padding: 0.35rem 0.35rem;">
             ${norm}
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 700; color: #fbbf24; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary); font-size: 0.825rem; padding: 0.35rem 0.45rem;">
             ${stdHours > 0 ? stdHours.toFixed(2) : (shortage > 0 ? '0.00' : '')}
           </td>
           <!-- CỤM CA NGÀY -->
-          <td style="text-align: center; font-size: 0.8rem; font-weight: 600; color: #cbd5e1; white-space: nowrap; padding: 0.35rem 0.25rem;">
+          <td style="text-align: center; font-size: 0.8rem; font-weight: 800; color: var(--text-primary); white-space: nowrap; padding: 0.35rem 0.25rem;">
             ${shiftDayText}
           </td>
           <td style="text-align: center; white-space: nowrap; padding: 0.25rem 0.25rem;">
             ${lineSelectDayHtml}
           </td>
           <td style="text-align: center; white-space: nowrap; padding: 0.25rem 0.25rem;">
-            <input type="text" class="sim-table-seq-input${asmLockClass} font-mono" ${asmLockAttr} value="${seqDay || ''}" placeholder="--" onchange="handleTableSeqDayChange(decodeURIComponent('${encodedRowKey}'), this.value)" style="width: 44px; padding: 0.15rem 0.2rem; font-size: 0.775rem; font-weight: 800; color: #38bdf8; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 6px; outline: none; text-align: center;" title="Nhập thứ tự sản xuất trên Line ca Ngày${asmLockTitleSuffix}">
+            <input type="text" class="sim-table-seq-input${asmLockClass} font-mono" ${asmLockAttr} value="${seqDay || ''}" placeholder="--" onchange="handleTableSeqDayChange(decodeURIComponent('${encodedRowKey}'), this.value)" style="width: 44px; padding: 0.15rem 0.2rem; font-size: 0.82rem; font-weight: 800; color: var(--text-primary); background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 6px; outline: none; text-align: center;" title="Nhập thứ tự sản xuất trên Line ca Ngày${asmLockTitleSuffix}">
           </td>
           <td class="font-mono" style="text-align: center; white-space: nowrap; padding: 0.25rem 0.25rem;">
             <div style="display: inline-flex; align-items: center; justify-content: center; gap: 2px;">
-              <input type="text" class="sim-table-pf-input${asmLockClass} font-mono" ${asmLockAttr} value="${perfPctDay !== null && perfPctDay !== undefined && (assignedDayLineId || (window.AppStore.simManualPfDay && window.AppStore.simManualPfDay[rowKey])) ? perfPctDay : ''}" placeholder="${assignedDayLineId ? '100' : '--'}" onchange="handleTablePfDayChange(decodeURIComponent('${encodedRowKey}'), this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 44px; padding: 0.15rem 0.15rem; font-size: 0.775rem; font-weight: 800; color: #38bdf8; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 6px; outline: none; text-align: center;" title="Nhập PF% Ca Ngày (mặc định 100%)${asmLockTitleSuffix}">%
+              <input type="text" class="sim-table-pf-input${asmLockClass} font-mono" ${asmLockAttr} value="${perfPctDay !== null && perfPctDay !== undefined && (assignedDayLineId || (window.AppStore.simManualPfDay && window.AppStore.simManualPfDay[rowKey])) ? perfPctDay : ''}" placeholder="${assignedDayLineId ? '100' : '--'}" onchange="handleTablePfDayChange(decodeURIComponent('${encodedRowKey}'), this.value)" oninput="const v = parseFloat(this.value); this.style.color = (!isNaN(v) && v > 0 && v < 100) ? '#ff0000' : '#000000';" onkeydown="if(event.key==='Enter') this.blur();" style="width: 44px; padding: 0.15rem 0.15rem; font-size: 0.82rem; font-weight: 800; color: ${(perfPctDay !== null && perfPctDay !== undefined && Number(perfPctDay) < 100 && Number(perfPctDay) > 0) ? '#ff0000 !important;' : '#000000;'}; background: var(--bg-card); border: 1.5px solid ${(perfPctDay !== null && perfPctDay !== undefined && Number(perfPctDay) < 100 && Number(perfPctDay) > 0) ? '#ef4444' : '#cbd5e1'}; border-radius: 6px; outline: none; text-align: center;" title="Nhập PF% Ca Ngày (mặc định 100%)${asmLockTitleSuffix}">%
             </div>
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 700; color: #38bdf8; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary); font-size: 0.85rem; padding: 0.35rem 0.45rem;">
             ${actualHoursDay !== null && actualHoursDay > 0 ? actualHoursDay.toFixed(3) : ''}
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 700; color: #fbbf24; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary); font-size: 0.85rem; padding: 0.35rem 0.45rem;">
             ${dayAvailHours !== null && dayAvailHours > 0 ? dayAvailHours.toFixed(2) : (assignedDayLineId && shortage > 0 ? '0.00' : '')}
           </td>
           <td class="font-mono" style="text-align: right; white-space: nowrap; padding: 0.25rem 0.25rem;">
-            <input type="text" class="sim-table-plan-input${asmLockClass} font-mono" ${asmLockAttr} value="${planDay > 0 ? planDay.toLocaleString('vi-VN') : (shortage > 0 && assignedDayLineId ? '0' : '')}" placeholder="0" onchange="handleTablePlanDayChange(decodeURIComponent('${encodedRowKey}'), this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 68px; padding: 0.15rem 0.3rem; font-size: 0.8rem; font-weight: 800; color: #38bdf8; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 6px; outline: none; text-align: right;" title="Nhập Plan sản xuất Ca Ngày${asmLockTitleSuffix}">
+            <input type="text" class="sim-table-plan-input${asmLockClass} font-mono" ${asmLockAttr} value="${planDay > 0 ? planDay.toLocaleString('vi-VN') : (shortage > 0 && assignedDayLineId ? '0' : '')}" placeholder="0" onchange="handleTablePlanDayChange(decodeURIComponent('${encodedRowKey}'), this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 68px; padding: 0.15rem 0.3rem; font-size: 0.85rem; font-weight: 900; color: var(--color-plan-blue, #0000ff) !important; background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 6px; outline: none; text-align: right;" title="Nhập Plan sản xuất Ca Ngày${asmLockTitleSuffix}">
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 800; color: #34d399; font-size: 0.825rem; padding: 0.35rem 0.45rem;" title="${factDay !== null && planDay > 0 ? `Fact Thực Tế Ca Ngày (Từ Sheet Data Mass) - Chênh lệch: ${(factDay - planDay) > 0 ? '+' : ''}${(factDay - planDay).toLocaleString('vi-VN')}` : 'Fact Thực Tế Ca Ngày (Cố định từ Sheet Data Mass)'}">
-            ${isSubRow ? '<span style="color: var(--text-muted); opacity: 0.45;">--</span>' : ((factDay !== null && !isNaN(factDay)) ? (factDay > 0 ? factDay.toLocaleString('vi-VN') : '0') : '<span style="color: var(--text-muted); opacity: 0.45;">--</span>')}
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary) !important; font-size: 0.85rem; padding: 0.35rem 0.45rem;" title="${factDay !== null && planDay > 0 ? `Fact Thực Tế Ca Ngày (Từ Sheet Data Mass) - Chênh lệch: ${(factDay - planDay) > 0 ? '+' : ''}${(factDay - planDay).toLocaleString('vi-VN')}` : 'Fact Thực Tế Ca Ngày (Cố định từ Sheet Data Mass)'}">
+            ${isSubRow ? '<span style="color: var(--text-primary); opacity: 0.45;">--</span>' : ((factDay !== null && !isNaN(factDay)) ? (factDay > 0 ? factDay.toLocaleString('vi-VN') : '0') : '<span style="color: var(--text-primary); opacity: 0.45;">--</span>')}
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 800; color: #f87171; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
+          <td class="font-mono" style="text-align: right; font-weight: 900; color: var(--color-alert-red, #ff0000) !important; font-size: 0.85rem; padding: 0.35rem 0.45rem;">
             ${nightShortage > 0 ? '-' + nightShortage.toLocaleString('vi-VN') : ''}
           </td>
           <!-- CỤM CA ĐÊM -->
-          <td style="text-align: center; font-size: 0.8rem; font-weight: 600; color: #c084fc; white-space: nowrap; padding: 0.35rem 0.25rem;">
+          <td style="text-align: center; font-size: 0.82rem; font-weight: 800; color: var(--text-primary); white-space: nowrap; padding: 0.35rem 0.25rem;">
             ${shiftNightText}
           </td>
           <td style="text-align: center; white-space: nowrap; padding: 0.25rem 0.25rem;">
             ${lineSelectNightHtml}
           </td>
           <td style="text-align: center; white-space: nowrap; padding: 0.25rem 0.25rem;">
-            <input type="text" class="sim-table-seq-input${asmLockClass} font-mono" ${asmLockAttr} value="${seqNight || ''}" placeholder="--" onchange="handleTableSeqNightChange(decodeURIComponent('${encodedRowKey}'), this.value)" style="width: 44px; padding: 0.15rem 0.2rem; font-size: 0.775rem; font-weight: 800; color: #c084fc; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(192, 132, 252, 0.35); border-radius: 6px; outline: none; text-align: center;" title="Nhập thứ tự sản xuất trên Line ca Đêm${asmLockTitleSuffix}">
+            <input type="text" class="sim-table-seq-input${asmLockClass} font-mono" ${asmLockAttr} value="${seqNight || ''}" placeholder="--" onchange="handleTableSeqNightChange(decodeURIComponent('${encodedRowKey}'), this.value)" style="width: 44px; padding: 0.15rem 0.2rem; font-size: 0.82rem; font-weight: 800; color: var(--text-primary); background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 6px; outline: none; text-align: center;" title="Nhập thứ tự sản xuất trên Line ca Đêm${asmLockTitleSuffix}">
           </td>
           <td class="font-mono" style="text-align: center; white-space: nowrap; padding: 0.25rem 0.25rem;">
             <div style="display: inline-flex; align-items: center; justify-content: center; gap: 2px;">
-              <input type="text" class="sim-table-pf-input${asmLockClass} font-mono" ${asmLockAttr} value="${perfPctNight !== null && perfPctNight !== undefined && (assignedNightLineId || (window.AppStore.simManualPfNight && window.AppStore.simManualPfNight[rowKey])) ? perfPctNight : ''}" placeholder="${assignedNightLineId ? '100' : '--'}" onchange="handleTablePfNightChange(decodeURIComponent('${encodedRowKey}'), this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 44px; padding: 0.15rem 0.15rem; font-size: 0.775rem; font-weight: 800; color: #c084fc; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(192, 132, 252, 0.35); border-radius: 6px; outline: none; text-align: center;" title="Nhập PF% Ca Đêm (mặc định 100%)${asmLockTitleSuffix}">%
+              <input type="text" class="sim-table-pf-input${asmLockClass} font-mono" ${asmLockAttr} value="${perfPctNight !== null && perfPctNight !== undefined && (assignedNightLineId || (window.AppStore.simManualPfNight && window.AppStore.simManualPfNight[rowKey])) ? perfPctNight : ''}" placeholder="${assignedNightLineId ? '100' : '--'}" onchange="handleTablePfNightChange(decodeURIComponent('${encodedRowKey}'), this.value)" oninput="const v = parseFloat(this.value); this.style.color = (!isNaN(v) && v > 0 && v < 100) ? '#ff0000' : '#000000';" onkeydown="if(event.key==='Enter') this.blur();" style="width: 44px; padding: 0.15rem 0.15rem; font-size: 0.82rem; font-weight: 800; color: ${(perfPctNight !== null && perfPctNight !== undefined && Number(perfPctNight) < 100 && Number(perfPctNight) > 0) ? '#ff0000 !important;' : '#000000;'}; background: var(--bg-card); border: 1.5px solid ${(perfPctNight !== null && perfPctNight !== undefined && Number(perfPctNight) < 100 && Number(perfPctNight) > 0) ? '#ef4444' : '#cbd5e1'}; border-radius: 6px; outline: none; text-align: center;" title="Nhập PF% Ca Đêm (mặc định 100%)${asmLockTitleSuffix}">%
             </div>
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 700; color: #c084fc; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary); font-size: 0.85rem; padding: 0.35rem 0.45rem;">
             ${actualHoursNight !== null && actualHoursNight > 0 ? actualHoursNight.toFixed(3) : ''}
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 700; color: #fbbf24; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary); font-size: 0.85rem; padding: 0.35rem 0.45rem;">
             ${nightAvailHours !== null && nightAvailHours > 0 ? nightAvailHours.toFixed(2) : (assignedNightLineId && nightShortage > 0 ? '0.00' : '')}
           </td>
           <td class="font-mono" style="text-align: right; white-space: nowrap; padding: 0.25rem 0.25rem;">
-            <input type="text" class="sim-table-plan-input${asmLockClass} font-mono" ${asmLockAttr} value="${planNight > 0 ? planNight.toLocaleString('vi-VN') : (nightShortage > 0 && assignedNightLineId ? '0' : '')}" placeholder="0" onchange="handleTablePlanNightChange(decodeURIComponent('${encodedRowKey}'), this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 68px; padding: 0.15rem 0.3rem; font-size: 0.8rem; font-weight: 800; color: #c084fc; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(192, 132, 252, 0.35); border-radius: 6px; outline: none; text-align: right;" title="Nhập Plan sản xuất Ca Đêm${asmLockTitleSuffix}">
+            <input type="text" class="sim-table-plan-input${asmLockClass} font-mono" ${asmLockAttr} value="${planNight > 0 ? planNight.toLocaleString('vi-VN') : (nightShortage > 0 && assignedNightLineId ? '0' : '')}" placeholder="0" onchange="handleTablePlanNightChange(decodeURIComponent('${encodedRowKey}'), this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 68px; padding: 0.15rem 0.3rem; font-size: 0.85rem; font-weight: 900; color: var(--color-plan-blue, #0000ff) !important; background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 6px; outline: none; text-align: right;" title="Nhập Plan sản xuất Ca Đêm${asmLockTitleSuffix}">
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 800; color: #34d399; font-size: 0.825rem; padding: 0.35rem 0.45rem;" title="${factNight !== null && planNight > 0 ? `Fact Thực Tế Ca Đêm (Từ Sheet Data Mass) - Chênh lệch: ${(factNight - planNight) > 0 ? '+' : ''}${(factNight - planNight).toLocaleString('vi-VN')}` : 'Fact Thực Tế Ca Đêm (Cố định từ Sheet Data Mass)'}">
-            ${isSubRow ? '<span style="color: var(--text-muted); opacity: 0.45;">--</span>' : ((factNight !== null && !isNaN(factNight)) ? (factNight > 0 ? factNight.toLocaleString('vi-VN') : '0') : '<span style="color: var(--text-muted); opacity: 0.45;">--</span>')}
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary) !important; font-size: 0.85rem; padding: 0.35rem 0.45rem;" title="${factNight !== null && planNight > 0 ? `Fact Thực Tế Ca Đêm (Từ Sheet Data Mass) - Chênh lệch: ${(factNight - planNight) > 0 ? '+' : ''}${(factNight - planNight).toLocaleString('vi-VN')}` : 'Fact Thực Tế Ca Đêm (Cố định từ Sheet Data Mass)'}">
+            ${isSubRow ? '<span style="color: var(--text-primary); opacity: 0.45;">--</span>' : ((factNight !== null && !isNaN(factNight)) ? (factNight > 0 ? factNight.toLocaleString('vi-VN') : '0') : '<span style="color: var(--text-primary); opacity: 0.45;">--</span>')}
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 800; color: #f87171; font-size: 0.825rem; padding: 0.35rem 0.45rem;">
+          <td class="font-mono" style="text-align: right; font-weight: 900; color: var(--color-alert-red, #ff0000) !important; font-size: 0.85rem; padding: 0.35rem 0.45rem;">
             ${finalShortage > 0 ? '-' + finalShortage.toLocaleString('vi-VN') : ''}
           </td>
           <td style="text-align: left; padding: 0.2rem 0.35rem; min-width: 140px;">
-            <input type="text" class="sim-table-note-input" data-row-key="${encodedRowKey}" value="${(window.AppStore.simManualNotes && window.AppStore.simManualNotes[rowKey]) ? String(window.AppStore.simManualNotes[rowKey]).replace(/"/g, '&quot;') : ''}" placeholder="${isAsmRowCumNeg ? 'Nhập lý do / ghi chú...' : 'Nhập ghi chú...'}" onchange="handleTableNoteChange(decodeURIComponent('${encodedRowKey}'), this.value)" onkeydown="if(event.key==='Enter') this.blur();" title="Ghi chú cho Model ${(it.productName1C || it.model || '').replace(/"/g, '&quot;').replace(/[\r\n]+/g, ' ')}">
+            ${(() => {
+              const asmNoteVal = (window.AppStore.simManualNotes && window.AppStore.simManualNotes[rowKey]) ? String(window.AppStore.simManualNotes[rowKey]).trim() : '';
+              const hasAsmNote = asmNoteVal.length > 0;
+              return `<input type="text" class="sim-table-note-input" data-row-key="${encodedRowKey}" value="${asmNoteVal.replace(/"/g, '&quot;')}" placeholder="${isAsmRowCumNeg ? 'Nhập lý do / ghi chú...' : 'Nhập ghi chú...'}" onchange="handleTableNoteChange(decodeURIComponent('${encodedRowKey}'), this.value)" oninput="this.style.color = this.value.trim().length > 0 ? '#ff0000' : '#000000'; this.style.borderColor = this.value.trim().length > 0 ? '#ef4444' : '#cbd5e1';" onkeydown="if(event.key==='Enter') this.blur();" style="background: var(--bg-card); color: ${hasAsmNote ? '#ff0000 !important;' : '#000000;'}; border: 1.5px solid ${hasAsmNote ? '#ef4444' : '#cbd5e1'}; border-radius: 6px; font-weight: 800; font-size: 0.82rem; padding: 0.2rem 0.4rem; width: 100%;" title="Ghi chú cho Model ${(it.productName1C || it.model || '').replace(/"/g, '&quot;').replace(/[\r\n]+/g, ' ')}">`;
+            })()}
           </td>
           ${renderAccumulatedNegativeOriginCellHtml(cumNegOriginMeta)}
           <td style="text-align: center; white-space: nowrap; padding: 0.25rem 0.35rem;">
             <button type="button"
               class="btn btn-xs"
               onclick="handleCheckModelWip('${encodeSimRowKey(it.stage || 'ASSEMBLY')}', '${encodeSimRowKey(it.model || '')}', '${encodeSimRowKey(it.productName1C || it.model || '')}', ${Number(it.cumGapQty || 0)}, '${queryFromDate}', '${queryToDate}')"
-              style="padding: 0.2rem 0.55rem; font-size: 0.725rem; font-weight: 800; color: #34d399; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.25rem;"
+              style="padding: 0.2rem 0.55rem; font-size: 0.8rem; font-weight: 800; color: var(--text-primary); background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.25rem;"
               title="Mở WIP Control và lọc đúng Model ${(it.productName1C || it.model || '').replace(/"/g, '&quot;').replace(/[\r\n]+/g, ' ')} (${it.stage || 'ASSEMBLY'})">
               <span>📦 Check WIP</span>
             </button>
@@ -3834,13 +3843,13 @@
         </div>
 
         <!-- 4. SIMULATOR FILTER TOOLBAR (Tối ưu sát lên trên) -->
-        <div class="card" style="padding: 0.35rem 0.75rem; margin-bottom: 0.35rem; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-glass);">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; flex: 1;">
+        <div class="card" style="padding: 0.4rem 0.85rem; margin-bottom: 0.45rem; background: var(--bg-card-header, #fff3cc); border: 1.5px solid var(--border-glass); border-radius: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.65rem;">
+            <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap; flex: 1;">
               <!-- Stage selector -->
-              <div style="display: flex; align-items: center; gap: 0.3rem;">
-                <span style="font-size: 0.75rem; font-weight: 700; color: #a78bfa;">🏭 Công Đoạn:</span>
-                <select class="select-filter font-mono" style="font-size: 0.775rem; min-width: 130px; padding: 0.2rem 0.45rem;" onchange="handleSimulatorStageFilterChange(this.value)">
+              <div style="display: flex; align-items: center; gap: 0.35rem;">
+                <span style="font-size: 0.82rem; font-weight: 800; color: var(--text-primary);">🏭 Công Đoạn:</span>
+                <select class="select-filter font-mono" style="font-size: 0.82rem; min-width: 135px; padding: 0.2rem 0.45rem; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; font-weight: 700;" onchange="handleSimulatorStageFilterChange(this.value)">
                   <option value="ASSEMBLY" ${stageFilter === 'ASSEMBLY' ? 'selected' : ''}>ASSEMBLY</option>
                   <option value="HARD TEST" ${stageFilter === 'HARD TEST' ? 'selected' : ''}>HARD TEST</option>
                   <option value="LONG TEST" ${stageFilter === 'LONG TEST' ? 'selected' : ''}>LONG TEST</option>
@@ -3855,32 +3864,32 @@
               </div>
 
               <!-- Plan status selector -->
-              <div style="display: flex; align-items: center; gap: 0.3rem;">
-                <span style="font-size: 0.75rem; font-weight: 700; color: #f87171;">📊 Kế Hoạch:</span>
-                <select class="select-filter font-mono" style="font-size: 0.775rem; min-width: 165px; padding: 0.2rem 0.45rem;" onchange="handleSimulatorPlanStatusFilterChange(this.value)">
+              <div style="display: flex; align-items: center; gap: 0.35rem;">
+                <span style="font-size: 0.82rem; font-weight: 800; color: var(--text-primary);">📊 Kế Hoạch:</span>
+                <select class="select-filter font-mono" style="font-size: 0.82rem; min-width: 175px; padding: 0.2rem 0.45rem; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; font-weight: 700;" onchange="handleSimulatorPlanStatusFilterChange(this.value)">
                   <option value="GAP_NEGATIVE" ${planStatusFilter === 'GAP_NEGATIVE' ? 'selected' : ''}>Đang Thiếu Hụt (Gap &lt; 0)</option>
                   <option value="ALL" ${planStatusFilter === 'ALL' ? 'selected' : ''}>Tất Cả Model</option>
                 </select>
               </div>
 
               <!-- Group Model selector -->
-              <div style="display: flex; align-items: center; gap: 0.3rem;">
-                <span style="font-size: 0.75rem; font-weight: 700; color: #60a5fa;">🏷️ Group Model:</span>
-                <select class="select-filter font-mono" style="font-size: 0.775rem; min-width: 160px; padding: 0.2rem 0.45rem;" onchange="handleSimulatorGroupFilterChange(this.value)">
+              <div style="display: flex; align-items: center; gap: 0.35rem;">
+                <span style="font-size: 0.82rem; font-weight: 800; color: var(--text-primary);">🏷️ Group Model:</span>
+                <select class="select-filter font-mono" style="font-size: 0.82rem; min-width: 165px; padding: 0.2rem 0.45rem; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; font-weight: 700;" onchange="handleSimulatorGroupFilterChange(this.value)">
                   <option value="ALL" ${groupFilter === 'ALL' ? 'selected' : ''}>Tất cả Group Model (${allGroups.length})</option>
                   ${allGroups.map(g => `<option value="${g.group}" ${groupFilter === g.group ? 'selected' : ''}>${g.group}</option>`).join('')}
                 </select>
               </div>
 
               <!-- Quick Search Input -->
-              <div class="search-box" style="min-width: 170px; flex: 1;">
+              <div class="search-box" style="min-width: 180px; flex: 1;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input id="simTableSearchInput" type="text" class="search-input" placeholder="Tìm theo Model hoặc Mã 1C..." value="${searchVal}" oninput="handleSimulatorSearch(this.value)" style="padding: 0.2rem 0.5rem 0.2rem 1.8rem; font-size: 0.775rem;">
+                <input id="simTableSearchInput" type="text" class="search-input" placeholder="Tìm theo Model hoặc Mã 1C..." value="${searchVal}" oninput="handleSimulatorSearch(this.value)" style="padding: 0.2rem 0.5rem 0.2rem 1.8rem; font-size: 0.82rem; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px;">
               </div>
             </div>
 
             <div style="display: flex; align-items: center; gap: 0.45rem;">
-              <button type="button" class="btn btn-secondary" onclick="handleResetSimulatorOptimalLines()" style="padding: 0.25rem 0.65rem; font-size: 0.725rem; display: inline-flex; align-items: center; gap: 0.3rem; color: #34d399; border-color: rgba(16, 185, 129, 0.4);" title="Khôi phục lại toàn bộ Line đề xuất tối ưu nhất của hệ thống">
+              <button type="button" class="btn btn-secondary" onclick="handleResetSimulatorOptimalLines()" style="padding: 0.25rem 0.65rem; font-size: 0.82rem; font-weight: 800; display: inline-flex; align-items: center; gap: 0.3rem; color: var(--text-primary); border: 1.5px solid var(--border-glass); background: var(--bg-card); border-radius: 6px;" title="Khôi phục lại toàn bộ Line đề xuất tối ưu nhất của hệ thống">
                 <span>↺ Đặt lại tất cả Line tối ưu</span>
               </button>
             </div>
@@ -3889,24 +3898,24 @@
 
         <!-- 5. MAIN SCHEDULE & SIMULATION TABLE (THEO FORMAT 13 CỘT CHUẨN BẢNG 2) -->
         <div class="sim-table-wrap">
-          <div class="sim-table-header" style="padding: 0.4rem 0.75rem;">
+          <div class="sim-table-header" style="padding: 0.5rem 0.85rem; background: var(--bg-card-header, #fff3cc); border-bottom: 1.5px solid #cbd5e1;">
             <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-              <span style="font-weight: 800; color: #38bdf8; font-size: 0.85rem;">
+              <span style="font-weight: 900; color: var(--text-primary); font-size: 0.9rem;">
                 📋 TIẾN ĐỘ SẢN LƯỢNG &amp; ĐỀ XUẤT LINE TẢI CHUYỀN (THEO BẢNG 2)
               </span>
               ${renderSimPlanActionButtonsHtml(plannerName, simHistoryCount)}
             </div>
             <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
-              <button type="button" class="sim-btn-export-sheet" onclick="handleExportCapacityScheduleGoogleSheet()" title="Xuất file CSV chuẩn UTF-8 tương thích Google Sheets &amp; Excel theo định dạng 29 cột kèm Date Plan, Shift Plan, Ghi Chú &amp; Âm Từ Ngày / Ca">
+              <button type="button" class="sim-btn-export-sheet" onclick="handleExportCapacityScheduleGoogleSheet()" title="Xuất file CSV chuẩn UTF-8 tương thích Google Sheets &amp; Excel theo định dạng 29 cột kèm Date Plan, Shift Plan, Ghi Chú &amp; Âm Từ Ngày / Ca" style="background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; padding: 0.25rem 0.6rem; font-size: 0.82rem; font-weight: 800;">
                 <span>📥 Xuất Google Sheets (CSV)</span>
               </button>
-              <button type="button" class="sim-btn-copy-sheet" onclick="handleCopyCapacityScheduleClipboard()" title="Sao chép toàn bộ bảng điều độ 29 cột kèm Date Plan, Shift Plan, Ghi Chú &amp; Âm Từ Ngày / Ca để dán ngay (Ctrl+V) vào Google Sheets">
+              <button type="button" class="sim-btn-copy-sheet" onclick="handleCopyCapacityScheduleClipboard()" title="Sao chép toàn bộ bảng điều độ 29 cột kèm Date Plan, Shift Plan, Ghi Chú &amp; Âm Từ Ngày / Ca để dán ngay (Ctrl+V) vào Google Sheets" style="background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; padding: 0.25rem 0.6rem; font-size: 0.82rem; font-weight: 800;">
                 <span>📋 Copy Cho Google Sheet</span>
               </button>
-              <button type="button" class="btn btn-secondary" onclick="handleOpenLineSequenceModal()" style="padding: 0.25rem 0.55rem; font-size: 0.725rem; color: #fbbf24; border-color: rgba(251, 191, 36, 0.4); display: inline-flex; align-items: center; gap: 0.3rem;" title="Xem bảng phân bổ thứ tự sản xuất chi tiết gom theo từng Chuyền">
+              <button type="button" class="btn btn-secondary" onclick="handleOpenLineSequenceModal()" style="padding: 0.25rem 0.55rem; font-size: 0.82rem; font-weight: 800; color: var(--text-primary); border: 1.5px solid var(--border-glass); background: var(--bg-card); border-radius: 6px; display: inline-flex; align-items: center; gap: 0.3rem;" title="Xem bảng phân bổ thứ tự sản xuất chi tiết gom theo từng Chuyền">
                 <span>📑 Thứ Tự Theo Chuyền</span>
               </button>
-              <span style="font-size: 0.725rem; color: var(--text-muted); margin-left: 0.2rem;">
+              <span style="font-size: 0.82rem; color: var(--text-primary); font-weight: 800; margin-left: 0.2rem;">
                 Đang hiển thị <strong>${scheduleItems.length}</strong> Model
               </span>
             </div>
@@ -3923,25 +3932,25 @@
                 <tr class="sim-sticky-totals-row">
                   <th class="sticky-sim-stt"></th>
                   <th class="sticky-sim-stage"></th>
-                  <th class="sticky-sim-group" style="text-align: center; color: #fbbf24; font-size: 0.725rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0.35rem 0.25rem;" title="Người lập Plan: ${plannerName}">
+                  <th class="sticky-sim-group" style="text-align: center; color: var(--text-primary); font-size: 0.725rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0.35rem 0.25rem;" title="Người lập Plan: ${plannerName}">
                     👤 ${plannerName}
                   </th>
-                  <th class="sticky-sim-model" style="text-align: right; color: #f8fafc; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.65rem;">
+                  <th class="sticky-sim-model" style="text-align: right; color: var(--text-primary); font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.65rem;">
                     Tổng Cộng :
                   </th>
-                  <th class="font-mono" style="text-align: right; color: #60a5fa; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                  <th class="font-mono" style="text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.85rem; font-weight: 900; padding: 0.35rem 0.45rem;">
                     ${grandPlan.toLocaleString('vi-VN')}
                   </th>
-                  <th class="font-mono" style="text-align: right; color: #34d399; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                  <th class="font-mono" style="text-align: right; color: var(--text-primary) !important; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
                     ${grandFact.toLocaleString('vi-VN')}
                   </th>
-                  <th class="font-mono" style="text-align: right; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem; ${grandGap < 0 ? 'color: var(--danger);' : grandGap > 0 ? 'color: var(--success);' : 'color: var(--text-muted);'}">
+                  <th class="font-mono" style="text-align: right; font-size: 0.85rem; font-weight: 900; padding: 0.35rem 0.45rem; ${grandGap < 0 ? 'color: var(--color-alert-red, #ff0000) !important;' : grandGap > 0 ? 'color: var(--color-plan-blue, #0000ff) !important;' : 'color: var(--text-primary) !important;'}">
                     ${grandGap !== 0 ? (grandGap > 0 ? '+' : '') + grandGap.toLocaleString('vi-VN') : '0'}
                   </th>
                   <th style="padding: 0.35rem 0.35rem;"></th>
                   <th style="padding: 0.35rem 0.35rem;"></th>
                   <th style="padding: 0.35rem 0.35rem;"></th>
-                  <th class="font-mono" style="text-align: right; color: #fbbf24; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                  <th class="font-mono" style="text-align: right; color: var(--text-primary); font-size: 0.88rem; font-weight: 800; padding: 0.35rem 0.45rem;">
                     ${grandStdHours.toFixed(1)}
                   </th>
                   <!-- Cụm Ca Ngày -->
@@ -3949,19 +3958,19 @@
                   <th style="padding: 0.35rem 0.25rem;"></th>
                   <th style="padding: 0.35rem 0.25rem;"></th>
                   <th style="padding: 0.35rem 0.25rem;"></th>
-                  <th class="font-mono" style="text-align: right; color: #38bdf8; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                  <th class="font-mono" style="text-align: right; color: var(--text-primary); font-size: 0.88rem; font-weight: 800; padding: 0.35rem 0.45rem;">
                     ${grandActualHoursDay > 0 ? grandActualHoursDay.toFixed(1) : ''}
                   </th>
-                  <th class="font-mono" style="text-align: right; color: #fbbf24; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                  <th class="font-mono" style="text-align: right; color: var(--text-primary); font-size: 0.88rem; font-weight: 800; padding: 0.35rem 0.45rem;">
                     ${grandDayAvailHours > 0 ? grandDayAvailHours.toFixed(2) : ''}
                   </th>
-                  <th class="font-mono" style="text-align: right; color: #38bdf8; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                  <th class="font-mono" style="text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.88rem; font-weight: 900; padding: 0.35rem 0.45rem;">
                     ${grandPlanDay > 0 ? grandPlanDay.toLocaleString('vi-VN') : ''}
                   </th>
-                  <th class="font-mono" style="text-align: right; color: #34d399; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;" title="Tổng Fact Thực Tế Ca Ngày">
+                  <th class="font-mono" style="text-align: right; color: var(--text-primary) !important; font-size: 0.88rem; font-weight: 800; padding: 0.35rem 0.45rem;" title="Tổng Fact Thực Tế Ca Ngày">
                     ${grandFactDay > 0 ? grandFactDay.toLocaleString('vi-VN') : (grandPlanDay > 0 ? '0' : '')}
                   </th>
-                  <th class="font-mono" style="text-align: right; color: #f87171; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                  <th class="font-mono" style="text-align: right; color: var(--color-alert-red, #ff0000) !important; font-size: 0.88rem; font-weight: 900; padding: 0.35rem 0.45rem;">
                     ${grandNightShortage > 0 ? '-' + grandNightShortage.toLocaleString('vi-VN') : ''}
                   </th>
                   <!-- Cụm Ca Đêm -->
@@ -3969,19 +3978,19 @@
                   <th style="padding: 0.35rem 0.25rem;"></th>
                   <th style="padding: 0.35rem 0.25rem;"></th>
                   <th style="padding: 0.35rem 0.25rem;"></th>
-                  <th class="font-mono" style="text-align: right; color: #c084fc; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                  <th class="font-mono" style="text-align: right; color: var(--text-primary); font-size: 0.88rem; font-weight: 800; padding: 0.35rem 0.45rem;">
                     ${grandActualHoursNight > 0 ? grandActualHoursNight.toFixed(1) : ''}
                   </th>
-                  <th class="font-mono" style="text-align: right; color: #fbbf24; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                  <th class="font-mono" style="text-align: right; color: var(--text-primary); font-size: 0.88rem; font-weight: 800; padding: 0.35rem 0.45rem;">
                     ${grandNightAvailHours > 0 ? grandNightAvailHours.toFixed(2) : ''}
                   </th>
-                  <th class="font-mono" style="text-align: right; color: #c084fc; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                  <th class="font-mono" style="text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.88rem; font-weight: 900; padding: 0.35rem 0.45rem;">
                     ${grandPlanNight > 0 ? grandPlanNight.toLocaleString('vi-VN') : ''}
                   </th>
-                  <th class="font-mono" style="text-align: right; color: #34d399; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;" title="Tổng Fact Thực Tế Ca Đêm">
+                  <th class="font-mono" style="text-align: right; color: var(--text-primary) !important; font-size: 0.88rem; font-weight: 800; padding: 0.35rem 0.45rem;" title="Tổng Fact Thực Tế Ca Đêm">
                     ${grandFactNight > 0 ? grandFactNight.toLocaleString('vi-VN') : (grandPlanNight > 0 ? '0' : '')}
                   </th>
-                  <th class="font-mono" style="text-align: right; color: #f87171; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                  <th class="font-mono" style="text-align: right; color: var(--color-alert-red, #ff0000) !important; font-size: 0.88rem; font-weight: 900; padding: 0.35rem 0.45rem;">
                     ${grandFinalShortage > 0 ? '-' + grandFinalShortage.toLocaleString('vi-VN') : ''}
                   </th>
                   <th style="padding: 0.35rem 0.25rem;"></th>
@@ -3995,33 +4004,33 @@
                   <th class="sticky-sim-stage" style="text-align: center; width: 95px;">Công Đoạn</th>
                   <th class="sticky-sim-group" style="text-align: left; width: 140px;">Group Model</th>
                   <th class="sticky-sim-model" style="text-align: left; min-width: 300px;">Mã Model (1C)</th>
-                  <th style="text-align: right; min-width: 65px; color: #60a5fa; padding: 0.35rem 0.35rem;">Kế Hoạch</th>
-                  <th style="text-align: right; min-width: 65px; color: #34d399; padding: 0.35rem 0.35rem;">Thực Tế</th>
-                  <th style="text-align: right; min-width: 65px; padding: 0.35rem 0.35rem;">Chênh Lệch</th>
-                  <th style="text-align: center; min-width: 90px; color: #38bdf8; padding: 0.35rem 0.35rem;" title="Ngày kế hoạch hiện tại; nếu hôm nay không có Plan hoặc đã chạy đủ Plan (âm do ngày cũ) mặc định là Âm luỹ kế">Date Plan</th>
-                  <th style="text-align: center; min-width: 78px; color: #a78bfa; padding: 0.35rem 0.35rem;" title="Ca sản xuất trong ngày hiện tại mà Thực tế chưa chạy đủ Plan (Ngày / Đêm)">Shift Plan</th>
+                  <th style="text-align: right; min-width: 65px; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800; padding: 0.35rem 0.35rem;">Kế Hoạch</th>
+                  <th style="text-align: right; min-width: 65px; color: var(--text-primary) !important; font-weight: 800; padding: 0.35rem 0.35rem;">Thực Tế</th>
+                  <th style="text-align: right; min-width: 65px; color: var(--text-primary) !important; font-weight: 800; padding: 0.35rem 0.35rem;">Chênh Lệch</th>
+                  <th style="text-align: center; min-width: 90px; color: var(--text-primary) !important; font-weight: 800; padding: 0.35rem 0.35rem;" title="Ngày kế hoạch hiện tại; nếu hôm nay không có Plan hoặc đã chạy đủ Plan (âm do ngày cũ) mặc định là Âm luỹ kế">Date Plan</th>
+                  <th style="text-align: center; min-width: 78px; color: var(--text-primary) !important; font-weight: 800; padding: 0.35rem 0.35rem;" title="Ca sản xuất trong ngày hiện tại mà Thực tế chưa chạy đủ Plan (Ngày / Đêm)">Shift Plan</th>
                   <th style="text-align: center; min-width: 65px; padding: 0.35rem 0.25rem;">Cycle Time<br>TC</th>
-                  <th style="text-align: right; min-width: 75px; color: #fbbf24; padding: 0.35rem 0.25rem;">Tổng TG<br>Tiêu Chuẩn</th>
+                  <th style="text-align: right; min-width: 75px; color: var(--text-primary); padding: 0.35rem 0.25rem;">Tổng TG<br>Tiêu Chuẩn</th>
                   <!-- Cụm Ca Ngày -->
-                  <th style="text-align: center; min-width: 60px; color: #cbd5e1; padding: 0.35rem 0.25rem;">Ca Làm<br>Việc</th>
-                  <th style="text-align: center; min-width: 65px; color: #38bdf8; padding: 0.35rem 0.25rem;">Line SX</th>
-                  <th style="text-align: center; min-width: 50px; color: #38bdf8; padding: 0.35rem 0.25rem;">Thứ Tự<br>SX</th>
+                  <th style="text-align: center; min-width: 60px; color: var(--text-primary); padding: 0.35rem 0.25rem;">Ca Làm<br>Việc</th>
+                  <th style="text-align: center; min-width: 65px; color: var(--text-primary); padding: 0.35rem 0.25rem;">Line SX</th>
+                  <th style="text-align: center; min-width: 50px; color: var(--text-primary); padding: 0.35rem 0.25rem;">Thứ Tự<br>SX</th>
                   <th style="text-align: center; min-width: 58px; padding: 0.35rem 0.25rem;">PF %</th>
-                  <th style="text-align: right; min-width: 80px; color: #38bdf8; padding: 0.35rem 0.25rem;">Tổng TG Cần<br>Thực Tế 1</th>
-                  <th style="text-align: right; min-width: 75px; color: #fbbf24; padding: 0.35rem 0.25rem;">Tổng TG Có<br>Ca Ngày</th>
-                  <th style="text-align: right; min-width: 78px; color: #38bdf8; padding: 0.35rem 0.25rem;">Plan<br>Ca Ngày</th>
-                  <th style="text-align: right; min-width: 78px; color: #34d399; padding: 0.35rem 0.25rem;">Fact<br>Ca Ngày</th>
-                  <th style="text-align: right; min-width: 85px; color: #f87171; padding: 0.35rem 0.25rem;">Kế hoạch Còn<br>Thiếu Ca Đêm</th>
+                  <th style="text-align: right; min-width: 80px; color: var(--text-primary); padding: 0.35rem 0.25rem;">Tổng TG Cần<br>Thực Tế 1</th>
+                  <th style="text-align: right; min-width: 75px; color: var(--text-primary); padding: 0.35rem 0.25rem;">Tổng TG Có<br>Ca Ngày</th>
+                  <th style="text-align: right; min-width: 78px; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800; padding: 0.35rem 0.25rem;">Plan<br>Ca Ngày</th>
+                  <th style="text-align: right; min-width: 78px; color: var(--text-primary) !important; font-weight: 800; padding: 0.35rem 0.25rem;">Fact<br>Ca Ngày</th>
+                  <th style="text-align: right; min-width: 85px; color: var(--text-primary) !important; font-weight: 800; padding: 0.35rem 0.25rem;">Kế hoạch Còn<br>Thiếu Ca Đêm</th>
                   <!-- Cụm Ca Đêm -->
-                  <th style="text-align: center; min-width: 60px; color: #c084fc; padding: 0.35rem 0.25rem;">Ca Làm<br>Việc</th>
-                  <th style="text-align: center; min-width: 65px; color: #c084fc; padding: 0.35rem 0.25rem;">Line SX</th>
-                  <th style="text-align: center; min-width: 50px; color: #c084fc; padding: 0.35rem 0.25rem;">Thứ Tự<br>SX</th>
+                  <th style="text-align: center; min-width: 60px; color: var(--text-primary); padding: 0.35rem 0.25rem;">Ca Làm<br>Việc</th>
+                  <th style="text-align: center; min-width: 65px; color: var(--text-primary); padding: 0.35rem 0.25rem;">Line SX</th>
+                  <th style="text-align: center; min-width: 50px; color: var(--text-primary); padding: 0.35rem 0.25rem;">Thứ Tự<br>SX</th>
                   <th style="text-align: center; min-width: 58px; padding: 0.35rem 0.25rem;">PF %</th>
-                  <th style="text-align: right; min-width: 80px; color: #c084fc; padding: 0.35rem 0.25rem;">Tổng TG Cần<br>Thực Tế 2</th>
-                  <th style="text-align: right; min-width: 75px; color: #fbbf24; padding: 0.35rem 0.25rem;">Tổng TG Có<br>Ca Đêm</th>
-                  <th style="text-align: right; min-width: 78px; color: #c084fc; padding: 0.35rem 0.25rem;">Plan<br>Ca Đêm</th>
-                  <th style="text-align: right; min-width: 78px; color: #34d399; padding: 0.35rem 0.25rem;">Fact<br>Ca Đêm</th>
-                  <th style="text-align: right; min-width: 85px; color: #f87171; padding: 0.35rem 0.25rem;">Kế hoạch Còn<br>Thiếu Tổng</th>
+                  <th style="text-align: right; min-width: 80px; color: var(--text-primary); padding: 0.35rem 0.25rem;">Tổng TG Cần<br>Thực Tế 2</th>
+                  <th style="text-align: right; min-width: 75px; color: var(--text-primary); padding: 0.35rem 0.25rem;">Tổng TG Có<br>Ca Đêm</th>
+                  <th style="text-align: right; min-width: 78px; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800; padding: 0.35rem 0.25rem;">Plan<br>Ca Đêm</th>
+                  <th style="text-align: right; min-width: 78px; color: var(--text-primary) !important; font-weight: 800; padding: 0.35rem 0.25rem;">Fact<br>Ca Đêm</th>
+                  <th style="text-align: right; min-width: 85px; color: var(--text-primary) !important; font-weight: 800; padding: 0.35rem 0.25rem;">Kế hoạch Còn<br>Thiếu Tổng</th>
                   <th style="text-align: left; min-width: 140px; color: #e2e8f0; padding: 0.35rem 0.35rem;">Ghi Chú</th>
                   <th style="text-align: center; min-width: 132px; color: #fbbf24; padding: 0.35rem 0.35rem;" title="Truy xuất ngày và ca sản xuất (Ngày / Đêm) bắt đầu bị âm cho các Model Âm luỹ kế">Âm Từ<br>Ngày / Ca</th>
                   <th style="text-align: center; min-width: 102px; color: #34d399; padding: 0.35rem 0.35rem;" title="Bấm để mở ngay tab WIP Control và lọc đúng Model này theo công đoạn">Check WIP</th>
@@ -4657,7 +4666,7 @@
       const htLockTitleSuffix = isHtRowLocked
         ? ' [Đang khóa: Cần nhập Kế hoạch (>0) hoặc Lý do ở cột Ghi Chú cho các Model Âm luỹ kế trước]'
         : '';
-      const gapColor = r.gapQty < 0 ? '#f87171' : r.gapQty > 0 ? '#34d399' : 'var(--text-muted)';
+      const gapColor = r.gapQty < 0 ? '#ff0000 !important;' : (r.gapQty > 0 ? '#0000ff !important;' : '#000000 !important;');
       const showPoolHint = r.isSharedPool || r.poolDayPeerCount > 1 || r.poolNightPeerCount > 1;
       const dayTbTitle = r.isPoolDayTbOver
         ? `⚠️ Nhóm ${r.poolNote || 'Dùng Chung'} đang dùng ${r.poolDayUsedTb}/${r.availTb} TB (vượt TB sẵn có!)`
@@ -4672,25 +4681,25 @@
 
       return `
         <tr class="hover-row${isHtRowCumNeg ? ' sim-row-cumneg-priority' : ''}${isHtRowLocked ? ' sim-row-locked-current-day' : ''}" data-row-key="${encodedRowId}" data-is-cumneg="${isHtRowCumNeg ? '1' : '0'}" data-row-locked="${isHtRowLocked ? '1' : '0'}">
-          <td class="sticky-sim-stt" style="text-align: center; color: var(--text-muted); font-size: 0.78rem;">${r.displayIdx}</td>
+          <td class="sticky-sim-stt" style="text-align: center; color: var(--text-primary); font-size: 0.78rem; font-weight: 800;">${r.displayIdx}</td>
           <td class="sticky-sim-stage" style="text-align: center; white-space: nowrap;">
             <span class="badge ${r.stage === 'HARD TEST' ? 'badge-stage-hardtest' : r.stage === 'OPTICS ASM' ? 'badge-stage-optics' : 'badge-stage-focus'}">${r.stage}</span>
           </td>
-          <td class="sticky-sim-group" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.825rem; font-weight: 700; color: var(--text-primary);" title="${r.normGroup || r.group || '--'}">
+          <td class="sticky-sim-group" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.825rem; font-weight: 800; color: var(--text-primary);" title="${r.normGroup || r.group || '--'}">
             ${r.normGroup || r.group || '--'}
           </td>
           <td class="sticky-sim-model">
             <div style="display: flex; flex-direction: column; gap: 0.12rem;">
-              <span class="font-mono" style="font-size: 0.8rem; font-weight: 700; color: var(--text-primary); word-break: break-word; line-height: 1.35;" title="${r.model1c}">${r.model1c}</span>
-              ${r.board && r.board !== r.model1c ? `<span class="font-mono" style="font-size: 0.67rem; color: var(--text-muted);" title="Định mức Test Block theo bo mạch: ${r.board}">⚙️ ${r.board}</span>` : ''}
+              <span class="font-mono" style="font-size: 0.8rem; font-weight: 800; color: var(--text-primary); word-break: break-word; line-height: 1.35;" title="${r.model1c}">${r.model1c}</span>
+              ${r.board && r.board !== r.model1c ? `<span class="font-mono" style="font-size: 0.67rem; color: var(--text-primary);" title="Định mức Test Block theo bo mạch: ${r.board}">⚙️ ${r.board}</span>` : ''}
             </div>
           </td>
           <!-- Kế Hoạch (Plan): Số mặc định không chỉnh sửa -->
-          <td class="font-mono" style="text-align: right; font-weight: 700; color: #60a5fa; font-size: 0.825rem; padding: 0.35rem 0.45rem;" title="Kế hoạch sản lượng (Pcs) mặc định theo dữ liệu Bảng 2">
+          <td class="font-mono" style="text-align: right; font-weight: 700; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.825rem; padding: 0.35rem 0.45rem;" title="Kế hoạch sản lượng (Pcs) mặc định theo dữ liệu Bảng 2">
             ${r.planQty.toLocaleString('vi-VN')}
           </td>
           <!-- Thực Tế (Fact) -->
-          <td class="font-mono" style="text-align: right; font-size: 0.825rem; font-weight: 700; color: #34d399; padding: 0.35rem 0.45rem;" title="Sản lượng thực tế đã sản xuất trong giai đoạn">
+          <td class="font-mono" style="text-align: right; font-size: 0.825rem; font-weight: 700; color: var(--text-primary) !important; padding: 0.35rem 0.45rem;" title="Sản lượng thực tế đã sản xuất trong giai đoạn">
             ${r.factQty.toLocaleString('vi-VN')}
           </td>
           <!-- Chênh Lệch (Gap) -->
@@ -4701,74 +4710,78 @@
           ${renderPlanDateAndShiftCellsHtml(r.planMeta)}
           <!-- Cycle Time Norm (CT Norm gốc trên sheet Hardtest Data, chưa gồm FTT/Downtime) -->
           <td style="text-align: right; padding: 0.35rem 0.45rem;" class="font-mono" title="Cycle Time Norm gốc trên sheet: ${r.ctNorm}s (CT Thực tế FTT+DT: ${r.ctMachineWithFttDt.toFixed(2)}s)">
-            <span style="font-weight: 700; color: var(--text-primary); font-size: 0.825rem;">${r.ctNorm}</span>
+            <span style="font-weight: 800; color: var(--text-primary); font-size: 0.825rem;">${r.ctNorm}</span>
           </td>
           <!-- FTT % (từ sheet Hardtest Data cột FTT %) -->
           <td style="text-align: right; padding: 0.35rem 0.45rem;" class="font-mono" title="Tỉ lệ Pass FTT % từ sheet Hardtest Data: ${r.fttPct}%">
-            <span style="font-weight: 700; color: #34d399; font-size: 0.8rem;">${r.fttPct}%</span>
+            <span style="font-weight: 800; color: ${r.fttPct < 100 ? '#ff0000 !important;' : '#000000;'}; font-size: 0.8rem;">${r.fttPct}%</span>
           </td>
           <!-- Downtime % (từ sheet Hardtest Data cột Total DownTime) -->
           <td style="text-align: right; padding: 0.35rem 0.45rem;" class="font-mono" title="Tổng Downtime (Total DownTime) từ sheet Hardtest Data: ${r.dtTotalPct}%">
-            <span style="font-weight: 700; color: #f59e0b; font-size: 0.8rem;">${r.dtTotalPct}%</span>
+            <span style="font-weight: 800; color: ${r.dtTotalPct > 0 ? '#ff0000 !important;' : '#000000;'}; font-size: 0.8rem;">${r.dtTotalPct}%</span>
           </td>
           <!-- TB Sẵn Có (Test Block) + Nhóm Dùng Chung -->
           <td style="text-align: center; padding: 0.3rem 0.35rem;" class="font-mono" title="Số lượng Test Block hiện có sẵn trong xưởng (${r.poolNote || 'Riêng'} • Ngày dùng ${r.poolDayUsedTb}/${r.availTb} • Đêm dùng ${r.poolNightUsedTb}/${r.availTb})">
-            <span class="badge badge-ht-tb font-mono" style="font-weight: 800; ${r.isPoolDayTbOver || r.isPoolNightTbOver ? 'border-color: #f87171; color: #f87171;' : ''}">${r.availTb}</span>
-            ${showPoolHint ? `<div style="font-size: 0.62rem; margin-top: 2px; font-weight: 700; color: ${r.isPoolDayTbOver || r.isPoolNightTbOver ? '#f87171' : '#38bdf8'}; white-space: nowrap;">Chung ${r.poolDayUsedTb}/${r.availTb}N</div>` : ''}
+            <span class="badge badge-ht-tb font-mono" style="font-weight: 800; background: var(--bg-card); color: ${r.isPoolDayTbOver || r.isPoolNightTbOver ? '#ff0000' : '#000000'}; border: 1.5px solid ${r.isPoolDayTbOver || r.isPoolNightTbOver ? '#ef4444' : '#cbd5e1'};">${r.availTb}</span>
+            ${showPoolHint ? `<div style="font-size: 0.62rem; margin-top: 2px; font-weight: 700; color: ${r.isPoolDayTbOver || r.isPoolNightTbOver ? '#ff0000' : '#0284c7'}; white-space: nowrap;">Chung ${r.poolDayUsedTb}/${r.availTb}N</div>` : ''}
           </td>
           <!-- Số Test Block Cần -->
           <td style="text-align: center; padding: 0.35rem 0.35rem;" class="font-mono" title="Đề xuất Số Test Block cần = Math.ceil(${r.targetQty} ÷ ${Math.round(r.capaPer1TB)}) = ${r.reqTb} TB">
             ${r.reqTb > 0 ? `
-              <span class="badge ${!isTbOverloaded ? 'badge-green' : 'badge-red'} font-mono" style="font-weight: 800;">${r.reqTb}</span>
-            ` : `<span style="color: var(--text-muted); font-size: 0.78rem;">0</span>`}
+              <span class="badge font-mono" style="font-weight: 800; background: var(--bg-card); color: ${isTbOverloaded ? '#ff0000 !important;' : '#000000;'}; border: 1.5px solid ${isTbOverloaded ? '#ef4444;' : '#cbd5e1;'};">${r.reqTb}</span>
+            ` : `<span style="color: var(--text-primary); font-size: 0.78rem;">0</span>`}
           </td>
           <!-- Giờ máy cần tiêu chuẩn (KHÔNG tính FTT & Downtime): |Chênh Lệch| * CT_Norm / 3600 -->
-          <td style="text-align: right; color: #fbbf24; font-weight: 800; font-size: 0.825rem; padding: 0.35rem 0.45rem;" class="font-mono" title="Giờ máy cần tiêu chuẩn (chưa tính FTT &amp; Downtime) = ${r.targetQty.toLocaleString('vi-VN')} × ${r.ctNorm}s ÷ 3600 = ${r.stdHours.toFixed(2)}h">
+          <td style="text-align: right; color: var(--text-primary); font-weight: 800; font-size: 0.85rem; padding: 0.35rem 0.45rem;" class="font-mono" title="Giờ máy cần tiêu chuẩn (chưa tính FTT &amp; Downtime) = ${r.targetQty.toLocaleString('vi-VN')} × ${r.ctNorm}s ÷ 3600 = ${r.stdHours.toFixed(2)}h">
             ${r.stdHours > 0 ? r.stdHours.toFixed(1) : '0.0'}
           </td>
 
           <!-- CỤM CA NGÀY (10.83h) -->
-          <td style="text-align: center; font-size: 0.8rem; font-weight: 600; color: ${dayShiftHours > 0 ? 'var(--text-secondary)' : '#64748b'}; white-space: nowrap; padding: 0.35rem 0.35rem;">
+          <td style="text-align: center; font-size: 0.82rem; font-weight: 800; color: var(--text-primary); white-space: nowrap; padding: 0.35rem 0.35rem;">
             Ca Ngày
           </td>
           <td style="text-align: center; padding: 0.25rem 0.3rem;">
-            <input type="number" min="0" max="50" class="sim-manual-input${htLockClass} font-mono" ${htLockAttr} style="width: 58px; ${isDayTbOver ? 'border-color: #f87171; color: #f87171;' : ''}" value="${r.manualTbDay}" onchange="handleHardtestManualTbDayChange('${encodedRowId}', this.value)" title="${dayTbTitle}${htLockTitleSuffix}">
+            <input type="number" min="0" max="50" class="sim-manual-input${htLockClass} font-mono" ${htLockAttr} style="width: 58px; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; font-size: 0.82rem; font-weight: 800; text-align: center;" value="${r.manualTbDay}" onchange="handleHardtestManualTbDayChange('${encodedRowId}', this.value)" title="${dayTbTitle}${htLockTitleSuffix}">
           </td>
           <td style="text-align: center; padding: 0.25rem 0.3rem;">
-            <input type="number" min="0" max="50" class="sim-manual-input sim-manual-input-man${htLockClass} font-mono" ${htLockAttr} style="width: 58px; ${isDayManOver ? 'border-color: #fbbf24;' : ''}" value="${r.manualManDay}" onchange="handleHardtestManualManDayChange('${encodedRowId}', this.value)" title="${isDayManOver ? `⚠️ Quá tải: ${r.manualManDay} người vận hành ${r.manualTbDay} TB (chuẩn 1 người / 2 TB)` : 'Số người sử dụng Ca Ngày (Chuẩn 1 người / 2 TB)'}${htLockTitleSuffix}">
+            <input type="number" min="0" max="50" class="sim-manual-input sim-manual-input-man${htLockClass} font-mono" ${htLockAttr} style="width: 58px; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; font-size: 0.82rem; font-weight: 800; text-align: center;" value="${r.manualManDay}" onchange="handleHardtestManualManDayChange('${encodedRowId}', this.value)" title="${isDayManOver ? `⚠️ Quá tải: ${r.manualManDay} người vận hành ${r.manualTbDay} TB (chuẩn 1 người / 2 TB)` : 'Số người sử dụng Ca Ngày (Chuẩn 1 người / 2 TB)'}${htLockTitleSuffix}">
           </td>
           <td class="font-mono" style="text-align: right; white-space: nowrap; padding: 0.25rem 0.25rem;">
-            <input type="text" class="sim-table-plan-input${htLockClass} font-mono" ${htLockAttr} value="${r.dayOutput > 0 ? r.dayOutput.toLocaleString('vi-VN') : (r.targetQty > 0 ? '0' : '')}" placeholder="0" onchange="handleHardtestManualPlanDayChange('${encodedRowId}', this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 72px; padding: 0.16rem 0.32rem; font-size: 0.8rem; font-weight: 800; color: #38bdf8; background: rgba(15, 23, 42, 0.9); border: 1px solid ${r.isDayShiftCapOver ? '#f87171' : (r.hasDayPlanOverride ? '#22d3ee' : 'rgba(56, 189, 248, 0.35)')}; border-radius: 6px; outline: none; text-align: right;" title="${r.isDayShiftCapOver ? `⚠️ Output ${r.dayOutput.toLocaleString('vi-VN')} cần ${r.dayActualHours.toFixed(1)}h vượt công suất ${r.manualTbDay} TB × 10.83h (${(r.manualTbDay * dayShiftHours).toFixed(1)}h)` : `Sửa OUTPUT PLAN DAY (Tối đa ${dayShiftHours.toFixed(2)}h/TB × ${r.manualTbDay} TB • Để trống để tự động tính)`}${htLockTitleSuffix}">
+            <input type="text" class="sim-table-plan-input${htLockClass} font-mono" ${htLockAttr} value="${r.dayOutput > 0 ? r.dayOutput.toLocaleString('vi-VN') : (r.targetQty > 0 ? '0' : '')}" placeholder="0" onchange="handleHardtestManualPlanDayChange('${encodedRowId}', this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 72px; padding: 0.16rem 0.32rem; font-size: 0.85rem; font-weight: 900; color: var(--color-plan-blue, #0000ff) !important; background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 6px; outline: none; text-align: right;" title="${r.isDayShiftCapOver ? `⚠️ Output ${r.dayOutput.toLocaleString('vi-VN')} cần ${r.dayActualHours.toFixed(1)}h vượt công suất ${r.manualTbDay} TB × 10.83h (${(r.manualTbDay * dayShiftHours).toFixed(1)}h)` : `Sửa OUTPUT PLAN DAY (Tối đa ${dayShiftHours.toFixed(2)}h/TB × ${r.manualTbDay} TB • Để trống để tự động tính)`}${htLockTitleSuffix}">
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 800; color: ${r.isDayShiftCapOver ? '#f87171' : '#38bdf8'}; font-size: 0.825rem; padding: 0.35rem 0.45rem;" title="Giờ máy cần thực tế Ca Ngày (đã tính FTT ${r.fttPct}% &amp; Downtime ${r.dtTotalPct}%) = ${r.dayOutput.toLocaleString('vi-VN')} × ${r.ctMachineWithFttDt.toFixed(2)}s ÷ 3600 = ${r.dayActualHours.toFixed(2)}h${r.manualTbDay > 0 ? ` (${(r.dayActualHours / r.manualTbDay).toFixed(2)}h/TB)` : ''}">
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary); font-size: 0.85rem; padding: 0.35rem 0.45rem;" title="Giờ máy cần thực tế Ca Ngày (đã tính FTT ${r.fttPct}% &amp; Downtime ${r.dtTotalPct}%) = ${r.dayOutput.toLocaleString('vi-VN')} × ${r.ctMachineWithFttDt.toFixed(2)}s ÷ 3600 = ${r.dayActualHours.toFixed(2)}h${r.manualTbDay > 0 ? ` (${(r.dayActualHours / r.manualTbDay).toFixed(2)}h/TB)` : ''}">
             ${r.dayActualHours > 0 ? r.dayActualHours.toFixed(1) : '0.0'}
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 800; font-size: 0.825rem; padding: 0.35rem 0.45rem; color: ${r.nightShortage > 0 ? '#f87171' : '#34d399'};" title="Số lượng còn thiếu sau Ca Ngày (chuyển tiếp sang Ca Đêm)">
+          <td class="font-mono" style="text-align: right; font-weight: 900; font-size: 0.85rem; padding: 0.35rem 0.45rem; color: ${r.nightShortage > 0 ? '#ff0000 !important' : '#0000ff !important'};" title="Số lượng còn thiếu sau Ca Ngày (chuyển tiếp sang Ca Đêm)">
             ${r.nightShortage > 0 ? '-' + r.nightShortage.toLocaleString('vi-VN') : '0'}
           </td>
 
           <!-- CỤM CA ĐÊM (10.58h) -->
-          <td style="text-align: center; font-size: 0.8rem; font-weight: 600; color: ${nightShiftHours > 0 ? '#c084fc' : '#64748b'}; white-space: nowrap; padding: 0.35rem 0.35rem;">
+          <td style="text-align: center; font-size: 0.82rem; font-weight: 800; color: var(--text-primary); white-space: nowrap; padding: 0.35rem 0.35rem;">
             Ca Đêm
           </td>
           <td style="text-align: center; padding: 0.25rem 0.3rem;">
-            <input type="number" min="0" max="50" class="sim-manual-input sim-manual-input-night${htLockClass} font-mono" ${htLockAttr} style="width: 58px; ${isNightTbOver ? 'border-color: #f87171; color: #f87171;' : ''}" value="${r.manualTbNight}" onchange="handleHardtestManualTbNightChange('${encodedRowId}', this.value)" title="${nightTbTitle}${htLockTitleSuffix}">
+            <input type="number" min="0" max="50" class="sim-manual-input sim-manual-input-night${htLockClass} font-mono" ${htLockAttr} style="width: 58px; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; font-size: 0.82rem; font-weight: 800; text-align: center;" value="${r.manualTbNight}" onchange="handleHardtestManualTbNightChange('${encodedRowId}', this.value)" title="${nightTbTitle}${htLockTitleSuffix}">
           </td>
           <td style="text-align: center; padding: 0.25rem 0.3rem;">
-            <input type="number" min="0" max="50" class="sim-manual-input sim-manual-input-man${htLockClass} font-mono" ${htLockAttr} style="width: 58px; ${isNightManOver ? 'border-color: #fbbf24;' : ''}" value="${r.manualManNight}" onchange="handleHardtestManualManNightChange('${encodedRowId}', this.value)" title="${isNightManOver ? `⚠️ Quá tải: ${r.manualManNight} người vận hành ${r.manualTbNight} TB (chuẩn 1 người / 2 TB)` : 'Số người sử dụng Ca Đêm (Chuẩn 1 người / 2 TB)'}${htLockTitleSuffix}">
+            <input type="number" min="0" max="50" class="sim-manual-input sim-manual-input-man${htLockClass} font-mono" ${htLockAttr} style="width: 58px; background: var(--bg-card); color: var(--text-primary); border: 1.5px solid var(--border-glass); border-radius: 6px; font-size: 0.82rem; font-weight: 800; text-align: center;" value="${r.manualManNight}" onchange="handleHardtestManualManNightChange('${encodedRowId}', this.value)" title="${isNightManOver ? `⚠️ Quá tải: ${r.manualManNight} người vận hành ${r.manualTbNight} TB (chuẩn 1 người / 2 TB)` : 'Số người sử dụng Ca Đêm (Chuẩn 1 người / 2 TB)'}${htLockTitleSuffix}">
           </td>
           <td class="font-mono" style="text-align: right; white-space: nowrap; padding: 0.25rem 0.25rem;">
-            <input type="text" class="sim-table-plan-input${htLockClass} font-mono" ${htLockAttr} value="${r.nightOutput > 0 ? r.nightOutput.toLocaleString('vi-VN') : (r.nightShortage > 0 ? '0' : '')}" placeholder="0" onchange="handleHardtestManualPlanNightChange('${encodedRowId}', this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 72px; padding: 0.16rem 0.32rem; font-size: 0.8rem; font-weight: 800; color: #c084fc; background: rgba(15, 23, 42, 0.9); border: 1px solid ${r.isNightShiftCapOver ? '#f87171' : (r.hasNightPlanOverride ? '#e879f9' : 'rgba(192, 132, 252, 0.35)')}; border-radius: 6px; outline: none; text-align: right;" title="${r.isNightShiftCapOver ? `⚠️ Output ${r.nightOutput.toLocaleString('vi-VN')} cần ${r.nightActualHours.toFixed(1)}h vượt công suất ${r.manualTbNight} TB × 10.58h (${(r.manualTbNight * nightShiftHours).toFixed(1)}h)` : `Output Plan Ca Đêm (${nightShiftHours.toFixed(2)}h/TB × ${r.manualTbNight} TB • Có thể nhập tay hoặc để trống để tự động tính)`}${htLockTitleSuffix}">
+            <input type="text" class="sim-table-plan-input${htLockClass} font-mono" ${htLockAttr} value="${r.nightOutput > 0 ? r.nightOutput.toLocaleString('vi-VN') : (r.nightShortage > 0 ? '0' : '')}" placeholder="0" onchange="handleHardtestManualPlanNightChange('${encodedRowId}', this.value)" onkeydown="if(event.key==='Enter') this.blur();" style="width: 72px; padding: 0.16rem 0.32rem; font-size: 0.85rem; font-weight: 900; color: var(--color-plan-blue, #0000ff) !important; background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 6px; outline: none; text-align: right;" title="${r.isNightShiftCapOver ? `⚠️ Output ${r.nightOutput.toLocaleString('vi-VN')} cần ${r.nightActualHours.toFixed(1)}h vượt công suất ${r.manualTbNight} TB × 10.58h (${(r.manualTbNight * nightShiftHours).toFixed(1)}h)` : `Output Plan Ca Đêm (${nightShiftHours.toFixed(2)}h/TB × ${r.manualTbNight} TB • Có thể nhập tay hoặc để trống để tự động tính)`}${htLockTitleSuffix}">
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 800; color: ${r.isNightShiftCapOver ? '#f87171' : '#c084fc'}; font-size: 0.825rem; padding: 0.35rem 0.45rem;" title="Giờ máy cần thực tế Ca Đêm (đã tính FTT ${r.fttPct}% &amp; Downtime ${r.dtTotalPct}%) = ${r.nightOutput.toLocaleString('vi-VN')} × ${r.ctMachineWithFttDt.toFixed(2)}s ÷ 3600 = ${r.nightActualHours.toFixed(2)}h${r.manualTbNight > 0 ? ` (${(r.nightActualHours / r.manualTbNight).toFixed(2)}h/TB)` : ''}">
+          <td class="font-mono" style="text-align: right; font-weight: 800; color: var(--text-primary); font-size: 0.85rem; padding: 0.35rem 0.45rem;" title="Giờ máy cần thực tế Ca Đêm (đã tính FTT ${r.fttPct}% &amp; Downtime ${r.dtTotalPct}%) = ${r.nightOutput.toLocaleString('vi-VN')} × ${r.ctMachineWithFttDt.toFixed(2)}s ÷ 3600 = ${r.nightActualHours.toFixed(2)}h${r.manualTbNight > 0 ? ` (${(r.nightActualHours / r.manualTbNight).toFixed(2)}h/TB)` : ''}">
             ${r.nightActualHours > 0 ? r.nightActualHours.toFixed(1) : '0.0'}
           </td>
-          <td class="font-mono" style="text-align: right; font-weight: 800; font-size: 0.825rem; padding: 0.35rem 0.45rem; color: ${r.finalShortage > 0 ? '#f87171' : '#34d399'};" title="Số lượng còn thiếu tổng sau cả Ca Ngày & Ca Đêm">
+          <td class="font-mono" style="text-align: right; font-weight: 900; font-size: 0.85rem; padding: 0.35rem 0.45rem; color: ${r.finalShortage > 0 ? '#ff0000 !important' : '#0000ff !important'};" title="Số lượng còn thiếu tổng sau cả Ca Ngày & Ca Đêm">
             ${r.finalShortage > 0 ? '-' + r.finalShortage.toLocaleString('vi-VN') : '0'}
           </td>
           <!-- Ghi Chú -->
           <td style="text-align: left; padding: 0.2rem 0.35rem; min-width: 140px;">
-            <input type="text" class="sim-table-note-input" data-row-key="${encodedRowId}" value="${(window.AppStore.simManualNotes && window.AppStore.simManualNotes[r.rowId]) ? String(window.AppStore.simManualNotes[r.rowId]).replace(/"/g, '&quot;') : ''}" placeholder="${isHtRowCumNeg ? 'Nhập lý do / ghi chú...' : 'Nhập ghi chú...'}" onchange="handleTableNoteChange(decodeURIComponent('${encodedRowId}'), this.value)" onkeydown="if(event.key==='Enter') this.blur();" title="Ghi chú cho Model ${(r.model1c || r.group || '').replace(/"/g, '&quot;').replace(/[\r\n]+/g, ' ')}">
+            ${(() => {
+              const htNoteVal = (window.AppStore.simManualNotes && window.AppStore.simManualNotes[r.rowId]) ? String(window.AppStore.simManualNotes[r.rowId]).trim() : '';
+              const hasHtNote = htNoteVal.length > 0;
+              return `<input type="text" class="sim-table-note-input" data-row-key="${encodedRowId}" value="${htNoteVal.replace(/"/g, '&quot;')}" placeholder="${isHtRowCumNeg ? 'Nhập lý do / ghi chú...' : 'Nhập ghi chú...'}" onchange="handleTableNoteChange(decodeURIComponent('${encodedRowId}'), this.value)" oninput="this.style.color = this.value.trim().length > 0 ? '#ff0000' : '#000000'; this.style.borderColor = this.value.trim().length > 0 ? '#ef4444' : '#cbd5e1';" onkeydown="if(event.key==='Enter') this.blur();" style="background: var(--bg-card); color: ${hasHtNote ? '#ff0000 !important;' : '#000000;'}; border: 1.5px solid ${hasHtNote ? '#ef4444' : '#cbd5e1'}; border-radius: 6px; font-weight: 800; font-size: 0.82rem; width: 100%; padding: 0.2rem 0.4rem;" title="Ghi chú cho Model ${(r.model1c || r.group || '').replace(/"/g, '&quot;').replace(/[\r\n]+/g, ' ')}">`;
+            })()}
           </td>
           <!-- Âm Từ Ngày / Ca -->
           ${renderAccumulatedNegativeOriginCellHtml(r.cumNegOriginMeta)}
@@ -4777,7 +4790,7 @@
             <button type="button"
               class="btn btn-xs"
               onclick="handleCheckModelWip('${encodeSimRowKey(r.stage || 'HARD TEST')}', '${encodeSimRowKey(r.group || '')}', '${encodeSimRowKey(r.model1c || r.group || '')}', ${Number(r.gapQty || 0)}, '${simFromDate}', '${simToDate}')"
-              style="padding: 0.2rem 0.55rem; font-size: 0.725rem; font-weight: 800; color: #34d399; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.25rem;"
+              style="padding: 0.2rem 0.55rem; font-size: 0.8rem; font-weight: 800; color: var(--text-primary); background: var(--bg-card); border: 1.5px solid var(--border-glass); border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.25rem;"
               title="Mở WIP Control và lọc đúng Model ${(r.model1c || r.group || '').replace(/"/g, '&quot;')} (${r.stage || 'HARD TEST'})">
               <span>📦 Check WIP</span>
             </button>
@@ -4822,44 +4835,44 @@
           <tbody>
             <tr>
               <td class="mini-kpi-label">Sản Lượng (pcs)</td>
-              <td class="mini-kpi-val font-mono" style="color: #f87171; font-weight: 800;">
+              <td class="mini-kpi-val font-mono" style="color: ${grandGap < 0 ? '#ff0000 !important;' : (grandGap > 0 ? '#0000ff !important;' : '#000000;')}; font-weight: 800;">
                 ${grandGap !== 0 ? (grandGap > 0 ? '+' : '') + grandGap.toLocaleString('vi-VN') : '0'}
               </td>
-              <td class="mini-kpi-val font-mono" style="color: #38bdf8; font-weight: 800;">
+              <td class="mini-kpi-val font-mono" style="color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;">
                 ${grandDayOutput > 0 ? '+' + grandDayOutput.toLocaleString('vi-VN') : '0'}
               </td>
-              <td class="mini-kpi-val font-mono" style="color: #c084fc; font-weight: 800;">
+              <td class="mini-kpi-val font-mono" style="color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;">
                 ${grandNightOutput > 0 ? '+' + grandNightOutput.toLocaleString('vi-VN') : '0'}
               </td>
-              <td class="mini-kpi-val font-mono" style="color: #f87171; font-weight: 800;">
+              <td class="mini-kpi-val font-mono" style="color: var(--color-alert-red, #ff0000) !important; font-weight: 800;">
                 ${grandFinalShortage > 0 ? '-' + grandFinalShortage.toLocaleString('vi-VN') : '0'}
               </td>
             </tr>
             <tr>
               <td class="mini-kpi-label">Tổng TG Máy (h)</td>
-              <td class="mini-kpi-val font-mono" style="color: #d97706; font-weight: 800;">
+              <td class="mini-kpi-val font-mono" style="color: var(--text-primary); font-weight: 800;">
                 ${grandStdHours > 0 ? grandStdHours.toFixed(1) + 'h' : '0.0h'}
               </td>
-              <td class="mini-kpi-val font-mono" style="color: #38bdf8; font-weight: 700;">
+              <td class="mini-kpi-val font-mono" style="color: var(--text-primary); font-weight: 800;">
                 ${grandDayTbHours > 0 ? grandDayTbHours.toFixed(1) + 'h' : '0.0h'}
               </td>
-              <td class="mini-kpi-val font-mono" style="color: #c084fc; font-weight: 700;">
+              <td class="mini-kpi-val font-mono" style="color: var(--text-primary); font-weight: 800;">
                 ${grandNightTbHours > 0 ? grandNightTbHours.toFixed(1) + 'h' : '0.0h'}
               </td>
-              <td class="mini-kpi-val font-mono" style="color: var(--text-muted);">
+              <td class="mini-kpi-val font-mono" style="color: var(--text-primary); font-weight: 800;">
                 ${(grandDayOutput + grandNightOutput) > 0 ? totalCoverPct + '%' : '0%'}
               </td>
             </tr>
             <tr>
               <td class="mini-kpi-label">Hiệu Quả Bù</td>
-              <td class="mini-kpi-val font-mono" style="color: var(--text-muted);">100%</td>
-              <td class="mini-kpi-val font-mono" style="color: #38bdf8; font-weight: 800;">
+              <td class="mini-kpi-val font-mono" style="color: var(--text-primary); font-weight: 800;">100%</td>
+              <td class="mini-kpi-val font-mono" style="color: ${parseFloat(dayCoverPct) < 100 ? '#ff0000 !important;' : '#0000ff !important;'}; font-weight: 800;">
                 ${dayCoverPct}%
               </td>
-              <td class="mini-kpi-val font-mono" style="color: #c084fc; font-weight: 800;">
+              <td class="mini-kpi-val font-mono" style="color: ${parseFloat(nightCoverPct) < 100 ? '#ff0000 !important;' : '#0000ff !important;'}; font-weight: 800;">
                 ${nightCoverPct}%
               </td>
-              <td class="mini-kpi-val font-mono" style="${grandFinalShortage === 0 ? 'color: #10b981; font-weight: 800;' : 'color: #f87171; font-weight: 800;'}">
+              <td class="mini-kpi-val font-mono" style="${grandFinalShortage === 0 ? 'color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;' : 'color: var(--color-alert-red, #ff0000) !important; font-weight: 800;'}">
                 ${grandFinalShortage === 0 ? '✅ Hết thiếu' : '⚠️ Thiếu ' + remainShortagePct + '%'}
               </td>
             </tr>
@@ -4906,7 +4919,7 @@
                 <th class="mini-kpi-th-title">Ca ngày</th>
                 ${activeDayKips.map(kip => {
                   const hc = getHardtestKipHeadcount(kip);
-                  return `<th class="mini-kpi-th-line">${kip} <span style="display: inline-block; margin-left: 0.2rem; padding: 0.05rem 0.3rem; font-size: 0.64rem; border-radius: 4px; background: rgba(245, 158, 11, 0.18); border: 1px solid rgba(245, 158, 11, 0.45); font-weight: 800;">${hc} ng</span></th>`;
+                  return `<th class="mini-kpi-th-line">${kip} <span style="display: inline-block; margin-left: 0.2rem; padding: 0.05rem 0.3rem; font-size: 0.64rem; border-radius: 4px; background: var(--bg-card-header, #fff3cc); border: 1px solid #f59e0b; color: var(--text-primary); font-weight: 800;">${hc} ng</span></th>`;
                 }).join('')}
               </tr>
             </thead>
@@ -4917,11 +4930,11 @@
               </tr>
               <tr>
                 <td class="mini-kpi-label">Tổng TG có KH</td>
-                ${activeDayKips.map(() => `<td class="mini-kpi-val font-mono" style="${dayAvgShiftHours > 0 ? 'color: #38bdf8; font-weight: 700;' : 'color: #64748b;'}" title="Tổng giờ công nhân lực Ca Ngày: ${grandDayManHours.toFixed(1)}h ÷ ${effectiveDayPeople} người">${dayAvgShiftHours > 0 ? dayAvgShiftHours.toFixed(2) : ''}</td>`).join('')}
+                ${activeDayKips.map(() => `<td class="mini-kpi-val font-mono" style="${dayAvgShiftHours > 0 ? 'color: var(--text-primary); font-weight: 800;' : 'color: var(--text-primary);'}" title="Tổng giờ công nhân lực Ca Ngày: ${grandDayManHours.toFixed(1)}h ÷ ${effectiveDayPeople} người">${dayAvgShiftHours > 0 ? dayAvgShiftHours.toFixed(2) : ''}</td>`).join('')}
               </tr>
               <tr>
                 <td class="mini-kpi-label">Hiệu Suất</td>
-                ${activeDayKips.map(() => `<td class="mini-kpi-val font-mono" style="${dayEffPct ? (dayEffNum > 100 ? 'color: #f87171; font-weight: 800;' : 'color: #34d399; font-weight: 800;') : 'color: #64748b;'}">${dayEffPct ? dayEffPct + '%' : ''}</td>`).join('')}
+                ${activeDayKips.map(() => `<td class="mini-kpi-val font-mono" style="${dayEffPct ? (dayEffNum < 100 ? 'color: var(--color-alert-red, #ff0000) !important; font-weight: 800;' : 'color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;') : 'color: var(--text-primary);'}">${dayEffPct ? dayEffPct + '%' : ''}</td>`).join('')}
               </tr>
             </tbody>
           </table>
@@ -4959,7 +4972,7 @@
                 <th class="mini-kpi-th-title">Ca đêm</th>
                 ${activeNightKips.map(kip => {
                   const hc = getHardtestKipHeadcount(kip);
-                  return `<th class="mini-kpi-th-line">${kip} <span style="display: inline-block; margin-left: 0.2rem; padding: 0.05rem 0.3rem; font-size: 0.64rem; border-radius: 4px; background: rgba(192, 132, 252, 0.18); border: 1px solid rgba(192, 132, 252, 0.45); font-weight: 800;">${hc} ng</span></th>`;
+                  return `<th class="mini-kpi-th-line">${kip} <span style="display: inline-block; margin-left: 0.2rem; padding: 0.05rem 0.3rem; font-size: 0.64rem; border-radius: 4px; background: var(--bg-card-header, #fff3cc); border: 1px solid #f59e0b; color: var(--text-primary); font-weight: 800;">${hc} ng</span></th>`;
                 }).join('')}
               </tr>
             </thead>
@@ -4970,11 +4983,11 @@
               </tr>
               <tr>
                 <td class="mini-kpi-label">Tổng TG có KH</td>
-                ${activeNightKips.map(() => `<td class="mini-kpi-val font-mono" style="${nightAvgShiftHours > 0 ? 'color: #c084fc; font-weight: 700;' : 'color: #64748b;'}" title="Tổng giờ công nhân lực Ca Đêm: ${grandNightManHours.toFixed(1)}h ÷ ${effectiveNightPeople} người">${nightAvgShiftHours > 0 ? nightAvgShiftHours.toFixed(2) : ''}</td>`).join('')}
+                ${activeNightKips.map(() => `<td class="mini-kpi-val font-mono" style="${nightAvgShiftHours > 0 ? 'color: var(--text-primary); font-weight: 800;' : 'color: var(--text-primary);'}" title="Tổng giờ công nhân lực Ca Đêm: ${grandNightManHours.toFixed(1)}h ÷ ${effectiveNightPeople} người">${nightAvgShiftHours > 0 ? nightAvgShiftHours.toFixed(2) : ''}</td>`).join('')}
               </tr>
               <tr>
                 <td class="mini-kpi-label">Hiệu Suất</td>
-                ${activeNightKips.map(() => `<td class="mini-kpi-val font-mono" style="${nightEffPct ? (nightEffNum > 100 ? 'color: #f87171; font-weight: 800;' : 'color: #34d399; font-weight: 800;') : 'color: #64748b;'}">${nightEffPct ? nightEffPct + '%' : ''}</td>`).join('')}
+                ${activeNightKips.map(() => `<td class="mini-kpi-val font-mono" style="${nightEffPct ? (nightEffNum < 100 ? 'color: var(--color-alert-red, #ff0000) !important; font-weight: 800;' : 'color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;') : 'color: var(--text-primary);'}">${nightEffPct ? nightEffPct + '%' : ''}</td>`).join('')}
               </tr>
             </tbody>
           </table>
@@ -5136,19 +5149,19 @@
               <tr class="sim-sticky-totals-row">
                 <th class="sticky-sim-stt"></th>
                 <th class="sticky-sim-stage"></th>
-                <th class="sticky-sim-group" style="text-align: center; color: #fbbf24; font-size: 0.725rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0.35rem 0.25rem;" title="Người lập Plan: ${plannerName}">
+                <th class="sticky-sim-group" style="text-align: center; color: var(--text-primary); font-size: 0.725rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0.35rem 0.25rem;" title="Người lập Plan: ${plannerName}">
                   👤 ${plannerName}
                 </th>
                 <th class="sticky-sim-model" style="text-align: right; color: var(--text-primary); font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.65rem;">
                   Tổng Cộng :
                 </th>
-                <th class="font-mono" style="text-align: right; color: #60a5fa; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                <th class="font-mono" style="text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.85rem; font-weight: 900; padding: 0.35rem 0.45rem;">
                   ${grandPlan.toLocaleString('vi-VN')}
                 </th>
-                <th class="font-mono" style="text-align: right; color: #34d399; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                <th class="font-mono" style="text-align: right; color: var(--text-primary) !important; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
                   ${grandFact.toLocaleString('vi-VN')}
                 </th>
-                <th class="font-mono" style="text-align: right; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem; ${grandGap < 0 ? 'color: #f87171;' : grandGap > 0 ? 'color: #34d399;' : 'color: var(--text-muted);'}">
+                <th class="font-mono" style="text-align: right; font-size: 0.85rem; font-weight: 900; padding: 0.35rem 0.45rem; ${grandGap < 0 ? 'color: var(--color-alert-red, #ff0000) !important;' : grandGap > 0 ? 'color: var(--color-plan-blue, #0000ff) !important;' : 'color: var(--text-primary) !important;'}">
                   ${grandGap !== 0 ? (grandGap > 0 ? '+' : '') + grandGap.toLocaleString('vi-VN') : '0'}
                 </th>
                 <th style="padding: 0.35rem 0.35rem;"></th>
@@ -5158,41 +5171,41 @@
                 <th style="padding: 0.35rem 0.35rem;"></th>
                 <th style="padding: 0.35rem 0.35rem;"></th>
                 <th style="padding: 0.35rem 0.35rem;"></th>
-                <th class="font-mono" style="text-align: right; color: #fbbf24; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;" title="Tổng Giờ máy cần tiêu chuẩn (chưa tính FTT &amp; Downtime)">
+                <th class="font-mono" style="text-align: right; color: var(--text-primary); font-size: 0.88rem; font-weight: 800; padding: 0.35rem 0.45rem;" title="Tổng Giờ máy cần tiêu chuẩn (chưa tính FTT &amp; Downtime)">
                   ${grandStdHours.toFixed(1)}
                 </th>
                 <!-- Cụm Ca Ngày -->
                 <th style="padding: 0.35rem 0.25rem;"></th>
-                <th class="font-mono" style="text-align: center; color: #38bdf8; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.3rem;">
+                <th class="font-mono" style="text-align: center; color: var(--text-primary); font-size: 0.88rem; font-weight: 800; padding: 0.35rem 0.3rem;">
                   ${grandDayTb > 0 ? grandDayTb.toLocaleString('vi-VN') : ''}
                 </th>
-                <th class="font-mono" style="text-align: center; color: #c084fc; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.3rem;">
+                <th class="font-mono" style="text-align: center; color: var(--text-primary); font-size: 0.88rem; font-weight: 800; padding: 0.35rem 0.3rem;">
                   ${grandDayMan > 0 ? grandDayMan.toLocaleString('vi-VN') : ''}
                 </th>
-                <th class="font-mono" style="text-align: right; color: #38bdf8; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                <th class="font-mono" style="text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.88rem; font-weight: 900; padding: 0.35rem 0.45rem;">
                   ${grandDayOutput > 0 ? grandDayOutput.toLocaleString('vi-VN') : ''}
                 </th>
-                <th class="font-mono" style="text-align: right; color: #38bdf8; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;" title="Tổng Giờ máy cần thực tế Ca Ngày (đã tính FTT &amp; Downtime)">
+                <th class="font-mono" style="text-align: right; color: var(--text-primary); font-size: 0.88rem; font-weight: 800; padding: 0.35rem 0.45rem;" title="Tổng Giờ máy cần thực tế Ca Ngày (đã tính FTT &amp; Downtime)">
                   ${grandDayActualHours > 0 ? grandDayActualHours.toFixed(1) : ''}
                 </th>
-                <th class="font-mono" style="text-align: right; color: #f87171; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                <th class="font-mono" style="text-align: right; color: var(--color-alert-red, #ff0000) !important; font-size: 0.88rem; font-weight: 900; padding: 0.35rem 0.45rem;">
                   ${grandNightShortage > 0 ? '-' + grandNightShortage.toLocaleString('vi-VN') : ''}
                 </th>
                 <!-- Cụm Ca Đêm -->
                 <th style="padding: 0.35rem 0.25rem;"></th>
-                <th class="font-mono" style="text-align: center; color: #c084fc; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.3rem;">
+                <th class="font-mono" style="text-align: center; color: var(--text-primary); font-size: 0.88rem; font-weight: 800; padding: 0.35rem 0.3rem;">
                   ${grandNightTb > 0 ? grandNightTb.toLocaleString('vi-VN') : ''}
                 </th>
-                <th class="font-mono" style="text-align: center; color: #c084fc; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.3rem;">
+                <th class="font-mono" style="text-align: center; color: var(--text-primary); font-size: 0.88rem; font-weight: 800; padding: 0.35rem 0.3rem;">
                   ${grandNightMan > 0 ? grandNightMan.toLocaleString('vi-VN') : ''}
                 </th>
-                <th class="font-mono" style="text-align: right; color: #c084fc; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                <th class="font-mono" style="text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-size: 0.88rem; font-weight: 900; padding: 0.35rem 0.45rem;">
                   ${grandNightOutput > 0 ? grandNightOutput.toLocaleString('vi-VN') : ''}
                 </th>
-                <th class="font-mono" style="text-align: right; color: #c084fc; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;" title="Tổng Giờ máy cần thực tế Ca Đêm (đã tính FTT &amp; Downtime)">
+                <th class="font-mono" style="text-align: right; color: var(--text-primary); font-size: 0.88rem; font-weight: 800; padding: 0.35rem 0.45rem;" title="Tổng Giờ máy cần thực tế Ca Đêm (đã tính FTT &amp; Downtime)">
                   ${grandNightActualHours > 0 ? grandNightActualHours.toFixed(1) : ''}
                 </th>
-                <th class="font-mono" style="text-align: right; color: #f87171; font-size: 0.85rem; font-weight: 800; padding: 0.35rem 0.45rem;">
+                <th class="font-mono" style="text-align: right; color: var(--color-alert-red, #ff0000) !important; font-size: 0.88rem; font-weight: 900; padding: 0.35rem 0.45rem;">
                   ${grandFinalShortage > 0 ? '-' + grandFinalShortage.toLocaleString('vi-VN') : ''}
                 </th>
                 <th style="padding: 0.35rem 0.25rem;"></th>
@@ -5206,35 +5219,35 @@
                 <th class="sticky-sim-stage" style="text-align: center;">Công Đoạn</th>
                 <th class="sticky-sim-group" style="text-align: left;">Group Model</th>
                 <th class="sticky-sim-model" style="text-align: left;">Mã 1C</th>
-                <th style="text-align: right; min-width: 88px; color: #60a5fa; padding: 0.35rem 0.35rem;">Kế Hoạch<br>(Plan)</th>
-                <th style="text-align: right; min-width: 80px; color: #34d399; padding: 0.35rem 0.35rem;">Thực Tế<br>(Fact)</th>
-                <th style="text-align: right; min-width: 82px; color: #f87171; padding: 0.35rem 0.35rem;">Chênh Lệch<br>(Gap)</th>
-                <th style="text-align: center; min-width: 90px; color: #38bdf8; padding: 0.35rem 0.35rem;">Date Plan</th>
-                <th style="text-align: center; min-width: 78px; color: #a78bfa; padding: 0.35rem 0.35rem;">Shift Plan</th>
-                <th style="text-align: right; min-width: 78px; color: #38bdf8; padding: 0.35rem 0.35rem;" title="Cycle Time Norm gốc trên sheet Hardtest Data (chưa gồm FTT &amp; Downtime)">Cycle Time<br>Norm</th>
-                <th style="text-align: right; min-width: 68px; color: #34d399; padding: 0.35rem 0.35rem;" title="Tỉ lệ Pass FTT % lấy từ sheet Hardtest Data (cột FTT %)">FTT</th>
-                <th style="text-align: right; min-width: 78px; color: #f59e0b; padding: 0.35rem 0.35rem;" title="Tổng Downtime lấy từ sheet Hardtest Data (cột Total DownTime)">Downtime</th>
-                <th style="text-align: center; min-width: 96px; color: #38bdf8; padding: 0.35rem 0.3rem;" title="Số Test Block sẵn có trên sheet Hardtest Data (nhóm Dùng Chung giới hạn tổng TB/ca)">TB Sẵn Có<br>(Test Block)</th>
-                <th style="text-align: center; min-width: 90px; color: #10b981; padding: 0.35rem 0.3rem;">Số Test Block<br>Cần</th>
-                <th style="text-align: right; min-width: 96px; color: #fbbf24; padding: 0.35rem 0.35rem;" title="Giờ máy cần tiêu chuẩn (KHÔNG tính FTT &amp; Downtime) = |Chênh lệch| × CT Norm ÷ 3600">Giờ máy cần<br>tiêu chuẩn</th>
+                <th style="text-align: right; min-width: 88px; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800; padding: 0.35rem 0.35rem;">Kế Hoạch<br>(Plan)</th>
+                <th style="text-align: right; min-width: 80px; color: var(--text-primary) !important; font-weight: 800; padding: 0.35rem 0.35rem;">Thực Tế<br>(Fact)</th>
+                <th style="text-align: right; min-width: 82px; color: var(--text-primary) !important; font-weight: 800; padding: 0.35rem 0.35rem;">Chênh Lệch<br>(Gap)</th>
+                <th style="text-align: center; min-width: 90px; color: var(--text-primary) !important; font-weight: 800; padding: 0.35rem 0.35rem;">Date Plan</th>
+                <th style="text-align: center; min-width: 78px; color: var(--text-primary) !important; font-weight: 800; padding: 0.35rem 0.35rem;">Shift Plan</th>
+                <th style="text-align: right; min-width: 78px; color: var(--text-primary); font-weight: 800; padding: 0.35rem 0.35rem;" title="Cycle Time Norm gốc trên sheet Hardtest Data (chưa gồm FTT &amp; Downtime)">Cycle Time<br>Norm</th>
+                <th style="text-align: right; min-width: 68px; color: var(--text-primary); font-weight: 800; padding: 0.35rem 0.35rem;" title="Tỉ lệ Pass FTT % lấy từ sheet Hardtest Data (cột FTT %)">FTT</th>
+                <th style="text-align: right; min-width: 78px; color: var(--text-primary); font-weight: 800; padding: 0.35rem 0.35rem;" title="Tổng Downtime lấy từ sheet Hardtest Data (cột Total DownTime)">Downtime</th>
+                <th style="text-align: center; min-width: 96px; color: var(--text-primary); font-weight: 800; padding: 0.35rem 0.3rem;" title="Số Test Block sẵn có trên sheet Hardtest Data (nhóm Dùng Chung giới hạn tổng TB/ca)">TB Sẵn Có<br>(Test Block)</th>
+                <th style="text-align: center; min-width: 90px; color: var(--text-primary); font-weight: 800; padding: 0.35rem 0.3rem;">Số Test Block<br>Cần</th>
+                <th style="text-align: right; min-width: 96px; color: var(--text-primary); font-weight: 800; padding: 0.35rem 0.35rem;" title="Giờ máy cần tiêu chuẩn (KHÔNG tính FTT &amp; Downtime) = |Chênh lệch| × CT Norm ÷ 3600">Giờ máy cần<br>tiêu chuẩn</th>
                 <!-- Cụm Ca Ngày -->
-                <th style="text-align: center; min-width: 72px; color: #cbd5e1; padding: 0.35rem 0.25rem;">Ca Làm<br>Việc</th>
-                <th style="text-align: center; min-width: 82px; color: #38bdf8; padding: 0.35rem 0.25rem;">Số Test Block<br>Dùng</th>
-                <th style="text-align: center; min-width: 82px; color: #c084fc; padding: 0.35rem 0.25rem;">Số Người<br>Sử Dụng</th>
-                <th style="text-align: right; min-width: 92px; color: #38bdf8; padding: 0.35rem 0.35rem;" title="Output Plan Ca Ngày (có thể chỉnh sửa trực tiếp, tự tính lại thiếu ca đêm &amp; giờ máy thực tế)">OUTPUT PLAN<br>DAY</th>
-                <th style="text-align: right; min-width: 96px; color: #38bdf8; padding: 0.35rem 0.35rem;" title="Giờ máy cần thực tế Ca Ngày (ĐÃ tính FTT &amp; Downtime) = OUTPUT PLAN DAY × CT_Thực_Tế ÷ 3600">Giờ máy cần<br>thực tế</th>
-                <th style="text-align: right; min-width: 98px; color: #f87171; padding: 0.35rem 0.35rem;">Số lượng còn<br>thiếu ca đêm</th>
+                <th style="text-align: center; min-width: 72px; color: var(--text-primary); font-weight: 800; padding: 0.35rem 0.25rem;">Ca Làm<br>Việc</th>
+                <th style="text-align: center; min-width: 82px; color: var(--text-primary); font-weight: 800; padding: 0.35rem 0.25rem;">Số Test Block<br>Dùng</th>
+                <th style="text-align: center; min-width: 82px; color: var(--text-primary); font-weight: 800; padding: 0.35rem 0.25rem;">Số Người<br>Sử Dụng</th>
+                <th style="text-align: right; min-width: 92px; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800; padding: 0.35rem 0.35rem;" title="Output Plan Ca Ngày (có thể chỉnh sửa trực tiếp, tự tính lại thiếu ca đêm &amp; giờ máy thực tế)">OUTPUT PLAN<br>DAY</th>
+                <th style="text-align: right; min-width: 96px; color: var(--text-primary); font-weight: 800; padding: 0.35rem 0.35rem;" title="Giờ máy cần thực tế Ca Ngày (ĐÃ tính FTT &amp; Downtime) = OUTPUT PLAN DAY × CT_Thực_Tế ÷ 3600">Giờ máy cần<br>thực tế</th>
+                <th style="text-align: right; min-width: 98px; color: var(--color-alert-red, #ff0000) !important; font-weight: 800; padding: 0.35rem 0.35rem;">Số lượng còn<br>thiếu ca đêm</th>
                 <!-- Cụm Ca Đêm -->
-                <th style="text-align: center; min-width: 72px; color: #c084fc; padding: 0.35rem 0.25rem;">Ca Làm<br>Việc</th>
-                <th style="text-align: center; min-width: 82px; color: #c084fc; padding: 0.35rem 0.25rem;">Số Test Block<br>Dùng</th>
-                <th style="text-align: center; min-width: 82px; color: #c084fc; padding: 0.35rem 0.25rem;">Số Người<br>Sử Dụng</th>
-                <th style="text-align: right; min-width: 92px; color: #c084fc; padding: 0.35rem 0.35rem;" title="Output Plan Ca Đêm (tự động theo TB Ca Đêm hoặc chỉnh sửa trực tiếp)">Output Plan<br>ca đêm</th>
-                <th style="text-align: right; min-width: 96px; color: #c084fc; padding: 0.35rem 0.35rem;" title="Giờ máy cần thực tế Ca Đêm (ĐÃ tính FTT &amp; Downtime) = Output Plan ca đêm × CT_Thực_Tế ÷ 3600">Giờ máy cần<br>thực tế</th>
-                <th style="text-align: right; min-width: 98px; color: #f87171; padding: 0.35rem 0.35rem;">Số lượng còn<br>thiếu tổng</th>
+                <th style="text-align: center; min-width: 72px; color: var(--text-primary); font-weight: 800; padding: 0.35rem 0.25rem;">Ca Làm<br>Việc</th>
+                <th style="text-align: center; min-width: 82px; color: var(--text-primary); font-weight: 800; padding: 0.35rem 0.25rem;">Số Test Block<br>Dùng</th>
+                <th style="text-align: center; min-width: 82px; color: var(--text-primary); font-weight: 800; padding: 0.35rem 0.25rem;">Số Người<br>Sử Dụng</th>
+                <th style="text-align: right; min-width: 92px; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800; padding: 0.35rem 0.35rem;" title="Output Plan Ca Đêm (tự động theo TB Ca Đêm hoặc chỉnh sửa trực tiếp)">Output Plan<br>ca đêm</th>
+                <th style="text-align: right; min-width: 96px; color: var(--text-primary); font-weight: 800; padding: 0.35rem 0.35rem;" title="Giờ máy cần thực tế Ca Đêm (ĐÃ tính FTT &amp; Downtime) = Output Plan ca đêm × CT_Thực_Tế ÷ 3600">Giờ máy cần<br>thực tế</th>
+                <th style="text-align: right; min-width: 98px; color: var(--color-alert-red, #ff0000) !important; font-weight: 800; padding: 0.35rem 0.35rem;">Số lượng còn<br>thiếu tổng</th>
                 <!-- Cụm Trailing tương tự Assembly -->
-                <th style="text-align: left; min-width: 140px; color: #e2e8f0; padding: 0.35rem 0.35rem;">Ghi Chú</th>
-                <th style="text-align: center; min-width: 132px; color: #fbbf24; padding: 0.35rem 0.35rem;" title="Truy xuất ngày và ca sản xuất (Ngày / Đêm) bắt đầu bị âm cho các Model Âm luỹ kế">Âm Từ<br>Ngày / Ca</th>
-                <th style="text-align: center; min-width: 102px; color: #34d399; padding: 0.35rem 0.35rem;" title="Bấm để mở ngay tab WIP Control và lọc đúng Model này theo công đoạn">Check WIP</th>
+                <th style="text-align: left; min-width: 140px; color: var(--text-primary); font-weight: 800; padding: 0.35rem 0.35rem;">Ghi Chú</th>
+                <th style="text-align: center; min-width: 132px; color: var(--color-alert-red, #ff0000) !important; font-weight: 800; padding: 0.35rem 0.35rem;" title="Truy xuất ngày và ca sản xuất (Ngày / Đêm) bắt đầu bị âm cho các Model Âm luỹ kế">Âm Từ<br>Ngày / Ca</th>
+                <th style="text-align: center; min-width: 102px; color: var(--text-primary); font-weight: 800; padding: 0.35rem 0.35rem;" title="Bấm để mở ngay tab WIP Control và lọc đúng Model này theo công đoạn">Check WIP</th>
               </tr>
             </thead>
             <tbody>
@@ -7392,25 +7405,25 @@
             <button type="button" class="btn btn-secondary" onclick="handleExportUnscheduledWarningCSV()" style="padding: 0.25rem 0.6rem; font-size: 0.72rem; font-weight: 700; color: #fca5a5; border-color: rgba(248, 113, 113, 0.5); background: rgba(15, 23, 42, 0.75);">
               <span>📥 Xuất CSV Cảnh Báo</span>
             </button>
-            <button type="button" class="btn btn-secondary" onclick="handleCopyUnscheduledWarningClipboard()" style="padding: 0.25rem 0.6rem; font-size: 0.72rem; font-weight: 700; color: #fde68a; border-color: rgba(251, 191, 36, 0.45); background: rgba(15, 23, 42, 0.75);">
+            <button type="button" class="btn btn-secondary" onclick="handleCopyUnscheduledWarningClipboard()" style="padding: 0.25rem 0.6rem; font-size: 0.8rem; font-weight: 800; color: var(--text-primary); border: 1.5px solid var(--border-glass); background: var(--bg-card); border-radius: 6px;">
               <span>📋 Copy Cảnh Báo</span>
             </button>
           </div>
         </div>
         <div style="overflow-x: auto; max-height: 360px;">
           <table class="sim-seq-table" style="width: 100%;">
-            <thead style="position: sticky; top: 0; z-index: 4; background: rgba(15, 23, 42, 0.98);">
+            <thead style="position: sticky; top: 0; z-index: 4; background: var(--bg-card-header, #fff3cc); border-bottom: 1.5px solid #cbd5e1;">
               <tr>
-                <th style="width: 38px; text-align: center;">STT</th>
-                <th style="width: 78px; text-align: center;">CÔNG ĐOẠN</th>
-                <th style="min-width: 105px;">GROUP MODEL</th>
-                <th style="min-width: 185px;">MÃ MODEL (1C)</th>
-                <th style="text-align: right; min-width: 68px; color: #60a5fa;">KẾ HOẠCH</th>
-                <th style="text-align: right; min-width: 65px; color: #34d399;">THỰC TẾ</th>
-                <th style="text-align: right; min-width: 72px; color: #f87171;">BÙ THIẾU</th>
-                <th style="text-align: right; min-width: 65px; color: #fbbf24;">TG TC</th>
-                <th style="text-align: center; min-width: 92px;">CẢNH BÁO</th>
-                <th style="min-width: 185px; color: #fca5a5;">GHI CHÚ (YÊU CẦU NHẬP) *</th>
+                <th style="width: 38px; text-align: center; color: var(--text-primary); font-weight: 800;">STT</th>
+                <th style="width: 78px; text-align: center; color: var(--text-primary); font-weight: 800;">CÔNG ĐOẠN</th>
+                <th style="min-width: 105px; color: var(--text-primary); font-weight: 800;">GROUP MODEL</th>
+                <th style="min-width: 185px; color: var(--text-primary); font-weight: 800;">MÃ MODEL (1C)</th>
+                <th style="text-align: right; min-width: 68px; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;">KẾ HOẠCH</th>
+                <th style="text-align: right; min-width: 65px; color: var(--text-primary) !important; font-weight: 800;">THỰC TẾ</th>
+                <th style="text-align: right; min-width: 72px; color: var(--color-alert-red, #ff0000) !important; font-weight: 800;">BÙ THIẾU</th>
+                <th style="text-align: right; min-width: 65px; color: var(--text-primary); font-weight: 800;">TG TC</th>
+                <th style="text-align: center; min-width: 92px; color: var(--text-primary); font-weight: 800;">CẢNH BÁO</th>
+                <th style="min-width: 185px; color: var(--color-alert-red, #ff0000) !important; font-weight: 800;">GHI CHÚ (YÊU CẦU NHẬP) *</th>
               </tr>
             </thead>
             <tbody>
@@ -7603,39 +7616,39 @@
         <div class="sim-seq-group-card" style="padding: 0; overflow: hidden; border: 1px solid rgba(255,255,255,0.15);">
           <div style="overflow-x: auto; max-height: 520px;">
             <table class="sim-seq-table" style="width: 100%;">
-              <thead style="position: sticky; top: 0; z-index: 5; background: rgba(15, 23, 42, 0.98);">
+              <thead style="position: sticky; top: 0; z-index: 5; background: var(--bg-card-header, #fff3cc); border-bottom: 1.5px solid #cbd5e1;">
                 <tr>
-                  <th style="width: 45px; text-align: center;">STT</th>
-                  <th style="width: 85px; text-align: center;">CA</th>
-                  <th style="width: 80px; text-align: center;">LINE</th>
-                  <th style="width: 65px; text-align: center;">THỨ TỰ</th>
-                  <th style="width: 85px; text-align: center;">CÔNG ĐOẠN</th>
-                  <th style="min-width: 130px;">GROUP MODEL</th>
-                  <th style="min-width: 260px;">MÃ MODEL (1C)</th>
-                  <th style="text-align: right; min-width: 90px;">BÙ THIẾU</th>
-                  <th style="text-align: right; min-width: 95px; color: #34d399;">SẢN LƯỢNG</th>
-                  <th style="text-align: right; min-width: 55px;">CT</th>
-                  <th style="text-align: right; min-width: 75px;">GIỜ CHẠY</th>
-                  <th style="text-align: center; min-width: 115px;">LŨY KẾ GIỜ</th>
-                  <th style="text-align: center; min-width: 95px;">ĐÁNH GIÁ</th>
+                  <th style="width: 45px; text-align: center; color: var(--text-primary); font-weight: 800;">STT</th>
+                  <th style="width: 85px; text-align: center; color: var(--text-primary); font-weight: 800;">CA</th>
+                  <th style="width: 80px; text-align: center; color: var(--text-primary); font-weight: 800;">LINE</th>
+                  <th style="width: 65px; text-align: center; color: var(--text-primary); font-weight: 800;">THỨ TỰ</th>
+                  <th style="width: 85px; text-align: center; color: var(--text-primary); font-weight: 800;">CÔNG ĐOẠN</th>
+                  <th style="min-width: 130px; color: var(--text-primary); font-weight: 800;">GROUP MODEL</th>
+                  <th style="min-width: 260px; color: var(--text-primary); font-weight: 800;">MÃ MODEL (1C)</th>
+                  <th style="text-align: right; min-width: 90px; color: var(--color-alert-red, #ff0000) !important; font-weight: 800;">BÙ THIẾU</th>
+                  <th style="text-align: right; min-width: 95px; color: var(--color-plan-blue, #0000ff) !important; font-weight: 800;">SẢN LƯỢNG</th>
+                  <th style="text-align: right; min-width: 55px; color: var(--text-primary); font-weight: 800;">CT</th>
+                  <th style="text-align: right; min-width: 75px; color: var(--text-primary); font-weight: 800;">GIỜ CHẠY</th>
+                  <th style="text-align: center; min-width: 115px; color: var(--text-primary); font-weight: 800;">LŨY KẾ GIỜ</th>
+                  <th style="text-align: center; min-width: 95px; color: var(--text-primary); font-weight: 800;">ĐÁNH GIÁ</th>
                 </tr>
               </thead>
               <tbody>
                 ${tableRowsHtml}
               </tbody>
               <tfoot>
-                <tr style="background: rgba(15, 23, 42, 0.95); font-weight: 800; border-top: 2px solid var(--border-glass);">
-                  <td colspan="7" style="text-align: right; color: #fbbf24; font-size: 0.8rem; padding: 0.5rem 0.75rem;">
+                <tr style="background: var(--bg-card-header, #fff3cc); font-weight: 800; border-top: 1.5px solid #cbd5e1;">
+                  <td colspan="7" style="text-align: right; color: var(--text-primary); font-size: 0.85rem; font-weight: 900; padding: 0.5rem 0.75rem;">
                     TỔNG CỘNG (${filteredJobs.length} Model):
                   </td>
-                  <td class="font-mono" style="text-align: right; color: #f87171; font-weight: 800; padding: 0.5rem 0.5rem;">
+                  <td class="font-mono" style="text-align: right; color: var(--color-alert-red, #ff0000) !important; font-weight: 900; padding: 0.5rem 0.5rem;">
                     ${filteredJobs.reduce((s, j) => s + (j.gapQty || 0), 0).toLocaleString('vi-VN')}
                   </td>
-                  <td class="font-mono" style="text-align: right; color: #34d399; font-weight: 800; font-size: 0.85rem; padding: 0.5rem 0.5rem;">
+                  <td class="font-mono" style="text-align: right; color: var(--color-plan-blue, #0000ff) !important; font-weight: 900; font-size: 0.88rem; padding: 0.5rem 0.5rem;">
                     +${filteredJobs.reduce((s, j) => s + (j.allocatedQty || 0), 0).toLocaleString('vi-VN')}
                   </td>
                   <td></td>
-                  <td class="font-mono" style="text-align: right; color: #fbbf24; font-weight: 800; font-size: 0.85rem; padding: 0.5rem 0.5rem;">
+                  <td class="font-mono" style="text-align: right; color: var(--text-primary); font-weight: 800; font-size: 0.85rem; padding: 0.5rem 0.5rem;">
                     ${filteredJobs.reduce((s, j) => s + (j.hours || 0), 0).toFixed(1)}h
                   </td>
                   <td colspan="2" style="text-align: center; color: #94a3b8; font-size: 0.75rem; padding: 0.5rem;">
