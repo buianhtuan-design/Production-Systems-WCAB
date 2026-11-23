@@ -1,7 +1,7 @@
 {
   "success": true,
-  "timestamp": "2026-11-23 15:24:23",
-  "version": 20261123152423,
+  "timestamp": "2026-11-23 15:27:44",
+  "version": 20261123152744,
   "kpiSummary": [
     {
       "month": "Nov - 2026",
@@ -5978,6 +5978,19 @@
     ]
   },
   "blockedBatches": [
+    {
+      "date": "Blocked batches (v1)",
+      "unblockDate": "",
+      "device": "",
+      "area": "",
+      "cl": "",
+      "generator": "",
+      "responsible": "",
+      "nonConformance": "",
+      "qty": "",
+      "detectedQty": "",
+      "defectPct": ""
+    },
     {
       "date": "12.02.2026",
       "unblockDate": "13.02.2026",
