@@ -36,17 +36,17 @@
       "2B",
       "3B"
     ],
-    "assyDirect": 42.0,
-    "assyTotal": 57.0,
+    "assyDirect": 43.0,
+    "assyTotal": 58.0,
     "assyLinesDirect": {
       "1B": 14.0,
       "2B": 14.0,
-      "3B": 14.0
+      "3B": 15.0
     },
     "assyLinesTotal": {
       "1B": 19.0,
       "2B": 19.0,
-      "3B": 19.0
+      "3B": 20.0
     },
     "htDirect": 25.0,
     "htTotal": 27.0,
@@ -94,17 +94,17 @@
       "2D",
       "3D"
     ],
-    "assyDirect": 44.0,
-    "assyTotal": 59.0,
+    "assyDirect": 43.0,
+    "assyTotal": 58.0,
     "assyLinesDirect": {
       "1D": 14.0,
       "2D": 14.0,
-      "3D": 16.0
+      "3D": 15.0
     },
     "assyLinesTotal": {
       "1D": 19.0,
       "2D": 19.0,
-      "3D": 21.0
+      "3D": 20.0
     },
     "htDirect": 24.0,
     "htTotal": 26.0,
