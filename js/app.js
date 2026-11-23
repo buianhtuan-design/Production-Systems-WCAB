@@ -1208,7 +1208,9 @@ function applyThemeMode(theme) {
 
 function initTheme() {
   const toggleBtn = document.getElementById('themeToggleBtn');
-  const savedTheme = localStorage.getItem('AJAX_PROPLAN_THEME') || 'dark';
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlTheme = (urlParams.get('theme') || '').toLowerCase();
+  const savedTheme = (urlTheme === 'light' || urlTheme === 'dark') ? urlTheme : (localStorage.getItem('AJAX_PROPLAN_THEME') || 'dark');
   applyThemeMode(savedTheme);
 
   if (toggleBtn) {
@@ -8141,6 +8143,9 @@ window.saveKipLineConfig = function() {
   if (typeof window.syncHardtestKipsOnMasterConfigChange === 'function') {
     window.syncHardtestKipsOnMasterConfigChange();
   }
+  if (typeof window.renderCapacityView === 'function') {
+    window.renderCapacityView();
+  }
 
   window.closeKipLineConfigModal();
   window.showToast('success', '💾 Đã lưu và áp dụng cấu hình Line theo Kíp thành công! Toàn bộ bảng tính và biểu đồ đã được cập nhật.');
@@ -8164,6 +8169,9 @@ window.resetKipConfigToDefault = function() {
   }
   if (typeof window.syncHardtestKipsOnMasterConfigChange === 'function') {
     window.syncHardtestKipsOnMasterConfigChange();
+  }
+  if (typeof window.renderCapacityView === 'function') {
+    window.renderCapacityView();
   }
 
   window.renderKipConfigTab(window.activeKipConfigTab || 'A');

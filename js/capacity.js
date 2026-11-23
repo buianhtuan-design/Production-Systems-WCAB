@@ -37,6 +37,9 @@
     const data = window.AppStore.getAssemblyCapacityData();
     const currentStage = window.AppStore.selectedCapacityStage || 'ASSEMBLY';
     const shiftHours = parseFloat(window.AppStore.capacityShiftHours || 21.41);
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlCapMode = (urlParams.get('capMode') || urlParams.get('mode') || '').toUpperCase();
+    if (urlCapMode === 'SIMULATOR') window.AppStore.capacityViewMode = 'SIMULATOR';
     const viewMode = window.AppStore.capacityViewMode || 'MATRIX';
     const searchVal = (document.getElementById('capacitySearchInput')?.value || '').trim();
     const _defWeek = (window.AppStore && window.AppStore.getFactoryWeekRange) ? window.AppStore.getFactoryWeekRange() : null;
@@ -2034,32 +2037,50 @@
     const selCount = schedule.kpis.selectedDaysCount || 5;
     const totCount = schedule.kpis.totalDaysCount || 5;
 
-    const availableFactoryLines = ['1A', '2A', '1B', '2B', '1C', '2C', '1D', '2D', '3A', '3C', '3D', 'Support 1', 'Support 2', 'Support 3'];
-    const activeAssemblyLines = ['1A', '2A', '1B', '2B', '1C', '2C', '1D', '2D', '3A', '3C', '3D', 'Support 1', 'Support 2', 'Support 3'];
+    // Lấy danh sách Line theo "Cấu Hình Line & Định Mức Nhân Lực" (window.MANPOWER_MASTER_DATA)
+    const getMasterAssemblyLines = () => {
+      const masterLines = [];
+      const src = window.MANPOWER_MASTER_DATA || (typeof window.getStandardManpowerDefaults === 'function' ? window.getStandardManpowerDefaults() : null);
+      if (src) {
+        ['A', 'B', 'C', 'D'].forEach(kCode => {
+          const k = src[kCode];
+          if (k && k.assyLinesDirect) {
+            Object.keys(k.assyLinesDirect).forEach(lid => {
+              if (!masterLines.includes(lid)) masterLines.push(lid);
+            });
+          }
+        });
+      }
+      if (masterLines.length === 0) {
+        masterLines.push('1A', '2A', '3A', '1B', '2B', '3B', '1C', '2C', '3C', '1D', '2D', '3D');
+      }
+      return masterLines;
+    };
 
-    // Auto-migrate legacy 'Support' to 'Support 1'
+    const baseConfiguredLines = getMasterAssemblyLines();
+    const availableFactoryLines = [...baseConfiguredLines, 'Support 1', 'Support 2', 'Support 3'];
+    const activeAssemblyLines = [...availableFactoryLines];
+
+    // Auto-migrate legacy 'Support' to 'Support 1' (Line 3B giữ nguyên không bị map sang 3C)
     if (window.AppStore.simWorkingLinesDay) {
-      window.AppStore.simWorkingLinesDay = window.AppStore.simWorkingLinesDay.map(l => l === 'Support' ? 'Support 1' : (l === '3B' ? '3C' : l));
+      window.AppStore.simWorkingLinesDay = window.AppStore.simWorkingLinesDay.map(l => l === 'Support' ? 'Support 1' : l);
     }
     if (window.AppStore.simWorkingLinesNight) {
-      window.AppStore.simWorkingLinesNight = window.AppStore.simWorkingLinesNight.map(l => l === 'Support' ? 'Support 1' : (l === '3B' ? '3C' : l));
+      window.AppStore.simWorkingLinesNight = window.AppStore.simWorkingLinesNight.map(l => l === 'Support' ? 'Support 1' : l);
     }
     if (window.AppStore.simLineOverridesDay) {
       Object.keys(window.AppStore.simLineOverridesDay).forEach(k => {
         if (window.AppStore.simLineOverridesDay[k] === 'Support') window.AppStore.simLineOverridesDay[k] = 'Support 1';
-        if (window.AppStore.simLineOverridesDay[k] === '3B') window.AppStore.simLineOverridesDay[k] = '3C';
       });
     }
     if (window.AppStore.simLineOverridesNight) {
       Object.keys(window.AppStore.simLineOverridesNight).forEach(k => {
         if (window.AppStore.simLineOverridesNight[k] === 'Support') window.AppStore.simLineOverridesNight[k] = 'Support 1';
-        if (window.AppStore.simLineOverridesNight[k] === '3B') window.AppStore.simLineOverridesNight[k] = '3C';
       });
     }
     if (window.AppStore.simLineOverrides) {
       Object.keys(window.AppStore.simLineOverrides).forEach(k => {
         if (window.AppStore.simLineOverrides[k] === 'Support') window.AppStore.simLineOverrides[k] = 'Support 1';
-        if (window.AppStore.simLineOverrides[k] === '3B') window.AppStore.simLineOverrides[k] = '3C';
       });
     }
 
@@ -3764,23 +3785,22 @@
 
               <div style="width: 1px; height: 18px; background: rgba(255, 255, 255, 0.15); margin: 0 0.35rem;"></div>
 
-              <!-- Quick Line Support Selector for Day Shift -->
-              <div class="sim-support-selector" style="display: inline-flex; align-items: center; gap: 0.25rem; background: rgba(56, 189, 248, 0.08); padding: 0.12rem 0.45rem; border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.3); white-space: nowrap;">
-                <span style="font-size: 0.725rem; font-weight: 800; color: #38bdf8; display: flex; align-items: center; gap: 0.2rem;">
+              <!-- Line Support Selector for Day Shift (Độc lập chọn 1 hoặc nhiều line support) -->
+              <div class="sim-support-selector" style="display: inline-flex; align-items: center; gap: 0.3rem; background: rgba(56, 189, 248, 0.08); padding: 0.12rem 0.45rem; border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.3); white-space: nowrap;">
+                <span style="font-size: 0.725rem; font-weight: 800; color: #38bdf8; display: flex; align-items: center; gap: 0.2rem; margin-right: 0.1rem;">
                   🛠️ Line Support:
                 </span>
-                <button type="button" class="btn ${daySupportCount === 0 ? 'btn-primary' : 'btn-secondary'}" onclick="handleSetSimSupportLineCount('DAY', 0)" style="padding: 0.15rem 0.4rem; font-size: 0.7rem; font-weight: 800; min-width: 22px; ${daySupportCount === 0 ? 'background: #0284c7; color: #fff;' : ''}" title="Tắt toàn bộ Line Support ca Ngày">
-                  0
-                </button>
-                <button type="button" class="btn ${daySupportCount === 1 ? 'btn-primary' : 'btn-secondary'}" onclick="handleSetSimSupportLineCount('DAY', 1)" style="padding: 0.15rem 0.45rem; font-size: 0.7rem; font-weight: 800; ${daySupportCount === 1 ? 'background: #0284c7; color: #fff;' : ''}" title="Huy động 1 Line Support ca Ngày">
-                  1 Line
-                </button>
-                <button type="button" class="btn ${daySupportCount === 2 ? 'btn-primary' : 'btn-secondary'}" onclick="handleSetSimSupportLineCount('DAY', 2)" style="padding: 0.15rem 0.45rem; font-size: 0.7rem; font-weight: 800; ${daySupportCount === 2 ? 'background: #0284c7; color: #fff;' : ''}" title="Huy động 2 Line Support ca Ngày">
-                  2 Line
-                </button>
-                <button type="button" class="btn ${daySupportCount === 3 ? 'btn-primary' : 'btn-secondary'}" onclick="handleSetSimSupportLineCount('DAY', 3)" style="padding: 0.15rem 0.45rem; font-size: 0.7rem; font-weight: 800; ${daySupportCount === 3 ? 'background: #0284c7; color: #fff;' : ''}" title="Huy động 3 Line Support ca Ngày">
-                  3 Line
-                </button>
+                ${['Support 1', 'Support 2', 'Support 3'].map(spId => {
+                  const isSpActive = workingLinesDaySet.has(spId);
+                  return `
+                    <span class="sim-line-toggle-chip ${isSpActive ? 'is-day-active' : ''}" 
+                          onclick="handleToggleSimWorkingLine('DAY', '${spId}')" 
+                          title="Bấm để bật/tắt ${spId} ca Ngày"
+                          style="padding: 0.15rem 0.45rem; font-size: 0.72rem; font-weight: 800; cursor: pointer;">
+                      ${isSpActive ? '✓ ' : ''}${spId}
+                    </span>
+                  `;
+                }).join('')}
               </div>
             </div>
 
@@ -3804,23 +3824,22 @@
 
               <div style="width: 1px; height: 18px; background: rgba(255, 255, 255, 0.15); margin: 0 0.35rem;"></div>
 
-              <!-- Quick Line Support Selector for Night Shift -->
-              <div class="sim-support-selector" style="display: inline-flex; align-items: center; gap: 0.25rem; background: rgba(192, 132, 252, 0.08); padding: 0.12rem 0.45rem; border-radius: 6px; border: 1px solid rgba(192, 132, 252, 0.3); white-space: nowrap;">
-                <span style="font-size: 0.725rem; font-weight: 800; color: #c084fc; display: flex; align-items: center; gap: 0.2rem;">
+              <!-- Line Support Selector for Night Shift (Độc lập chọn 1 hoặc nhiều line support) -->
+              <div class="sim-support-selector" style="display: inline-flex; align-items: center; gap: 0.3rem; background: rgba(192, 132, 252, 0.08); padding: 0.12rem 0.45rem; border-radius: 6px; border: 1px solid rgba(192, 132, 252, 0.3); white-space: nowrap;">
+                <span style="font-size: 0.725rem; font-weight: 800; color: #c084fc; display: flex; align-items: center; gap: 0.2rem; margin-right: 0.1rem;">
                   🛠️ Line Support:
                 </span>
-                <button type="button" class="btn ${nightSupportCount === 0 ? 'btn-primary' : 'btn-secondary'}" onclick="handleSetSimSupportLineCount('NIGHT', 0)" style="padding: 0.15rem 0.4rem; font-size: 0.7rem; font-weight: 800; min-width: 22px; ${nightSupportCount === 0 ? 'background: #9333ea; color: #fff;' : ''}" title="Tắt toàn bộ Line Support ca Đêm">
-                  0
-                </button>
-                <button type="button" class="btn ${nightSupportCount === 1 ? 'btn-primary' : 'btn-secondary'}" onclick="handleSetSimSupportLineCount('NIGHT', 1)" style="padding: 0.15rem 0.45rem; font-size: 0.7rem; font-weight: 800; ${nightSupportCount === 1 ? 'background: #9333ea; color: #fff;' : ''}" title="Huy động 1 Line Support ca Đêm">
-                  1 Line
-                </button>
-                <button type="button" class="btn ${nightSupportCount === 2 ? 'btn-primary' : 'btn-secondary'}" onclick="handleSetSimSupportLineCount('NIGHT', 2)" style="padding: 0.15rem 0.45rem; font-size: 0.7rem; font-weight: 800; ${nightSupportCount === 2 ? 'background: #9333ea; color: #fff;' : ''}" title="Huy động 2 Line Support ca Đêm">
-                  2 Line
-                </button>
-                <button type="button" class="btn ${nightSupportCount === 3 ? 'btn-primary' : 'btn-secondary'}" onclick="handleSetSimSupportLineCount('NIGHT', 3)" style="padding: 0.15rem 0.45rem; font-size: 0.7rem; font-weight: 800; ${nightSupportCount === 3 ? 'background: #9333ea; color: #fff;' : ''}" title="Huy động 3 Line Support ca Đêm">
-                  3 Line
-                </button>
+                ${['Support 1', 'Support 2', 'Support 3'].map(spId => {
+                  const isSpActive = workingLinesNightSet.has(spId);
+                  return `
+                    <span class="sim-line-toggle-chip ${isSpActive ? 'is-night-active' : ''}" 
+                          onclick="handleToggleSimWorkingLine('NIGHT', '${spId}')" 
+                          title="Bấm để bật/tắt ${spId} ca Đêm"
+                          style="padding: 0.15rem 0.45rem; font-size: 0.72rem; font-weight: 800; cursor: pointer;">
+                      ${isSpActive ? '✓ ' : ''}${spId}
+                    </span>
+                  `;
+                }).join('')}
               </div>
             </div>
           </div>
@@ -6304,6 +6323,10 @@
   };
 
   window.handleToggleSimWorkingLine = function(shift, lineId) {
+    if (window.UserAuth && !window.UserAuth.canEdit()) {
+      window.showToast('warning', '⚠️ Tài khoản của bạn là Viewer (Chỉ xem). Không thể thay đổi danh sách Line đi làm!');
+      return;
+    }
     if (shift === 'DAY') {
       const arr = window.AppStore.simWorkingLinesDay || [];
       const set = new Set(arr);
@@ -6411,7 +6434,7 @@
       window.showToast('warning', '⚠️ Tài khoản của bạn là Viewer (Chỉ xem). Không thể thay đổi danh sách Line đi làm!');
       return;
     }
-    const standardLines = ['1A', '2A', '1B', '2B', '1C', '2C', '1D', '2D', '3A', '3C', '3D'];
+    const standardLines = ['1A', '2A', '3A', '1B', '2B', '3B', '1C', '2C', '3C', '1D', '2D', '3D'];
     if (shift === 'DAY') {
       if (action === 'ALL') window.AppStore.simWorkingLinesDay = [...standardLines, 'Support 1'];
       else if (action === 'NONE') window.AppStore.simWorkingLinesDay = [];
