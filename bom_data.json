@@ -347201,6 +347201,312 @@
       }
     ]
   },
+  "62118": {
+    "productCode": "62118",
+    "specCode": "62118",
+    "productName": "Ajax Hub 2 Plus white EU (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000122318",
+        "nomenclature": "Ajax, HB2.001.PWB.001v4_HRD",
+        "spec": "Ajax, HB2.001.PWB.001v4_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000147062",
+        "nomenclature": "Ajax, HB2.008.MBR.001v1_H2P_ECG_8EU_white_HRD",
+        "spec": "Ajax, HB2.008.MBR.001v1_H2P_ECG_8EU_white_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007254",
+        "nomenclature": "Ajax, Hub_V4_holder_board with components",
+        "spec": "Ajax, Hub_V4_holder_board with components",
+        "quantity": 2.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000020415",
+        "nomenclature": "PCB HB2.002.ANT.002v3 WiFi",
+        "spec": "PCB HB2.002.ANT.002v3 WiFi",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000020661",
+        "nomenclature": "PCB HB2.002.ANT.001v3 LTE",
+        "spec": "PCB HB2.002.ANT.001v3 LTE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000019055",
+        "nomenclature": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "spec": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000012525",
+        "nomenclature": "MiniHUB_case_backside_WHITE (Double SIM card hole)",
+        "spec": "MiniHUB_case_backside_WHITE (Double SIM card hole)",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007240",
+        "nomenclature": "MiniHUB_case_button_WHITE",
+        "spec": "MiniHUB_case_button_WHITE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000033491",
+        "nomenclature": "The housing element MH frontside wh",
+        "spec": "The housing element MH frontside wh",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007241",
+        "nomenclature": "MiniHUB_case_light",
+        "spec": "MiniHUB_case_light",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007339",
+        "nomenclature": "Self-tapping screw M2*6 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*6 nickel-plated SUS304",
+        "quantity": 9.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000008330",
+        "nomenclature": "Damper_3*7 mm",
+        "spec": "Damper_3*7 mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000083995",
+        "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "Die cut part acrylic 9mm x 30mm",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000161898",
+        "nomenclature": "[Sticker]_HP2J_CE_EU_v4",
+        "spec": "[Sticker]_HP2J_CE_EU_v4",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000129738",
+        "nomenclature": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "spec": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
+  "000062118": {
+    "productCode": "62118",
+    "specCode": "62118",
+    "productName": "Ajax Hub 2 Plus white EU (напівфабрикат)",
+    "stage": "ASSEMBLY",
+    "process": "ASSEMBLY",
+    "materials": [
+      {
+        "materialCode": "000122318",
+        "nomenclature": "Ajax, HB2.001.PWB.001v4_HRD",
+        "spec": "Ajax, HB2.001.PWB.001v4_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000147062",
+        "nomenclature": "Ajax, HB2.008.MBR.001v1_H2P_ECG_8EU_white_HRD",
+        "spec": "Ajax, HB2.008.MBR.001v1_H2P_ECG_8EU_white_HRD",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007254",
+        "nomenclature": "Ajax, Hub_V4_holder_board with components",
+        "spec": "Ajax, Hub_V4_holder_board with components",
+        "quantity": 2.0,
+        "category": "SFG",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000020415",
+        "nomenclature": "PCB HB2.002.ANT.002v3 WiFi",
+        "spec": "PCB HB2.002.ANT.002v3 WiFi",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000020661",
+        "nomenclature": "PCB HB2.002.ANT.001v3 LTE",
+        "spec": "PCB HB2.002.ANT.001v3 LTE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000019055",
+        "nomenclature": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "spec": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000012525",
+        "nomenclature": "MiniHUB_case_backside_WHITE (Double SIM card hole)",
+        "spec": "MiniHUB_case_backside_WHITE (Double SIM card hole)",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007240",
+        "nomenclature": "MiniHUB_case_button_WHITE",
+        "spec": "MiniHUB_case_button_WHITE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000033491",
+        "nomenclature": "The housing element MH frontside wh",
+        "spec": "The housing element MH frontside wh",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007241",
+        "nomenclature": "MiniHUB_case_light",
+        "spec": "MiniHUB_case_light",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007338",
+        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*10 nickel-plated SUS304",
+        "quantity": 4.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000007339",
+        "nomenclature": "Self-tapping screw M2*6 nickel-plated SUS304",
+        "spec": "Self-tapping screw M2*6 nickel-plated SUS304",
+        "quantity": 9.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000008330",
+        "nomenclature": "Damper_3*7 mm",
+        "spec": "Damper_3*7 mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000083995",
+        "nomenclature": "Die cut part acrylic 9mm x 30mm",
+        "spec": "Die cut part acrylic 9mm x 30mm",
+        "quantity": 2.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000161898",
+        "nomenclature": "[Sticker]_HP2J_CE_EU_v4",
+        "spec": "[Sticker]_HP2J_CE_EU_v4",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      },
+      {
+        "materialCode": "000129738",
+        "nomenclature": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "spec": "MiniHUB_case_Holder_for_antennas_white_v3",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "ASSEMBLY",
+        "stage": "ASSEMBLY"
+      }
+    ]
+  },
   "63399": {
     "productCode": "63399",
     "specCode": "63399",
@@ -363503,314 +363809,6 @@
       {
         "materialCode": "000161899",
         "nomenclature": "[Sticker]_H2J_(4G)_CE_EU_v4",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000046092",
-        "nomenclature": "MiniHUB_case_Holder_for_antennas_white_v2",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      }
-    ],
-    "source": "BOM"
-  },
-  "62118": {
-    "productCode": "62118",
-    "specCode": "62118",
-    "productName": "Ajax Hub 2 Plus white EU (напівфабрикат)",
-    "stage": "ASSEMBLY",
-    "process": "ASSEMBLY",
-    "materials": [
-      {
-        "materialCode": "000122318",
-        "nomenclature": "Ajax, HB2.001.PWB.001v4_HRD",
-        "spec": "Ajax, HB2.001.PWB.001v4_HRD",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000147062",
-        "nomenclature": "Ajax, HB2.008.MBR.001v1_H2P_ECG_8EU_white_HRD",
-        "spec": "Ajax, HB2.008.MBR.001v1_H2P_ECG_8EU_white_HRD",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000007254",
-        "nomenclature": "Ajax, Hub_V4_holder_board with components",
-        "spec": "Ajax, Hub_V4_holder_плата з компонентами (установочная партия)",
-        "quantity": 2.0,
-        "category": "SFG",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000020415",
-        "nomenclature": "PCB HB2.002.ANT.002v3 WiFi",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000020661",
-        "nomenclature": "HB2.002.ANT.001v3 LTE board",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000019055",
-        "nomenclature": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000012525",
-        "nomenclature": "MiniHUB_case_backside_WHITE (Double SIM card hole)",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000007240",
-        "nomenclature": "MiniHUB_case_button_WHITE",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000033491",
-        "nomenclature": "The housing element MH frontside wh",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000007241",
-        "nomenclature": "MiniHUB_case_light",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000007338",
-        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
-        "spec": "",
-        "quantity": 4.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000007339",
-        "nomenclature": "Self-tapping screw M2*6 nickel-plated SUS304",
-        "spec": "",
-        "quantity": 9.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000008330",
-        "nomenclature": "Damper_3*7 mm",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000083995",
-        "nomenclature": "Die cut part acrylic 9mm x 30mm",
-        "spec": "",
-        "quantity": 2.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000161898",
-        "nomenclature": "[Sticker]_HP2J_CE_EU_v4",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000046092",
-        "nomenclature": "MiniHUB_case_Holder_for_antennas_white_v2",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      }
-    ],
-    "source": "BOM"
-  },
-  "000062118": {
-    "productCode": "62118",
-    "specCode": "62118",
-    "productName": "Ajax Hub 2 Plus white EU (напівфабрикат)",
-    "stage": "ASSEMBLY",
-    "process": "ASSEMBLY",
-    "materials": [
-      {
-        "materialCode": "000122318",
-        "nomenclature": "Ajax, HB2.001.PWB.001v4_HRD",
-        "spec": "Ajax, HB2.001.PWB.001v4_HRD",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000147062",
-        "nomenclature": "Ajax, HB2.008.MBR.001v1_H2P_ECG_8EU_white_HRD",
-        "spec": "Ajax, HB2.008.MBR.001v1_H2P_ECG_8EU_white_HRD",
-        "quantity": 1.0,
-        "category": "SFG",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000007254",
-        "nomenclature": "Ajax, Hub_V4_holder_board with components",
-        "spec": "Ajax, Hub_V4_holder_плата з компонентами (установочная партия)",
-        "quantity": 2.0,
-        "category": "SFG",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000020415",
-        "nomenclature": "PCB HB2.002.ANT.002v3 WiFi",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000020661",
-        "nomenclature": "HB2.002.ANT.001v3 LTE board",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000019055",
-        "nomenclature": "Li-ion XK-953580 + PCM, 3.7v 3000mAh, 9.5x35x80 mm, Xingke battery",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000012525",
-        "nomenclature": "MiniHUB_case_backside_WHITE (Double SIM card hole)",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000007240",
-        "nomenclature": "MiniHUB_case_button_WHITE",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000033491",
-        "nomenclature": "The housing element MH frontside wh",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000007241",
-        "nomenclature": "MiniHUB_case_light",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000007338",
-        "nomenclature": "Self-tapping screw M2*10 nickel-plated SUS304",
-        "spec": "",
-        "quantity": 4.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000007339",
-        "nomenclature": "Self-tapping screw M2*6 nickel-plated SUS304",
-        "spec": "",
-        "quantity": 9.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000008330",
-        "nomenclature": "Damper_3*7 mm",
-        "spec": "",
-        "quantity": 1.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000083995",
-        "nomenclature": "Die cut part acrylic 9mm x 30mm",
-        "spec": "",
-        "quantity": 2.0,
-        "category": "Material",
-        "process": "ASSEMBLY",
-        "stage": "ASSEMBLY"
-      },
-      {
-        "materialCode": "000161898",
-        "nomenclature": "[Sticker]_HP2J_CE_EU_v4",
         "spec": "",
         "quantity": 1.0,
         "category": "Material",
