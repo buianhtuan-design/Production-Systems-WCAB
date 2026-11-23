@@ -347021,6 +347021,186 @@
       }
     ]
   },
+  "63941": {
+    "productCode": "63941",
+    "specCode": "63941",
+    "productName": "Ajax Hub 4G (8EU/UEU) WL Kale Guvenlik white охоронна централь",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000105789",
+        "nomenclature": "Ajax Hub 4G (8EU/UEU) WL Kale Guvenlik white (напівфабрикат)",
+        "spec": "Ajax Hub 4G (8EU/UEU) WL Kale Guvenlik white (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170924",
+        "nomenclature": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "spec": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171033",
+        "nomenclature": "Ajax, Монтажний комплект Cables Kit Type C White",
+        "spec": "Ajax, Монтажний комплект Cables Kit Type C White",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000007238",
+        "nomenclature": "MiniHUB_case_bracket_WHITE",
+        "spec": "MiniHUB_case_bracket_WHITE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000138972",
+        "nomenclature": "[Manual]_HB_4G_CE_WL_GPSR_v1",
+        "spec": "[Manual]_HB_4G_CE_WL_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000143751",
+        "nomenclature": "[Package]_HB_4G_CE_FCC_WL_white_v1",
+        "spec": "[Package]_HB_4G_CE_FCC_WL_white_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019467",
+        "nomenclature": "BritishHub package liner for Controler",
+        "spec": "BritishHub package liner for Controler",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019469",
+        "nomenclature": "BritishHub package liner Vstavka",
+        "spec": "BritishHub package liner Vstavka",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000010548",
+        "nomenclature": "EPE Package 180*250 mm",
+        "spec": "EPE Package 180*250 mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
+  "000063941": {
+    "productCode": "63941",
+    "specCode": "63941",
+    "productName": "Ajax Hub 4G (8EU/UEU) WL Kale Guvenlik white охоронна централь",
+    "stage": "PKG",
+    "process": "PKG",
+    "materials": [
+      {
+        "materialCode": "000105789",
+        "nomenclature": "Ajax Hub 4G (8EU/UEU) WL Kale Guvenlik white (напівфабрикат)",
+        "spec": "Ajax Hub 4G (8EU/UEU) WL Kale Guvenlik white (напівфабрикат)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000170924",
+        "nomenclature": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "spec": "Ajax, Монтажний комплект v.6 (MiniHub White)",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000171033",
+        "nomenclature": "Ajax, Монтажний комплект Cables Kit Type C White",
+        "spec": "Ajax, Монтажний комплект Cables Kit Type C White",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000007238",
+        "nomenclature": "MiniHUB_case_bracket_WHITE",
+        "spec": "MiniHUB_case_bracket_WHITE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000138972",
+        "nomenclature": "[Manual]_HB_4G_CE_WL_GPSR_v1",
+        "spec": "[Manual]_HB_4G_CE_WL_GPSR_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000143751",
+        "nomenclature": "[Package]_HB_4G_CE_FCC_WL_white_v1",
+        "spec": "[Package]_HB_4G_CE_FCC_WL_white_v1",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019467",
+        "nomenclature": "BritishHub package liner for Controler",
+        "spec": "BritishHub package liner for Controler",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000019469",
+        "nomenclature": "BritishHub package liner Vstavka",
+        "spec": "BritishHub package liner Vstavka",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      },
+      {
+        "materialCode": "000010548",
+        "nomenclature": "EPE Package 180*250 mm",
+        "spec": "EPE Package 180*250 mm",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "PKG",
+        "stage": "PKG"
+      }
+    ]
+  },
   "63399": {
     "productCode": "63399",
     "specCode": "63399",
