@@ -15,24 +15,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Core Stylesheet (Dark Theme Gốc 100% - Bảo toàn chuẩn Web Render) -->
-  <link rel="stylesheet" id="app-core-stylesheet" href="css/app.css?v=20261122_dark_final">
-  <!-- Light Theme Stylesheet (4-Color Palette: Trắng, Vàng Nhạt, Xanh, Cam - Chỉ nạp khi bật Giao Diện Sáng) -->
-  <link rel="stylesheet" id="app-light-stylesheet" href="css/app-light-theme.css?v=20261122_light_final" disabled>
+  <!-- Core Stylesheet (Dark Theme Gốc 100% - Bảo Toàn Chuẩn Web Render) -->
+  <link rel="stylesheet" id="app-core-stylesheet" href="css/app.css?v=20261123_dark_orig">
   <script>
     (function() {
       try {
         var t = localStorage.getItem('AJAX_PROPLAN_THEME') || 'dark';
         document.documentElement.setAttribute('data-theme', t);
-        var lightLink = document.getElementById('app-light-stylesheet');
-        if (lightLink) {
-          if (t === 'light') {
-            lightLink.removeAttribute('disabled');
-            lightLink.disabled = false;
-          } else {
-            lightLink.setAttribute('disabled', '');
-            lightLink.disabled = true;
-          }
+        if (t === 'light') {
+          var link = document.createElement('link');
+          link.id = 'app-light-stylesheet';
+          link.rel = 'stylesheet';
+          link.href = 'css/app-light-theme.css?v=20261123_light_v1';
+          document.head.appendChild(link);
         }
       } catch(e) {}
     })();

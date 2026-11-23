@@ -1183,14 +1183,18 @@ function initNavigation() {
 function applyThemeMode(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   localStorage.setItem('AJAX_PROPLAN_THEME', theme);
-  const lightLink = document.getElementById('app-light-stylesheet');
-  if (lightLink) {
-    if (theme === 'light') {
-      lightLink.removeAttribute('disabled');
-      lightLink.disabled = false;
-    } else {
-      lightLink.setAttribute('disabled', '');
-      lightLink.disabled = true;
+  let lightLink = document.getElementById('app-light-stylesheet');
+  if (theme === 'light') {
+    if (!lightLink) {
+      lightLink = document.createElement('link');
+      lightLink.id = 'app-light-stylesheet';
+      lightLink.rel = 'stylesheet';
+      lightLink.href = 'css/app-light-theme.css?v=20261123_light_v1';
+      document.head.appendChild(lightLink);
+    }
+  } else {
+    if (lightLink) {
+      lightLink.remove();
     }
   }
   updateThemeIcon(theme);
