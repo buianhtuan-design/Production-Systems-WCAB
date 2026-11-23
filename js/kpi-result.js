@@ -213,15 +213,42 @@
 
   /**
   /**
-   * Lấy Level 5 Target chuẩn từ Bảng Tổng Hợp KPI cho từng metric
+   * Lấy Level 5 Target chuẩn từ Bảng Tổng Hợp KPI cho từng metric và từng Process/Stage
    */
   function getSummaryLevel5Target(stageOrProc, metric) {
     const m = String(metric).toLowerCase();
+    const md = window.KPI_MASTER_DATA;
+    const sheetSummary = (md && Array.isArray(md.kpiSummary)) ? md.kpiSummary : [];
+    
+    const s = String(stageOrProc || '').toLowerCase();
+    const isHt = s.includes('hard') || s.includes('focus');
+    const isAsm = s.includes('asm');
+
+    if (sheetSummary.length > 0) {
+      const match = sheetSummary.find(r => {
+        const proc = (r.process || '').toUpperCase();
+        if (isHt && proc && !proc.includes('HARD')) return false;
+        if (isAsm && proc && !proc.includes('ASM')) return false;
+
+        const ind = (r.indicator || '').toLowerCase();
+        if (m === 'prod' || m === 'productivity') return ind.includes('prod');
+        if (m === 'rem' || m === 'remarks') return ind.includes('remark');
+        if (m === 'att' || m === 'attendance') return ind.includes('attend');
+        if (m === 'scrap') return ind.includes('scrap');
+        if (m === 'blocked') return ind.includes('blocked');
+        if (m === 'clip') return ind.includes('clip');
+        return false;
+      });
+      if (match && match.l5) {
+        const n = parseNumericInput(match.l5);
+        if (n !== null) return n;
+      }
+    }
+
     if (m === 'prod' || m === 'productivity') return 95;
     if (m === 'rem' || m === 'remarks') return 98;
-    if (m === 'att' || m === 'attendance') return 95;
+    if (m === 'att' || m === 'attendance') return 96;
     if (m === 'scrap') {
-      const md = window.KPI_MASTER_DATA;
       if (md && md.scrap && md.scrap.target) {
         const n = parseNumericInput(md.scrap.target);
         if (n !== null) return n;
@@ -242,10 +269,15 @@
     if (window.KpiResultStore.targetsMap && window.KpiResultStore.targetsMap[key] !== undefined && window.KpiResultStore.targetsMap[key] !== '') {
       return window.KpiResultStore.targetsMap[key];
     }
+    // Tự động đẩy Level 5 Target từ Bảng Tổng Hợp KPI cho từng mục
+    const level5 = getSummaryLevel5Target(stage, metric);
+    if (level5 !== null && level5 !== undefined) {
+      return level5;
+    }
     if (defaultVal !== null && defaultVal !== undefined && defaultVal !== '') {
       return defaultVal;
     }
-    return getSummaryLevel5Target(stage, metric);
+    return 95;
   }
 
   /**
@@ -440,6 +472,55 @@
   };
 
   /**
+   * Tự động đẩy Target Level 5 từ Bảng Tổng Hợp KPI xuống cho từng team và từng mục
+   */
+  window.handleKpiApplyLevel5ToAllTeams = function(notify = true) {
+    if (window.UserAuth && !window.UserAuth.canEdit()) {
+      window.showToast('warning', '⚠️ Tài khoản của bạn là Viewer (Chỉ xem). Không thể thay đổi Target!');
+      return;
+    }
+    const allData = getCurrentProductivityData();
+    const workcellTeams = allData.filter(item => isWorkcellAorB(item.team));
+    if (!window.KpiResultStore.targetsMap) window.KpiResultStore.targetsMap = {};
+
+    const metrics = ['prod', 'rem', 'att', 'scrap', 'blocked', 'clip'];
+
+    // 1. Áp dụng cho dòng SFPD ALL
+    metrics.forEach(m => {
+      const l5 = getSummaryLevel5Target('SFPD', m);
+      window.KpiResultStore.targetsMap[`${m}_SFPD_SFPD_ALL`] = l5;
+    });
+
+    // 2. Áp dụng cho từng Team và từng Stage Ave
+    const stages = new Set();
+    workcellTeams.forEach(item => {
+      stages.add(item.stage || 'Focus');
+      metrics.forEach(m => {
+        const l5 = getSummaryLevel5Target(item.stage, m);
+        const key = `${m}_${item.district}_${item.stage}_${item.team}`;
+        window.KpiResultStore.targetsMap[key] = l5;
+      });
+    });
+
+    stages.forEach(stage => {
+      metrics.forEach(m => {
+        const dist = stage === 'Assembly' ? 'Assembly' : 'Hard Test';
+        const l5 = getSummaryLevel5Target(stage, m);
+        window.KpiResultStore.targetsMap[`${m}_${dist}_${stage}_Ave`] = l5;
+      });
+    });
+
+    try {
+      localStorage.setItem('AJAX_PROPLAN_KPI_ALL_TARGETS', JSON.stringify(window.KpiResultStore.targetsMap));
+    } catch(e) {}
+
+    window.renderKpiResultView();
+    if (notify && window.showToast) {
+      window.showToast('success', '🎯 Đã tự động đẩy Target Level 5 xuống cho toàn bộ Team và từng mục thành công!');
+    }
+  };
+
+  /**
    * Lưu Result khi người dùng tự input (dành cho Scrap, Blocked, Attendance...)
    */
   window.handleKpiUniversalResultChange = function(inputElem, metric, district, stage, team) {
@@ -532,10 +613,11 @@
       else if (num <= 0.0427) level = 2;
       else level = 1;
     } else if (m === 'attendance' || m === 'att') {
-      if (num >= 95) level = 5;
-      else if (num >= 92) level = 4;
-      else if (num >= 90) level = 3;
-      else if (num >= 85) level = 2;
+      // Level 1: < 88,98 | Level 2: >= 88,98 | Level 3: >= 91,32 | Level 4: >= 93,66 | Level 5: >= 96
+      if (num >= 96) level = 5;
+      else if (num >= 93.66) level = 4;
+      else if (num >= 91.32) level = 3;
+      else if (num >= 88.98) level = 2;
       else level = 1;
     }
 
@@ -641,13 +723,14 @@
     const monthText = (sheetSummary[0] && sheetSummary[0].month) ? sheetSummary[0].month : 'Nov - 2026';
     const teamText = 'SFPD';
 
-    // 5 chỉ số tiêu chuẩn
+    // 6 chỉ số tiêu chuẩn theo Sheet KPI Data (đã bổ sung Attendance)
     const baseIndicators = [
       { key: 'productivity', name: 'Productivity', unit: '%', l1: '< 88,05', l2: '>= 88,05', l3: '>= 90,36', l4: '>= 92,68', l5: '>= 95' },
       { key: 'clip', name: 'Clip (all plant)', unit: '%', l1: '< 85', l2: '>= 85', l3: '>= 88,8', l4: '>= 92,5', l5: '>= 95' },
       { key: 'blocked', name: 'Blocked batches (v1)', unit: 'pcs', l1: '> 3', l2: '<= 3', l3: '<= 2', l4: '<= 1', l5: '<= 0' },
       { key: 'remarks', name: 'Inspection remarks, %', unit: '%', l1: '< 91', l2: '>= 91', l3: '>= 94', l4: '>= 96', l5: '>= 98' },
-      { key: 'scrap', name: 'Scrap, %', unit: '%', l1: '> 0,0427', l2: '<= 0,0427', l3: '<= 0,0417', l4: '<= 0,0407', l5: '<= 0,0387' }
+      { key: 'scrap', name: 'Scrap, %', unit: '%', l1: '> 0,0427', l2: '<= 0,0427', l3: '<= 0,0417', l4: '<= 0,0407', l5: '<= 0,0387' },
+      { key: 'attendance', name: 'Attendance', unit: '%', l1: '< 88,98', l2: '>= 88,98', l3: '>= 91,32', l4: '>= 93,66', l5: '>= 96' }
     ];
 
     // Dữ liệu Scrap thực tế từ Sheet KPI (Target: 0.0387%, Actual: 0.0369%)
@@ -680,6 +763,8 @@
     }
     const htScrapInput = getMetricResultInput('scrap', 'Hard Test', 'HardTest', 'Ave', '');
     const htScrapLive = htScrapInput || (st.customScrapData && st.customScrapData.actual ? st.customScrapData.actual : sheetScrap.actual);
+    const htAttInput = getMetricResultInput('att', 'Hard Test', 'HardTest', 'Ave', '');
+    const htAttLive = htAttInput || '';
 
     // 2. Assembly Live Values
     const asmTotalRow = allData.find(it => (it.district || '').trim().toLowerCase() === 'assembly' && ((it.stage || '').trim().toLowerCase() === 'total' || !(it.stage || '').trim()) && !(it.team || '').trim() && it.result);
@@ -700,6 +785,8 @@
     }
     const asmScrapInput = getMetricResultInput('scrap', 'Assembly', 'Assembly', 'Ave', '');
     const asmScrapLive = asmScrapInput || (st.customScrapData && st.customScrapData.actual ? st.customScrapData.actual : sheetScrap.actual);
+    const asmAttInput = getMetricResultInput('att', 'Assembly', 'Assembly', 'Ave', '');
+    const asmAttLive = asmAttInput || '';
 
     const liveDataMap = {
       'HARD_TEST': {
@@ -707,20 +794,22 @@
         clip: htClipLive,
         blocked: htBlockedLive,
         remarks: htRemLive,
-        scrap: htScrapLive
+        scrap: htScrapLive,
+        attendance: htAttLive
       },
       'ASSEMBLY': {
         productivity: asmProdLive,
         clip: asmClipLive,
         blocked: asmBlockedLive,
         remarks: asmRemLive,
-        scrap: asmScrapLive
+        scrap: asmScrapLive,
+        attendance: asmAttLive
       }
     };
 
     const processes = [
       { key: 'HARD_TEST', label: 'HARD TEST', startIndex: 0 },
-      { key: 'ASSEMBLY', label: 'ASSEMBLY', startIndex: 5 }
+      { key: 'ASSEMBLY', label: 'ASSEMBLY', startIndex: 6 }
     ];
 
     let rowsHtml = '';
@@ -753,7 +842,7 @@
         
         // Month cell (chỉ ở hàng đầu tiên của bảng)
         if (globalRowIdx === 0) {
-          rowContent += `<td rowspan="10" class="td-month" style="font-size: 0.775rem; letter-spacing: 0.3px; vertical-align: middle;">${monthText}</td>`;
+          rowContent += `<td rowspan="${processes.length * baseIndicators.length}" class="td-month" style="font-size: 0.775rem; letter-spacing: 0.3px; vertical-align: middle;">${monthText}</td>`;
         }
 
         // Team cell
@@ -762,7 +851,7 @@
         // Process cell (chỉ ở hàng đầu của mỗi Process)
         if (indIdx === 0) {
           const procClass = proc.key === 'HARD_TEST' ? 'td-proc-ht' : 'td-proc-asm';
-          rowContent += `<td rowspan="5" class="${procClass}" style="font-size: 0.775rem; letter-spacing: 0.3px; vertical-align: middle;">${proc.label}</td>`;
+          rowContent += `<td rowspan="${baseIndicators.length}" class="${procClass}" style="font-size: 0.775rem; letter-spacing: 0.3px; vertical-align: middle;">${proc.label}</td>`;
         }
 
         // Indicators & Unit & Levels
@@ -1268,6 +1357,11 @@
               <!-- 4. Nút Xuất File Sheet (CSV UTF-8 BOM) -->
               <button type="button" class="btn btn-sm btn-outline" onclick="handleExportKpiMasterTableCsv()" style="font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.65rem; color: #34d399; border-color: rgba(52, 211, 153, 0.4);" title="Tải xuống tệp dữ liệu bảng cho Google Sheets / Excel">
                 <span>📥 Xuất File Sheet</span>
+              </button>
+
+              <!-- 4b. Nút Tự Động Đẩy Target Level 5 Xuống Từng Team -->
+              <button type="button" class="btn btn-sm btn-outline" onclick="handleKpiApplyLevel5ToAllTeams()" style="font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.65rem; color: #fbbf24; border-color: rgba(245, 158, 11, 0.45); background: rgba(245, 158, 11, 0.08);" title="Tự động đẩy Target Level 5 từ Bảng Tổng Hợp KPI xuống cho từng mục và từng Team">
+                <span>🎯 Đẩy Target Level 5 Xuống Teams</span>
               </button>
 
               <!-- 5. Nút Upload Data -->
@@ -2330,7 +2424,7 @@
       if (!prodStarted) {
         if (c0.toLowerCase() === 'district') {
           prodStarted = true;
-        } else if (r.length >= 10 && ['Productivity', 'Clip', 'Blocked', 'remarks', 'Scrap'].some(k => (r[3] || '').includes(k))) {
+        } else if (r.length >= 10 && ['Productivity', 'Clip', 'Blocked', 'remarks', 'Scrap', 'Attendance'].some(k => (r[3] || '').toLowerCase().includes(k.toLowerCase()))) {
           parsedSummary.push({
             month: c0,
             team: c1,

@@ -1831,7 +1831,7 @@ def fetch_and_parse_kpi_data(ctx):
         if not prod_started:
             if c0.lower() == 'district':
                 prod_started = True
-            elif len(r) >= 10 and any(k in (r[3] if len(r)>3 else '') for k in ['Productivity', 'Clip', 'Blocked', 'remarks', 'Scrap']):
+            elif len(r) >= 10 and any(k.lower() in (r[3] if len(r)>3 else '').lower() for k in ['Productivity', 'Clip', 'Blocked', 'remarks', 'Scrap', 'Attendance']):
                 kpi_summary_rows.append({
                     'month': c0,
                     'team': c1,
