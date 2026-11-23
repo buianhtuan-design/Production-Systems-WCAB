@@ -1,7 +1,7 @@
 {
   "success": true,
-  "timestamp": "2026-11-23 17:23:46",
-  "version": 20261123172346,
+  "timestamp": "2026-11-23 17:24:26",
+  "version": 20261123172426,
   "kpiSummary": [
     {
       "month": "Nov - 2026",
@@ -81,6 +81,21 @@
     {
       "month": "",
       "team": "SFPD",
+      "process": "",
+      "indicator": "Attendance",
+      "unit": "%",
+      "l1": "< 88,98",
+      "l2": ">= 88,98",
+      "l3": ">= 91,32",
+      "l4": ">= 93,66",
+      "l5": ">= 96",
+      "result": "",
+      "eval": "",
+      "conclusion": ""
+    },
+    {
+      "month": "",
+      "team": "SFPD",
       "process": "ASSEMBLY",
       "indicator": "Productivity",
       "unit": "%",
@@ -149,6 +164,21 @@
       "l3": "<= 0,0417",
       "l4": "<= 0,0407",
       "l5": "<= 0,0387",
+      "result": "",
+      "eval": "",
+      "conclusion": ""
+    },
+    {
+      "month": "",
+      "team": "SFPD",
+      "process": "",
+      "indicator": "Attendance",
+      "unit": "%",
+      "l1": "< 88,98",
+      "l2": ">= 88,98",
+      "l3": ">= 91,32",
+      "l4": ">= 93,66",
+      "l5": ">= 96",
       "result": "",
       "eval": "",
       "conclusion": ""
