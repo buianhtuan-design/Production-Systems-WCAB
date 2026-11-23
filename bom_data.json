@@ -347561,6 +347561,60 @@
       }
     ]
   },
+  "80290": {
+    "productCode": "80290",
+    "specCode": "80290",
+    "productName": "Ajax, HB2.008.MBR.001v1_H2P_ECG_8EU_WL_black_HRD",
+    "stage": "HARD TEST",
+    "process": "HARD TEST",
+    "materials": [
+      {
+        "materialCode": "000051780",
+        "nomenclature": "Ajax, HB2.008.MBR.001v1[8XX_ECG]_DIP",
+        "spec": "Ajax, HB2.008.MBR.001v1[8XX_ECG]_DIP",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      },
+      {
+        "materialCode": "000026173",
+        "nomenclature": "Hub 2 Plus QR WL Standard sticker BLACK",
+        "spec": "Hub 2 Plus QR WL Standard sticker BLACK",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      }
+    ]
+  },
+  "000080290": {
+    "productCode": "80290",
+    "specCode": "80290",
+    "productName": "Ajax, HB2.008.MBR.001v1_H2P_ECG_8EU_WL_black_HRD",
+    "stage": "HARD TEST",
+    "process": "HARD TEST",
+    "materials": [
+      {
+        "materialCode": "000051780",
+        "nomenclature": "Ajax, HB2.008.MBR.001v1[8XX_ECG]_DIP",
+        "spec": "Ajax, HB2.008.MBR.001v1[8XX_ECG]_DIP",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      },
+      {
+        "materialCode": "000026173",
+        "nomenclature": "Hub 2 Plus QR WL Standard sticker BLACK",
+        "spec": "Hub 2 Plus QR WL Standard sticker BLACK",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      }
+    ]
+  },
   "63399": {
     "productCode": "63399",
     "specCode": "63399",
