@@ -347507,6 +347507,60 @@
       }
     ]
   },
+  "80306": {
+    "productCode": "80306",
+    "specCode": "80306",
+    "productName": "Ajax, HB2.005.MBR.001v0_HB2_66A_8EU_white_HRD",
+    "stage": "HARD TEST",
+    "process": "HARD TEST",
+    "materials": [
+      {
+        "materialCode": "000050420",
+        "nomenclature": "Ajax, HB2.005.MBR.001v0_[HB2-8XX-66A]_DIP",
+        "spec": "Ajax, HB2.005.MBR.001v0_[HB2-8XX-66A]_DIP",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      },
+      {
+        "materialCode": "000013512",
+        "nomenclature": "HUB 2 QR sticker WHITE",
+        "spec": "HUB 2 QR sticker WHITE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      }
+    ]
+  },
+  "000080306": {
+    "productCode": "80306",
+    "specCode": "80306",
+    "productName": "Ajax, HB2.005.MBR.001v0_HB2_66A_8EU_white_HRD",
+    "stage": "HARD TEST",
+    "process": "HARD TEST",
+    "materials": [
+      {
+        "materialCode": "000050420",
+        "nomenclature": "Ajax, HB2.005.MBR.001v0_[HB2-8XX-66A]_DIP",
+        "spec": "Ajax, HB2.005.MBR.001v0_[HB2-8XX-66A]_DIP",
+        "quantity": 1.0,
+        "category": "SFG",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      },
+      {
+        "materialCode": "000013512",
+        "nomenclature": "HUB 2 QR sticker WHITE",
+        "spec": "HUB 2 QR sticker WHITE",
+        "quantity": 1.0,
+        "category": "Material",
+        "process": "HARD TEST",
+        "stage": "HARD TEST"
+      }
+    ]
+  },
   "63399": {
     "productCode": "63399",
     "specCode": "63399",
