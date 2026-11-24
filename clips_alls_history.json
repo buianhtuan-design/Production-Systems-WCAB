@@ -7,14 +7,14 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-25 00:49:24",
+      "archivedAt": "2026-11-25 01:48:32",
       "totalItems": 272,
       "totalPlan": 485822.0,
-      "totalSheetFact": 383493.0,
+      "totalSheetFact": 385851.0,
       "qtyAllDevice": 272,
-      "qtyDoneDevice": 193,
-      "qtyNotDoneDevice": 79,
-      "clipAllPlant": "71.0%",
+      "qtyDoneDevice": 195,
+      "qtyNotDoneDevice": 77,
+      "clipAllPlant": "71.7%",
       "items": [
         {
           "category": "Comfort and productivity",
@@ -722,7 +722,7 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Blue) (9NA) ручний сповіщувач",
           "plan": 180.0,
-          "sheetFact": 117.0,
+          "sheetFact": 119.0,
           "done": 0,
           "isDone": false
         },
@@ -1022,7 +1022,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
           "plan": 9569.0,
-          "sheetFact": 8240.0,
+          "sheetFact": 8460.0,
           "done": 0,
           "isDone": false
         },
@@ -1642,7 +1642,7 @@
           "agg": "DualCurtain Outdoor",
           "device": "Ajax DualCurtain Outdoor (8EU) ASP white датчик руху",
           "plan": 7156.0,
-          "sheetFact": 2938.0,
+          "sheetFact": 3004.0,
           "done": 0,
           "isDone": false
         },
@@ -2022,9 +2022,9 @@
           "agg": "",
           "device": "Ajax MotionProtect Plus (8EU) ASP white датчик руху",
           "plan": 9755.0,
-          "sheetFact": 8640.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 8915.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -2182,9 +2182,9 @@
           "agg": "DoorProtect Plus",
           "device": "Ajax DoorProtect Plus (8EU) ASP black датчик відкриття",
           "plan": 6842.0,
-          "sheetFact": 5899.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 6680.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -2192,7 +2192,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) ASP white датчик відкриття",
           "plan": 28086.0,
-          "sheetFact": 194.0,
+          "sheetFact": 498.0,
           "done": 0,
           "isDone": false
         },
@@ -2342,7 +2342,7 @@
           "agg": "",
           "device": "Ajax HomeSiren (8EU) ASP white сирена",
           "plan": 13736.0,
-          "sheetFact": 2702.0,
+          "sheetFact": 3331.0,
           "done": 0,
           "isDone": false
         },
@@ -2422,7 +2422,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 20971.0,
+          "sheetFact": 21052.0,
           "done": 0,
           "isDone": false
         },
@@ -3444,7 +3444,7 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Blue) (9NA) ручний сповіщувач",
           "plan": 180.0,
-          "sheetFact": 117.0,
+          "sheetFact": 119.0,
           "done": 0,
           "isDone": false
         },
@@ -3744,7 +3744,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
           "plan": 9569.0,
-          "sheetFact": 8240.0,
+          "sheetFact": 8460.0,
           "done": 0,
           "isDone": false
         },
@@ -4364,7 +4364,7 @@
           "agg": "DualCurtain Outdoor",
           "device": "Ajax DualCurtain Outdoor (8EU) ASP white датчик руху",
           "plan": 7156.0,
-          "sheetFact": 2938.0,
+          "sheetFact": 3004.0,
           "done": 0,
           "isDone": false
         },
@@ -4744,9 +4744,9 @@
           "agg": "",
           "device": "Ajax MotionProtect Plus (8EU) ASP white датчик руху",
           "plan": 9755.0,
-          "sheetFact": 8640.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 8915.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax MotionProtect Plus (9AU) white датчик руху": {
           "category": "",
@@ -4904,9 +4904,9 @@
           "agg": "DoorProtect Plus",
           "device": "Ajax DoorProtect Plus (8EU) ASP black датчик відкриття",
           "plan": 6842.0,
-          "sheetFact": 5899.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 6680.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax DoorProtect Plus (8EU) ASP white датчик відкриття": {
           "category": "",
@@ -4914,7 +4914,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) ASP white датчик відкриття",
           "plan": 28086.0,
-          "sheetFact": 194.0,
+          "sheetFact": 498.0,
           "done": 0,
           "isDone": false
         },
@@ -5064,7 +5064,7 @@
           "agg": "",
           "device": "Ajax HomeSiren (8EU) ASP white сирена",
           "plan": 13736.0,
-          "sheetFact": 2702.0,
+          "sheetFact": 3331.0,
           "done": 0,
           "isDone": false
         },
@@ -5144,7 +5144,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 20971.0,
+          "sheetFact": 21052.0,
           "done": 0,
           "isDone": false
         },
