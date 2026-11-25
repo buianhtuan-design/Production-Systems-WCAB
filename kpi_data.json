@@ -1,7 +1,7 @@
 {
   "success": true,
-  "timestamp": "2026-11-25 10:26:42",
-  "version": 20261125102642,
+  "timestamp": "2026-11-25 10:28:00",
+  "version": 20261125102800,
   "kpiSummary": [
     {
       "month": "Nov - 2026",
@@ -6353,7 +6353,7 @@
       "area": "QC",
       "cl": "",
       "generator": "Assembly",
-      "responsible": "[VTP] Workcell A-Assembly-Team 1 B",
+      "responsible": "[VTP] Workcell B-Assembly-Team 1 D",
       "nonConformance": "Fabric installed upside down",
       "qty": "1331",
       "detectedQty": "1331",
