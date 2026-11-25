@@ -2176,7 +2176,7 @@
       "agg": "DoorProtect Plus",
       "device": "Ajax DoorProtect Plus (8EU) ASP black датчик відкриття",
       "plan": 6842.0,
-      "sheetFact": 6962.0,
+      "sheetFact": 6969.0,
       "done": 1,
       "isDone": true
     },
@@ -4908,7 +4908,7 @@
       "agg": "DoorProtect Plus",
       "device": "Ajax DoorProtect Plus (8EU) ASP black датчик відкриття",
       "plan": 6842.0,
-      "sheetFact": 6962.0,
+      "sheetFact": 6969.0,
       "done": 1,
       "isDone": true
     },
@@ -5470,7 +5470,7 @@
   "clipAllPlant": "72.9%",
   "clipAllPlantPct": 72.9,
   "totalPlan": 485822.0,
-  "totalSheetFact": 404835.0,
+  "totalSheetFact": 404842.0,
   "hasPlanCount": 219,
   "gt90Count": 199,
   "lt90Count": 74,
@@ -5483,10 +5483,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-26 03:04:00",
+        "archivedAt": "2026-11-26 04:04:16",
         "totalItems": 273,
         "totalPlan": 485822.0,
-        "totalSheetFact": 404835.0,
+        "totalSheetFact": 404842.0,
         "qtyAllDevice": 273,
         "qtyDoneDevice": 199,
         "qtyNotDoneDevice": 74,
@@ -7668,7 +7668,7 @@
             "agg": "DoorProtect Plus",
             "device": "Ajax DoorProtect Plus (8EU) ASP black датчик відкриття",
             "plan": 6842.0,
-            "sheetFact": 6962.0,
+            "sheetFact": 6969.0,
             "done": 1,
             "isDone": true
           },
@@ -10400,7 +10400,7 @@
             "agg": "DoorProtect Plus",
             "device": "Ajax DoorProtect Plus (8EU) ASP black датчик відкриття",
             "plan": 6842.0,
-            "sheetFact": 6962.0,
+            "sheetFact": 6969.0,
             "done": 1,
             "isDone": true
           },
