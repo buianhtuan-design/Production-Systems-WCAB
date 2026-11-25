@@ -2366,7 +2366,7 @@
       "agg": "",
       "device": "Ajax HomeSiren (9AU) white сирена",
       "plan": 5498.0,
-      "sheetFact": 5501.0,
+      "sheetFact": 5468.0,
       "done": 1,
       "isDone": true
     },
@@ -5098,7 +5098,7 @@
       "agg": "",
       "device": "Ajax HomeSiren (9AU) white сирена",
       "plan": 5498.0,
-      "sheetFact": 5501.0,
+      "sheetFact": 5468.0,
       "done": 1,
       "isDone": true
     },
@@ -5470,7 +5470,7 @@
   "clipAllPlant": "72.5%",
   "clipAllPlantPct": 72.5,
   "totalPlan": 485822.0,
-  "totalSheetFact": 393358.0,
+  "totalSheetFact": 393325.0,
   "hasPlanCount": 219,
   "gt90Count": 198,
   "lt90Count": 75,
@@ -5483,10 +5483,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-25 17:30:39",
+        "archivedAt": "2026-11-25 17:49:29",
         "totalItems": 273,
         "totalPlan": 485822.0,
-        "totalSheetFact": 393358.0,
+        "totalSheetFact": 393325.0,
         "qtyAllDevice": 273,
         "qtyDoneDevice": 198,
         "qtyNotDoneDevice": 75,
@@ -7858,7 +7858,7 @@
             "agg": "",
             "device": "Ajax HomeSiren (9AU) white сирена",
             "plan": 5498.0,
-            "sheetFact": 5501.0,
+            "sheetFact": 5468.0,
             "done": 1,
             "isDone": true
           },
@@ -10590,7 +10590,7 @@
             "agg": "",
             "device": "Ajax HomeSiren (9AU) white сирена",
             "plan": 5498.0,
-            "sheetFact": 5501.0,
+            "sheetFact": 5468.0,
             "done": 1,
             "isDone": true
           },
