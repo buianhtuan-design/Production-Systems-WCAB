@@ -2416,7 +2416,7 @@
       "agg": "",
       "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
       "plan": 29553.0,
-      "sheetFact": 21773.0,
+      "sheetFact": 21775.0,
       "done": 0,
       "isDone": false
     },
@@ -5148,7 +5148,7 @@
       "agg": "",
       "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
       "plan": 29553.0,
-      "sheetFact": 21773.0,
+      "sheetFact": 21775.0,
       "done": 0,
       "isDone": false
     },
@@ -5470,7 +5470,7 @@
   "clipAllPlant": "72.9%",
   "clipAllPlantPct": 72.9,
   "totalPlan": 485822.0,
-  "totalSheetFact": 404842.0,
+  "totalSheetFact": 404844.0,
   "hasPlanCount": 219,
   "gt90Count": 199,
   "lt90Count": 74,
@@ -5483,10 +5483,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-26 05:04:10",
+        "archivedAt": "2026-11-26 06:02:15",
         "totalItems": 273,
         "totalPlan": 485822.0,
-        "totalSheetFact": 404842.0,
+        "totalSheetFact": 404844.0,
         "qtyAllDevice": 273,
         "qtyDoneDevice": 199,
         "qtyNotDoneDevice": 74,
@@ -7908,7 +7908,7 @@
             "agg": "",
             "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
             "plan": 29553.0,
-            "sheetFact": 21773.0,
+            "sheetFact": 21775.0,
             "done": 0,
             "isDone": false
           },
@@ -10640,7 +10640,7 @@
             "agg": "",
             "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
             "plan": 29553.0,
-            "sheetFact": 21773.0,
+            "sheetFact": 21775.0,
             "done": 0,
             "isDone": false
           },
