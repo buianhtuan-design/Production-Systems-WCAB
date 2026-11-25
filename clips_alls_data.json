@@ -276,7 +276,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
       "plan": 14284.0,
-      "sheetFact": 11317.0,
+      "sheetFact": 11960.0,
       "done": 0,
       "isDone": false
     },
@@ -666,7 +666,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8EU) ASP black сповіщувач пожежний димовий зі звуковим оповіщувачем",
       "plan": 2454.0,
-      "sheetFact": 101.0,
+      "sheetFact": 461.0,
       "done": 0,
       "isDone": false
     },
@@ -3008,7 +3008,7 @@
       "agg": "",
       "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
       "plan": 14284.0,
-      "sheetFact": 11317.0,
+      "sheetFact": 11960.0,
       "done": 0,
       "isDone": false
     },
@@ -3398,7 +3398,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8EU) ASP black сповіщувач пожежний димовий зі звуковим оповіщувачем",
       "plan": 2454.0,
-      "sheetFact": 101.0,
+      "sheetFact": 461.0,
       "done": 0,
       "isDone": false
     },
@@ -5470,7 +5470,7 @@
   "clipAllPlant": "72.9%",
   "clipAllPlantPct": 72.9,
   "totalPlan": 485822.0,
-  "totalSheetFact": 403832.0,
+  "totalSheetFact": 404835.0,
   "hasPlanCount": 219,
   "gt90Count": 199,
   "lt90Count": 74,
@@ -5483,10 +5483,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-26 01:12:43",
+        "archivedAt": "2026-11-26 02:04:07",
         "totalItems": 273,
         "totalPlan": 485822.0,
-        "totalSheetFact": 403832.0,
+        "totalSheetFact": 404835.0,
         "qtyAllDevice": 273,
         "qtyDoneDevice": 199,
         "qtyNotDoneDevice": 74,
@@ -5768,7 +5768,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
             "plan": 14284.0,
-            "sheetFact": 11317.0,
+            "sheetFact": 11960.0,
             "done": 0,
             "isDone": false
           },
@@ -6158,7 +6158,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8EU) ASP black сповіщувач пожежний димовий зі звуковим оповіщувачем",
             "plan": 2454.0,
-            "sheetFact": 101.0,
+            "sheetFact": 461.0,
             "done": 0,
             "isDone": false
           },
@@ -8500,7 +8500,7 @@
             "agg": "",
             "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) ASP white датчик диму та температури",
             "plan": 14284.0,
-            "sheetFact": 11317.0,
+            "sheetFact": 11960.0,
             "done": 0,
             "isDone": false
           },
@@ -8890,7 +8890,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8EU) ASP black сповіщувач пожежний димовий зі звуковим оповіщувачем",
             "plan": 2454.0,
-            "sheetFact": 101.0,
+            "sheetFact": 461.0,
             "done": 0,
             "isDone": false
           },
