@@ -221,6 +221,11 @@ window.UserAuth = {
     if (activeTab === 'capacity' && typeof window.renderCapacityView === 'function') {
       window.renderCapacityView('capacityContainer');
     }
+
+    // Re-render Overtime Adjustment section to immediately update Admin/View-Only UI state
+    if (typeof window.renderAssemblyAdjustmentPlan === 'function') {
+      window.renderAssemblyAdjustmentPlan(window.__LATEST_SCHEDULE__, window.__LATEST_MP_STAGES__);
+    }
   }
 };
 
@@ -8114,6 +8119,10 @@ window.updateKipHtVal = function(kipCode, field, val) {
 };
 
 window.saveKipLineConfig = function() {
+  if (window.UserAuth && !window.UserAuth.isAdmin()) {
+    if (window.showToast) window.showToast('warning', '⚠️ Chỉ tài khoản Quản Trị Viên (Admin) mới có quyền lưu cấu hình Line Kíp!');
+    return;
+  }
   if (!window.tempKipConfig) return;
 
   try {
@@ -8163,6 +8172,10 @@ window.saveKipLineConfig = function() {
 };
 
 window.resetKipConfigToDefault = function() {
+  if (window.UserAuth && !window.UserAuth.isAdmin()) {
+    if (window.showToast) window.showToast('warning', '⚠️ Chỉ tài khoản Quản Trị Viên (Admin) mới có quyền khôi phục cấu hình Line Kíp!');
+    return;
+  }
   if (!confirm('Khôi phục toàn bộ cấu hình Line của Kíp A, B, C, D và Hành Chính về mặc định theo đúng Sheet Manpower?')) return;
 
   try {

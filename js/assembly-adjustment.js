@@ -339,6 +339,22 @@
     } catch (e) {}
   }
 
+  /**
+   * Kiểm tra quyền Admin dành riêng cho Kế Hoạch Điều Chỉnh Overtime
+   * Theo yêu cầu: Chỉ quyền Admin mới được input và chỉnh sửa data; các user khác (Editor, Viewer) chỉ được xem.
+   */
+  function isAdjustmentAdmin() {
+    if (window.UserAuth && typeof window.UserAuth.isAdmin === 'function') {
+      return window.UserAuth.isAdmin();
+    }
+    try {
+      const r = localStorage.getItem('AJAX_USER_ROLE') || sessionStorage.getItem('AJAX_USER_ROLE');
+      if (r === 'admin') return true;
+      if (r === 'editor' || r === 'viewer') return false;
+    } catch(e) {}
+    return false;
+  }
+
   // Khởi tạo Stage đã chọn từ Storage hoặc default
   const initialStage = localStorage.getItem(SELECTED_STAGE_KEY) || DEFAULT_STAGE;
   const validStage = STAGE_CONFIGS[initialStage] ? initialStage : DEFAULT_STAGE;
@@ -545,6 +561,7 @@
     const cleanPlan = sanitizePlanRecord(remotePlan);
     if (!cleanPlan) return;
     const store = window.AssemblyAdjustmentStore;
+    const isAdmin = isAdjustmentAdmin();
 
     // 1. Cập nhật tất cả các công đoạn nếu remotePlan có allStagesOtMap (luôn sanitize khóa ngày chuẩn)
     if (cleanPlan.allStagesOtMap && typeof cleanPlan.allStagesOtMap === 'object') {
@@ -1245,6 +1262,7 @@
     const prevWrapLeft = prevScrollWrap ? prevScrollWrap.scrollLeft : null;
 
     const store = window.AssemblyAdjustmentStore;
+    const isAdmin = isAdjustmentAdmin();
     const isCollapsed = Boolean(store.isCollapsed);
     const activeSched = schedule || window.__LATEST_SCHEDULE__;
     const dates = resolveAdjustmentDates(activeSched);
@@ -1343,6 +1361,16 @@
                   📋 KẾ HOẠCH ĐIỀU CHỈNH OVERTIME
                 </h2>
 
+                ${isAdmin ? `
+                  <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-size: 0.72rem; font-weight: 700; border: 1px solid rgba(52, 211, 153, 0.4); padding: 0.15rem 0.5rem; border-radius: 4px; display: inline-flex; align-items: center; gap: 0.25rem;">
+                    👑 Admin (Được chỉnh sửa)
+                  </span>
+                ` : `
+                  <span class="badge" style="background: rgba(239, 68, 68, 0.18); color: #fca5a5; font-size: 0.72rem; font-weight: 700; border: 1px solid rgba(248, 113, 113, 0.4); padding: 0.15rem 0.5rem; border-radius: 4px; display: inline-flex; align-items: center; gap: 0.25rem;" title="Chỉ Quản trị viên (Admin) mới có quyền chỉnh sửa kế hoạch Overtime. Tài khoản hiện tại chỉ có quyền xem.">
+                    🔒 Chỉ Xem (Admin mới được sửa)
+                  </span>
+                `}
+
                 <!-- CHỨC NĂNG CHỌN CÔNG ĐOẠN BÊN CẠNH -->
                 <div style="display: inline-flex; align-items: center; gap: 0.35rem; background: rgba(15, 23, 42, 0.85); padding: 0.18rem 0.5rem; border-radius: 6px; border: 1px solid rgba(167, 139, 250, 0.45);">
                   <span style="font-size: 0.75rem; font-weight: 700; color: #c4b5fd;">Công đoạn:</span>
@@ -1376,26 +1404,50 @@
           <!-- Quick Action Buttons Toolbar -->
           <div style="display: flex; gap: 0.45rem; align-items: center; flex-wrap: wrap;">
             <!-- Người lập Plan -->
-            <button type="button" class="btn btn-secondary sim-btn-planner" onclick="window.handleEditAssemblyAdjPlannerName()" style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 6px; background: rgba(15, 23, 42, 0.8); cursor: pointer;" title="Bấm để cập nhật tên Người lập Plan">
-              <span>👤 Người lập: <strong id="adjPlannerBadgeName" style="color: #fbbf24;">${escapeHtml(store.plannerName)}</strong></span>
-              <span style="font-size: 0.65rem; opacity: 0.8;">✏️</span>
-            </button>
+            ${isAdmin ? `
+              <button type="button" class="btn btn-secondary sim-btn-planner" onclick="window.handleEditAssemblyAdjPlannerName()" style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 6px; background: rgba(15, 23, 42, 0.8); cursor: pointer;" title="Bấm để cập nhật tên Người lập Plan">
+                <span>👤 Người lập: <strong id="adjPlannerBadgeName" style="color: #fbbf24;">${escapeHtml(store.plannerName)}</strong></span>
+                <span style="font-size: 0.65rem; opacity: 0.8;">✏️</span>
+              </button>
+            ` : `
+              <div style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.25); display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 6px; background: rgba(15, 23, 42, 0.5); cursor: default;" title="Người lập Plan (Chỉ Admin mới có quyền đổi)">
+                <span>👤 Người lập: <strong id="adjPlannerBadgeName" style="color: #fbbf24;">${escapeHtml(store.plannerName)}</strong></span>
+              </div>
+            `}
 
             <!-- Ngày lập Plan -->
-            <button type="button" class="btn btn-secondary" onclick="window.handleEditAssemblyAdjPlanDate()" style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 6px; background: rgba(15, 23, 42, 0.8); cursor: pointer;" title="Bấm để chỉnh sửa Ngày lập Plan">
-              <span>📅 Ngày lập: <strong id="adjPlanDateBadge" style="color: #38bdf8;">${escapeHtml(shortenYear26(store.planDate))}</strong></span>
-              <span style="font-size: 0.65rem; opacity: 0.8;">✏️</span>
-            </button>
+            ${isAdmin ? `
+              <button type="button" class="btn btn-secondary" onclick="window.handleEditAssemblyAdjPlanDate()" style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 6px; background: rgba(15, 23, 42, 0.8); cursor: pointer;" title="Bấm để chỉnh sửa Ngày lập Plan">
+                <span>📅 Ngày lập: <strong id="adjPlanDateBadge" style="color: #38bdf8;">${escapeHtml(shortenYear26(store.planDate))}</strong></span>
+                <span style="font-size: 0.65rem; opacity: 0.8;">✏️</span>
+              </button>
+            ` : `
+              <div style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.25); display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 6px; background: rgba(15, 23, 42, 0.5); cursor: default;" title="Ngày lập Plan (Chỉ Admin mới có quyền đổi)">
+                <span>📅 Ngày lập: <strong id="adjPlanDateBadge" style="color: #38bdf8;">${escapeHtml(shortenYear26(store.planDate))}</strong></span>
+              </div>
+            `}
 
             <!-- Lưu Tạm -->
-            <button type="button" class="btn btn-secondary" onclick="window.handleSaveAssemblyAdjDraft()" style="padding: 0.2rem 0.6rem; font-size: 0.725rem; font-weight: 700; color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; background: rgba(56, 189, 248, 0.12); cursor: pointer;" title="Lưu tạm tiến độ Kế Hoạch Điều Chỉnh">
-              <span>💾 Lưu Tạm</span>
-            </button>
+            ${isAdmin ? `
+              <button type="button" class="btn btn-secondary" onclick="window.handleSaveAssemblyAdjDraft()" style="padding: 0.2rem 0.6rem; font-size: 0.725rem; font-weight: 700; color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; background: rgba(56, 189, 248, 0.12); cursor: pointer;" title="Lưu tạm tiến độ Kế Hoạch Điều Chỉnh">
+                <span>💾 Lưu Tạm</span>
+              </button>
+            ` : `
+              <button type="button" class="btn btn-secondary" disabled style="padding: 0.2rem 0.6rem; font-size: 0.725rem; font-weight: 700; color: #64748b; border-color: rgba(100, 116, 139, 0.3); display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; background: rgba(15, 23, 42, 0.4); opacity: 0.45; cursor: not-allowed;" title="[Khóa] Chỉ Quản Trị Viên (Admin) mới có quyền Lưu Tạm">
+                <span>💾 Lưu Tạm 🔒</span>
+              </button>
+            `}
 
             <!-- Hoàn Thành -->
-            <button type="button" class="btn btn-primary" onclick="window.handleCompleteAssemblyAdjPlan()" style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #fff; background: linear-gradient(135deg, #059669 0%, #10b981 100%); border-color: #10b981; display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); cursor: pointer;" title="Hoàn thành Kế Hoạch Điều Chỉnh, lưu lịch sử và đồng bộ cho tất cả User">
-              <span>✅ Hoàn Thành</span>
-            </button>
+            ${isAdmin ? `
+              <button type="button" class="btn btn-primary" onclick="window.handleCompleteAssemblyAdjPlan()" style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #fff; background: linear-gradient(135deg, #059669 0%, #10b981 100%); border-color: #10b981; display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); cursor: pointer;" title="Hoàn thành Kế Hoạch Điều Chỉnh, lưu lịch sử và đồng bộ cho tất cả User">
+                <span>✅ Hoàn Thành</span>
+              </button>
+            ` : `
+              <button type="button" class="btn btn-primary" disabled style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #94a3b8; background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(100, 116, 139, 0.3); display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; opacity: 0.45; cursor: not-allowed;" title="[Khóa] Chỉ Quản Trị Viên (Admin) mới có quyền Hoàn Thành">
+                <span>✅ Hoàn Thành 🔒</span>
+              </button>
+            `}
 
             <!-- Đồng Bộ Plan -->
             <button type="button" class="btn btn-secondary" onclick="window.handleForceSyncAssemblyAdjPlan()" style="padding: 0.2rem 0.65rem; font-size: 0.725rem; font-weight: 700; color: #34d399; border-color: rgba(52, 211, 153, 0.45); display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 6px; background: rgba(52, 211, 153, 0.1); cursor: pointer;" title="Đồng bộ ngay lập tức bản Kế Hoạch Điều Chỉnh mới nhất giữa các User / Tabs">
@@ -1409,9 +1461,15 @@
             </button>
 
             <!-- Reset -->
-            <button type="button" class="btn btn-secondary" onclick="window.handleResetAssemblyAdjustmentPlan()" style="padding: 0.2rem 0.6rem; font-size: 0.725rem; font-weight: 700; color: #f87171; border-color: rgba(248, 113, 113, 0.45); display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; background: rgba(248, 113, 113, 0.12); cursor: pointer;" title="Đặt lại toàn bộ Line OT của công đoạn này về mặc định">
-              <span>🔄 Reset</span>
-            </button>
+            ${isAdmin ? `
+              <button type="button" class="btn btn-secondary" onclick="window.handleResetAssemblyAdjustmentPlan()" style="padding: 0.2rem 0.6rem; font-size: 0.725rem; font-weight: 700; color: #f87171; border-color: rgba(248, 113, 113, 0.45); display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; background: rgba(248, 113, 113, 0.12); cursor: pointer;" title="Đặt lại toàn bộ Line OT của công đoạn này về mặc định">
+                <span>🔄 Reset</span>
+              </button>
+            ` : `
+              <button type="button" class="btn btn-secondary" disabled style="padding: 0.2rem 0.6rem; font-size: 0.725rem; font-weight: 700; color: #64748b; border-color: rgba(100, 116, 139, 0.3); display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 6px; background: rgba(15, 23, 42, 0.4); opacity: 0.45; cursor: not-allowed;" title="[Khóa] Chỉ Quản Trị Viên (Admin) mới có quyền Reset">
+                <span>🔄 Reset 🔒</span>
+              </button>
+            `}
 
             <!-- Cấu Hình Line Kíp -->
             <button type="button" class="btn btn-secondary" onclick="window.openKipLineConfigModal()" style="font-size: 0.725rem; padding: 0.2rem 0.55rem;" title="Mở modal Cấu Hình Line & Định Mức Nhân Lực">
@@ -1429,9 +1487,15 @@
             </button>
 
             <!-- Áp Dụng Bảng 1 -->
-            <button type="button" class="btn btn-primary" onclick="window.handleApplyAssemblyAdjustmentToTable1()" style="font-size: 0.725rem; padding: 0.2rem 0.55rem; background: linear-gradient(135deg, #059669, #10b981); border: none;" title="Đưa số người làm thêm (Số Người OT) vào dòng Thực Tế Bổ Sung của Bảng 1">
-              <span>👥 Áp Dụng Bảng 1</span>
-            </button>
+            ${isAdmin ? `
+              <button type="button" class="btn btn-primary" onclick="window.handleApplyAssemblyAdjustmentToTable1()" style="font-size: 0.725rem; padding: 0.2rem 0.55rem; background: linear-gradient(135deg, #059669, #10b981); border: none; cursor: pointer;" title="Đưa số người làm thêm (Số Người OT) vào dòng Thực Tế Bổ Sung của Bảng 1">
+                <span>👥 Áp Dụng Bảng 1</span>
+              </button>
+            ` : `
+              <button type="button" class="btn btn-primary" disabled style="font-size: 0.725rem; padding: 0.2rem 0.55rem; background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(100, 116, 139, 0.3); color: #94a3b8; opacity: 0.45; cursor: not-allowed;" title="[Khóa] Chỉ Quản Trị Viên (Admin) mới có quyền Áp Dụng Bảng 1">
+                <span>👥 Áp Dụng Bảng 1 🔒</span>
+              </button>
+            `}
           </div>
         </div>
 
@@ -1630,23 +1694,45 @@
                             </td>
                           `;
                         } else if (st.status === 'OT') {
-                          return `
-                            <td class="adj-cell-ot" onclick="window.toggleAssemblyLineOt('${cd.dateStr}', '${cd.shift}', '${lineName}')" 
-                                style="text-align: center; font-weight: 900; background: #fde047; color: #000000; border-right: 1px solid rgba(0,0,0,0.12); border-bottom: 1px solid rgba(0,0,0,0.15); padding: 0.35rem 0.4rem; cursor: pointer; transition: transform 0.1s ease;"
-                                title="Line làm thêm (OT): ${st.totalVal} người • Click để HỦY chọn">
-                              <span style="display: inline-block; padding: 0.1rem 0.35rem; border-radius: 4px; font-weight: 900;">
-                                OT
-                              </span>
-                            </td>
-                          `;
+                          if (isAdmin) {
+                            return `
+                              <td class="adj-cell-ot" onclick="window.toggleAssemblyLineOt('${cd.dateStr}', '${cd.shift}', '${lineName}')" 
+                                  style="text-align: center; font-weight: 900; background: #fde047; color: #000000; border-right: 1px solid rgba(0,0,0,0.12); border-bottom: 1px solid rgba(0,0,0,0.15); padding: 0.35rem 0.4rem; cursor: pointer; transition: transform 0.1s ease;"
+                                  title="Line làm thêm (OT): ${st.totalVal} người • Click để HỦY chọn">
+                                <span style="display: inline-block; padding: 0.1rem 0.35rem; border-radius: 4px; font-weight: 900;">
+                                  OT
+                                </span>
+                              </td>
+                            `;
+                          } else {
+                            return `
+                              <td class="adj-cell-ot adj-cell-readonly" onclick="window.toggleAssemblyLineOt('${cd.dateStr}', '${cd.shift}', '${lineName}')" 
+                                  style="text-align: center; font-weight: 900; background: #eab308; color: #000000; border-right: 1px solid rgba(0,0,0,0.12); border-bottom: 1px solid rgba(0,0,0,0.15); padding: 0.35rem 0.4rem; cursor: not-allowed; opacity: 0.88;"
+                                  title="[Chỉ Xem: Cần quyền Admin để chỉnh sửa] Line làm thêm (OT): ${st.totalVal} người">
+                                <span style="display: inline-block; padding: 0.1rem 0.35rem; border-radius: 4px; font-weight: 900;">
+                                  OT
+                                </span>
+                              </td>
+                            `;
+                          }
                         } else {
-                          return `
-                            <td class="adj-cell-empty" onclick="window.toggleAssemblyLineOt('${cd.dateStr}', '${cd.shift}', '${lineName}')" 
-                                style="text-align: center; color: var(--text-muted, #64748b); border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.4rem; cursor: pointer;"
-                                title="Line đang nghỉ (${st.totalVal} người) • Click để BẬT làm thêm (OT)">
-                              <span class="adj-hover-plus" style="opacity: 0.15; font-size: 0.7rem; font-weight: 700;">+</span>
-                            </td>
-                          `;
+                          if (isAdmin) {
+                            return `
+                              <td class="adj-cell-empty" onclick="window.toggleAssemblyLineOt('${cd.dateStr}', '${cd.shift}', '${lineName}')" 
+                                  style="text-align: center; color: var(--text-muted, #64748b); border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.4rem; cursor: pointer;"
+                                  title="Line đang nghỉ (${st.totalVal} người) • Click để BẬT làm thêm (OT)">
+                                <span class="adj-hover-plus" style="opacity: 0.15; font-size: 0.7rem; font-weight: 700;">+</span>
+                              </td>
+                            `;
+                          } else {
+                            return `
+                              <td class="adj-cell-empty adj-cell-readonly" onclick="window.toggleAssemblyLineOt('${cd.dateStr}', '${cd.shift}', '${lineName}')" 
+                                  style="text-align: center; color: var(--text-muted, #64748b); border-right: 1px solid var(--border-glass, #334155); border-bottom: 1px solid var(--border-glass, #334155); padding: 0.35rem 0.4rem; cursor: not-allowed;"
+                                  title="[Chỉ Xem: Cần quyền Admin để bật OT] Line đang nghỉ (${st.totalVal} người)">
+                                <span style="opacity: 0.12; font-size: 0.7rem;">-</span>
+                              </td>
+                            `;
+                          }
                         }
                       }).join('')}
                     </tr>
@@ -1659,8 +1745,13 @@
           <!-- Bottom Legend -->
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.55rem; padding: 0.4rem 0.75rem; background: rgba(15, 23, 42, 0.4); border-radius: 6px; font-size: 0.75rem; color: var(--text-muted, #94a3b8);">
             <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-              <span>💡 <strong>Hướng dẫn:</strong> Bấm ô Line nghỉ để bật <strong style="color: #fde047;">OT</strong>. Bấm ô <strong style="color: #fde047;">OT</strong> để hủy.</span>
-              <span style="color: #fbbf24; font-weight: 700;">🛡️ Giới hạn an toàn: 1 Line không được làm liên tục quá 5 ngày.</span>
+              ${isAdmin ? `
+                <span>💡 <strong>Hướng dẫn:</strong> Bấm ô Line nghỉ để bật <strong style="color: #fde047;">OT</strong>. Bấm ô <strong style="color: #fde047;">OT</strong> để hủy.</span>
+                <span style="color: #fbbf24; font-weight: 700;">🛡️ Giới hạn an toàn: 1 Line không được làm liên tục quá 5 ngày.</span>
+              ` : `
+                <span>👁️ <strong>Chế độ: Chỉ Xem</strong> — <span style="color: #fca5a5; font-weight: 600;">Chỉ tài khoản Quản Trị Viên (Admin) mới có quyền bật/hủy Line OT và lưu kế hoạch.</span></span>
+                <span style="color: #fbbf24; font-weight: 700;">🛡️ Giới hạn an toàn: 1 Line không được làm liên tục quá 5 ngày.</span>
+              `}
             </div>
             <div>
               <span>Đồng bộ 100% <strong>Bảng Nhân Lực &amp; Cân Đối Ca</strong> • Công đoạn: <strong style="color: #fde047;">${activeStageConfig.name}</strong> • Định mức theo <strong>Cấu Hình Line Kíp</strong></span>
@@ -1693,6 +1784,15 @@
    * Bật / Tắt một Line OT (Kèm kiểm tra quy định an toàn không làm việc liên tục > 5 ngày)
    */
   window.toggleAssemblyLineOt = function(dateStr, shift, lineName) {
+    if (!isAdjustmentAdmin()) {
+      const warnMsg = '⚠️ Chỉ tài khoản Quản Trị Viên (Admin) mới có quyền điều chỉnh Line Overtime! Các quyền khác chỉ được xem.';
+      if (window.showToast) {
+        window.showToast('warning', warnMsg);
+      } else {
+        alert(warnMsg);
+      }
+      return;
+    }
     const store = window.AssemblyAdjustmentStore;
     const currentStage = store.selectedStage || DEFAULT_STAGE;
     const norm = normalizeDateKey(dateStr);
@@ -1747,6 +1847,10 @@
    * Chỉnh sửa tên Người lập Plan
    */
   window.handleEditAssemblyAdjPlannerName = function() {
+    if (!isAdjustmentAdmin()) {
+      if (window.showToast) window.showToast('warning', '⚠️ Chỉ tài khoản Quản Trị Viên (Admin) mới có quyền đổi Người lập Plan!');
+      return;
+    }
     const store = window.AssemblyAdjustmentStore;
     const current = store.plannerName || 'Lê Ngọc Duy GLD';
     const newName = window.prompt('Nhập họ tên Người lập Plan (Kế hoạch Điều Chỉnh Line OT):', current);
@@ -1766,6 +1870,10 @@
    * Chỉnh sửa Ngày lập Plan
    */
   window.handleEditAssemblyAdjPlanDate = function() {
+    if (!isAdjustmentAdmin()) {
+      if (window.showToast) window.showToast('warning', '⚠️ Chỉ tài khoản Quản Trị Viên (Admin) mới có quyền đổi Ngày lập Plan!');
+      return;
+    }
     const store = window.AssemblyAdjustmentStore;
     const current = shortenYear26(store.planDate || getTodayFormatted());
     const newDate = window.prompt('Nhập Ngày lập Plan (DD/MM/YY):', current);
@@ -1785,6 +1893,10 @@
    * Lưu Tạm Kế Hoạch Điều Chỉnh (bảo toàn 100% cả OT lẫn khoảng ngày khi web refresh / F5)
    */
   window.handleSaveAssemblyAdjDraft = function() {
+    if (!isAdjustmentAdmin()) {
+      if (window.showToast) window.showToast('warning', '⚠️ Chỉ tài khoản Quản Trị Viên (Admin) mới có quyền Lưu Tạm Kế Hoạch Điều Chỉnh Overtime!');
+      return;
+    }
     const store = window.AssemblyAdjustmentStore;
     const currentStage = store.selectedStage || DEFAULT_STAGE;
     store.otMap = saveStoredOtMap(store.otMap, currentStage);
@@ -1820,6 +1932,10 @@
    * Hoàn Thành Kế Hoạch Điều Chỉnh & Đồng bộ đa người dùng
    */
   window.handleCompleteAssemblyAdjPlan = async function() {
+    if (!isAdjustmentAdmin()) {
+      if (window.showToast) window.showToast('warning', '⚠️ Chỉ tài khoản Quản Trị Viên (Admin) mới có quyền Hoàn Thành Kế Hoạch Điều Chỉnh Overtime!');
+      return;
+    }
     const store = window.AssemblyAdjustmentStore;
     const currentStage = store.selectedStage || DEFAULT_STAGE;
     const now = new Date();
@@ -2007,6 +2123,7 @@
    */
   window.handleOpenAssemblyAdjHistoryModal = function() {
     const store = window.AssemblyAdjustmentStore;
+    const isAdmin = isAdjustmentAdmin();
     const history = store.history || [];
 
     let modal = document.getElementById('assemblyAdjHistoryModal');
@@ -2055,12 +2172,18 @@
                     </div>
                   </div>
                   <div style="display: flex; gap: 0.35rem;">
-                    <button type="button" class="btn btn-primary" onclick="window.handleRestoreAssemblyAdjHistory('${h.id}')" style="font-size: 0.75rem; padding: 0.3rem 0.65rem; background: #0284c7; border-color: #0284c7;">
-                      🔄 Khôi Phục
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="window.handleDeleteAssemblyAdjHistory('${h.id}')" style="font-size: 0.75rem; padding: 0.3rem 0.5rem; color: #f87171;">
-                      🗑️
-                    </button>
+                    ${isAdmin ? `
+                      <button type="button" class="btn btn-primary" onclick="window.handleRestoreAssemblyAdjHistory('${h.id}')" style="font-size: 0.75rem; padding: 0.3rem 0.65rem; background: #0284c7; border-color: #0284c7; cursor: pointer;">
+                        🔄 Khôi Phục
+                      </button>
+                      <button type="button" class="btn btn-secondary" onclick="window.handleDeleteAssemblyAdjHistory('${h.id}')" style="font-size: 0.75rem; padding: 0.3rem 0.5rem; color: #f87171; cursor: pointer;" title="Xóa bản ghi">
+                        🗑️
+                      </button>
+                    ` : `
+                      <span style="font-size: 0.75rem; color: #94a3b8; font-style: italic; padding: 0.3rem 0.5rem; background: rgba(15, 23, 42, 0.5); border-radius: 4px; border: 1px solid rgba(148, 163, 184, 0.2);">
+                        👁️ Chỉ Xem
+                      </span>
+                    `}
                   </div>
                 </div>
               `).join('')}
@@ -2077,6 +2200,10 @@
    * Khôi phục 1 bản Kế hoạch Điều Chỉnh từ Lịch Sử
    */
   window.handleRestoreAssemblyAdjHistory = function(planId) {
+    if (!isAdjustmentAdmin()) {
+      if (window.showToast) window.showToast('warning', '⚠️ Chỉ tài khoản Quản Trị Viên (Admin) mới có quyền Khôi phục bản ghi lịch sử Kế Hoạch Điều Chỉnh!');
+      return;
+    }
     const store = window.AssemblyAdjustmentStore;
     const found = (store.history || []).find(h => h.id === planId);
     if (!found) return;
@@ -2127,6 +2254,10 @@
    * Xóa 1 bản ghi lịch sử (đồng bộ cả máy chủ Local & GitHub nếu đang chạy Local)
    */
   window.handleDeleteAssemblyAdjHistory = async function(planId) {
+    if (!isAdjustmentAdmin()) {
+      if (window.showToast) window.showToast('warning', '⚠️ Chỉ tài khoản Quản Trị Viên (Admin) mới có quyền Xóa bản ghi lịch sử Kế Hoạch Điều Chỉnh!');
+      return;
+    }
     const store = window.AssemblyAdjustmentStore;
     if (!confirm('Bạn có chắc chắn muốn xóa bản ghi lịch sử này?')) return;
     store.history = (store.history || []).filter(h => h.id !== planId);
@@ -2166,6 +2297,10 @@
    * Đặt lại toàn bộ Line OT đã chọn về mặc định của công đoạn hiện tại
    */
   window.handleResetAssemblyAdjustmentPlan = function() {
+    if (!isAdjustmentAdmin()) {
+      if (window.showToast) window.showToast('warning', '⚠️ Chỉ tài khoản Quản Trị Viên (Admin) mới có quyền Đặt lại (Reset) Kế Hoạch Điều Chỉnh Overtime!');
+      return;
+    }
     const store = window.AssemblyAdjustmentStore;
     const currentStage = store.selectedStage || DEFAULT_STAGE;
     const stageName = STAGE_CONFIGS[currentStage]?.name || currentStage;
@@ -2182,6 +2317,10 @@
    * Đưa số người làm thêm (Số Người OT) vào dòng Thực Tế Bổ Sung của Bảng 1 Tình Trạng Nhân Lực
    */
   window.handleApplyAssemblyAdjustmentToTable1 = function() {
+    if (!isAdjustmentAdmin()) {
+      if (window.showToast) window.showToast('warning', '⚠️ Chỉ tài khoản Quản Trị Viên (Admin) mới có quyền Áp dụng số người OT vào Bảng 1!');
+      return;
+    }
     const store = window.AssemblyAdjustmentStore;
     const currentStage = store.selectedStage || DEFAULT_STAGE;
     const dates = resolveAdjustmentDates(window.__LATEST_SCHEDULE__);
