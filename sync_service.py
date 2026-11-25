@@ -35,6 +35,8 @@ CLIPS_ALLS_HISTORY_JSON_FILE = os.path.join(WORKSPACE_DIR, 'clips_alls_history.j
 CLIPS_ALLS_JS_FILE = os.path.join(WORKSPACE_DIR, 'js', 'clips-alls-data.js')
 KPI_JSON_FILE = os.path.join(WORKSPACE_DIR, 'kpi_data.json')
 KPI_JS_FILE = os.path.join(WORKSPACE_DIR, 'js', 'kpi-data.js')
+ISSUE_RECORD_JSON_FILE = os.path.join(WORKSPACE_DIR, 'issue_record_data.json')
+ISSUE_RECORD_JS_FILE = os.path.join(WORKSPACE_DIR, 'js', 'issue-record-data.js')
 STATUS_FILE = os.path.join(WORKSPACE_DIR, 'sync_status.json')
 
 def fetch_and_parse_manpower(ctx):
@@ -1377,6 +1379,12 @@ def sync_datamass():
     except Exception as kpie:
         print(f"⚠️ Lỗi khi đồng bộ KPI Data: {kpie}")
 
+    # 0h. Đồng bộ Sheet Issue Record
+    try:
+        fetch_and_parse_issue_record(ctx)
+    except Exception as ire:
+        print(f"⚠️ Lỗi khi đồng bộ Issue Record: {ire}")
+
     url = f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid={DATA_MASS_GID}'
     
     req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'})
@@ -1999,6 +2007,89 @@ def fetch_and_parse_kpi_data(ctx):
 
     print(f"✅ Đã đồng bộ Sheet KPI Data: {workcell_count} Workcell teams, Total Prod={total_productivity}, Remarks={total_remarks}, Scrap={scrap_actual}")
     return kpi_payload
+
+def fetch_and_parse_issue_record(ctx):
+    """
+    Tải và bóc tách dữ liệu từ sheet 'Issue Record' trên Google Sheets.
+    Phân loại theo Bộ phận (SFPD, FPD, SMT, OTHER) và Công đoạn.
+    """
+    url = f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet=' + urllib.parse.quote('Issue Record')
+    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'})
+    with urllib.request.urlopen(req, context=ctx, timeout=30) as resp:
+        content = resp.read().decode('utf-8', errors='ignore')
+
+    reader = list(csv.reader(io.StringIO(content)))
+    valid_rows = [r for r in reader if len(r) > 1 and r[0].strip() and r[0] != 'ID']
+
+    sfpd_locations = {'HARD TEST', 'ASSEMBLY', 'OPTICS ASM', 'A IMP ASM', 'FOCUS'}
+    fpd_locations = {'LONG TEST', 'TEST ROOM', 'QC', 'PKG', 'COM PKG', 'COM PKG AUTO', 'MB'}
+
+    items = []
+    for r in valid_rows:
+        loc = (r[4] if len(r) > 4 else '').strip()
+        wc = (r[3] if len(r) > 3 else '').strip()
+        loc_u = loc.upper()
+
+        if loc_u in sfpd_locations or wc in ['Workcell A', 'Workcell B']:
+            dept_scope = 'SFPD'
+            stage_group = 'HARD TEST' if any(k in loc_u for k in ['HARD', 'FOCUS', 'OPTIC', 'IMP']) else 'ASSEMBLY'
+        elif loc_u in fpd_locations:
+            dept_scope = 'FPD'
+            stage_group = loc_u if loc_u in fpd_locations else 'FPD'
+        elif 'SMT' in wc or 'SMD' in loc_u:
+            dept_scope = 'SMT'
+            stage_group = 'SMT'
+        else:
+            dept_scope = 'OTHER'
+            stage_group = loc_u or 'OTHER'
+
+        items.append({
+            'id': r[0].strip(),
+            'date': r[1].strip() if len(r) > 1 else '',
+            'shift': r[2].strip() if len(r) > 2 else '',
+            'workcell': wc,
+            'location': loc,
+            'product': r[5].strip() if len(r) > 5 else '',
+            'priority': r[6].strip() if len(r) > 6 else '',
+            'category': r[7].strip() if len(r) > 7 else '',
+            'fourM': r[8].strip() if len(r) > 8 else '',
+            'issueName': r[9].strip() if len(r) > 9 else '',
+            'description': r[10].strip() if len(r) > 10 else '',
+            'impact': r[11].strip() if len(r) > 11 else '',
+            'impactDate': r[12].strip() if len(r) > 12 else '',
+            'reporter': r[13].strip() if len(r) > 13 else '',
+            'department': r[14].strip() if len(r) > 14 else '',
+            'corrective': r[16].strip() if len(r) > 16 else '',
+            'status': r[17].strip() if len(r) > 17 else '',
+            'correctiveOwner': r[18].strip() if len(r) > 18 else '',
+            'correctiveDate': r[19].strip() if len(r) > 19 else '',
+            'preventive': r[20].strip() if len(r) > 20 else '',
+            'preventiveStatus': r[21].strip() if len(r) > 21 else '',
+            'agingTime': r[28].strip() if len(r) > 28 else '',
+            'deviationNo': r[30].strip() if len(r) > 30 else '',
+            'weekNo': r[31].strip() if len(r) > 31 else '',
+            'dateOnly': r[33].strip() if len(r) > 33 else '',
+            'deptScope': dept_scope,
+            'stageGroup': stage_group
+        })
+
+    payload = {
+        'success': True,
+        'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'version': int(time.strftime('%Y%m%d%H%M%S')),
+        'totalItems': len(items),
+        'items': items
+    }
+
+    with open(ISSUE_RECORD_JSON_FILE, 'w', encoding='utf-8') as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+
+    with open(ISSUE_RECORD_JS_FILE, 'w', encoding='utf-8') as f:
+        f.write('// Tự động sinh từ Google Sheet Issue Record\n')
+        f.write('window.ISSUE_RECORD_DATA = ' + json.dumps(payload, ensure_ascii=False) + ';\n')
+
+    print(f"✅ Đã đồng bộ Sheet Issue Record: {len(items)} sự cố ghi nhận ({sum(1 for i in items if i['deptScope']=='SFPD')} SFPD, {sum(1 for i in items if i['deptScope']=='FPD')} FPD)")
+    return payload
 
 def sync_kpi_only():
     t0 = time.time()

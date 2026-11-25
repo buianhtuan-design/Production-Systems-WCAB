@@ -3582,23 +3582,65 @@ class Store {
         dedupMap.set(key, it);
       } else {
         const existing = dedupMap.get(key);
-        if (existing.cumPlanQty === it.cumPlanQty && existing.cumFactQty === it.cumFactQty) {
-          if ((it.model || '').length > (existing.model || '').length) {
-            existing.model = it.model;
-          }
-        } else if (it.cumPlanQty > 0 || it.cumFactQty > 0) {
-          if (existing.cumPlanQty === 0 && existing.cumFactQty === 0) {
-            dedupMap.set(key, it);
+        // Ưu tiên model/revision chi tiết hơn hoặc có tên dài hơn
+        const preferItMeta = (it.model || '').length > (existing.model || '').length;
+        if (preferItMeta) {
+          existing.model = it.model;
+          if (it.specCode) existing.specCode = it.specCode;
+          if (it.normKey) existing.normKey = it.normKey;
+          if (it.normKeyShort) existing.normKeyShort = it.normKeyShort;
+          if (it.normName) existing.normName = it.normName;
+        }
+        if ((!existing.norm || existing.norm <= 0) && it.norm > 0) {
+          existing.norm = it.norm;
+          existing.normName = it.normName || existing.normName;
+        }
+
+        // Cộng dồn sản lượng và giờ công luỹ kế
+        existing.cumPlanQty = (existing.cumPlanQty || 0) + (it.cumPlanQty || 0);
+        existing.cumFactQty = (existing.cumFactQty || 0) + (it.cumFactQty || 0);
+        existing.cumGapQty = existing.cumFactQty - existing.cumPlanQty;
+        existing.cumPlanHours = Math.round(((existing.cumPlanHours || 0) + (it.cumPlanHours || 0)) * 10) / 10;
+        existing.cumFactHours = Math.round(((existing.cumFactHours || 0) + (it.cumFactHours || 0)) * 10) / 10;
+        existing.cumGapHours = Math.round((existing.cumFactHours - existing.cumPlanHours) * 10) / 10;
+        existing.totalPlanQty = (existing.totalPlanQty || 0) + (it.totalPlanQty || 0);
+        existing.totalFactQty = (existing.totalFactQty || 0) + (it.totalFactQty || 0);
+        existing.cumRate = existing.cumPlanQty > 0 ? Math.round((existing.cumFactQty / existing.cumPlanQty) * 100) : (existing.cumFactQty > 0 ? 100 : 0);
+
+        // Hợp nhất dữ liệu từng ngày (daily array)
+        if (Array.isArray(it.daily) && it.daily.length > 0) {
+          if (!Array.isArray(existing.daily) || existing.daily.length === 0) {
+            existing.daily = JSON.parse(JSON.stringify(it.daily));
           } else {
-            existing.cumPlanQty += it.cumPlanQty;
-            existing.cumFactQty += it.cumFactQty;
-            existing.cumGapQty = existing.cumFactQty - existing.cumPlanQty;
-            existing.cumPlanHours = Math.round((existing.cumPlanHours + it.cumPlanHours) * 10) / 10;
-            existing.cumFactHours = Math.round((existing.cumFactHours + it.cumFactHours) * 10) / 10;
-            existing.cumGapHours = Math.round((existing.cumFactHours - existing.cumPlanHours) * 10) / 10;
-            if ((it.model || '').length > (existing.model || '').length) {
-              existing.model = it.model;
-            }
+            it.daily.forEach(dEntry => {
+              const match = existing.daily.find(ed => ed.date === dEntry.date);
+              if (match) {
+                match.plan = (match.plan || 0) + (dEntry.plan || 0);
+                match.fact = (match.fact || 0) + (dEntry.fact || 0);
+                match.gap = match.fact - match.plan;
+                match.planDay = (match.planDay || 0) + (dEntry.planDay || 0);
+                match.planNight = (match.planNight || 0) + (dEntry.planNight || 0);
+                match.factDay = (match.factDay || 0) + (dEntry.factDay || 0);
+                match.factNight = (match.factNight || 0) + (dEntry.factNight || 0);
+                match.planHours = Math.round(((match.planHours || 0) + (dEntry.planHours || 0)) * 100) / 100;
+                match.factHours = Math.round(((match.factHours || 0) + (dEntry.factHours || 0)) * 100) / 100;
+                match.gapHours = Math.round((match.factHours - match.planHours) * 100) / 100;
+                if (dEntry.isSelected) match.isSelected = true;
+              } else {
+                existing.daily.push(JSON.parse(JSON.stringify(dEntry)));
+              }
+            });
+          }
+        }
+
+        // Hợp nhất shortageReasons
+        if (Array.isArray(it.shortageReasons) && it.shortageReasons.length > 0) {
+          if (!Array.isArray(existing.shortageReasons)) {
+            existing.shortageReasons = [...it.shortageReasons];
+          } else {
+            it.shortageReasons.forEach(sr => {
+              if (!existing.shortageReasons.includes(sr)) existing.shortageReasons.push(sr);
+            });
           }
         }
       }

@@ -869,6 +869,11 @@
 
               <!-- Action Toolbar for Table 2 -->
               <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                <button type="button" class="btn btn-secondary" onclick="window.scrollToReportIssueSection()" 
+                        style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.4); color: #f87171; font-weight: 700;"
+                        title="Cuộn nhanh xuống xem Báo Cáo Report Issue (Tổng Deviation, Issue Record, KPI)">
+                  <span>🚨 Xem Report Issue ⬇️</span>
+                </button>
                 <button type="button" class="btn btn-sheet-copy" onclick="window.handleCopyTable2Detailed()" 
                         title="Sao chép toàn bộ dữ liệu Bảng 2 (Model & Công đoạn) để dán trực tiếp (Ctrl+V) vào Google Sheets">
                   <span>📋 Copy Cho Sheet</span>
@@ -990,6 +995,147 @@
               <!-- Dynamically rendered -->
             </div>
             </div> <!-- End datamassTable2BodyWrap -->
+          </div>
+
+          <!-- ======================================================== -->
+          <!-- TAB / BẢNG: REPORT ISSUE (THEO BỘ PHẬN & CÔNG ĐOẠN)       -->
+          <!-- ======================================================== -->
+          <div class="section-card" id="datamassReportIssueSectionCard" style="margin-top: 1.5rem;">
+            <div class="section-header-row" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+              <div class="section-title-wrap">
+                <div class="section-icon-badge" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.35); color: #f87171;">🚨</div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
+                    <h2>BÁO CÁO REPORT ISSUE (THEO BỘ PHẬN &amp; CÔNG ĐOẠN)</h2>
+                    <span id="badgeReportIssueSummary" class="badge badge-amber" style="font-size: 0.75rem; font-weight: 700;">
+                      Đang tổng hợp...
+                    </span>
+                    <button type="button" id="btnToggleReportIssueDetail" class="btn-filter-toggle" onclick="handleToggleReportIssueViewMode()" style="font-size: 0.75rem; padding: 0.25rem 0.65rem; background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.35); color: #60a5fa;" title="Chuyển đổi giữa xem tóm tắt theo Bộ Phận và xem chi tiết từng Công Đoạn">
+                      🔽 Chi Tiết Từng Công Đoạn
+                    </button>
+                    <button type="button" id="btnToggleReportIssueSection" class="btn-filter-toggle" onclick="toggleReportIssueSectionCollapse()" style="font-size: 0.75rem; padding: 0.25rem 0.65rem;" title="Thu gọn / Mở rộng Mục Report Issue">
+                      🔼 Thu gọn
+                    </button>
+                  </div>
+                  <span id="datamassReportIssueSubtitle" class="section-subtitle">
+                    Tổng hợp đa chiều: <strong>Tổng Deviation (mã bị âm luỹ kế tuần)</strong> • <strong>Tổng Issue Record (sheet Issue Record)</strong> • <strong>Issue KPI (chỉ số không đạt)</strong>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Action Toolbar for Report Issue -->
+              <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                <button type="button" class="btn btn-sheet-copy" onclick="handleCopyReportIssueTable()" 
+                        title="Sao chép toàn bộ bảng Report Issue để dán (Ctrl+V) vào Google Sheets">
+                  <span>📋 Copy Cho Sheet</span>
+                </button>
+                <button type="button" class="btn btn-sheet-export" onclick="handleExportReportIssueCSV()" 
+                        title="Tải file CSV Report Issue chuẩn UTF-8">
+                  <span>📥 Xuất File Sheet</span>
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="renderReportIssueSection()" style="font-size: 0.8rem; padding: 0.4rem 0.75rem;" title="Làm mới lại dữ liệu">
+                  <span>🔄 Cập Nhật</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Body Wrap for Report Issue -->
+            <div id="datamassReportIssueBodyWrap" style="margin-top: 1rem;">
+              <!-- Filter Toolbar for Report Issue (Chuẩn 2 hàng theo ảnh số 1) -->
+              <div class="filter-card-bar" style="padding: 0.65rem 0.95rem; background: rgba(15, 23, 42, 0.75); border: 1px solid var(--border-glass); border-radius: var(--radius-md); margin-bottom: 0.75rem;">
+                <!-- Hàng 1: Ngày, Ca, và Phím nhanh Tuần/Đồng bộ Bảng 2 -->
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.55rem;">
+                  <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
+                    <!-- Lọc Ngày: Từ ... Đến ... -->
+                    <span style="font-size: 0.8rem; font-weight: 700; color: #60a5fa; display: flex; align-items: center; gap: 0.25rem;">
+                      📅 Ngày:
+                    </span>
+                    <span style="font-size: 0.725rem; color: var(--text-muted);">Từ</span>
+                    <input type="date" id="reportIssueFromDate" class="select-filter font-mono" value="2026-11-19" onchange="handleReportIssueDateChange('FROM', this.value)" style="padding: 0.25rem 0.5rem; font-size: 0.775rem;">
+                    <span style="font-size: 0.725rem; color: var(--text-muted);">Đến</span>
+                    <input type="date" id="reportIssueToDate" class="select-filter font-mono" value="2026-11-23" onchange="handleReportIssueDateChange('TO', this.value)" style="padding: 0.25rem 0.5rem; font-size: 0.775rem;">
+
+                    <!-- Lọc Ca: Cả 2 Ca, Ca Ngày, Ca Đêm, Phân Tách 2 Ca -->
+                    <div style="display: flex; align-items: center; gap: 0.4rem; margin-left: 0.5rem;">
+                      <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-secondary);">
+                        ☀️/🌙 Ca:
+                      </span>
+                      <div class="btn-group" id="reportIssueShiftGroup">
+                        <button class="btn-mode active" data-shift="ALL" onclick="handleReportIssueShiftChange('ALL')" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;">
+                          🌟 Cả 2 Ca
+                        </button>
+                        <button class="btn-mode" data-shift="DAY" onclick="handleReportIssueShiftChange('DAY')" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;">
+                          ☀️ Ca Ngày
+                        </button>
+                        <button class="btn-mode" data-shift="NIGHT" onclick="handleReportIssueShiftChange('NIGHT')" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;">
+                          🌙 Ca Đêm
+                        </button>
+                        <button class="btn-mode" data-shift="SPLIT" onclick="handleReportIssueShiftChange('SPLIT')" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;">
+                          🔄 Phân Tách 2 Ca
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Quick Week & Sync Buttons -->
+                  <div style="display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="handleReportIssueQuickWeek('W48')" style="font-size: 0.725rem; padding: 0.25rem 0.55rem;" title="Xem tuần hiện tại (19/11 - 23/11/2026)">
+                      Tuần Này (W48)
+                    </button>
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="handleReportIssueQuickWeek('W47')" style="font-size: 0.725rem; padding: 0.25rem 0.55rem;" title="Xem tuần trước (12/11 - 18/11/2026)">
+                      Tuần Trước (W47)
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline" onclick="handleReportIssueSyncWithTable2()" style="font-size: 0.725rem; padding: 0.25rem 0.55rem; color: #38bdf8; border-color: rgba(56, 189, 248, 0.4);" title="Đồng bộ chính xác khoảng ngày và ca đang chọn ở Bảng 2">
+                      🔄 Đồng Bộ Bảng 2
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Hàng 2: Công Đoạn: Dropdown + Quick Pills (chuẩn theo ảnh số 1) -->
+                <div style="display: flex; align-items: center; justify-content: flex-start; flex-wrap: wrap; gap: 0.75rem; padding-top: 0.55rem; border-top: 1px dashed rgba(255, 255, 255, 0.1);">
+                  <span style="font-size: 0.8rem; font-weight: 800; color: #c084fc; display: flex; align-items: center; gap: 0.35rem;">
+                    🏭 2. CÔNG ĐOẠN:
+                  </span>
+
+                  <!-- Stage Dropdown Selector -->
+                  <select id="reportIssueStageSelect" class="select-filter font-bold" onchange="handleReportIssueStageChange(this.value)" style="padding: 0.35rem 0.75rem; font-size: 0.785rem; font-weight: 700; border-radius: var(--radius-sm); background: #1e1b4b; border: 1px solid #7c3aed; color: #e9d5ff; cursor: pointer; outline: none;">
+                    <option value="HARDTEST_AND_ASSEMBLY" selected>🚀 Tổng SFPD</option>
+                    <option value="HARDTEST_TOTAL">⭐ Total Hard Test</option>
+                    <option value="ASSEMBLY">🔧 ASSEMBLY</option>
+                    <option value="FPD_TOTAL">📦 Tổng FPD</option>
+                    <option value="MASTERBOX_TOTAL">💻 Tổng MasterBox</option>
+                    <option value="ALL">🏭 Toàn Bộ Nhà Máy (ALL)</option>
+                  </select>
+
+                  <!-- Quick Stage Pill Buttons -->
+                  <div class="stage-quick-pills" id="reportIssueStagePills">
+                    <button type="button" class="btn-quick-stage" data-stage="HARDTEST_TOTAL" onclick="handleReportIssueStageChange('HARDTEST_TOTAL')">
+                      ⭐ Total Hard Test
+                    </button>
+                    <button type="button" class="btn-quick-stage" data-stage="ASSEMBLY" onclick="handleReportIssueStageChange('ASSEMBLY')">
+                      🔧 ASSEMBLY
+                    </button>
+                    <button type="button" class="btn-quick-stage active" data-stage="HARDTEST_AND_ASSEMBLY" onclick="handleReportIssueStageChange('HARDTEST_AND_ASSEMBLY')">
+                      🚀 Tổng SFPD
+                    </button>
+                    <button type="button" class="btn-quick-stage" data-stage="FPD_TOTAL" onclick="handleReportIssueStageChange('FPD_TOTAL')">
+                      📦 Tổng FPD
+                    </button>
+                    <button type="button" class="btn-quick-stage" data-stage="MASTERBOX_TOTAL" onclick="handleReportIssueStageChange('MASTERBOX_TOTAL')">
+                      💻 Tổng MasterBox
+                    </button>
+                    <button type="button" class="btn-quick-stage" data-stage="ALL" onclick="handleReportIssueStageChange('ALL')">
+                      🏭 Toàn Bộ
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Main Table Container -->
+              <div id="datamassReportIssueTableContainer" class="table-container">
+                <!-- Populated dynamically by renderReportIssueSection() -->
+              </div>
+            </div>
           </div>
 
           <!-- Section Card 3: CÁC ĐIỂM CHÚ Ý & CẢNH BÁO MODEL MỚI SẢN XUẤT -->
@@ -2246,6 +2392,22 @@
   </div>
 
 
+  <!-- Modal Tra Cứu Chi Tiết Report Issue (Mã Âm / Sự Cố Issue Record / Chỉ Số KPI) -->
+  <div id="modalReportIssueDetail" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+    <div class="modal-card" style="background: var(--bg-card, #1e293b); border: 1px solid var(--border-glass, rgba(255,255,255,0.15)); border-radius: 12px; width: 92%; max-width: 950px; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
+        <h3 id="reportIssueDetailModalTitle" style="font-size: 1.05rem; font-weight: 800; color: var(--text-primary); margin: 0;">Chi Tiết</h3>
+        <button type="button" class="btn-close-modal" onclick="handleCloseReportDetailModal()" style="background: none; border: none; font-size: 1.3rem; color: var(--text-muted); cursor: pointer; padding: 0.2rem 0.5rem;">✕</button>
+      </div>
+      <div id="reportIssueDetailModalBody" class="modal-body" style="padding: 1.25rem; overflow-y: auto; flex: 1;">
+        <!-- Dynamically rendered -->
+      </div>
+      <div class="modal-footer" style="padding: 0.75rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: flex-end; background: rgba(255,255,255,0.02);">
+        <button type="button" class="btn btn-secondary" onclick="handleCloseReportDetailModal()">Đóng</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Container -->
   <div id="toastBox" class="toast-box"></div>
 
@@ -2268,6 +2430,8 @@
   <script src="js/clips-all-plan.js?v=20261103_clips_nov_v1"></script>
   <script src="js/kpi-data.js?v=20261116_kpi_v7"></script>
   <script src="js/kpi-result.js?v=20261116_prod_adj_v1"></script>
+  <script src="js/issue-record-data.js?v=20261123_v1"></script>
+  <script src="js/report-issue.js?v=20261123_v1"></script>
   <script src="js/prod-history.js?v=20261107_prod_hist_v1"></script>
   <script src="js/plan-fact-check.js?v=20261115_adj_v3"></script>
   <script src="js/assembly-adjustment.js?v=20261118_adj_syncfix_v4"></script>

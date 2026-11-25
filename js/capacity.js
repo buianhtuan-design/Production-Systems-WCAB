@@ -949,12 +949,24 @@
     };
   }
 
-  function getTodayPlanReference() {
-    const now = new Date();
+  function getTodayPlanReference(preferredDate) {
     const pad = n => String(n).padStart(2, '0');
+    let target = preferredDate || (window.AppStore && (window.AppStore.simTargetDate || window.AppStore.simToDate || window.AppStore.toDate));
+    if (target) {
+      const d = (window.AppStore && window.AppStore.parseDate) ? window.AppStore.parseDate(target) : new Date(target);
+      if (d && !isNaN(d.getTime())) {
+        return {
+          todayIso: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`,
+          todayDisplay: `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`,
+          sheetKey: `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`
+        };
+      }
+    }
+    const now = new Date();
     return {
       todayIso: `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`,
-      todayDisplay: `${pad(now.getDate())}/${pad(now.getMonth() + 1)}/${now.getFullYear()}`
+      todayDisplay: `${pad(now.getDate())}/${pad(now.getMonth() + 1)}/${now.getFullYear()}`,
+      sheetKey: `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}`
     };
   }
 
@@ -966,16 +978,36 @@
   function resolvePlanDateAndShiftMeta(it, gapQty, todayRef, shiftFilter = 'ALL') {
     const { todayIso, todayDisplay } = todayRef || getTodayPlanReference();
     const dailyList = (it && Array.isArray(it.daily)) ? it.daily : [];
-    const todayEntry = dailyList.find(d => {
+    let todayEntry = dailyList.find(d => {
       if (!d || d.isSelected === false) return false;
       const dIso = (window.AppStore && window.AppStore.toISODate) ? window.AppStore.toISODate(d.date) : d.date;
       return dIso === todayIso;
     });
 
+    let effectiveDisplay = todayDisplay;
+    if (!todayEntry && dailyList.length > 0) {
+      const selectedEntries = dailyList.filter(d => d && d.isSelected !== false);
+      if (selectedEntries.length > 0) {
+        todayEntry = selectedEntries[selectedEntries.length - 1];
+        const dIso = (window.AppStore && window.AppStore.toISODate) ? window.AppStore.toISODate(todayEntry.date) : todayEntry.date;
+        if (dIso && dIso.includes('-')) {
+          const parts = dIso.split('-');
+          effectiveDisplay = `${parts[2]}/${parts[1]}/${parts[0]}`;
+        } else {
+          effectiveDisplay = todayEntry.date;
+        }
+      }
+    }
+
     const plannedShifts = [];
     if (todayEntry) {
-      const dayPlan = Number(todayEntry.planDay) || 0;
-      const nightPlan = Number(todayEntry.planNight) || 0;
+      let dayPlan = Number(todayEntry.planDay) || 0;
+      let nightPlan = Number(todayEntry.planNight) || 0;
+      const totPlan = Number(todayEntry.plan) || 0;
+      if (totPlan > 0 && dayPlan === 0 && nightPlan === 0) {
+        dayPlan = Math.round(totPlan * 0.6);
+        nightPlan = totPlan - dayPlan;
+      }
 
       if (shiftFilter !== 'NIGHT' && dayPlan > 0) {
         plannedShifts.push('Ngày');
@@ -987,7 +1019,7 @@
 
     if (plannedShifts.length > 0) {
       return {
-        datePlanLabel: todayDisplay,
+        datePlanLabel: effectiveDisplay,
         shiftPlanLabel: plannedShifts.join(' + '),
         isCumNegative: false,
         pendingShifts: plannedShifts
@@ -1990,7 +2022,16 @@
     const searchVal = (window.AppStore.simSearchVal || '').trim();
 
     // Target simulation date & Scope state ('CUMULATIVE' | 'SINGLE')
-    const simTargetDate = window.AppStore.simTargetDate || toDate || '2026-10-26';
+    let simTargetDate = window.AppStore.simTargetDate || toDate || '2026-11-25';
+    if (simFromDate && simToDate) {
+      const fromIso = (window.AppStore && window.AppStore.toISODate) ? window.AppStore.toISODate(simFromDate) : simFromDate;
+      const toIso = (window.AppStore && window.AppStore.toISODate) ? window.AppStore.toISODate(simToDate) : simToDate;
+      const targetIso = (window.AppStore && window.AppStore.toISODate) ? window.AppStore.toISODate(simTargetDate) : simTargetDate;
+      if (targetIso < fromIso || targetIso > toIso) {
+        simTargetDate = toDate;
+        window.AppStore.simTargetDate = simTargetDate;
+      }
+    }
     if (!window.AppStore.simTargetDate) {
       window.AppStore.simTargetDate = simTargetDate;
     }
@@ -2024,10 +2065,30 @@
         if ((it.model || '').length > (existing.model || '').length) {
           existing.model = it.model;
         }
+        if (Array.isArray(it.daily) && it.daily.length > 0) {
+          if (!Array.isArray(existing.daily) || existing.daily.length === 0) {
+            existing.daily = JSON.parse(JSON.stringify(it.daily));
+          } else {
+            it.daily.forEach(dEntry => {
+              const match = existing.daily.find(ed => ed.date === dEntry.date);
+              if (match) {
+                match.plan = (match.plan || 0) + (dEntry.plan || 0);
+                match.fact = (match.fact || 0) + (dEntry.fact || 0);
+                match.gap = match.fact - match.plan;
+                match.planDay = (match.planDay || 0) + (dEntry.planDay || 0);
+                match.planNight = (match.planNight || 0) + (dEntry.planNight || 0);
+                match.factDay = (match.factDay || 0) + (dEntry.factDay || 0);
+                match.factNight = (match.factNight || 0) + (dEntry.factNight || 0);
+              } else {
+                existing.daily.push(JSON.parse(JSON.stringify(dEntry)));
+              }
+            });
+          }
+        }
       }
     });
     const scheduleItems = Array.from(uniqueScheduleMap.values());
-    const todayPlanRefPreSort = getTodayPlanReference();
+    const todayPlanRefPreSort = getTodayPlanReference(simTargetDate);
     scheduleItems.forEach((it, idx) => {
       const gapQty = Number(it.cumGapQty || 0);
       it._preSortIdx = idx;
@@ -2175,7 +2236,7 @@
     if (!window.AppStore.simManualFactDay) window.AppStore.simManualFactDay = {};
     if (!window.AppStore.simManualFactNight) window.AppStore.simManualFactNight = {};
 
-    const todayPlanRef = getTodayPlanReference();
+    const todayPlanRef = getTodayPlanReference(simTargetDate);
 
     const processedRows = scheduleItems.map((it, idx) => {
       grandPlan += (it.cumPlanQty || 0);
@@ -4340,7 +4401,17 @@
 
     const plannerName = getSimPlannerName();
     const simHistoryCount = getSimHistoryCount();
-    const todayPlanRef = getTodayPlanReference();
+    let simTargetDate = window.AppStore.hardtestSimTargetDate || window.AppStore.simTargetDate || simToDate;
+    if (simFromDate && simToDate) {
+      const fromIso = (window.AppStore && window.AppStore.toISODate) ? window.AppStore.toISODate(simFromDate) : simFromDate;
+      const toIso = (window.AppStore && window.AppStore.toISODate) ? window.AppStore.toISODate(simToDate) : simToDate;
+      const targetIso = (window.AppStore && window.AppStore.toISODate) ? window.AppStore.toISODate(simTargetDate) : simTargetDate;
+      if (targetIso < fromIso || targetIso > toIso) {
+        simTargetDate = simToDate;
+        window.AppStore.hardtestSimTargetDate = simTargetDate;
+      }
+    }
+    const todayPlanRef = getTodayPlanReference(simTargetDate);
 
     // 2. Query Master Schedule from Bảng 2 data source (Total Hardtest cluster)
     const targetStageFilter = (stageSubFilter === 'ALL') ? 'TOTAL_HARDTEST' : stageSubFilter;

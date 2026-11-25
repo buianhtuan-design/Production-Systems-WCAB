@@ -1165,6 +1165,12 @@ function initNavigation() {
   if (!initialHash) {
     try { initialHash = localStorage.getItem('AJAX_ACTIVE_TAB') || ''; } catch(e) {}
   }
+  if (initialHash === 'report-issue') {
+    initialHash = 'datamass';
+    setTimeout(() => {
+      if (typeof window.scrollToReportIssueSection === 'function') window.scrollToReportIssueSection();
+    }, 600);
+  }
   if (!initialHash) initialHash = 'datamass';
 
   const matchingLink = document.querySelector(`.nav-link[data-tab="${initialHash}"]`);
@@ -4049,6 +4055,11 @@ function renderDataMassView() {
         ${paginationHtml}
       `;
     }
+  }
+
+  // 3b. Render BÁO CÁO REPORT ISSUE (THEO BỘ PHẬN & CÔNG ĐOẠN)
+  if (typeof renderReportIssueSection === 'function') {
+    renderReportIssueSection();
   }
 
   // 4. Render Section 3: CÁC ĐIỂM CHÚ Ý & CẢNH BÁO MODEL MỚI SẢN XUẤT
