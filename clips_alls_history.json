@@ -7,10 +7,10 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-25 21:25:22",
+      "archivedAt": "2026-11-25 22:31:25",
       "totalItems": 273,
       "totalPlan": 485822.0,
-      "totalSheetFact": 393325.0,
+      "totalSheetFact": 393327.0,
       "qtyAllDevice": 273,
       "qtyDoneDevice": 198,
       "qtyNotDoneDevice": 75,
@@ -462,7 +462,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke/CO) (9NA) white датчик диму, температури та чадного газу",
           "plan": 0.0,
-          "sheetFact": 2.0,
+          "sheetFact": 4.0,
           "done": 1,
           "isDone": true
         },
@@ -3194,7 +3194,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke/CO) (9NA) white датчик диму, температури та чадного газу",
           "plan": 0.0,
-          "sheetFact": 2.0,
+          "sheetFact": 4.0,
           "done": 1,
           "isDone": true
         },
