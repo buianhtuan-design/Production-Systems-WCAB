@@ -7,14 +7,14 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-26 13:45:55",
+      "archivedAt": "2026-11-26 13:46:47",
       "totalItems": 273,
       "totalPlan": 485822.0,
-      "totalSheetFact": 404844.0,
+      "totalSheetFact": 405650.0,
       "qtyAllDevice": 273,
-      "qtyDoneDevice": 199,
-      "qtyNotDoneDevice": 74,
-      "clipAllPlant": "72.9%",
+      "qtyDoneDevice": 202,
+      "qtyNotDoneDevice": 71,
+      "clipAllPlant": "74.0%",
       "items": [
         {
           "category": "Comfort and productivity",
@@ -642,7 +642,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke) (8EU) ASP white сповіщувач пожежний димовий",
           "plan": 16298.0,
-          "sheetFact": 15011.0,
+          "sheetFact": 15626.0,
           "done": 1,
           "isDone": true
         },
@@ -652,7 +652,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke) (8IN) white сповіщувач пожежний димовий",
           "plan": 1624.0,
-          "sheetFact": 1596.0,
+          "sheetFact": 1611.0,
           "done": 1,
           "isDone": true
         },
@@ -702,9 +702,9 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8MA) white сповіщувач пожежний димовий зі звуковим оповіщувачем",
           "plan": 1064.0,
-          "sheetFact": 935.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 1019.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -2532,7 +2532,7 @@
           "agg": "",
           "device": "Ajax BulletCam (5 Mp/2.8 mm) ASP white відеокамера спостереження",
           "plan": 2590.0,
-          "sheetFact": 1561.0,
+          "sheetFact": 1606.0,
           "done": 0,
           "isDone": false
         },
@@ -2612,7 +2612,7 @@
           "agg": "",
           "device": "Ajax TurretCam (5 Mp/2.8 mm) ASP white відеокамера спостереження",
           "plan": 1675.0,
-          "sheetFact": 1322.0,
+          "sheetFact": 1355.0,
           "done": 0,
           "isDone": false
         },
@@ -2642,9 +2642,9 @@
           "agg": "",
           "device": "Ajax TurretCam (8 Mp/2.8 mm) ASP black відеокамера спостереження",
           "plan": 528.0,
-          "sheetFact": 475.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 476.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -2652,9 +2652,9 @@
           "agg": "",
           "device": "Ajax TurretCam (8 Mp/2.8 mm) ASP white відеокамера спостереження",
           "plan": 528.0,
-          "sheetFact": 474.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 478.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -2662,7 +2662,7 @@
           "agg": "",
           "device": "Ajax TurretCam (8 Mp/4 mm) ASP black відеокамера спостереження",
           "plan": 252.0,
-          "sheetFact": 137.0,
+          "sheetFact": 144.0,
           "done": 0,
           "isDone": false
         },
@@ -2672,7 +2672,7 @@
           "agg": "",
           "device": "Ajax TurretCam (8 Mp/4 mm) ASP white відеокамера спостереження",
           "plan": 252.0,
-          "sheetFact": 253.0,
+          "sheetFact": 255.0,
           "done": 1,
           "isDone": true
         },
@@ -3374,7 +3374,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke) (8EU) ASP white сповіщувач пожежний димовий",
           "plan": 16298.0,
-          "sheetFact": 15011.0,
+          "sheetFact": 15626.0,
           "done": 1,
           "isDone": true
         },
@@ -3384,7 +3384,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke) (8IN) white сповіщувач пожежний димовий",
           "plan": 1624.0,
-          "sheetFact": 1596.0,
+          "sheetFact": 1611.0,
           "done": 1,
           "isDone": true
         },
@@ -3434,9 +3434,9 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8MA) white сповіщувач пожежний димовий зі звуковим оповіщувачем",
           "plan": 1064.0,
-          "sheetFact": 935.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 1019.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax Manual Call Point (Blue) (8EU) ASP ручний сповіщувач": {
           "category": "",
@@ -5264,7 +5264,7 @@
           "agg": "",
           "device": "Ajax BulletCam (5 Mp/2.8 mm) ASP white відеокамера спостереження",
           "plan": 2590.0,
-          "sheetFact": 1561.0,
+          "sheetFact": 1606.0,
           "done": 0,
           "isDone": false
         },
@@ -5344,7 +5344,7 @@
           "agg": "",
           "device": "Ajax TurretCam (5 Mp/2.8 mm) ASP white відеокамера спостереження",
           "plan": 1675.0,
-          "sheetFact": 1322.0,
+          "sheetFact": 1355.0,
           "done": 0,
           "isDone": false
         },
@@ -5374,9 +5374,9 @@
           "agg": "",
           "device": "Ajax TurretCam (8 Mp/2.8 mm) ASP black відеокамера спостереження",
           "plan": 528.0,
-          "sheetFact": 475.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 476.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax TurretCam (8 Mp/2.8 mm) ASP white відеокамера спостереження": {
           "category": "",
@@ -5384,9 +5384,9 @@
           "agg": "",
           "device": "Ajax TurretCam (8 Mp/2.8 mm) ASP white відеокамера спостереження",
           "plan": 528.0,
-          "sheetFact": 474.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 478.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax TurretCam (8 Mp/4 mm) ASP black відеокамера спостереження": {
           "category": "",
@@ -5394,7 +5394,7 @@
           "agg": "",
           "device": "Ajax TurretCam (8 Mp/4 mm) ASP black відеокамера спостереження",
           "plan": 252.0,
-          "sheetFact": 137.0,
+          "sheetFact": 144.0,
           "done": 0,
           "isDone": false
         },
@@ -5404,7 +5404,7 @@
           "agg": "",
           "device": "Ajax TurretCam (8 Mp/4 mm) ASP white відеокамера спостереження",
           "plan": 252.0,
-          "sheetFact": 253.0,
+          "sheetFact": 255.0,
           "done": 1,
           "isDone": true
         },
