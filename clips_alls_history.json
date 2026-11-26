@@ -7,10 +7,10 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-26 21:19:35",
+      "archivedAt": "2026-11-26 22:17:01",
       "totalItems": 273,
       "totalPlan": 485822.0,
-      "totalSheetFact": 415432.0,
+      "totalSheetFact": 415956.0,
       "qtyAllDevice": 273,
       "qtyDoneDevice": 202,
       "qtyNotDoneDevice": 71,
@@ -2432,7 +2432,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 22230.0,
+          "sheetFact": 22754.0,
           "done": 0,
           "isDone": false
         },
@@ -5164,7 +5164,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 22230.0,
+          "sheetFact": 22754.0,
           "done": 0,
           "isDone": false
         },
