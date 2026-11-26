@@ -1,9 +1,9 @@
 {
   "success": true,
-  "timestamp": "2026-11-26 13:43:00",
+  "timestamp": "2026-11-26 13:43:58",
   "version": 202611261343,
-  "download_seconds": 24.86,
-  "total_seconds": 25.93,
+  "download_seconds": 23.32,
+  "total_seconds": 24.42,
   "items_count": 2152,
   "dates_count": 438,
   "weeks_count": 62,
