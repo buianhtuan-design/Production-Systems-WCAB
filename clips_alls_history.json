@@ -7,10 +7,10 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-27 18:49:12",
+      "archivedAt": "2026-11-27 19:58:12",
       "totalItems": 273,
       "totalPlan": 485822.0,
-      "totalSheetFact": 434404.0,
+      "totalSheetFact": 435499.0,
       "qtyAllDevice": 273,
       "qtyDoneDevice": 211,
       "qtyNotDoneDevice": 62,
@@ -1752,7 +1752,7 @@
           "agg": "MotionCam Outdoor",
           "device": "Ajax MotionCam Outdoor (8EU) ASP white датчик руху з камерою",
           "plan": 5950.0,
-          "sheetFact": 4780.0,
+          "sheetFact": 4965.0,
           "done": 0,
           "isDone": false
         },
@@ -2202,7 +2202,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) ASP white датчик відкриття",
           "plan": 28086.0,
-          "sheetFact": 16183.0,
+          "sheetFact": 16608.0,
           "done": 0,
           "isDone": false
         },
@@ -2352,7 +2352,7 @@
           "agg": "",
           "device": "Ajax HomeSiren (8EU) ASP white сирена",
           "plan": 13736.0,
-          "sheetFact": 7415.0,
+          "sheetFact": 7621.0,
           "done": 0,
           "isDone": false
         },
@@ -2432,7 +2432,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 23678.0,
+          "sheetFact": 23957.0,
           "done": 0,
           "isDone": false
         },
@@ -4484,7 +4484,7 @@
           "agg": "MotionCam Outdoor",
           "device": "Ajax MotionCam Outdoor (8EU) ASP white датчик руху з камерою",
           "plan": 5950.0,
-          "sheetFact": 4780.0,
+          "sheetFact": 4965.0,
           "done": 0,
           "isDone": false
         },
@@ -4934,7 +4934,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) ASP white датчик відкриття",
           "plan": 28086.0,
-          "sheetFact": 16183.0,
+          "sheetFact": 16608.0,
           "done": 0,
           "isDone": false
         },
@@ -5084,7 +5084,7 @@
           "agg": "",
           "device": "Ajax HomeSiren (8EU) ASP white сирена",
           "plan": 13736.0,
-          "sheetFact": 7415.0,
+          "sheetFact": 7621.0,
           "done": 0,
           "isDone": false
         },
@@ -5164,7 +5164,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 23678.0,
+          "sheetFact": 23957.0,
           "done": 0,
           "isDone": false
         },
