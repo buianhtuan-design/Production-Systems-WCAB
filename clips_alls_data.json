@@ -1736,7 +1736,7 @@
       "agg": "MotionCam Outdoor",
       "device": "Ajax MotionCam Outdoor (8EU) ASP white датчик руху з камерою",
       "plan": 5950.0,
-      "sheetFact": 4965.0,
+      "sheetFact": 5096.0,
       "done": 0,
       "isDone": false
     },
@@ -2336,7 +2336,7 @@
       "agg": "",
       "device": "Ajax HomeSiren (8EU) ASP white сирена",
       "plan": 13736.0,
-      "sheetFact": 7621.0,
+      "sheetFact": 9198.0,
       "done": 0,
       "isDone": false
     },
@@ -4468,7 +4468,7 @@
       "agg": "MotionCam Outdoor",
       "device": "Ajax MotionCam Outdoor (8EU) ASP white датчик руху з камерою",
       "plan": 5950.0,
-      "sheetFact": 4965.0,
+      "sheetFact": 5096.0,
       "done": 0,
       "isDone": false
     },
@@ -5068,7 +5068,7 @@
       "agg": "",
       "device": "Ajax HomeSiren (8EU) ASP white сирена",
       "plan": 13736.0,
-      "sheetFact": 7621.0,
+      "sheetFact": 9198.0,
       "done": 0,
       "isDone": false
     },
@@ -5470,7 +5470,7 @@
   "clipAllPlant": "77.3%",
   "clipAllPlantPct": 77.3,
   "totalPlan": 485822.0,
-  "totalSheetFact": 435499.0,
+  "totalSheetFact": 437207.0,
   "hasPlanCount": 219,
   "gt90Count": 211,
   "lt90Count": 62,
@@ -5483,10 +5483,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-27 23:17:57",
+        "archivedAt": "2026-11-28 00:30:05",
         "totalItems": 273,
         "totalPlan": 485822.0,
-        "totalSheetFact": 435499.0,
+        "totalSheetFact": 437207.0,
         "qtyAllDevice": 273,
         "qtyDoneDevice": 211,
         "qtyNotDoneDevice": 62,
@@ -7228,7 +7228,7 @@
             "agg": "MotionCam Outdoor",
             "device": "Ajax MotionCam Outdoor (8EU) ASP white датчик руху з камерою",
             "plan": 5950.0,
-            "sheetFact": 4965.0,
+            "sheetFact": 5096.0,
             "done": 0,
             "isDone": false
           },
@@ -7828,7 +7828,7 @@
             "agg": "",
             "device": "Ajax HomeSiren (8EU) ASP white сирена",
             "plan": 13736.0,
-            "sheetFact": 7621.0,
+            "sheetFact": 9198.0,
             "done": 0,
             "isDone": false
           },
@@ -9960,7 +9960,7 @@
             "agg": "MotionCam Outdoor",
             "device": "Ajax MotionCam Outdoor (8EU) ASP white датчик руху з камерою",
             "plan": 5950.0,
-            "sheetFact": 4965.0,
+            "sheetFact": 5096.0,
             "done": 0,
             "isDone": false
           },
@@ -10560,7 +10560,7 @@
             "agg": "",
             "device": "Ajax HomeSiren (8EU) ASP white сирена",
             "plan": 13736.0,
-            "sheetFact": 7621.0,
+            "sheetFact": 9198.0,
             "done": 0,
             "isDone": false
           },
