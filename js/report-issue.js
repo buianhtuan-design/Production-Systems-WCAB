@@ -89,8 +89,8 @@
    * Tính toán dữ liệu Deviation cho 1 danh sách công đoạn
    */
   function computeStageDeviation(matchStagesList, datesList, shiftFilter) {
-    const rawItems = (window.DEFAULT_DATAMASS_DATA && window.DEFAULT_DATAMASS_DATA.items) 
-      || (window.AppStore && window.AppStore.dataMass && window.AppStore.dataMass.items) || [];
+    const rawItems = (window.AppStore && window.AppStore.dataMass && window.AppStore.dataMass.items) 
+      || (window.DEFAULT_DATAMASS_DATA && window.DEFAULT_DATAMASS_DATA.items) || [];
     
     const stageSet = new Set(matchStagesList.map(s => s.toUpperCase()));
     const negModels = [];

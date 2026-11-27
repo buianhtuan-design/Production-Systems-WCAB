@@ -1242,6 +1242,12 @@ class Store {
     this.asPlan = [];
     this.htPlan = [];
     this.fttStats = [];
+    this.appVersion = (function() {
+      try { return localStorage.getItem('AJAX_APP_VERSION') || 'V00'; } catch(e) { return 'V00'; }
+    })();
+    this.factoryFilter = (function() {
+      try { return localStorage.getItem('AJAX_PROPLAN_FACTORY') || 'ALL'; } catch(e) { return 'ALL'; }
+    })();
     this.dataMass = window.DEFAULT_DATAMASS_DATA || { weeks: [], manpower: [], items: [] };
     this.selectedWeekIndex = 0;
     this.selectedStageFilter = 'HARDTEST_AND_ASSEMBLY';
@@ -1372,6 +1378,9 @@ class Store {
       this.fttStats = SEED_FTT_DATA;
       this.dataMass = window.DEFAULT_DATAMASS_DATA || { weeks: [], manpower: [], items: [] };
     }
+
+    // Áp dụng bộ dữ liệu theo phiên bản (V00 vs V01) và nhà xưởng (WCA vs WCB vs ALL)
+    this.applyActiveVersionData();
 
     // Load actual attendance data (Actual headcount for SFPD report & Master Plan)
     try {
@@ -1626,6 +1635,7 @@ class Store {
       }
       this.dataMass = dataMass;
       this._normalizedWeeks = null;
+      this.applyActiveVersionData();
     }
     this.save();
   }
@@ -3549,8 +3559,10 @@ class Store {
         shift: shiftFilter
       });
 
+      const itemWorkcell = this.getItemWorkcell(it);
       items.push({
         stage: it.stage,
+        workcell: itemWorkcell,
         model: it.model,
         productName1C: p1c,
         specCode: it.specCode || '',
@@ -3590,6 +3602,13 @@ class Store {
           if (it.normKey) existing.normKey = it.normKey;
           if (it.normKeyShort) existing.normKeyShort = it.normKeyShort;
           if (it.normName) existing.normName = it.normName;
+        }
+        if (existing.workcell !== it.workcell && it.workcell) {
+          if ((existing.workcell === 'WCA' && it.workcell === 'WCB') || (existing.workcell === 'WCB' && it.workcell === 'WCA')) {
+            existing.workcell = 'WCAB';
+          } else if (!existing.workcell) {
+            existing.workcell = it.workcell;
+          }
         }
         if ((!existing.norm || existing.norm <= 0) && it.norm > 0) {
           existing.norm = it.norm;
@@ -3829,6 +3848,90 @@ class Store {
     return count;
   }
 
+
+  // =========================================================================
+  // VERSION SWITCHER & FACTORY FILTER SUPPORT (V00 vs V01 / WCA vs WCB)
+  // =========================================================================
+  setAppVersion(ver) {
+    if (ver !== 'V00' && ver !== 'V01') ver = 'V00';
+    this.appVersion = ver;
+    try {
+      localStorage.setItem('AJAX_APP_VERSION', ver);
+    } catch(e) {}
+    this._normalizedWeeks = null;
+    this.applyActiveVersionData();
+    this.notify();
+    return this.appVersion;
+  }
+
+  setFactoryFilter(factory) {
+    if (!['ALL', 'WCA', 'WCB'].includes(factory)) factory = 'ALL';
+    this.factoryFilter = factory;
+    try {
+      localStorage.setItem('AJAX_PROPLAN_FACTORY', factory);
+    } catch(e) {}
+    this._normalizedWeeks = null;
+    this.applyActiveVersionData();
+    this.notify();
+    return this.factoryFilter;
+  }
+
+  applyActiveVersionData() {
+    if (this.appVersion === 'V01') {
+      const baseData = window.DATAMASS_DATA_V01 || window.DEFAULT_DATAMASS_DATA || { weeks: [], manpower: [], items: [] };
+      const hasPos = (obj) => Object.values(obj || {}).some(v => parseFloat(v) > 0);
+      if (this.factoryFilter === 'WCA') {
+        this.dataMass = {
+          ...baseData,
+          items: (baseData.items || []).map(it => {
+            const wca = it.wca || {};
+            return {
+              ...it,
+              plan: wca.plan || {},
+              planDay: wca.planDay || {},
+              planNight: wca.planNight || {},
+              fact: wca.fact || {},
+              factDay: wca.factDay || {},
+              factNight: wca.factNight || {}
+            };
+          }).filter(it => hasPos(it.plan) || hasPos(it.fact) || hasPos(it.planDay) || hasPos(it.planNight) || hasPos(it.factDay) || hasPos(it.factNight)),
+          manpower: (baseData.manpower || []).map(m => ({
+            ...m,
+            daily: m.daily_wca || {}
+          }))
+        };
+      } else if (this.factoryFilter === 'WCB') {
+        this.dataMass = {
+          ...baseData,
+          items: (baseData.items || []).map(it => {
+            const wcb = it.wcb || {};
+            return {
+              ...it,
+              plan: wcb.plan || {},
+              planDay: wcb.planDay || {},
+              planNight: wcb.planNight || {},
+              fact: wcb.fact || {},
+              factDay: wcb.factDay || {},
+              factNight: wcb.factNight || {}
+            };
+          }).filter(it => hasPos(it.plan) || hasPos(it.fact) || hasPos(it.planDay) || hasPos(it.planNight) || hasPos(it.factDay) || hasPos(it.factNight)),
+          manpower: (baseData.manpower || []).map(m => ({
+            ...m,
+            daily: m.daily_wcb || m.daily || {}
+          }))
+        };
+      } else {
+        // 'ALL' - WCAB combined
+        this.dataMass = baseData;
+      }
+    } else {
+      // V00 - baseline Data_Mass WCB 100% untouched
+      this.dataMass = window.DATAMASS_DATA_V00 || window.DEFAULT_DATAMASS_DATA || { weeks: [], manpower: [], items: [] };
+    }
+    // Đồng bộ DEFAULT_DATAMASS_DATA để mọi module tự động phản ánh đúng xưởng đang chọn
+    window.DEFAULT_DATAMASS_DATA = this.dataMass;
+  }
+
   resetToDefault() {
     this.asPlan = JSON.parse(JSON.stringify(SEED_AS_DATA));
     this.htPlan = JSON.parse(JSON.stringify(SEED_HT_DATA));
@@ -3898,6 +4001,56 @@ class Store {
   // ==========================================
   // CAPACITY PLANNING & LINE PERFORMANCE (IE)
   // ==========================================
+  getItemWorkcell(it) {
+    if (!it) return 'WCB';
+    if (it.workcell && ['WCA', 'WCB', 'WCAB'].includes(it.workcell)) return it.workcell;
+    if (it.factory && ['WCA', 'WCB', 'WCAB'].includes(it.factory)) return it.factory;
+
+    // Check item's own wca/wcb data from datamass_data_v01 if present
+    const hasPos = (obj) => Object.values(obj || {}).some(v => parseFloat(v) > 0);
+    const hasWca = it.wca && (hasPos(it.wca.plan) || hasPos(it.wca.fact) || hasPos(it.wca.planDay) || hasPos(it.wca.planNight) || hasPos(it.wca.factDay) || hasPos(it.wca.factNight));
+    const hasWcb = it.wcb && (hasPos(it.wcb.plan) || hasPos(it.wcb.fact) || hasPos(it.wcb.planDay) || hasPos(it.wcb.planNight) || hasPos(it.wcb.factDay) || hasPos(it.wcb.factNight));
+
+    if (hasWca && hasWcb) {
+      if (this.appVersion === 'V01' && this.factoryFilter === 'WCA') return 'WCA';
+      if (this.appVersion === 'V01' && this.factoryFilter === 'WCB') return 'WCB';
+      return 'WCAB';
+    }
+    if (hasWca) return 'WCA';
+    if (hasWcb) return 'WCB';
+
+    // Build cached lookup sets from window.DATAMASS_DATA_V01
+    if (!this._wcaModelSet) {
+      this._wcaModelSet = new Set();
+      this._wcaP1cSet = new Set();
+      const baseItems = (window.DATAMASS_DATA_V01 && window.DATAMASS_DATA_V01.items) || [];
+      baseItems.forEach(d => {
+        const dWca = d.wca && (hasPos(d.wca.plan) || hasPos(d.wca.fact) || hasPos(d.wca.planDay) || hasPos(d.wca.planNight) || hasPos(d.wca.factDay) || hasPos(d.wca.factNight));
+        if (dWca) {
+          if (d.model) this._wcaModelSet.add(d.model.toLowerCase().trim());
+          if (d.productName1C) this._wcaP1cSet.add(d.productName1C.toLowerCase().trim());
+        }
+      });
+    }
+
+    const p1c = (it.productName1C || it.board || '').toLowerCase().trim();
+    const grp = (it.model || it.group || '').toLowerCase().trim();
+
+    if (p1c && this._wcaP1cSet.has(p1c)) return 'WCA';
+    if (grp && this._wcaModelSet.has(grp)) return 'WCA';
+
+    // Check known WCA product families as assigned in sheet Data_Mass WCA
+    const wcaKeywords = [
+      'hub 2 plus', 'hub 2 4g', 'hub 2 black', 'hub 4g', 'keypad',
+      'motioncam hdr', 'motionprotect', 'nvr', 'waterstop'
+    ];
+    if (wcaKeywords.some(kw => grp.includes(kw) || p1c.includes(kw))) {
+      return 'WCA';
+    }
+
+    return 'WCB';
+  }
+
   getAssemblyCapacityData() {
     if (!this.assemblyCapacity && window.ASSEMBLY_CAPACITY_DATA) {
       this.assemblyCapacity = window.ASSEMBLY_CAPACITY_DATA;
@@ -3953,9 +4106,14 @@ class Store {
         nightShiftCapacityStandard: nightShiftStd,
         nightShiftCapacityActual: nightShiftAct,
         totalDayCapacityStandard: totalDayStd,
-        totalDayCapacityActual: totalDayAct
+        totalDayCapacityActual: totalDayAct,
+        workcell: it.workcell || this.getItemWorkcell(it)
       };
     });
+
+    if (this.appVersion === 'V01' && this.factoryFilter && this.factoryFilter !== 'ALL') {
+      items = items.filter(it => it.workcell === this.factoryFilter || it.workcell === 'WCAB');
+    }
 
     if (stageFilter && stageFilter !== 'ALL') {
       items = items.filter(it => it.stage === stageFilter);
@@ -4022,9 +4180,14 @@ class Store {
         dayCapacityStandard: dayCapStd,
         dayShiftCapacityStandard: dayShiftCapStd,
         nightShiftCapacityStandard: nightShiftCapStd,
-        lines
+        lines,
+        workcell: it.workcell || this.getItemWorkcell(it)
       };
     });
+
+    if (this.appVersion === 'V01' && this.factoryFilter && this.factoryFilter !== 'ALL') {
+      items = items.filter(it => it.workcell === this.factoryFilter || it.workcell === 'WCAB');
+    }
 
     if (groupFilter && groupFilter !== 'ALL') {
       items = items.filter(it => it.group === groupFilter);

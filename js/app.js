@@ -981,6 +981,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   renderAllViews();
   initMacBookAdaptiveSystem();
+  if (typeof initVersionSwitcherUI === 'function') {
+    initVersionSwitcherUI();
+  }
   if (typeof window.restoreSectionCollapseStates === 'function') {
     window.restoreSectionCollapseStates();
   }
@@ -4071,6 +4074,11 @@ function renderDataMassView() {
   if (typeof renderAttentionPointsSection === 'function') {
     renderAttentionPointsSection(schedule);
   }
+
+  // 5. Đồng bộ hiển thị & trạng thái active thanh chọn Xưởng trên cả 7 phần
+  if (typeof initVersionSwitcherUI === 'function') {
+    initVersionSwitcherUI();
+  }
 }
 
 // =========================================================================
@@ -4125,6 +4133,23 @@ window.handleToggleManpowerChartCollapse = function() {
   } catch (e) {}
   renderDataMassView();
   window.showToast('info', next ? '🔼 Đã thu gọn khung biểu đồ' : '🔽 Đã mở rộng khung biểu đồ');
+};
+
+window.createFactoryFilterHtml = function(extraStyle = '') {
+  const isV01 = (window.AppStore && window.AppStore.appVersion === 'V01');
+  const curFac = (window.AppStore && window.AppStore.factoryFilter) ? window.AppStore.factoryFilter : 'ALL';
+  const displayStyle = isV01 ? 'display: inline-flex;' : 'display: none;';
+  
+  return `
+    <div class="factory-filter-pill-wrapper" data-section-factory="true" style="${displayStyle} ${extraStyle}">
+      <span class="factory-filter-pill-label">🏭 Xưởng:</span>
+      <div class="btn-group factory-filter-btn-group">
+        <button type="button" class="btn-mode ${curFac === 'ALL' ? 'active' : ''}" data-factory="ALL" onclick="window.handleFactoryFilterChange('ALL')" title="Xem toàn bộ nhà máy (WCA + WCB)">⭐ Tất Cả (WCAB)</button>
+        <button type="button" class="btn-mode ${curFac === 'WCA' ? 'active' : ''}" data-factory="WCA" onclick="window.handleFactoryFilterChange('WCA')" title="Xem xưởng WCA (từ ngày 27/11/2026)">🏢 Xưởng WCA</button>
+        <button type="button" class="btn-mode ${curFac === 'WCB' ? 'active' : ''}" data-factory="WCB" onclick="window.handleFactoryFilterChange('WCB')" title="Xem xưởng WCB (loại trừ WCA từ ngày 27/11/2026)">🏭 Xưởng WCB</button>
+      </div>
+    </div>
+  `.trim();
 };
 
 window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, isSplit, shiftFilter) {
@@ -4305,6 +4330,7 @@ window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, is
           </div>
 
           <div class="manpower-chart-controls">
+            ${(typeof window.createFactoryFilterHtml === 'function') ? window.createFactoryFilterHtml('margin-right: 0.5rem;') : ''}
             <div class="manpower-chart-pills">
               ${stagePillsHtml}
             </div>
@@ -4641,6 +4667,7 @@ window.renderManpowerLoadingPlanChart = function(schedule, stagesForManpower, is
         </div>
 
         <div class="manpower-chart-controls">
+          ${(typeof window.createFactoryFilterHtml === 'function') ? window.createFactoryFilterHtml('margin-right: 0.5rem;') : ''}
           <!-- Stage Selector Pills -->
           <div class="manpower-chart-pills">
             ${stagePillsHtml}
@@ -4857,8 +4884,8 @@ const NEW_MODELS_PAGE_SIZE = 20;
  * Nếu Model đó chưa có Plan và Fact trong quá khứ và có plan trong thời gian sắp tới thì đó là New Model."
  */
 window.findNewModels = function(refDateStr = null) {
-  const allItems = (window.DEFAULT_DATAMASS_DATA && window.DEFAULT_DATAMASS_DATA.items) 
-    || (window.AppStore && window.AppStore.dataMass && window.AppStore.dataMass.items) || [];
+  const allItems = (window.AppStore && window.AppStore.dataMass && window.AppStore.dataMass.items) 
+    || (window.DEFAULT_DATAMASS_DATA && window.DEFAULT_DATAMASS_DATA.items) || [];
   const massHistory = window.MASS_HISTORY_DATA || (window.AppStore && window.AppStore.massHistory) || [];
 
   // Build set of models with past plan or fact in massHistory
@@ -6782,6 +6809,104 @@ window.handleDailyManpowerEdit = function(stageEnc, metricEnc, date, value, el) 
   window.showToast('success', `Đã lưu nhân lực ${stage} (${metric}) ngày ${date}: ${updatedNum}`);
 };
 
+
+// =========================================================================
+// VERSION SWITCHER (V00 vs V01) & FACTORY FILTER (WCA vs WCB vs ALL)
+// =========================================================================
+function initVersionSwitcherUI() {
+  const curVer = (window.AppStore && window.AppStore.appVersion) ? window.AppStore.appVersion : ((function() {
+    try { return localStorage.getItem('AJAX_APP_VERSION') || 'V00'; } catch(e) { return 'V00'; }
+  })());
+  const btnV00 = document.getElementById('btnVersionV00');
+  const btnV01 = document.getElementById('btnVersionV01');
+  if (btnV00) btnV00.classList.toggle('active', curVer === 'V00');
+  if (btnV01) btnV01.classList.toggle('active', curVer === 'V01');
+
+  const factoryWrapper = document.getElementById('factoryFilterWrapper');
+  if (factoryWrapper) {
+    factoryWrapper.style.display = (curVer === 'V01') ? 'flex' : 'none';
+  }
+  document.querySelectorAll('.factory-filter-pill-wrapper').forEach(el => {
+    el.style.display = (curVer === 'V01') ? 'inline-flex' : 'none';
+  });
+
+  if (curVer === 'V01') {
+    const curFac = (window.AppStore && window.AppStore.factoryFilter) ? window.AppStore.factoryFilter : ((function() {
+      try { return localStorage.getItem('AJAX_PROPLAN_FACTORY') || 'ALL'; } catch(e) { return 'ALL'; }
+    })());
+    document.querySelectorAll('.factory-filter-btn-group .btn-mode, #factoryFilterGroup .btn-mode').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.factory === curFac);
+    });
+  }
+}
+window.initVersionSwitcherUI = initVersionSwitcherUI;
+
+window.switchAppVersion = function(ver) {
+  if (ver !== 'V00' && ver !== 'V01') ver = 'V00';
+  window.AppStore.setAppVersion(ver);
+
+  const btnV00 = document.getElementById('btnVersionV00');
+  const btnV01 = document.getElementById('btnVersionV01');
+  if (btnV00) btnV00.classList.toggle('active', ver === 'V00');
+  if (btnV01) btnV01.classList.toggle('active', ver === 'V01');
+
+  const factoryWrapper = document.getElementById('factoryFilterWrapper');
+  if (factoryWrapper) {
+    factoryWrapper.style.display = (ver === 'V01') ? 'flex' : 'none';
+  }
+  document.querySelectorAll('.factory-filter-pill-wrapper').forEach(el => {
+    el.style.display = (ver === 'V01') ? 'inline-flex' : 'none';
+  });
+
+  if (ver === 'V01') {
+    const curFac = window.AppStore.factoryFilter || 'ALL';
+    document.querySelectorAll('.factory-filter-btn-group .btn-mode, #factoryFilterGroup .btn-mode').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.factory === curFac);
+    });
+  }
+
+  if (typeof renderDataMassView === 'function') {
+    renderDataMassView();
+  }
+  if (typeof renderCapacityView === 'function') {
+    renderCapacityView();
+  }
+
+  if (window.showToast) {
+    if (ver === 'V01') {
+      window.showToast('success', '🚀 Đã chuyển sang Phiên bản V01: Phân tách dữ liệu xưởng WCA & WCB (từ 27/11/2026)!');
+    } else {
+      window.showToast('info', '🔄 Đã chuyển về Phiên bản V00: Toàn bộ dữ liệu gốc hợp nhất hoạt động bình thường.');
+    }
+  }
+};
+
+window.handleFactoryFilterChange = function(factory) {
+  if (!['ALL', 'WCA', 'WCB'].includes(factory)) factory = 'ALL';
+  window.AppStore.setFactoryFilter(factory);
+
+  // Đồng bộ trạng thái active tức thì trên toàn bộ thanh chọn Xưởng ở cả 7 phần và Top Nav
+  document.querySelectorAll('.factory-filter-btn-group .btn-mode, #factoryFilterGroup .btn-mode').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.factory === factory);
+  });
+
+  if (typeof renderDataMassView === 'function') {
+    renderDataMassView();
+  }
+  if (typeof renderCapacityView === 'function') {
+    renderCapacityView();
+  }
+
+  const facLabels = {
+    'ALL': '⭐ Tất Cả Nhà Máy (WCAB)',
+    'WCA': '🏢 Xưởng WCA (Từ 27/11/2026)',
+    'WCB': '🏭 Xưởng WCB (Loại trừ WCA từ 27/11/2026)'
+  };
+  if (window.showToast) {
+    window.showToast('info', `Đã chọn: ${facLabels[factory] || factory}`);
+  }
+};
+
 window.handleShiftFilterChange = function(shift) {
   window.AppStore.currentShiftFilter = shift;
   document.querySelectorAll('#shiftFilterGroup .btn-mode').forEach(btn => {
@@ -6816,6 +6941,9 @@ window.handleResetDefaultData = function() {
   window.handlePresetDateSelect('THU_WED_OCT_W4');
   if (typeof renderDataMassView === 'function') {
     renderDataMassView();
+  }
+  if (typeof renderCapacityView === 'function') {
+    renderCapacityView();
   }
   if (window.showToast) {
     window.showToast('success', 'Đã khôi phục toàn bộ kế hoạch gốc từ 15/10 đến 28/10!');
@@ -8157,6 +8285,9 @@ window.saveKipLineConfig = function() {
   if (typeof renderDataMassView === 'function') {
     renderDataMassView();
   }
+  if (typeof renderCapacityView === 'function') {
+    renderCapacityView();
+  }
   if (typeof renderAsTable === 'function') {
     renderAsTable();
   }
@@ -8187,6 +8318,9 @@ window.resetKipConfigToDefault = function() {
 
   if (typeof renderDataMassView === 'function') {
     renderDataMassView();
+  }
+  if (typeof renderCapacityView === 'function') {
+    renderCapacityView();
   }
   if (typeof renderAsTable === 'function') {
     renderAsTable();

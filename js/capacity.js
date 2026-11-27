@@ -8,6 +8,19 @@
 (function() {
   'use strict';
 
+  // Helper render Workcell Badge
+  window.renderWorkcellBadge = function(cell) {
+    const c = (cell || 'WCB').toUpperCase();
+    if (c === 'WCA') {
+      return `<span class="badge" style="background: rgba(56, 189, 248, 0.16); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.45); font-weight: 800; font-size: 0.725rem; padding: 0.15rem 0.45rem; border-radius: 4px;" title="Xưởng WCA (Từ 27/11/2026)">🏢 WCA</span>`;
+    } else if (c === 'WCB') {
+      return `<span class="badge" style="background: rgba(245, 158, 11, 0.16); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.45); font-weight: 800; font-size: 0.725rem; padding: 0.15rem 0.45rem; border-radius: 4px;" title="Xưởng WCB">🏭 WCB</span>`;
+    } else if (c === 'WCAB' || c === 'ALL') {
+      return `<span class="badge" style="background: rgba(168, 85, 247, 0.16); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.45); font-weight: 800; font-size: 0.725rem; padding: 0.15rem 0.45rem; border-radius: 4px;" title="Chung cả 2 xưởng (WCA + WCB)">⭐ WCAB</span>`;
+    }
+    return `<span class="badge" style="background: rgba(148, 163, 184, 0.15); color: #cbd5e1; font-weight: 700; font-size: 0.725rem; padding: 0.15rem 0.4rem; border-radius: 4px;">${c}</span>`;
+  };
+
   // State local cache for search input
   let searchDebounceTimer = null;
 
@@ -155,6 +168,9 @@
                 TOTAL HARDTEST
               </button>
             </div>
+
+            <!-- Factory Filter (V01 ONLY) -->
+            ${window.createFactoryFilterHtml ? window.createFactoryFilterHtml('margin-left: 0.35rem;') : ''}
 
             <!-- Live Synced Plan Status Pill (Visible in both MATRIX & SIMULATOR) -->
             <div id="capacitySyncStatusBar" style="margin-left: auto; display: inline-flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
@@ -541,6 +557,12 @@
       return `
         <tr class="hover-row">
           <td class="sticky-cap-stt" style="color: var(--text-muted); font-size: 0.75rem;">${idx + 1}</td>
+          <td style="text-align: center; white-space: nowrap;">
+            <span class="badge badge-purple" style="font-weight: 800; font-size: 0.75rem;">ASSEMBLY</span>
+          </td>
+          <td style="text-align: center; white-space: nowrap;">
+            ${renderWorkcellBadge(it.workcell || it.factory)}
+          </td>
           <td class="sticky-cap-group">
             <span style="font-weight: 800; color: #f8fafc; font-size: 0.825rem;">${it.group}</span>
           </td>
@@ -583,6 +605,8 @@
             <thead>
               <tr>
                 <th class="sticky-cap-stt">STT</th>
+                <th style="min-width: 95px; text-align: center;">CÔNG ĐOẠN</th>
+                <th style="min-width: 80px; text-align: center;">WORKCELL</th>
                 <th class="sticky-cap-group" style="text-align: left;">GROUP MODEL</th>
                 <th class="sticky-cap-product1c" style="text-align: left;">PRODUCT NAME 1C</th>
                 <th class="sticky-cap-board" style="text-align: left;">MÃ BO MẠCH (BOARD)</th>
@@ -731,6 +755,9 @@
           <td style="text-align: center; white-space: nowrap;">
             <span class="badge ${stageBadgeClass}">${it.stage}</span>
           </td>
+          <td style="text-align: center; white-space: nowrap;">
+            ${renderWorkcellBadge(it.workcell || it.factory)}
+          </td>
           <td class="sticky-ht-group">
             <span style="font-weight: 800; color: #f8fafc; font-size: 0.825rem;">${it.group}</span>
           </td>
@@ -786,6 +813,7 @@
               <tr>
                 <th class="sticky-cap-stt">STT</th>
                 <th style="min-width: 100px; text-align: center;">CÔNG ĐOẠN</th>
+                <th style="min-width: 80px; text-align: center;">WORKCELL</th>
                 <th class="sticky-ht-group" style="text-align: left;">NORMING GROUP</th>
                 <th class="sticky-ht-board" style="text-align: left;">BOARD OR OPERATION</th>
                 <th style="min-width: 95px; text-align: center;">GHI CHÚ</th>
@@ -817,7 +845,7 @@
             </tbody>
             <tfoot>
               <tr style="background: rgba(15, 23, 42, 0.95); font-weight: 800; border-top: 2px solid var(--border-glass);">
-                <td colspan="5" style="text-align: right; padding: 0.75rem 1rem; color: #f8fafc; font-size: 0.85rem;">
+                <td colspan="6" style="text-align: right; padding: 0.75rem 1rem; color: #f8fafc; font-size: 0.85rem;">
                   TỔNG CỘNG (${items.length} MÃ):
                 </td>
                 <td style="text-align: center; color: #38bdf8; font-family: var(--font-mono); font-size: 0.85rem;">
@@ -3516,6 +3544,9 @@
           <td class="sticky-sim-stage" style="text-align: center; white-space: nowrap; font-size: 0.8rem; font-weight: 700; color: #f8fafc;">
             ${isSubRow ? '<span style="opacity: 0.45; font-size: 0.85rem;" title="Chuyền phụ kế thừa công đoạn ASSEMBLY">↳</span>' : (it.stage || 'ASSEMBLY')}
           </td>
+          <td class="sticky-sim-workcell" style="text-align: center; white-space: nowrap;">
+            ${isSubRow ? '<span style="opacity: 0.45; font-size: 0.85rem;" title="Chuyền phụ kế thừa Workcell">↳</span>' : renderWorkcellBadge(it.workcell || it.factory)}
+          </td>
           <td class="sticky-sim-group" style="white-space: nowrap; font-size: 0.825rem; font-weight: 700; color: #f8fafc;">
             ${isSubRow ? '<span style="opacity: 0.45; font-size: 0.85rem;" title="Chuyền phụ kế thừa Group Model">↳</span>' : (it.model || '--')}
           </td>
@@ -4007,6 +4038,7 @@
                 <tr class="sim-sticky-totals-row">
                   <th class="sticky-sim-stt"></th>
                   <th class="sticky-sim-stage"></th>
+                  <th class="sticky-sim-workcell"></th>
                   <th class="sticky-sim-group" style="text-align: center; color: #fbbf24; font-size: 0.725rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0.35rem 0.25rem;" title="Người lập Plan: ${plannerName}">
                     👤 ${plannerName}
                   </th>
@@ -4077,6 +4109,7 @@
                 <tr class="sim-header-titles">
                   <th class="sticky-sim-stt" style="text-align: center; width: 45px;">STT</th>
                   <th class="sticky-sim-stage" style="text-align: center; width: 95px;">Công Đoạn</th>
+                  <th class="sticky-sim-workcell" style="text-align: center; width: 80px;">Workcell</th>
                   <th class="sticky-sim-group" style="text-align: left; width: 140px;">Group Model</th>
                   <th class="sticky-sim-model" style="text-align: left; min-width: 300px;">Mã Model (1C)</th>
                   <th style="text-align: right; min-width: 65px; color: #60a5fa; padding: 0.35rem 0.35rem;">Kế Hoạch</th>
@@ -4114,7 +4147,7 @@
               <tbody>
                 ${tableRowsHtml.length > 0 ? tableRowsHtml : `
                   <tr>
-                    <td colspan="32" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                    <td colspan="33" style="text-align: center; padding: 3rem; color: var(--text-muted);">
                       <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔍</div>
                       <div style="font-weight: 700; color: #f8fafc;">Không tìm thấy Model nào theo tiêu chí lọc hiện tại</div>
                     </td>
@@ -4790,6 +4823,9 @@
           <td class="sticky-sim-stage" style="text-align: center; white-space: nowrap;">
             <span class="badge ${r.stage === 'HARD TEST' ? 'badge-stage-hardtest' : r.stage === 'OPTICS ASM' ? 'badge-stage-optics' : 'badge-stage-focus'}">${r.stage}</span>
           </td>
+          <td class="sticky-sim-workcell" style="text-align: center; white-space: nowrap;">
+            ${renderWorkcellBadge(r.workcell || (r.it && (r.it.workcell || r.it.factory)))}
+          </td>
           <td class="sticky-sim-group" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.825rem; font-weight: 700; color: var(--text-primary);" title="${r.normGroup || r.group || '--'}">
             ${r.normGroup || r.group || '--'}
           </td>
@@ -5259,6 +5295,7 @@
               <tr class="sim-sticky-totals-row">
                 <th class="sticky-sim-stt"></th>
                 <th class="sticky-sim-stage"></th>
+                <th class="sticky-sim-workcell"></th>
                 <th class="sticky-sim-group" style="text-align: center; color: #fbbf24; font-size: 0.725rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0.35rem 0.25rem;" title="Người lập Plan: ${plannerName}">
                   👤 ${plannerName}
                 </th>
@@ -5329,6 +5366,7 @@
               <tr class="sim-header-titles">
                 <th class="sticky-sim-stt" style="text-align: center;">STT</th>
                 <th class="sticky-sim-stage" style="text-align: center;">Công Đoạn</th>
+                <th class="sticky-sim-workcell" style="text-align: center; width: 80px;">Workcell</th>
                 <th class="sticky-sim-group" style="text-align: left;">Group Model</th>
                 <th class="sticky-sim-model" style="text-align: left;">Mã 1C</th>
                 <th style="text-align: right; min-width: 88px; color: #60a5fa; padding: 0.35rem 0.35rem;">Kế Hoạch<br>(Plan)</th>
@@ -5367,7 +5405,7 @@
             <tbody>
               ${rowsHtml.length > 0 ? rowsHtml : `
                 <tr>
-                  <td colspan="32" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                  <td colspan="33" style="text-align: center; padding: 3rem; color: var(--text-muted);">
                     <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔍</div>
                     <div style="font-weight: 700; color: #f8fafc;">Không tìm thấy mã nào phù hợp với bộ lọc</div>
                   </td>
@@ -5757,7 +5795,7 @@
 
   function getHardtestExportSpec(rows) {
     const headers = [
-      'STT', 'Công Đoạn', 'Group Model', 'Mã 1C',
+      'STT', 'Công Đoạn', 'Workcell', 'Group Model', 'Mã 1C',
       'Kế Hoạch (Plan)', 'Thực Tế (Fact)', 'Chênh Lệch (Gap)',
       'Date Plan', 'Shift Plan', 'Cycle Time Norm', 'FTT (%)', 'Downtime (%)', 'TB Sẵn Có (Test Block)',
       'Số Test Block Cần', 'Giờ máy cần tiêu chuẩn',
@@ -5768,6 +5806,7 @@
     const mapped = rows.map((r, idx) => ([
       r.displayIdx || (idx + 1),
       r.stage || '',
+      r.workcell || (r.it && (r.it.workcell || r.it.factory)) || 'WCB',
       r.normGroup || r.group || '',
       r.model1c || '',
       r.planQty != null ? r.planQty : 0,
@@ -7020,6 +7059,7 @@
     const totalRow = [
       '',
       '',
+      '',
       `Người lập: ${plannerName}`,
       'Tổng Cộng :',
       grandPlan,
@@ -7052,10 +7092,11 @@
     ];
     csv += totalRow.map(v => typeof v === 'number' ? v : `"${v}"`).join(',') + '\n';
 
-    // Row 1: Headers 30 cột
+    // Row 1: Headers 31 cột
     const headers = [
       'STT',
       'Công Đoạn',
+      'Workcell',
       'Group Model',
       'Mã Model (1C)',
       'Kế Hoạch',
@@ -7110,6 +7151,7 @@
       const row = [
         idx + 1,
         r.it.stage || 'ASSEMBLY',
+        r.workcell || (r.it && (r.it.workcell || r.it.factory)) || 'WCB',
         cleanGroup,
         cleanModel,
         r.it.cumPlanQty || 0,
@@ -7236,6 +7278,7 @@
     let tsv = '';
     // Row 0: Tổng Cộng
     const totalRow = [
+      '',
       '',
       '',
       `Người lập: ${plannerName}`,

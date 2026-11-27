@@ -7,6 +7,7 @@ and generates js/datamass-data.js with clean weekly cycles and model quantities.
 """
 
 import csv
+import io
 import json
 import os
 import ssl
@@ -15,13 +16,17 @@ import time
 import urllib.request
 
 SHEET_ID = '1wtuLHVwH4U4OfJ3bKQjTgC13g8EZfZePOyLnqnWzfl4'
-DATA_MASS_GID = '1404131818'
+DATA_MASS_WCB_GID = '1404131818'
+DATA_MASS_WCA_GID = '251923726'
+DATA_MASS_GID = DATA_MASS_WCB_GID
 MANPOWER_GID = '1491986705'
 INVENTORY_1C_GID = '629613225'
 MASS_HISTORY_GID = '568706266'
 CLIPS_ALLS_GID = '997908205'
 KPI_DATA_GID = '56968671'
 WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATAMASS_V00_JSON_FILE = os.path.join(WORKSPACE_DIR, 'datamass_data_v00.json')
+DATAMASS_V01_JSON_FILE = os.path.join(WORKSPACE_DIR, 'datamass_data_v01.json')
 OUTPUT_FILE = os.path.join(WORKSPACE_DIR, 'js', 'datamass-data.js')
 MANPOWER_JSON_FILE = os.path.join(WORKSPACE_DIR, 'manpower_data.json')
 INVENTORY_1C_JSON_FILE = os.path.join(WORKSPACE_DIR, 'inventory_1c_data.json')
@@ -1385,11 +1390,44 @@ def sync_datamass():
     except Exception as ire:
         print(f"⚠️ Lỗi khi đồng bộ Issue Record: {ire}")
 
-    url = f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid={DATA_MASS_GID}'
+    # 1. Tải cả 2 sheet Data_Mass WCB (GID: 1404131818) và Data_Mass WCA (GID: 251923726)
+    url_wcb = f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid={DATA_MASS_WCB_GID}'
+    url_wca = f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid={DATA_MASS_WCA_GID}'
     
-    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'})
-    with urllib.request.urlopen(req, context=ctx, timeout=30) as resp:
-        content = resp.read().decode('utf-8', errors='ignore')
+    content_wcb = None
+    content_wca = None
+    scratch_wcb = os.path.join(WORKSPACE_DIR, 'scratch', 'datamass_wcb.csv')
+    scratch_wca = os.path.join(WORKSPACE_DIR, 'scratch', 'datamass_wca.csv')
+    os.makedirs(os.path.join(WORKSPACE_DIR, 'scratch'), exist_ok=True)
+
+    try:
+        req_b = urllib.request.Request(url_wcb, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'})
+        with urllib.request.urlopen(req_b, context=ctx, timeout=45) as resp_b:
+            content_wcb = resp_b.read().decode('utf-8', errors='ignore')
+            with open(scratch_wcb, 'w', encoding='utf-8') as sf_b:
+                sf_b.write(content_wcb)
+    except Exception as eb:
+        print(f"⚠️ Lỗi tải Sheet Data_Mass WCB online ({eb}) -> Dùng cache")
+        if os.path.exists(scratch_wcb):
+            with open(scratch_wcb, 'r', encoding='utf-8') as sf_b:
+                content_wcb = sf_b.read()
+
+    try:
+        req_a = urllib.request.Request(url_wca, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'})
+        with urllib.request.urlopen(req_a, context=ctx, timeout=45) as resp_a:
+            content_wca = resp_a.read().decode('utf-8', errors='ignore')
+            with open(scratch_wca, 'w', encoding='utf-8') as sf_a:
+                sf_a.write(content_wca)
+    except Exception as ea:
+        print(f"⚠️ Lỗi tải Sheet Data_Mass WCA online ({ea}) -> Dùng cache")
+        if os.path.exists(scratch_wca):
+            with open(scratch_wca, 'r', encoding='utf-8') as sf_a:
+                content_wca = sf_a.read()
+
+    if not content_wcb:
+        raise ValueError('Không thể tải dữ liệu Sheet Data_Mass WCB từ Google Sheet hoặc cache.')
+
+    content = content_wcb
     t_down = time.time()
 
     reader = csv.reader(content.splitlines())
@@ -1616,7 +1654,10 @@ def sync_datamass():
     items = [it for it in itemsDict.values() if len(it['plan']) > 0 or len(it['fact']) > 0]
 
     v_timestamp = int(time.strftime('%Y%m%d%H%M'))
-    data = {
+    
+    # Dataset Version 00 (V00) - Hoàn toàn nguyên bản từ Data_Mass WCB
+    data_v00 = {
+        'version': 'V00',
         'dates': validDates,
         'weeks': weeks,
         'manpower': manpower,
@@ -1629,9 +1670,241 @@ def sync_datamass():
         '_v': v_timestamp
     }
 
+    # =========================================================================
+    # XÂY DỰNG DATASET VERSION 01 (V01) - TÁCH DỮ LIỆU WCA & WCB TỪ 27/11/2026
+    # =========================================================================
+    data_v01 = dict(data_v00)
+    data_v01['version'] = 'V01'
+
+    if content_wca:
+        try:
+            reader_wca = list(csv.reader(content_wca.splitlines()))
+            r2_a = reader_wca[1] if len(reader_wca) > 1 else []
+            r3_a = reader_wca[2] if len(reader_wca) > 2 else []
+
+            # Map date columns của WCA thành định dạng M/D/YYYY
+            wca_date_cols = {}
+            for c in range(13, len(r2_a)):
+                val = r2_a[c].strip()
+                shift = r3_a[c].strip() if c < len(r3_a) else ''
+                if '.' in val and not 'deviation' in val:
+                    parts = val.split('.')
+                    if len(parts) == 3:
+                        d, m, y = int(parts[0]), int(parts[1]), int(parts[2])
+                        wca_date_cols[(f'{m}/{d}/{y}', shift)] = c
+
+            def _to_std_d(d_str):
+                parts = d_str.split('/')
+                if len(parts) == 3:
+                    return f'{int(parts[2]):04d}-{int(parts[0]):02d}-{int(parts[1]):02d}'
+                return d_str
+
+            SPLIT_CUTOFF_STD = '2026-11-27'
+
+            # 1. Bóc tách Nhân lực WCA từ hàng 4 đến 40
+            wca_mp = {}
+            for r_idx in range(len(reader_wca)):
+                row_num = r_idx + 1
+                if row_num < 4 or row_num > 40:
+                    continue
+                r = reader_wca[r_idx]
+                stage = r[0].strip() if len(r) > 0 else ''
+                metric = r[1].strip() if len(r) > 1 else ''
+                if not stage:
+                    continue
+                k = (stage, metric or 'People')
+                if k not in wca_mp:
+                    wca_mp[k] = {}
+                for (dt_fmt, shift), col_a in wca_date_cols.items():
+                    if col_a < len(r):
+                        raw = r[col_a].replace(',', '').strip()
+                        if raw:
+                            try:
+                                num = float(raw)
+                                if num > 0:
+                                    rounded = round(num, 1)
+                                    if shift in ['Day', 'Night']:
+                                        wca_mp[k][f'{dt_fmt}_{shift}'] = rounded
+                                        wca_mp[k][dt_fmt] = round(wca_mp[k].get(dt_fmt, 0.0) + rounded, 1)
+                                    else:
+                                        wca_mp[k][dt_fmt] = rounded
+                                        d_val = round(rounded * 0.6, 1)
+                                        wca_mp[k][f'{dt_fmt}_Day'] = d_val
+                                        wca_mp[k][f'{dt_fmt}_Night'] = round(rounded - d_val, 1)
+                            except:
+                                pass
+
+            # 2. Bóc tách Model Items từ hàng 41 trở đi trong WCA
+            wca_items_dict = {}
+            for r_idx in range(40, len(reader_wca)):
+                r = reader_wca[r_idx]
+                if len(r) > 8 and r[8].strip().lower() in ['plan', 'fact']:
+                    stage, pname, model, pkey = r[0].strip(), r[1].strip(), r[7].strip(), r[8].strip().lower()
+                else:
+                    stage, pname, model, pkey = r[0].strip(), r[1].strip(), r[6].strip() if len(r)>6 else '', r[7].strip().lower() if len(r)>7 else ''
+                if not (stage and pname and pkey in ['plan', 'fact']):
+                    continue
+                k_full = f'{stage}|||{model}|||{pname}'
+                k_pname = f'{stage}|||{pname}'
+                for k in [k_full, k_pname]:
+                    if k not in wca_items_dict:
+                        wca_items_dict[k] = {'planDay': {}, 'planNight': {}, 'plan': {}, 'factDay': {}, 'factNight': {}, 'fact': {}}
+                    for (dt_fmt, shift), col_a in wca_date_cols.items():
+                        std_d = _to_std_d(dt_fmt)
+                        if std_d < SPLIT_CUTOFF_STD:
+                            continue
+                        if col_a < len(r):
+                            raw = r[col_a].replace(',', '').strip()
+                            if raw:
+                                try:
+                                    num = float(raw)
+                                    if num > 0:
+                                        rnd = round(num)
+                                        if shift == 'Day':
+                                            wca_items_dict[k][f'{pkey}Day'][dt_fmt] = wca_items_dict[k][f'{pkey}Day'].get(dt_fmt, 0) + rnd
+                                            wca_items_dict[k][pkey][dt_fmt] = wca_items_dict[k][pkey].get(dt_fmt, 0) + rnd
+                                        elif shift == 'Night':
+                                            wca_items_dict[k][f'{pkey}Night'][dt_fmt] = wca_items_dict[k][f'{pkey}Night'].get(dt_fmt, 0) + rnd
+                                            wca_items_dict[k][pkey][dt_fmt] = wca_items_dict[k][pkey].get(dt_fmt, 0) + rnd
+                                        else:
+                                            wca_items_dict[k][pkey][dt_fmt] = wca_items_dict[k][pkey].get(dt_fmt, 0) + rnd
+                                            d_val = round(rnd * 0.6)
+                                            wca_items_dict[k][f'{pkey}Day'][dt_fmt] = wca_items_dict[k][f'{pkey}Day'].get(dt_fmt, 0) + d_val
+                                            wca_items_dict[k][f'{pkey}Night'][dt_fmt] = wca_items_dict[k][f'{pkey}Night'].get(dt_fmt, 0) + (rnd - d_val)
+                                except:
+                                    pass
+
+            # 3. Tạo items V01: Tách WCA và WCB (loại trừ WCA từ 27/11/2026)
+            items_v01 = []
+            for it in items:
+                it_v01 = dict(it)
+                wca_branch = {'plan': {}, 'fact': {}, 'planDay': {}, 'planNight': {}, 'factDay': {}, 'factNight': {}}
+                wcb_branch = {'plan': {}, 'fact': {}, 'planDay': {}, 'planNight': {}, 'factDay': {}, 'factNight': {}}
+                all_plan = dict(it['plan'])
+                all_fact = dict(it['fact'])
+                all_planDay = dict(it['planDay'])
+                all_planNight = dict(it['planNight'])
+                all_factDay = dict(it['factDay'])
+                all_factNight = dict(it['factNight'])
+
+                stg, mdl, pnm = it['stage'], it['model'], it['productName1C']
+                wca_match = wca_items_dict.get(f'{stg}|||{mdl}|||{pnm}') or wca_items_dict.get(f'{stg}|||{pnm}')
+
+                all_dates_set = set(all_plan.keys()).union(set(all_fact.keys()))
+                if wca_match:
+                    all_dates_set = all_dates_set.union(set(wca_match['plan'].keys())).union(set(wca_match['fact'].keys()))
+
+                for d in all_dates_set:
+                    std_d = _to_std_d(d)
+                    tot_pd = all_planDay.get(d, 0)
+                    tot_pn = all_planNight.get(d, 0)
+                    tot_p = all_plan.get(d, 0)
+                    tot_fd = all_factDay.get(d, 0)
+                    tot_fn = all_factNight.get(d, 0)
+                    tot_f = all_fact.get(d, 0)
+
+                    if std_d < SPLIT_CUTOFF_STD:
+                        # Trước 27/11/2026: 100% thuộc về WCB
+                        if tot_pd: wcb_branch['planDay'][d] = tot_pd
+                        if tot_pn: wcb_branch['planNight'][d] = tot_pn
+                        if tot_p: wcb_branch['plan'][d] = tot_p
+                        if tot_fd: wcb_branch['factDay'][d] = tot_fd
+                        if tot_fn: wcb_branch['factNight'][d] = tot_fn
+                        if tot_f: wcb_branch['fact'][d] = tot_f
+                    else:
+                        # Từ 27/11/2026 trở đi: Tách WCA và WCB
+                        wca_pd = wca_match['planDay'].get(d, 0) if wca_match else 0
+                        wca_pn = wca_match['planNight'].get(d, 0) if wca_match else 0
+                        wca_p = wca_match['plan'].get(d, 0) if wca_match else 0
+                        wca_fd = wca_match['factDay'].get(d, 0) if wca_match else 0
+                        wca_fn = wca_match['factNight'].get(d, 0) if wca_match else 0
+                        wca_f = wca_match['fact'].get(d, 0) if wca_match else 0
+
+                        if wca_pd > 0: wca_branch['planDay'][d] = wca_pd
+                        if wca_pn > 0: wca_branch['planNight'][d] = wca_pn
+                        if wca_p > 0: wca_branch['plan'][d] = wca_p
+                        if wca_fd > 0: wca_branch['factDay'][d] = wca_fd
+                        if wca_fn > 0: wca_branch['factNight'][d] = wca_fn
+                        if wca_f > 0: wca_branch['fact'][d] = wca_f
+
+                        # Logic loại trừ: WCB = max(0, Total - WCA)
+                        wcb_pd = max(0, tot_pd - wca_pd)
+                        wcb_pn = max(0, tot_pn - wca_pn)
+                        wcb_p = max(0, tot_p - wca_p)
+                        wcb_fd = max(0, tot_fd - wca_fd)
+                        wcb_fn = max(0, tot_fn - wca_fn)
+                        wcb_f = max(0, tot_f - wca_f)
+
+                        if wcb_pd > 0: wcb_branch['planDay'][d] = wcb_pd
+                        if wcb_pn > 0: wcb_branch['planNight'][d] = wcb_pn
+                        if wcb_p > 0: wcb_branch['plan'][d] = wcb_p
+                        if wcb_fd > 0: wcb_branch['factDay'][d] = wcb_fd
+                        if wcb_fn > 0: wcb_branch['factNight'][d] = wcb_fn
+                        if wcb_f > 0: wcb_branch['fact'][d] = wcb_f
+
+                        eff_tot_p = max(tot_p, wca_p + wcb_p)
+                        eff_tot_pd = max(tot_pd, wca_pd + wcb_pd)
+                        eff_tot_pn = max(tot_pn, wca_pn + wcb_pn)
+                        if eff_tot_p > 0: all_plan[d] = eff_tot_p
+                        if eff_tot_pd > 0: all_planDay[d] = eff_tot_pd
+                        if eff_tot_pn > 0: all_planNight[d] = eff_tot_pn
+
+                it_v01['plan'] = all_plan
+                it_v01['fact'] = all_fact
+                it_v01['planDay'] = all_planDay
+                it_v01['planNight'] = all_planNight
+                it_v01['factDay'] = all_factDay
+                it_v01['factNight'] = all_factNight
+                it_v01['wca'] = wca_branch
+                it_v01['wcb'] = wcb_branch
+                items_v01.append(it_v01)
+
+            # 4. Tạo Manpower V01
+            manpower_v01 = []
+            for m in manpower:
+                stg, met = m['stage'], m['metric']
+                m_v01 = {'stage': stg, 'metric': met, 'daily': dict(m['daily']), 'daily_wca': {}, 'daily_wcb': {}}
+                wca_mp_entry = wca_mp.get((stg, met), {})
+
+                for d_key, val in m['daily'].items():
+                    base_d = d_key.split('_')[0]
+                    std_d = _to_std_d(base_d)
+                    if std_d < SPLIT_CUTOFF_STD:
+                        m_v01['daily_wcb'][d_key] = val
+                    else:
+                        wca_v = wca_mp_entry.get(d_key, 0.0)
+                        if wca_v > 0:
+                            m_v01['daily_wca'][d_key] = wca_v
+                        wcb_v = max(0.0, round(val - wca_v, 1))
+                        if wcb_v > 0:
+                            m_v01['daily_wcb'][d_key] = wcb_v
+                        m_v01['daily'][d_key] = max(val, round(wca_v + wcb_v, 1))
+                manpower_v01.append(m_v01)
+
+            data_v01['items'] = items_v01
+            data_v01['manpower'] = manpower_v01
+            print(f"✅ Đã tạo Dataset V01 thành công: {len(items_v01)} items, {len(manpower_v01)} manpower records (Tách WCA/WCB từ 27/11/2026)")
+        except Exception as v01_err:
+            print(f"⚠️ Lỗi xử lý Dataset V01 ({v01_err}) -> Giữ data_v01 = data_v00")
+            data_v01 = dict(data_v00)
+            data_v01['version'] = 'V01'
+
+    # Lưu file JSON phục vụ kiểm tra và API
+    try:
+        with open(DATAMASS_V00_JSON_FILE, 'w', encoding='utf-8') as f_v00:
+            json.dump(data_v00, f_v00, ensure_ascii=False)
+        with open(DATAMASS_V01_JSON_FILE, 'w', encoding='utf-8') as f_v01:
+            json.dump(data_v01, f_v01, ensure_ascii=False)
+    except Exception as j_err:
+        print(f"⚠️ Lỗi lưu JSON version: {j_err}")
+
+    data = data_v00
+
     os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
     with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
-        f.write('window.DEFAULT_DATAMASS_DATA = ' + json.dumps(data, ensure_ascii=False) + ';\n')
+        f.write('window.DATAMASS_DATA_V00 = ' + json.dumps(data_v00, ensure_ascii=False) + ';\n')
+        f.write('window.DEFAULT_DATAMASS_DATA = window.DATAMASS_DATA_V00;\n')
+        f.write('window.DATAMASS_DATA_V01 = ' + json.dumps(data_v01, ensure_ascii=False) + ';\n')
         f.write('window.MANPOWER_MASTER_DATA = ' + json.dumps(manpower_sheet_data, ensure_ascii=False) + ';\n')
         f.write('window.ASSEMBLY_CAPACITY_DATA = ' + json.dumps(assembly_capacity_data, ensure_ascii=False) + ';\n')
         f.write('window.HARDTEST_CAPACITY_DATA = ' + json.dumps(hardtest_capacity_data, ensure_ascii=False) + ';\n')

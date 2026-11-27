@@ -1394,6 +1394,9 @@
                          style="padding: 0.16rem 0.45rem; font-size: 0.75rem; font-weight: 700; border-radius: 6px; background: #0f172a; border: 1px solid rgba(148, 163, 184, 0.45); color: #f8fafc; cursor: pointer; outline: none; color-scheme: dark;" />
                 </div>
 
+                <!-- THANH CHỌN XƯỞNG CHO KẾ HOẠCH ĐIỀU CHỈNH OVERTIME (V01) -->
+                ${(typeof window.createFactoryFilterHtml === 'function') ? window.createFactoryFilterHtml('margin-left: 0.25rem;') : ''}
+
                 <button type="button" class="btn-filter-toggle" onclick="window.toggleAssemblyAdjustmentCollapse()" style="font-size: 0.75rem; padding: 0.2rem 0.6rem;" title="Thu gọn hoặc Mở rộng Bảng Điều Chỉnh">
                   ${isCollapsed ? '🔽 Mở rộng' : '🔼 Thu gọn'}
                 </button>

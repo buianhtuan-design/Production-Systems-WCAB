@@ -201,8 +201,8 @@
       return `${parseInt(p[1], 10)}/${parseInt(p[2], 10)}/${p[0]}`;
     }));
 
-    const dmItems = (window.DEFAULT_DATAMASS_DATA && window.DEFAULT_DATAMASS_DATA.items)
-      || (window.AppStore && window.AppStore.dataMass && window.AppStore.dataMass.items) || [];
+    const dmItems = (window.AppStore && window.AppStore.dataMass && window.AppStore.dataMass.items)
+      || (window.DEFAULT_DATAMASS_DATA && window.DEFAULT_DATAMASS_DATA.items) || [];
     const massHistory = window.MASS_HISTORY_DATA || (window.AppStore && window.AppStore.massHistory) || [];
 
     // 3. Chỉ mục hóa Mass History:

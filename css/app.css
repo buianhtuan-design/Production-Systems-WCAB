@@ -5019,34 +5019,46 @@ body.macbook-mode .btn-mode {
   white-space: nowrap;
 }
 
-/* 4c. FROZEN STICKY COLUMNS FOR SIMULATOR TABLE (STT, STAGE, GROUP, MODEL) */
+/* 4c. FROZEN STICKY COLUMNS FOR SIMULATOR TABLE (STT, STAGE, WORKCELL, GROUP, MODEL) */
 .sim-table .sticky-sim-stt {
   position: sticky !important;
   left: 0px !important;
   z-index: 18 !important;
   background: #0f172a !important;
-  width: 48px !important;
-  min-width: 48px !important;
-  max-width: 48px !important;
+  width: 45px !important;
+  min-width: 45px !important;
+  max-width: 45px !important;
   text-align: center;
   box-sizing: border-box;
 }
 
 .sim-table .sticky-sim-stage {
   position: sticky !important;
-  left: 48px !important;
+  left: 45px !important;
   z-index: 18 !important;
   background: #0f172a !important;
-  width: 105px !important;
-  min-width: 105px !important;
-  max-width: 105px !important;
+  width: 95px !important;
+  min-width: 95px !important;
+  max-width: 95px !important;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.sim-table .sticky-sim-workcell {
+  position: sticky !important;
+  left: 140px !important;
+  z-index: 18 !important;
+  background: #0f172a !important;
+  width: 80px !important;
+  min-width: 80px !important;
+  max-width: 80px !important;
   text-align: center;
   box-sizing: border-box;
 }
 
 .sim-table .sticky-sim-group {
   position: sticky !important;
-  left: 153px !important;
+  left: 220px !important;
   z-index: 18 !important;
   background: #0f172a !important;
   width: 135px !important;
@@ -5059,7 +5071,7 @@ body.macbook-mode .btn-mode {
 
 .sim-table .sticky-sim-model {
   position: sticky !important;
-  left: 288px !important;
+  left: 355px !important;
   z-index: 18 !important;
   background: #0f172a !important;
   min-width: 320px !important;
@@ -5071,6 +5083,7 @@ body.macbook-mode .btn-mode {
 /* Intersecting Header Cells (Fixed on both X and Y axes) */
 .sim-table thead th.sticky-sim-stt,
 .sim-table thead th.sticky-sim-stage,
+.sim-table thead th.sticky-sim-workcell,
 .sim-table thead th.sticky-sim-group,
 .sim-table thead th.sticky-sim-model {
   top: 0 !important;
@@ -5081,6 +5094,7 @@ body.macbook-mode .btn-mode {
 /* Row Hover for Sticky Cells */
 .sim-table tbody tr:hover td.sticky-sim-stt,
 .sim-table tbody tr:hover td.sticky-sim-stage,
+.sim-table tbody tr:hover td.sticky-sim-workcell,
 .sim-table tbody tr:hover td.sticky-sim-group,
 .sim-table tbody tr:hover td.sticky-sim-model {
   background: #1e293b !important;
@@ -5112,7 +5126,15 @@ body.macbook-mode .btn-mode {
 
 .sim-table thead tr.sim-sticky-totals-row th.sticky-sim-stage {
   position: sticky !important;
-  left: 48px !important;
+  left: 45px !important;
+  top: 0px !important;
+  z-index: 39 !important;
+  background: #111e38 !important;
+}
+
+.sim-table thead tr.sim-sticky-totals-row th.sticky-sim-workcell {
+  position: sticky !important;
+  left: 140px !important;
   top: 0px !important;
   z-index: 39 !important;
   background: #111e38 !important;
@@ -5120,7 +5142,7 @@ body.macbook-mode .btn-mode {
 
 .sim-table thead tr.sim-sticky-totals-row th.sticky-sim-group {
   position: sticky !important;
-  left: 153px !important;
+  left: 220px !important;
   top: 0px !important;
   z-index: 39 !important;
   background: #111e38 !important;
@@ -5129,7 +5151,7 @@ body.macbook-mode .btn-mode {
 .sim-table thead tr.sim-sticky-totals-row th.sticky-sim-model,
 .sim-table thead tr.sim-sticky-totals-row td.sticky-sim-totals-label {
   position: sticky !important;
-  left: 288px !important;
+  left: 355px !important;
   top: 0px !important;
   z-index: 39 !important;
   background: #111e38 !important;
@@ -5190,21 +5212,28 @@ body.macbook-mode .btn-mode {
 
 .sim-table thead tr.sim-header-titles th.sticky-sim-stage {
   position: sticky !important;
-  left: 48px !important;
+  left: 45px !important;
+  top: 36px !important;
+  z-index: 38 !important;
+}
+
+.sim-table thead tr.sim-header-titles th.sticky-sim-workcell {
+  position: sticky !important;
+  left: 140px !important;
   top: 36px !important;
   z-index: 38 !important;
 }
 
 .sim-table thead tr.sim-header-titles th.sticky-sim-group {
   position: sticky !important;
-  left: 153px !important;
+  left: 220px !important;
   top: 36px !important;
   z-index: 38 !important;
 }
 
 .sim-table thead tr.sim-header-titles th.sticky-sim-model {
   position: sticky !important;
-  left: 288px !important;
+  left: 355px !important;
   top: 36px !important;
   z-index: 38 !important;
   border-right: 2px solid #38bdf8 !important;
@@ -5242,6 +5271,7 @@ body.macbook-mode .btn-mode {
 
 [data-theme="light"] .sim-table .sticky-sim-stt,
 [data-theme="light"] .sim-table .sticky-sim-stage,
+[data-theme="light"] .sim-table .sticky-sim-workcell,
 [data-theme="light"] .sim-table .sticky-sim-group,
 [data-theme="light"] .sim-table .sticky-sim-model {
   background: #ffffff !important;
@@ -5250,10 +5280,12 @@ body.macbook-mode .btn-mode {
 
 [data-theme="light"] .sim-table thead th.sticky-sim-stt,
 [data-theme="light"] .sim-table thead th.sticky-sim-stage,
+[data-theme="light"] .sim-table thead th.sticky-sim-workcell,
 [data-theme="light"] .sim-table thead th.sticky-sim-group,
 [data-theme="light"] .sim-table thead th.sticky-sim-model,
 [data-theme="light"] .sim-table thead tr.sim-header-titles th.sticky-sim-stt,
 [data-theme="light"] .sim-table thead tr.sim-header-titles th.sticky-sim-stage,
+[data-theme="light"] .sim-table thead tr.sim-header-titles th.sticky-sim-workcell,
 [data-theme="light"] .sim-table thead tr.sim-header-titles th.sticky-sim-group,
 [data-theme="light"] .sim-table thead tr.sim-header-titles th.sticky-sim-model {
   background: #e2e8f0 !important;
@@ -5332,6 +5364,7 @@ body.macbook-mode .btn-mode {
 
 [data-theme="light"] .sim-table tbody tr:hover td.sticky-sim-stt,
 [data-theme="light"] .sim-table tbody tr:hover td.sticky-sim-stage,
+[data-theme="light"] .sim-table tbody tr:hover td.sticky-sim-workcell,
 [data-theme="light"] .sim-table tbody tr:hover td.sticky-sim-group,
 [data-theme="light"] .sim-table tbody tr:hover td.sticky-sim-model {
   background: #f1f5f9 !important;
@@ -10944,4 +10977,117 @@ body[data-user-role="viewer"] .sim-line-input {
   color: #0284c7 !important;
   background: rgba(2, 132, 199, 0.1) !important;
   border-color: rgba(2, 132, 199, 0.4) !important;
+}
+
+/* =========================================================================
+   VERSION SWITCHER & FACTORY FILTER (V00 vs V01 / WCA vs WCB)
+   ========================================================================= */
+.version-switcher-group {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease;
+}
+.version-switcher-group:hover {
+  border-color: rgba(139, 92, 246, 0.6);
+}
+.btn-version-opt {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.725rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-version-opt:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.08);
+}
+#btnVersionV00.active {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.45);
+}
+#btnVersionV01.active {
+  background: linear-gradient(135deg, #8b5cf6, #6366f1) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.5);
+}
+
+[data-theme="light"] .version-switcher-group {
+  background: #f1f5f9;
+  border-color: rgba(139, 92, 246, 0.4);
+}
+[data-theme="light"] #btnVersionV00.active {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  color: #ffffff !important;
+}
+[data-theme="light"] #btnVersionV01.active {
+  background: linear-gradient(135deg, #7c3aed, #6366f1) !important;
+  color: #ffffff !important;
+}
+
+/* Factory Filter styling in V01 (Đồng bộ cho tất cả các phần) */
+.factory-filter-pill-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-md);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+  animation: fadeIn 0.2s ease;
+}
+.factory-filter-pill-wrapper:hover {
+  border-color: rgba(56, 189, 248, 0.6);
+}
+.factory-filter-pill-label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #38bdf8;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+.factory-filter-btn-group {
+  display: inline-flex;
+  align-items: center;
+}
+.factory-filter-btn-group .btn-mode {
+  padding: 0.22rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition: all 0.15s ease;
+}
+.factory-filter-btn-group .btn-mode[data-factory="WCA"].active {
+  background: linear-gradient(135deg, #0284c7, #0369a1) !important;
+  color: #ffffff !important;
+  border-color: #38bdf8 !important;
+  box-shadow: 0 1px 6px rgba(2, 132, 199, 0.4);
+}
+.factory-filter-btn-group .btn-mode[data-factory="WCB"].active {
+  background: linear-gradient(135deg, #d97706, #b45309) !important;
+  color: #ffffff !important;
+  border-color: #fbbf24 !important;
+  box-shadow: 0 1px 6px rgba(217, 119, 6, 0.4);
+}
+.factory-filter-btn-group .btn-mode[data-factory="ALL"].active {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  color: #ffffff !important;
+  border-color: #60a5fa !important;
+  box-shadow: 0 1px 6px rgba(37, 99, 235, 0.4);
+}
+
+[data-theme="light"] .factory-filter-pill-wrapper {
+  background: #f8fafc;
+  border-color: rgba(56, 189, 248, 0.45);
+}
+[data-theme="light"] .factory-filter-pill-label {
+  color: #0284c7;
 }

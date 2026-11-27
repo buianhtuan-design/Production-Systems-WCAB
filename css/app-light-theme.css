@@ -385,6 +385,7 @@ html[data-theme="light"] body *,
 [data-theme="light"] td.sticky-col-cell,
 [data-theme="light"] td.sticky-sim-stt,
 [data-theme="light"] td.sticky-sim-stage,
+[data-theme="light"] td.sticky-sim-workcell,
 [data-theme="light"] td.sticky-sim-group,
 [data-theme="light"] td.sticky-sim-model,
 [data-theme="light"] td.sticky-sim-plan,
@@ -984,6 +985,7 @@ html[data-theme="light"] body *,
 }
 [data-theme="light"] .sim-table tbody td.sticky-sim-stt,
 [data-theme="light"] .sim-table tbody td.sticky-sim-stage,
+[data-theme="light"] .sim-table tbody td.sticky-sim-workcell,
 [data-theme="light"] .sim-table tbody td.sticky-sim-group,
 [data-theme="light"] .sim-table tbody td.sticky-sim-model {
   background: #ffffff !important;
@@ -991,8 +993,9 @@ html[data-theme="light"] body *,
 }
 [data-theme="light"] .sim-table tbody tr:hover td.sticky-sim-stt,
 [data-theme="light"] .sim-table tbody tr:hover td.sticky-sim-stage,
-[data-theme="light"] .sim-table tbody td.sticky-sim-group,
-[data-theme="light"] .sim-table tbody td.sticky-sim-model {
+[data-theme="light"] .sim-table tbody tr:hover td.sticky-sim-workcell,
+[data-theme="light"] .sim-table tbody tr:hover td.sticky-sim-group,
+[data-theme="light"] .sim-table tbody tr:hover td.sticky-sim-model {
   background: #fff3cc !important;
 }
 [data-theme="light"] .sim-table thead th,
@@ -1396,6 +1399,7 @@ html[data-theme="light"] body *,
 }
 [data-theme="light"] #tab-capacity .sim-table tbody td.sticky-sim-stt,
 [data-theme="light"] #tab-capacity .sim-table tbody td.sticky-sim-stage,
+[data-theme="light"] #tab-capacity .sim-table tbody td.sticky-sim-workcell,
 [data-theme="light"] #tab-capacity .sim-table tbody td.sticky-sim-group,
 [data-theme="light"] #tab-capacity .sim-table tbody td.sticky-sim-model {
   background: #ffffff !important;
@@ -1403,6 +1407,7 @@ html[data-theme="light"] body *,
 }
 [data-theme="light"] #tab-capacity .sim-table tbody tr:hover td.sticky-sim-stt,
 [data-theme="light"] #tab-capacity .sim-table tbody tr:hover td.sticky-sim-stage,
+[data-theme="light"] #tab-capacity .sim-table tbody tr:hover td.sticky-sim-workcell,
 [data-theme="light"] #tab-capacity .sim-table tbody tr:hover td.sticky-sim-group,
 [data-theme="light"] #tab-capacity .sim-table tbody tr:hover td.sticky-sim-model {
   background: #fff3cc !important;
