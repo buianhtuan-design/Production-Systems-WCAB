@@ -1,7 +1,7 @@
 {
   "success": true,
-  "timestamp": "2026-11-27 15:49:11",
-  "version": 20261127154911,
+  "timestamp": "2026-11-27 15:52:39",
+  "version": 20261127155239,
   "kpiSummary": [
     {
       "month": "Nov - 2026",
@@ -6285,19 +6285,6 @@
       "qty": "1190",
       "detectedQty": "4",
       "defectPct": "0.34%"
-    },
-    {
-      "date": "13.11.2026",
-      "unblockDate": "15.11.2026",
-      "device": "Ajax, MTR.001.MBR.000v1b (8XX_3EOL)_плата с компонентами",
-      "area": "QC SMT/DIP",
-      "cl": "Y9",
-      "generator": "SMT",
-      "responsible": "[VTP] Workcell UEA-SMT-Team 1 B",
-      "nonConformance": "misaligned components L3/ Lệch linh kiện L3",
-      "qty": "2146",
-      "detectedQty": "20",
-      "defectPct": "0.93%"
     },
     {
       "date": "13.11.2026",
