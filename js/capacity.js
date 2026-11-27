@@ -16,7 +16,7 @@
     } else if (c === 'WCB') {
       return `<span class="badge" style="background: rgba(245, 158, 11, 0.16); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.45); font-weight: 800; font-size: 0.725rem; padding: 0.15rem 0.45rem; border-radius: 4px;" title="Xưởng WCB">🏭 WCB</span>`;
     } else if (c === 'WCAB' || c === 'ALL') {
-      return `<span class="badge" style="background: rgba(168, 85, 247, 0.16); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.45); font-weight: 800; font-size: 0.725rem; padding: 0.15rem 0.45rem; border-radius: 4px;" title="Chung cả 2 xưởng (WCA + WCB)">⭐ WCAB</span>`;
+      return `<span class="badge" style="background: rgba(168, 85, 247, 0.16); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.45); font-weight: 800; font-size: 0.725rem; padding: 0.15rem 0.45rem; border-radius: 4px;" title="Chung cả 2 xưởng (WCA & WCB)">⭐ WCA &amp; WCB</span>`;
     }
     return `<span class="badge" style="background: rgba(148, 163, 184, 0.15); color: #cbd5e1; font-weight: 700; font-size: 0.725rem; padding: 0.15rem 0.4rem; border-radius: 4px;">${c}</span>`;
   };
@@ -1000,34 +1000,59 @@
 
   /**
    * Xác định thông tin 2 cột "Date Plan" & "Shift Plan" cạnh cột Chênh Lệch:
-   * - Hiển thị ngày hiện tại kèm các ca có kế hoạch (Plan > 0) trong ngày hiện tại ("Ngày", "Đêm", hoặc "Ngày + Đêm").
-   * - Nếu ngày hiện tại không có Plan mà tổng lũy kế vẫn âm -> "Âm luỹ kế" & "--".
+   * 1. Kiểm tra ngày hiện tại/mục tiêu (todayIso): nếu có Plan (>0) -> hiển thị ngày đó và ca tương ứng ("Ngày", "Đêm", hoặc "Ngày + Đêm").
+   * 2. Nếu ngày hiện tại không có Plan, tìm ngày kế tiếp gần nhất có kế hoạch (upcoming plan date >= todayIso) để hiển thị ngày và ca đó.
+   * 3. Chỉ khi model hoàn toàn không có kế hoạch ở bất kỳ ngày nào từ hiện tại trở đi mà gapQty < 0 (thiếu hụt tồn đọng quá khứ) mới gán "Âm luỹ kế".
    */
   function resolvePlanDateAndShiftMeta(it, gapQty, todayRef, shiftFilter = 'ALL') {
     const { todayIso, todayDisplay } = todayRef || getTodayPlanReference();
-    const dailyList = (it && Array.isArray(it.daily)) ? it.daily : [];
-    let todayEntry = dailyList.find(d => {
-      if (!d || d.isSelected === false) return false;
-      const dIso = (window.AppStore && window.AppStore.toISODate) ? window.AppStore.toISODate(d.date) : d.date;
-      return dIso === todayIso;
-    });
-
-    let effectiveDisplay = todayDisplay;
-    if (!todayEntry && dailyList.length > 0) {
-      const selectedEntries = dailyList.filter(d => d && d.isSelected !== false);
-      if (selectedEntries.length > 0) {
-        todayEntry = selectedEntries[selectedEntries.length - 1];
-        const dIso = (window.AppStore && window.AppStore.toISODate) ? window.AppStore.toISODate(todayEntry.date) : todayEntry.date;
-        if (dIso && dIso.includes('-')) {
-          const parts = dIso.split('-');
-          effectiveDisplay = `${parts[2]}/${parts[1]}/${parts[0]}`;
-        } else {
-          effectiveDisplay = todayEntry.date;
+    const toIsoHelper = (str) => {
+      if (!str) return '';
+      if (window.AppStore && window.AppStore.toISODate) return window.AppStore.toISODate(str);
+      if (typeof str === 'string') {
+        const trimmed = str.trim();
+        if (trimmed.includes('-')) {
+          const parts = trimmed.split('-');
+          if (parts.length === 3 && parts[0].length === 4) return trimmed;
+        }
+        if (trimmed.includes('/')) {
+          const parts = trimmed.split('/');
+          if (parts.length === 3 && parts[2].length === 4) {
+            const pad = n => String(n).padStart(2, '0');
+            const y = parts[2];
+            const p0 = parseInt(parts[0], 10);
+            const p1 = parseInt(parts[1], 10);
+            let m, d;
+            if (p0 > 12 && p1 <= 12) { d = p0; m = p1; } else { m = p0; d = p1; }
+            return `${y}-${pad(m)}-${pad(d)}`;
+          }
         }
       }
-    }
+      const dt = new Date(str);
+      if (isNaN(dt.getTime())) return str;
+      const pad = n => String(n).padStart(2, '0');
+      return `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(dt.getDate())}`;
+    };
 
-    const plannedShifts = [];
+    const formatVnDate = (isoStr, fallbackStr) => {
+      if (isoStr && typeof isoStr === 'string' && isoStr.includes('-')) {
+        const parts = isoStr.split('-');
+        if (parts.length === 3 && parts[0].length === 4) {
+          return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
+      }
+      return fallbackStr || isoStr || '--';
+    };
+
+    const dailyList = (it && Array.isArray(it.daily)) ? it.daily : [];
+
+    // 1. Kiểm tra ngày hiện tại / mục tiêu (todayIso)
+    const todayEntry = dailyList.find(d => {
+      if (!d) return false;
+      return toIsoHelper(d.date) === todayIso;
+    });
+
+    const plannedShiftsToday = [];
     if (todayEntry) {
       let dayPlan = Number(todayEntry.planDay) || 0;
       let nightPlan = Number(todayEntry.planNight) || 0;
@@ -1038,35 +1063,149 @@
       }
 
       if (shiftFilter !== 'NIGHT' && dayPlan > 0) {
-        plannedShifts.push('Ngày');
+        plannedShiftsToday.push('Ngày');
       }
       if (shiftFilter !== 'DAY' && nightPlan > 0) {
-        plannedShifts.push('Đêm');
+        plannedShiftsToday.push('Đêm');
       }
     }
 
-    if (plannedShifts.length > 0) {
+    if (plannedShiftsToday.length > 0) {
       return {
-        datePlanLabel: effectiveDisplay,
-        shiftPlanLabel: plannedShifts.join(' + '),
+        datePlanLabel: todayDisplay,
+        shiftPlanLabel: plannedShiftsToday.join(' + '),
         isCumNegative: false,
-        pendingShifts: plannedShifts
+        isToday: true,
+        isUpcoming: false,
+        planDateIso: todayIso,
+        pendingShifts: plannedShiftsToday
       };
     }
 
+    // 2. Nếu ngày hôm nay không có Plan, tìm ngày kế tiếp gần nhất có kế hoạch (>= todayIso)
+    let upcomingDateIso = null;
+    let upcomingDisplay = '';
+    let upcomingShifts = [];
+
+    // 2a. Tìm trong dailyList
+    const futureDaily = dailyList
+      .map(d => {
+        const dIso = toIsoHelper(d.date);
+        let dp = Number(d.planDay) || 0;
+        let np = Number(d.planNight) || 0;
+        const tot = Number(d.plan) || 0;
+        if (tot > 0 && dp === 0 && np === 0) {
+          dp = Math.round(tot * 0.6);
+          np = tot - dp;
+        }
+        return {
+          rawDate: d.date,
+          dIso,
+          plan: tot,
+          planDay: dp,
+          planNight: np
+        };
+      })
+      .filter(d => d.dIso && d.dIso >= todayIso && (
+        (shiftFilter === 'ALL' && (d.plan > 0 || d.planDay > 0 || d.planNight > 0)) ||
+        (shiftFilter === 'DAY' && (d.planDay > 0 || (d.plan > 0 && d.planNight === 0))) ||
+        (shiftFilter === 'NIGHT' && (d.planNight > 0 || (d.plan > 0 && d.planDay === 0)))
+      ))
+      .sort((a, b) => a.dIso.localeCompare(b.dIso));
+
+    if (futureDaily.length > 0) {
+      const earliest = futureDaily[0];
+      upcomingDateIso = earliest.dIso;
+      upcomingDisplay = formatVnDate(earliest.dIso, earliest.rawDate);
+      if (shiftFilter !== 'NIGHT' && earliest.planDay > 0) upcomingShifts.push('Ngày');
+      if (shiftFilter !== 'DAY' && earliest.planNight > 0) upcomingShifts.push('Đêm');
+      if (upcomingShifts.length === 0 && earliest.plan > 0) upcomingShifts.push('Ngày');
+    }
+
+    // 2b. Nếu chưa thấy trong dailyList, tìm trong it.plan / it.planDay / it.planNight gốc
+    if (!upcomingDateIso && it) {
+      const planSrc = it.plan || (it.wca && it.wca.plan) || (it.wcb && it.wcb.plan) || {};
+      const planDaySrc = it.planDay || (it.wca && it.wca.planDay) || (it.wcb && it.wcb.planDay) || {};
+      const planNightSrc = it.planNight || (it.wca && it.wca.planNight) || (it.wcb && it.wcb.planNight) || {};
+
+      const allPlanDates = new Set([
+        ...Object.keys(planSrc),
+        ...Object.keys(planDaySrc),
+        ...Object.keys(planNightSrc)
+      ]);
+
+      const upcomingCandidates = [];
+      allPlanDates.forEach(rawDate => {
+        const dIso = toIsoHelper(rawDate);
+        if (dIso && dIso >= todayIso) {
+          let p = Number(planSrc[rawDate]) || 0;
+          let pd = Number(planDaySrc[rawDate]) || 0;
+          let pn = Number(planNightSrc[rawDate]) || 0;
+          if (p > 0 && pd === 0 && pn === 0) {
+            pd = Math.round(p * 0.6);
+            pn = p - pd;
+          }
+          const matchFilter = (shiftFilter === 'ALL' && (p > 0 || pd > 0 || pn > 0)) ||
+                              (shiftFilter === 'DAY' && (pd > 0 || (p > 0 && pn === 0))) ||
+                              (shiftFilter === 'NIGHT' && (pn > 0 || (p > 0 && pd === 0)));
+          if (matchFilter) {
+            upcomingCandidates.push({
+              rawDate,
+              dIso,
+              plan: p,
+              planDay: pd,
+              planNight: pn
+            });
+          }
+        }
+      });
+
+      upcomingCandidates.sort((a, b) => a.dIso.localeCompare(b.dIso));
+      if (upcomingCandidates.length > 0) {
+        const earliest = upcomingCandidates[0];
+        upcomingDateIso = earliest.dIso;
+        upcomingDisplay = formatVnDate(earliest.dIso, earliest.rawDate);
+        if (shiftFilter !== 'NIGHT' && earliest.planDay > 0) upcomingShifts.push('Ngày');
+        if (shiftFilter !== 'DAY' && earliest.planNight > 0) upcomingShifts.push('Đêm');
+        if (upcomingShifts.length === 0 && earliest.plan > 0) upcomingShifts.push('Ngày');
+      }
+    }
+
+    // 2c. Nếu tìm thấy ngày kế hoạch tương lai
+    if (upcomingDateIso && upcomingShifts.length > 0) {
+      return {
+        datePlanLabel: upcomingDisplay,
+        shiftPlanLabel: upcomingShifts.join(' + '),
+        isCumNegative: false,
+        isToday: false,
+        isUpcoming: true,
+        planDateIso: upcomingDateIso,
+        pendingShifts: upcomingShifts
+      };
+    }
+
+    // 3. Nếu không có bất kỳ kế hoạch nào từ hôm nay trở đi và gapQty < 0:
+    // Model thuần túy mang tính chất thiếu hụt backlog từ quá khứ
     if (gapQty < 0) {
       return {
         datePlanLabel: 'Âm luỹ kế',
         shiftPlanLabel: '--',
         isCumNegative: true,
+        isToday: false,
+        isUpcoming: false,
+        planDateIso: '9999-99-99',
         pendingShifts: []
       };
     }
 
+    // 4. Mặc định không có kế hoạch
     return {
       datePlanLabel: '--',
       shiftPlanLabel: '--',
       isCumNegative: false,
+      isToday: false,
+      isUpcoming: false,
+      planDateIso: '',
       pendingShifts: []
     };
   }
@@ -1218,17 +1357,30 @@
   }
 
   function getPlanningPriorityTier(gapQty, planMeta) {
-    if (gapQty < 0) {
-      return (planMeta && planMeta.isCumNegative) ? 0 : 1;
+    if (planMeta && planMeta.isCumNegative) {
+      return 0; // Tier 0: Âm luỹ kế tồn đọng quá khứ (cần ưu tiên giải quyết trước)
     }
-    const hasTodayPlan = !!(planMeta && Array.isArray(planMeta.pendingShifts) && planMeta.pendingShifts.length > 0);
-    return hasTodayPlan ? 2 : 3;
+    if (planMeta && planMeta.isToday) {
+      return 1; // Tier 1: Kế hoạch ngày hôm nay
+    }
+    if (planMeta && planMeta.isUpcoming) {
+      return 2; // Tier 2: Kế hoạch các ngày kế tiếp trong kỳ
+    }
+    if (gapQty < 0) {
+      return 3; // Tier 3: Thiếu hụt khác
+    }
+    return 4; // Tier 4: Các model còn lại
   }
 
   function comparePlanningEntries(aGap, aPlanMeta, aPlanQty, aTieNum, bGap, bPlanMeta, bPlanQty, bTieNum) {
     const aTier = getPlanningPriorityTier(aGap, aPlanMeta);
     const bTier = getPlanningPriorityTier(bGap, bPlanMeta);
     if (aTier !== bTier) return aTier - bTier;
+
+    // Cùng Tier 2 (Upcoming): Ưu tiên ngày kế hoạch gần nhất lên trước
+    if (aTier === 2 && aPlanMeta && bPlanMeta && aPlanMeta.planDateIso && bPlanMeta.planDateIso && aPlanMeta.planDateIso !== bPlanMeta.planDateIso) {
+      return aPlanMeta.planDateIso.localeCompare(bPlanMeta.planDateIso);
+    }
 
     if (aGap < 0 && bGap < 0 && aGap !== bGap) {
       return aGap - bGap;
@@ -1240,6 +1392,13 @@
   }
 
   function compareAssemblyPriorityRows(a, b) {
+    if (window.AppStore && window.AppStore.appVersion === 'V01') {
+      const aIt = a.it || a;
+      const bIt = b.it || b;
+      const aWc = (a.workcell || aIt.workcell || aIt.factory || (window.AppStore.getItemWorkcell ? window.AppStore.getItemWorkcell(aIt) : 'WCB')) === 'WCA' ? 1 : 2;
+      const bWc = (b.workcell || bIt.workcell || bIt.factory || (window.AppStore.getItemWorkcell ? window.AppStore.getItemWorkcell(bIt) : 'WCB')) === 'WCA' ? 1 : 2;
+      if (aWc !== bWc) return aWc - bWc;
+    }
     const aGap = a.cumGapQty !== undefined ? Number(a.cumGapQty || 0) : Number((a.it && a.it.cumGapQty) || 0);
     const bGap = b.cumGapQty !== undefined ? Number(b.cumGapQty || 0) : Number((b.it && b.it.cumGapQty) || 0);
     const aMeta = a._prePlanMeta || a.planMeta;
@@ -1252,6 +1411,11 @@
   }
 
   function compareHardtestPriorityRows(a, b) {
+    if (window.AppStore && window.AppStore.appVersion === 'V01') {
+      const aWc = (a.workcell || (a.it && (a.it.workcell || a.it.factory)) || (window.AppStore.getItemWorkcell ? window.AppStore.getItemWorkcell(a.it || a) : 'WCB')) === 'WCA' ? 1 : 2;
+      const bWc = (b.workcell || (b.it && (b.it.workcell || b.it.factory)) || (window.AppStore.getItemWorkcell ? window.AppStore.getItemWorkcell(b.it || b) : 'WCB')) === 'WCA' ? 1 : 2;
+      if (aWc !== bWc) return aWc - bWc;
+    }
     const cmp = comparePlanningEntries(
       Number(a.gapQty || 0),
       a.planMeta,
@@ -1278,6 +1442,10 @@
     const bTier = getPlanningPriorityTier(bGap, bPlanMeta);
     if (aTier !== bTier) return aTier - bTier;
 
+    if (aTier === 2 && aPlanMeta && bPlanMeta && aPlanMeta.planDateIso && bPlanMeta.planDateIso && aPlanMeta.planDateIso !== bPlanMeta.planDateIso) {
+      return aPlanMeta.planDateIso.localeCompare(bPlanMeta.planDateIso);
+    }
+
     const gA = String(aGroup || '').trim();
     const gB = String(bGroup || '').trim();
     const gCmp = gA.localeCompare(gB, 'vi', { sensitivity: 'base', numeric: true });
@@ -1297,6 +1465,11 @@
   function compareAssemblyDisplayByGroupModel(a, b) {
     const aIt = a.it || a;
     const bIt = b.it || b;
+    if (window.AppStore && window.AppStore.appVersion === 'V01') {
+      const aWc = (a.workcell || aIt.workcell || aIt.factory || (window.AppStore.getItemWorkcell ? window.AppStore.getItemWorkcell(aIt) : 'WCB')) === 'WCA' ? 1 : 2;
+      const bWc = (b.workcell || bIt.workcell || bIt.factory || (window.AppStore.getItemWorkcell ? window.AppStore.getItemWorkcell(bIt) : 'WCB')) === 'WCA' ? 1 : 2;
+      if (aWc !== bWc) return aWc - bWc;
+    }
     return compareGroupModelDisplayRows(
       aIt.model || '',
       Number(aIt.cumGapQty || 0),
@@ -1314,6 +1487,11 @@
   }
 
   function compareHardtestDisplayByGroupModel(a, b) {
+    if (window.AppStore && window.AppStore.appVersion === 'V01') {
+      const aWc = (a.workcell || (a.it && (a.it.workcell || a.it.factory)) || (window.AppStore.getItemWorkcell ? window.AppStore.getItemWorkcell(a.it || a) : 'WCB')) === 'WCA' ? 1 : 2;
+      const bWc = (b.workcell || (b.it && (b.it.workcell || b.it.factory)) || (window.AppStore.getItemWorkcell ? window.AppStore.getItemWorkcell(b.it || b) : 'WCB')) === 'WCA' ? 1 : 2;
+      if (aWc !== bWc) return aWc - bWc;
+    }
     return compareGroupModelDisplayRows(
       a.normGroup || a.group || '',
       Number(a.gapQty || 0),
@@ -2084,12 +2262,13 @@
       selectedDates: window.AppStore.getActiveSelectedDates ? window.AppStore.getActiveSelectedDates(queryFromDate, queryToDate) : null
     });
 
-    // Deduplicate items by stage + productName1C to prevent duplicate planning rows for same physical product
+    // Deduplicate items by stage + productName1C (+ workcell in V01) to prevent duplicate planning rows for same physical product
     const uniqueScheduleMap = new Map();
     (schedule.items || []).forEach(it => {
       const p1cKey = (it.productName1C || it.model || '').trim().toLowerCase();
       const stageKey = (it.stage || '').trim().toUpperCase();
-      const uKey = `${stageKey}___${p1cKey}`;
+      const wcKey = (window.AppStore && window.AppStore.appVersion === 'V01') ? (it.workcell || it.factory || 'WCB') : '';
+      const uKey = `${stageKey}___${p1cKey}${wcKey ? '___' + wcKey : ''}`;
       if (!uniqueScheduleMap.has(uKey)) {
         uniqueScheduleMap.set(uKey, it);
       } else {
@@ -2276,7 +2455,9 @@
       grandGap += (it.cumGapQty || 0);
 
       const capInfo = resolveModelLineCapacity(it, capData);
-      const rowKey = `${it.stage}___${it.model}___${it.productName1C}`.replace(/"/g, '&quot;');
+      const itWc = it.workcell || it.factory || (window.AppStore && window.AppStore.getItemWorkcell ? window.AppStore.getItemWorkcell(it) : 'WCB');
+      const wcSuffix = (window.AppStore && window.AppStore.appVersion === 'V01') ? `___${itWc}` : '';
+      const rowKey = `${it.stage}___${it.model}___${it.productName1C}${wcSuffix}`.replace(/"/g, '&quot;');
       const shortage = it.cumGapQty < 0 ? Math.abs(it.cumGapQty) : 0;
 
       if (it.cumGapQty < 0) {
@@ -2549,6 +2730,7 @@
         factNight,
         manualFactNight,
         finalShortage: 0,
+        workcell: itWc,
         shiftTextDay: (shortage > 0 || assignedDayLineId) ? 'Ca Ngày' : '',
         shiftTextNight: (shortage > 0 || assignedNightLineId) ? 'Ca Đêm' : '',
         // Legacy compatibility properties for other modules
@@ -2591,8 +2773,9 @@
     const lineDayGroups = {};
     processedRows.forEach(r => {
       if (r.assignedDayLineId) {
-        if (!lineDayGroups[r.assignedDayLineId]) lineDayGroups[r.assignedDayLineId] = [];
-        lineDayGroups[r.assignedDayLineId].push(r);
+        const groupKey = (window.AppStore && window.AppStore.appVersion === 'V01') ? `${r.assignedDayLineId}___${r.workcell || 'WCB'}` : r.assignedDayLineId;
+        if (!lineDayGroups[groupKey]) lineDayGroups[groupKey] = [];
+        lineDayGroups[groupKey].push(r);
       }
     });
 
@@ -2650,8 +2833,9 @@
     const lineNightGroups = {};
     processedRows.forEach(r => {
       if (r.assignedNightLineId) {
-        if (!lineNightGroups[r.assignedNightLineId]) lineNightGroups[r.assignedNightLineId] = [];
-        lineNightGroups[r.assignedNightLineId].push(r);
+        const groupKey = (window.AppStore && window.AppStore.appVersion === 'V01') ? `${r.assignedNightLineId}___${r.workcell || 'WCB'}` : r.assignedNightLineId;
+        if (!lineNightGroups[groupKey]) lineNightGroups[groupKey] = [];
+        lineNightGroups[groupKey].push(r);
       }
     });
 
@@ -2941,6 +3125,7 @@
           factNight,
           manualFactNight,
           finalShortage: subFinalShortage,
+          workcell: r.workcell,
           shiftTextDay: (subShortage > 0 || assignedDayLineId) ? 'Ca Ngày' : '',
           shiftTextNight: (subShortage > 0 || assignedNightLineId) ? 'Ca Đêm' : '',
           assignedLineId: assignedDayLineId,
@@ -4512,7 +4697,9 @@
 
     // 4. Map each 1C schedule item from Bảng 2 to its capacity norm & shared TB pool metadata
     let processedRows = scheduleItems.map((it, idx) => {
-      const rowId = it.id || `${it.stage}___${it.model}___${it.productName1C}`;
+      const itWc = it.workcell || it.factory || (window.AppStore && window.AppStore.getItemWorkcell ? window.AppStore.getItemWorkcell(it) : 'WCB');
+      const wcSuffix = (window.AppStore && window.AppStore.appVersion === 'V01') ? `___${itWc}` : '';
+      const rowId = it.id ? `${it.id}${wcSuffix}` : `${it.stage}___${it.model}___${it.productName1C}${wcSuffix}`;
       const stage = it.stage;
       const group = it.model;
       const model1c = it.productName1C || '';
@@ -4573,6 +4760,7 @@
         idx,
         displayIdx: idx + 1,
         rowId,
+        workcell: itWc,
         stage,
         group,
         normGroup,
@@ -6869,10 +7057,13 @@
 
       // Các Model đang thiếu sản lượng nhưng CHƯA được nhập Line SX vào Ca Ngày hoặc Ca Đêm
       if (!hasDay && !hasNight && (shortage > 0 || gapQty < 0)) {
-        const rowKey = r.rowKey || `${it.stage || 'ASSEMBLY'}___${it.model || ''}___${it.productName1C || ''}`.replace(/"/g, '&quot;');
+        const itWc = (r.it && (r.it.workcell || r.it.factory)) || r.workcell || (window.AppStore && window.AppStore.getItemWorkcell ? window.AppStore.getItemWorkcell(r.it) : 'WCB');
+        const wcSuffix = (window.AppStore && window.AppStore.appVersion === 'V01') ? `___${itWc}` : '';
+        const rowKey = r.rowKey || `${it.stage || 'ASSEMBLY'}___${it.model || ''}___${it.productName1C || ''}${wcSuffix}`.replace(/"/g, '&quot;');
         list.push({
           idx: r.idx !== undefined ? r.idx : i,
           rowKey,
+          workcell: itWc,
           stage: it.stage || 'ASSEMBLY',
           modelGroup: it.model || '',
           productName1C: it.productName1C || '',
@@ -6896,6 +7087,8 @@
     const jobs = [];
 
     rows.forEach(r => {
+      const itWc = r.workcell || (r.it && (r.it.workcell || r.it.factory)) || (window.AppStore && window.AppStore.getItemWorkcell ? window.AppStore.getItemWorkcell(r.it) : 'WCB');
+
       // 1. Day Shift scheduled job - CHỈ lấy các Model thực sự đã được sắp xếp/gán Line SX sau khi lưu
       const dayLineId = (r.assignedDayLineId && r.assignedDayLineId !== 'NONE' && String(r.assignedDayLineId).trim() !== '')
         ? String(r.assignedDayLineId).trim()
@@ -6909,6 +7102,7 @@
 
         jobs.push({
           lineId: dayLineId,
+          workcell: itWc,
           shiftName: 'Ca Ngày',
           shiftCode: 'DAY',
           seq: daySeq,
@@ -6941,6 +7135,7 @@
 
         jobs.push({
           lineId: nightLineId,
+          workcell: itWc,
           shiftName: 'Ca Đêm',
           shiftCode: 'NIGHT',
           seq: nightSeq,
@@ -6961,10 +7156,10 @@
       }
     });
 
-    // Group jobs by lineId and shiftCode to calculate sequential cumulative hours
+    // Group jobs by lineId and shiftCode (and workcell in V01) to calculate sequential cumulative hours
     const lineShiftGroups = {};
     jobs.forEach(j => {
-      const k = `${j.lineId}___${j.shiftCode}`;
+      const k = (window.AppStore && window.AppStore.appVersion === 'V01') ? `${j.workcell || 'WCB'}___${j.lineId}___${j.shiftCode}` : `${j.lineId}___${j.shiftCode}`;
       if (!lineShiftGroups[k]) lineShiftGroups[k] = [];
       lineShiftGroups[k].push(j);
     });
@@ -6990,10 +7185,15 @@
       });
     });
 
-    // Custom sorting: Shift (ALL DAY FIRST, then ALL NIGHT) -> Line ID -> Sequence ascending
+    // Custom sorting: Shift (ALL DAY FIRST, then ALL NIGHT) -> Workcell (WCA first, then WCB in V01) -> Line ID -> Sequence ascending
     const lineOrder = { '1A': 1, '1B': 2, '1C': 3, '1D': 4, '2A': 5, '2B': 6, '2C': 7, '2D': 8, '3A': 9, '3B': 10, '3C': 11, '3D': 12, 'Support 1': 13, 'Support 2': 14, 'Support 3': 15, 'Support': 13 };
     jobs.sort((a, b) => {
       if (a.shiftCode !== b.shiftCode) return a.shiftCode === 'DAY' ? -1 : 1;
+      if (window.AppStore && window.AppStore.appVersion === 'V01') {
+        const rA = (a.workcell || 'WCB') === 'WCA' ? 1 : 2;
+        const rB = (b.workcell || 'WCB') === 'WCA' ? 1 : 2;
+        if (rA !== rB) return rA - rB;
+      }
       const orderA = lineOrder[a.lineId] || 99;
       const orderB = lineOrder[b.lineId] || 99;
       if (orderA !== orderB) return orderA - orderB;
@@ -7559,6 +7759,9 @@
           <td style="text-align: center;">
             <span class="badge badge-blue" style="font-size: 0.68rem; font-weight: 700;">${m.stage}</span>
           </td>
+          <td style="text-align: center;">
+            ${renderWorkcellBadge(m.workcell)}
+          </td>
           <td style="font-weight: 800; color: #f8fafc; font-size: 0.78rem;">${m.modelGroup || '--'}</td>
           <td style="font-family: var(--font-mono); font-size: 0.72rem; color: #93c5fd; max-width: 210px; word-break: break-word;">${m.productName1C}</td>
           <td class="font-mono" style="text-align: right; color: #60a5fa; font-weight: 700;">${(m.planQty || 0).toLocaleString('vi-VN')}</td>
@@ -7621,6 +7824,7 @@
               <tr>
                 <th style="width: 38px; text-align: center;">STT</th>
                 <th style="width: 78px; text-align: center;">CÔNG ĐOẠN</th>
+                <th style="width: 75px; text-align: center;">WORKCELL</th>
                 <th style="min-width: 105px;">GROUP MODEL</th>
                 <th style="min-width: 185px;">MÃ MODEL (1C)</th>
                 <th style="text-align: right; min-width: 68px; color: #60a5fa;">KẾ HOẠCH</th>
@@ -7648,8 +7852,20 @@
     window.AppStore.lineSeqFilterShift = 'ALL';
     if (!window.AppStore.lineSeqViewMode) window.AppStore.lineSeqViewMode = 'CARDS';
 
+    const isV01 = (window.AppStore && window.AppStore.appVersion === 'V01');
+    const wcWrap = document.getElementById('lineSeqWorkcellFilterWrap');
+    if (wcWrap) wcWrap.style.display = isV01 ? 'flex' : 'none';
+    const wcSelect = document.getElementById('lineSeqWorkcellFilterSelect');
+    if (wcSelect) {
+      wcSelect.value = window.AppStore.lineSeqFilterWorkcell || window.AppStore.factoryFilter || 'ALL';
+      window.AppStore.lineSeqFilterWorkcell = wcSelect.value;
+    }
+
     // Chỉ populate các Line thực sự đã được sắp xếp kế hoạch sau khi lưu
-    populateLineSeqFilterOptions(getScheduledLineJobs());
+    const allJobs = getScheduledLineJobs();
+    const filterWorkcell = window.AppStore.lineSeqFilterWorkcell || 'ALL';
+    const jobsForFilter = (filterWorkcell === 'ALL') ? allJobs : allJobs.filter(j => (j.workcell || 'WCB') === filterWorkcell);
+    populateLineSeqFilterOptions(jobsForFilter);
 
     const shiftSelect = document.getElementById('lineSeqShiftFilterSelect');
     if (shiftSelect) shiftSelect.value = 'ALL';
@@ -7666,6 +7882,13 @@
     if (modal) modal.style.display = 'none';
   };
   window.handleCloseLineSequenceModal = window.closeLineSequenceModal;
+
+  window.handleLineSeqWorkcellFilterChange = function(wc) {
+    window.AppStore.lineSeqFilterWorkcell = wc;
+    const select = document.getElementById('lineSeqWorkcellFilterSelect');
+    if (select && select.value !== wc) select.value = wc;
+    window.renderLineSequenceModalContent();
+  };
 
   window.handleLineSeqFilterChange = function(lineId) {
     window.AppStore.lineSeqFilterLine = lineId;
@@ -7695,27 +7918,36 @@
     if (!container) return;
 
     const allJobs = getScheduledLineJobs();
-    populateLineSeqFilterOptions(allJobs);
-    const unscheduledModels = getUnscheduledWarningModels();
-    const unscheduledWarningHtml = buildUnscheduledWarningSectionHtml(unscheduledModels);
-    const missingNotesCount = unscheduledModels.filter(m => !m.note).length;
-
+    const filterWorkcell = window.AppStore.lineSeqFilterWorkcell || 'ALL';
     const filterLine = window.AppStore.lineSeqFilterLine || 'ALL';
     const filterShift = window.AppStore.lineSeqFilterShift || 'ALL';
     const viewMode = window.AppStore.lineSeqViewMode || 'CARDS';
 
+    const jobsForFilter = (filterWorkcell === 'ALL') ? allJobs : allJobs.filter(j => (j.workcell || 'WCB') === filterWorkcell);
+    populateLineSeqFilterOptions(jobsForFilter);
+
+    const unscheduledModels = getUnscheduledWarningModels();
+    const filteredUnscheduledModels = unscheduledModels.filter(m => {
+      if (filterWorkcell !== 'ALL' && (m.workcell || 'WCB') !== filterWorkcell) return false;
+      return true;
+    });
+    const unscheduledWarningHtml = buildUnscheduledWarningSectionHtml(filteredUnscheduledModels);
+    const missingNotesCount = filteredUnscheduledModels.filter(m => !m.note).length;
+
     const filteredJobs = allJobs.filter(j => {
+      if (filterWorkcell !== 'ALL' && (j.workcell || 'WCB') !== filterWorkcell) return false;
       if (filterLine !== 'ALL' && j.lineId !== filterLine) return false;
       if (filterShift !== 'ALL' && j.shiftCode !== filterShift) return false;
       return true;
     });
 
-    // Group jobs by Line + Shift key
+    // Group jobs by Line + Shift (+ Workcell in V01)
     const groups = {};
     filteredJobs.forEach(j => {
-      const groupKey = `${j.lineId}___${j.shiftCode}`;
+      const groupKey = (window.AppStore && window.AppStore.appVersion === 'V01') ? `${j.workcell || 'WCB'}___${j.lineId}___${j.shiftCode}` : `${j.lineId}___${j.shiftCode}`;
       if (!groups[groupKey]) {
         groups[groupKey] = {
+          workcell: j.workcell || 'WCB',
           lineId: j.lineId,
           shiftCode: j.shiftCode,
           shiftName: j.shiftName,
@@ -7737,6 +7969,11 @@
       if (grpA.shiftCode !== grpB.shiftCode) {
         return grpA.shiftCode === 'DAY' ? -1 : 1;
       }
+      if (window.AppStore && window.AppStore.appVersion === 'V01') {
+        const rA = grpA.workcell === 'WCA' ? 1 : 2;
+        const rB = grpB.workcell === 'WCA' ? 1 : 2;
+        if (rA !== rB) return rA - rB;
+      }
       const orderA = lineOrder[grpA.lineId] || 99;
       const orderB = lineOrder[grpB.lineId] || 99;
       return orderA - orderB;
@@ -7744,13 +7981,13 @@
 
     if (badge) {
       badge.innerText = `${groupKeys.length} Chuyền/Ca (${filteredJobs.length} Model)` +
-        (unscheduledModels.length > 0 ? ` • ⚠️ ${unscheduledModels.length} Chưa có KH` : '');
+        (filteredUnscheduledModels.length > 0 ? ` • ⚠️ ${filteredUnscheduledModels.length} Chưa có KH` : '');
     }
     if (summaryInfo) {
       const totalH = filteredJobs.reduce((s, j) => s + j.hours, 0);
       const totalQ = filteredJobs.reduce((s, j) => s + j.allocatedQty, 0);
-      const warnSuffix = unscheduledModels.length > 0
-        ? ` • <span id="lineSeqFooterWarnSpan" style="color:#f87171; font-weight:700;">⚠️ ${unscheduledModels.length} Model chưa gán Line (${missingNotesCount} thiếu ghi chú)</span>`
+      const warnSuffix = filteredUnscheduledModels.length > 0
+        ? ` • <span id="lineSeqFooterWarnSpan" style="color:#f87171; font-weight:700;">⚠️ ${filteredUnscheduledModels.length} Model chưa gán Line (${missingNotesCount} thiếu ghi chú)</span>`
         : '<span id="lineSeqFooterWarnSpan"></span>';
       summaryInfo.innerHTML = `Tổng cộng: <strong>${filteredJobs.length} lượt chạy</strong> • <strong>${totalH.toFixed(1)} giờ máy</strong> • <strong>${totalQ.toLocaleString('vi-VN')} pcs</strong> hoàn thành${warnSuffix}.`;
     }
@@ -7786,6 +8023,9 @@
             </td>
             <td style="text-align: center;">
               <span class="badge badge-blue" style="font-size: 0.68rem; font-weight: 700;">${j.stage}</span>
+            </td>
+            <td style="text-align: center;">
+              ${renderWorkcellBadge(j.workcell)}
             </td>
             <td style="font-weight: 800; color: #f8fafc; font-size: 0.8rem;">
               ${j.modelGroup}
@@ -7828,6 +8068,7 @@
                   <th style="width: 80px; text-align: center;">LINE</th>
                   <th style="width: 65px; text-align: center;">THỨ TỰ</th>
                   <th style="width: 85px; text-align: center;">CÔNG ĐOẠN</th>
+                  <th style="width: 75px; text-align: center;">WORKCELL</th>
                   <th style="min-width: 130px;">GROUP MODEL</th>
                   <th style="min-width: 260px;">MÃ MODEL (1C)</th>
                   <th style="text-align: right; min-width: 90px;">BÙ THIẾU</th>
@@ -7843,7 +8084,7 @@
               </tbody>
               <tfoot>
                 <tr style="background: rgba(15, 23, 42, 0.95); font-weight: 800; border-top: 2px solid var(--border-glass);">
-                  <td colspan="7" style="text-align: right; color: #fbbf24; font-size: 0.8rem; padding: 0.5rem 0.75rem;">
+                  <td colspan="8" style="text-align: right; color: #fbbf24; font-size: 0.8rem; padding: 0.5rem 0.75rem;">
                     TỔNG CỘNG (${filteredJobs.length} Model):
                   </td>
                   <td class="font-mono" style="text-align: right; color: #f87171; font-weight: 800; padding: 0.5rem 0.5rem;">
@@ -7870,7 +8111,7 @@
     }
 
     // CHẾ ĐỘ 2: GOM THEO TỪNG CHUYỀN (CARD VIEW NHƯ ẢNH ĐÍNH KÈM)
-    let lastShiftCode = null;
+    let lastSectionKey = null;
     const html = groupKeys.map(key => {
       const grp = groups[key];
       const isDay = grp.shiftCode === 'DAY';
@@ -7879,14 +8120,16 @@
       const isUnder = grp.totalHours <= grp.quotaHours + 0.05;
 
       let sectionHeaderHtml = '';
-      if (filterShift === 'ALL' && grp.shiftCode !== lastShiftCode) {
-        lastShiftCode = grp.shiftCode;
+      const sectionKey = (window.AppStore && window.AppStore.appVersion === 'V01') ? `${grp.shiftCode}___${grp.workcell}` : grp.shiftCode;
+      if (sectionKey !== lastSectionKey) {
+        lastSectionKey = sectionKey;
+        const wcText = (window.AppStore && window.AppStore.appVersion === 'V01') ? ` - XƯỞNG ${grp.workcell}` : '';
         sectionHeaderHtml = `
           <div style="margin: ${isDay ? '0.25rem' : '1.75rem'} 0 0.85rem 0; padding: 0.6rem 1rem; background: ${isDay ? 'rgba(251, 191, 36, 0.08)' : 'rgba(192, 132, 252, 0.08)'}; border: 1px solid ${isDay ? 'rgba(251, 191, 36, 0.25)' : 'rgba(192, 132, 252, 0.25)'}; border-left: 5px solid ${shiftColor}; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
             <div style="display: flex; align-items: center; gap: 0.5rem;">
               <span style="font-size: 1.15rem;">${shiftIcon}</span>
               <span style="font-weight: 900; font-size: 0.875rem; color: ${shiftColor}; text-transform: uppercase; letter-spacing: 0.03em;">
-                ${isDay ? 'CÁC CHUYỀN SẢN XUẤT CA NGÀY (QUY CHUẨN ≤ 10.83H / LINE)' : 'CÁC CHUYỀN SẢN XUẤT CA ĐÊM (QUY CHUẨN ≤ 10.58H / LINE)'}
+                ${isDay ? `CÁC CHUYỀN SẢN XUẤT CA NGÀY${wcText} (QUY CHUẨN ≤ 10.83H / LINE)` : `CÁC CHUYỀN SẢN XUẤT CA ĐÊM${wcText} (QUY CHUẨN ≤ 10.58H / LINE)`}
               </span>
             </div>
             <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 600;">
@@ -7939,8 +8182,9 @@
         ${sectionHeaderHtml}
         <div class="sim-seq-group-card">
           <div class="sim-seq-group-header">
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
               <span style="font-weight: 900; font-size: 0.95rem; color: #f8fafc;">Line ${grp.lineId}</span>
+              ${(window.AppStore && window.AppStore.appVersion === 'V01') ? renderWorkcellBadge(grp.workcell) : ''}
               <span style="font-size: 0.8rem; font-weight: 800; color: ${shiftColor}; display: inline-flex; align-items: center; gap: 0.25rem;">
                 <span>${shiftIcon}</span> <span>${grp.shiftName}</span>
               </span>
@@ -7990,10 +8234,12 @@
   /* ======================================================== */
   window.handleExportLineSequenceGoogleSheet = function() {
     const allJobs = getScheduledLineJobs();
+    const filterWorkcell = window.AppStore.lineSeqFilterWorkcell || 'ALL';
     const filterLine = window.AppStore.lineSeqFilterLine || 'ALL';
     const filterShift = window.AppStore.lineSeqFilterShift || 'ALL';
 
     const filteredJobs = allJobs.filter(j => {
+      if (filterWorkcell !== 'ALL' && (j.workcell || 'WCB') !== filterWorkcell) return false;
       if (filterLine !== 'ALL' && j.lineId !== filterLine) return false;
       if (filterShift !== 'ALL' && j.shiftCode !== filterShift) return false;
       return true;
@@ -8027,6 +8273,7 @@
       'Line SX',
       'Thứ Tự SX',
       'Công Đoạn',
+      'Workcell',
       'Group Model',
       'Mã Model (1C)',
       'Bù Thiếu',
@@ -8047,6 +8294,7 @@
         `Line ${j.lineId}`,
         `#${j.seq}`,
         j.stage,
+        j.workcell || 'WCB',
         j.modelGroup,
         j.productName1C,
         j.gapQty,
@@ -8063,6 +8311,7 @@
     // Total Row
     const totalRow = [
       'Tổng Cộng',
+      '',
       '',
       '',
       '',
@@ -8097,10 +8346,12 @@
 
   window.handleCopyLineSequenceClipboard = function() {
     const allJobs = getScheduledLineJobs();
+    const filterWorkcell = window.AppStore.lineSeqFilterWorkcell || 'ALL';
     const filterLine = window.AppStore.lineSeqFilterLine || 'ALL';
     const filterShift = window.AppStore.lineSeqFilterShift || 'ALL';
 
     const filteredJobs = allJobs.filter(j => {
+      if (filterWorkcell !== 'ALL' && (j.workcell || 'WCB') !== filterWorkcell) return false;
       if (filterLine !== 'ALL' && j.lineId !== filterLine) return false;
       if (filterShift !== 'ALL' && j.shiftCode !== filterShift) return false;
       return true;
@@ -8127,6 +8378,7 @@
       'Line SX',
       'Thứ Tự SX',
       'Công Đoạn',
+      'Workcell',
       'Group Model',
       'Mã Model (1C)',
       'Bù Thiếu',
@@ -8153,6 +8405,7 @@
         `Line ${j.lineId}`,
         `#${j.seq}`,
         j.stage,
+        j.workcell || 'WCB',
         j.modelGroup,
         j.productName1C,
         j.gapQty,
@@ -8235,6 +8488,7 @@
         list.push({
           idx: r.idx !== undefined ? r.idx : i,
           rowId: r.rowId,
+          workcell: r.workcell || (r.it && (r.it.workcell || r.it.factory)) || 'WCB',
           stage: r.stage || 'HARD TEST',
           modelGroup: r.normGroup || r.group || '',
           productName1C: r.model1c || '',
@@ -8259,6 +8513,8 @@
     const jobs = [];
 
     rows.forEach(r => {
+      const itWc = r.workcell || (r.it && (r.it.workcell || r.it.factory)) || (window.AppStore && window.AppStore.getItemWorkcell ? window.AppStore.getItemWorkcell(r.it) : 'WCB');
+
       // 1. Ca Ngày
       const hasDayJob = (r.manualTbDay > 0 || r.dayOutput > 0 || (r.seqDay && r.seqDay.trim() !== ''));
       if (hasDayJob) {
@@ -8270,6 +8526,7 @@
         jobs.push({
           shiftName: 'Ca Ngày',
           shiftCode: 'DAY',
+          workcell: itWc,
           seq: daySeq,
           idx: r.idx !== undefined ? r.idx : 0,
           stage: r.stage || 'HARD TEST',
@@ -8307,6 +8564,7 @@
         jobs.push({
           shiftName: 'Ca Đêm',
           shiftCode: 'NIGHT',
+          workcell: itWc,
           seq: nightSeq,
           idx: r.idx !== undefined ? r.idx : 0,
           stage: r.stage || 'HARD TEST',
@@ -8334,14 +8592,16 @@
       }
     });
 
-    // Group jobs by shiftCode
-    const shiftGroups = { DAY: [], NIGHT: [] };
+    // Group jobs by shiftCode (+ workcell in V01)
+    const shiftGroups = {};
     jobs.forEach(j => {
-      if (shiftGroups[j.shiftCode]) shiftGroups[j.shiftCode].push(j);
+      const k = (window.AppStore && window.AppStore.appVersion === 'V01') ? `${j.shiftCode}___${j.workcell || 'WCB'}` : j.shiftCode;
+      if (!shiftGroups[k]) shiftGroups[k] = [];
+      shiftGroups[k].push(j);
     });
 
-    ['DAY', 'NIGHT'].forEach(sc => {
-      shiftGroups[sc].sort((a, b) => {
+    Object.values(shiftGroups).forEach(groupJobs => {
+      groupJobs.sort((a, b) => {
         const seqA = (a.seq !== undefined && isFinite(a.seq) && a.seq > 0) ? a.seq : 999;
         const seqB = (b.seq !== undefined && isFinite(b.seq) && b.seq > 0) ? b.seq : 999;
         if (seqA !== seqB) return seqA - seqB;
@@ -8349,7 +8609,7 @@
       });
 
       let curH = 0;
-      shiftGroups[sc].forEach((j, groupIdx) => {
+      groupJobs.forEach((j, groupIdx) => {
         if (!isFinite(j.seq) || j.seq >= 99 || j.seq <= 0) {
           j.seq = groupIdx + 1;
         }
@@ -8362,6 +8622,11 @@
 
     jobs.sort((a, b) => {
       if (a.shiftCode !== b.shiftCode) return a.shiftCode === 'DAY' ? -1 : 1;
+      if (window.AppStore && window.AppStore.appVersion === 'V01') {
+        const rA = (a.workcell || 'WCB') === 'WCA' ? 1 : 2;
+        const rB = (b.workcell || 'WCB') === 'WCA' ? 1 : 2;
+        if (rA !== rB) return rA - rB;
+      }
       if (a.seq !== b.seq) return a.seq - b.seq;
       return a.idx - b.idx;
     });
@@ -8377,6 +8642,15 @@
     window.AppStore.hardtestSeqFilterShift = 'ALL';
     window.AppStore.hardtestSeqFilterStage = 'ALL';
     if (!window.AppStore.hardtestSeqViewMode) window.AppStore.hardtestSeqViewMode = 'CARDS';
+
+    const isV01 = (window.AppStore && window.AppStore.appVersion === 'V01');
+    const wcWrap = document.getElementById('hardtestSeqWorkcellFilterWrap');
+    if (wcWrap) wcWrap.style.display = isV01 ? 'flex' : 'none';
+    const wcSelect = document.getElementById('hardtestSeqWorkcellFilterSelect');
+    if (wcSelect) {
+      wcSelect.value = window.AppStore.hardtestSeqFilterWorkcell || window.AppStore.factoryFilter || 'ALL';
+      window.AppStore.hardtestSeqFilterWorkcell = wcSelect.value;
+    }
 
     const shiftSelect = document.getElementById('hardtestSeqShiftFilterSelect');
     if (shiftSelect) shiftSelect.value = 'ALL';
@@ -8396,6 +8670,13 @@
     if (modal) modal.style.display = 'none';
   };
   window.handleCloseHardtestShiftSequenceModal = window.closeHardtestShiftSequenceModal;
+
+  window.handleHardtestSeqWorkcellFilterChange = function(wc) {
+    window.AppStore.hardtestSeqFilterWorkcell = wc;
+    const select = document.getElementById('hardtestSeqWorkcellFilterSelect');
+    if (select && select.value !== wc) select.value = wc;
+    window.renderHardtestShiftSequenceModalContent();
+  };
 
   window.handleHardtestSeqShiftFilterChange = function(shift) {
     window.AppStore.hardtestSeqFilterShift = shift;
@@ -8427,27 +8708,47 @@
     const allJobs = getScheduledHardtestShiftJobs();
     const unscheduledModels = getUnscheduledHardtestWarningModels();
 
+    const filterWorkcell = window.AppStore.hardtestSeqFilterWorkcell || 'ALL';
     const filterShift = window.AppStore.hardtestSeqFilterShift || 'ALL';
     const filterStage = window.AppStore.hardtestSeqFilterStage || 'ALL';
     const viewMode = window.AppStore.hardtestSeqViewMode || 'CARDS';
 
     const filteredJobs = allJobs.filter(j => {
+      if (filterWorkcell !== 'ALL' && (j.workcell || 'WCB') !== filterWorkcell) return false;
       if (filterShift !== 'ALL' && j.shiftCode !== filterShift) return false;
       if (filterStage !== 'ALL' && j.stage !== filterStage) return false;
       return true;
     });
 
-    const shiftKeys = [];
-    if (filterShift === 'ALL' || filterShift === 'DAY') {
-      if (filteredJobs.some(j => j.shiftCode === 'DAY')) shiftKeys.push('DAY');
-    }
-    if (filterShift === 'ALL' || filterShift === 'NIGHT') {
-      if (filteredJobs.some(j => j.shiftCode === 'NIGHT')) shiftKeys.push('NIGHT');
+    const filteredUnscheduledModels = unscheduledModels.filter(m => {
+      if (filterWorkcell !== 'ALL' && (m.workcell || 'WCB') !== filterWorkcell) return false;
+      return true;
+    });
+
+    const isV01 = (window.AppStore && window.AppStore.appVersion === 'V01');
+    const cardGroupSpecs = [];
+    if (isV01) {
+      const shifts = (filterShift === 'ALL') ? ['DAY', 'NIGHT'] : [filterShift];
+      const workcells = (filterWorkcell === 'ALL') ? ['WCA', 'WCB'] : [filterWorkcell];
+      shifts.forEach(sc => {
+        workcells.forEach(wc => {
+          if (filteredJobs.some(j => j.shiftCode === sc && (j.workcell || 'WCB') === wc)) {
+            cardGroupSpecs.push({ shiftCode: sc, workcell: wc, key: `${sc}___${wc}` });
+          }
+        });
+      });
+    } else {
+      const shifts = (filterShift === 'ALL') ? ['DAY', 'NIGHT'] : [filterShift];
+      shifts.forEach(sc => {
+        if (filteredJobs.some(j => j.shiftCode === sc)) {
+          cardGroupSpecs.push({ shiftCode: sc, workcell: '', key: sc });
+        }
+      });
     }
 
     if (badge) {
-      badge.innerText = `${shiftKeys.length} Ca (${filteredJobs.length} Model)` +
-        (unscheduledModels.length > 0 ? ` • ⚠️ ${unscheduledModels.length} Chưa có KH` : '');
+      badge.innerText = `${cardGroupSpecs.length} Ca (${filteredJobs.length} Model)` +
+        (filteredUnscheduledModels.length > 0 ? ` • ⚠️ ${filteredUnscheduledModels.length} Chưa có KH` : '');
     }
 
     const totalH = filteredJobs.reduce((s, j) => s + j.hours, 0);
@@ -8456,19 +8757,20 @@
     const totalMan = filteredJobs.reduce((s, j) => s + j.manUsed, 0);
 
     if (summaryInfo) {
-      const warnSuffix = unscheduledModels.length > 0
-        ? ` • <span style="color:#f87171; font-weight:700;">⚠️ ${unscheduledModels.length} Model thiếu hụt chưa có KH</span>`
+      const warnSuffix = filteredUnscheduledModels.length > 0
+        ? ` • <span style="color:#f87171; font-weight:700;">⚠️ ${filteredUnscheduledModels.length} Model thiếu hụt chưa có KH</span>`
         : '';
       summaryInfo.innerHTML = `Tổng cộng: <strong>${filteredJobs.length} lượt chạy</strong> • <strong>${totalH.toFixed(1)} giờ máy</strong> • <strong>${totalQ.toLocaleString('vi-VN')} pcs</strong> • <strong>${totalTb} TB</strong> • <strong>${totalMan} Người</strong>${warnSuffix}.`;
     }
 
     // Warning HTML for unscheduled models
     let unscheduledWarningHtml = '';
-    if (unscheduledModels.length > 0) {
-      const unRows = unscheduledModels.map((m, idx) => `
+    if (filteredUnscheduledModels.length > 0) {
+      const unRows = filteredUnscheduledModels.map((m, idx) => `
         <tr>
           <td style="text-align: center; color: var(--text-muted); font-size: 0.75rem;">${idx + 1}</td>
           <td style="text-align: center;"><span class="badge badge-amber" style="font-size: 0.68rem; font-weight: 700;">${m.stage}</span></td>
+          <td style="text-align: center;">${renderWorkcellBadge(m.workcell)}</td>
           <td style="font-weight: 700; color: #f8fafc; font-size: 0.78rem;">${m.modelGroup}</td>
           <td style="font-family: var(--font-mono); font-size: 0.75rem; color: #93c5fd; max-width: 280px; word-break: break-all;">${m.productName1C}</td>
           <td style="font-family: var(--font-mono); font-size: 0.72rem; color: #cbd5e1;">${m.board || '--'}</td>
@@ -8485,7 +8787,7 @@
             <div style="display: flex; align-items: center; gap: 0.5rem;">
               <span style="font-size: 1.1rem;">⚠️</span>
               <span style="font-weight: 800; color: #f87171; font-size: 0.85rem; text-transform: uppercase;">
-                CẢNH BÁO: PHÁT HIỆN ${unscheduledModels.length} MODEL THIẾU HỤT CHƯA CÓ KẾ HOẠCH TRONG CA
+                CẢNH BÁO: PHÁT HIỆN ${filteredUnscheduledModels.length} MODEL THIẾU HỤT CHƯA CÓ KẾ HOẠCH TRONG CA
               </span>
             </div>
             <span style="font-size: 0.75rem; color: #cbd5e1;">
@@ -8498,6 +8800,7 @@
                 <tr>
                   <th style="width: 40px; text-align: center;">STT</th>
                   <th style="width: 80px; text-align: center;">CÔNG ĐOẠN</th>
+                  <th style="width: 75px; text-align: center;">WORKCELL</th>
                   <th style="min-width: 120px;">GROUP MODEL</th>
                   <th style="min-width: 240px;">MÃ MODEL (1C)</th>
                   <th style="min-width: 130px;">BO MẠCH</th>
@@ -8544,6 +8847,9 @@
             </td>
             <td style="text-align: center;">
               <span class="badge badge-blue" style="font-size: 0.68rem; font-weight: 700;">${j.stage}</span>
+            </td>
+            <td style="text-align: center;">
+              ${renderWorkcellBadge(j.workcell)}
             </td>
             <td style="font-weight: 800; color: #f8fafc; font-size: 0.8rem;">
               ${j.modelGroup}
@@ -8594,6 +8900,7 @@
                   <th style="width: 80px; text-align: center;">CA</th>
                   <th style="width: 65px; text-align: center;">THỨ TỰ</th>
                   <th style="width: 85px; text-align: center;">CÔNG ĐOẠN</th>
+                  <th style="width: 75px; text-align: center;">WORKCELL</th>
                   <th style="min-width: 120px;">GROUP MODEL</th>
                   <th style="min-width: 250px;">MÃ MODEL (1C)</th>
                   <th style="min-width: 120px;">BO MẠCH</th>
@@ -8612,7 +8919,7 @@
               </tbody>
               <tfoot>
                 <tr style="background: rgba(15, 23, 42, 0.95); font-weight: 800; border-top: 2px solid var(--border-glass);">
-                  <td colspan="7" style="text-align: right; color: #fbbf24; font-size: 0.8rem; padding: 0.5rem 0.75rem;">
+                  <td colspan="8" style="text-align: right; color: #fbbf24; font-size: 0.8rem; padding: 0.5rem 0.75rem;">
                     TỔNG CỘNG (${filteredJobs.length} Model):
                   </td>
                   <td class="font-mono" style="text-align: right; color: #f87171; font-weight: 800; padding: 0.5rem 0.5rem;">
@@ -8644,22 +8951,25 @@
       return;
     }
 
-    // CHẾ ĐỘ 2: GOM THEO TỪNG CA (CARD VIEW TƯƠNG TỰ ASSEMBLY)
-    const cardsHtml = shiftKeys.map(shiftCode => {
+    // CHẾ ĐỘ 2: GOM THEO TỪNG CA (CARD VIEW TƯƠNG TỰ ASSEMBLY, TÁCH THEO WCA / WCB Ở V01)
+    const cardsHtml = cardGroupSpecs.map(grp => {
+      const shiftCode = grp.shiftCode;
       const isDay = shiftCode === 'DAY';
       const shiftIcon = isDay ? '☀️' : '🌙';
       const shiftName = isDay ? 'Ca Ngày' : 'Ca Đêm';
       const shiftColor = isDay ? '#fbbf24' : '#c084fc';
       const quotaHours = isDay ? 10.83 : 10.58;
 
-      const jobsInShift = filteredJobs.filter(j => j.shiftCode === shiftCode);
-      const shiftTotalH = jobsInShift.reduce((s, j) => s + j.hours, 0);
-      const shiftTotalQ = jobsInShift.reduce((s, j) => s + j.allocatedQty, 0);
-      const shiftTotalTb = jobsInShift.reduce((s, j) => s + j.tbUsed, 0);
-      const shiftTotalMan = jobsInShift.reduce((s, j) => s + j.manUsed, 0);
+      const jobsInGroup = filteredJobs.filter(j => j.shiftCode === shiftCode && (!grp.workcell || (j.workcell || 'WCB') === grp.workcell));
+      const shiftTotalH = jobsInGroup.reduce((s, j) => s + j.hours, 0);
+      const shiftTotalQ = jobsInGroup.reduce((s, j) => s + j.allocatedQty, 0);
+      const shiftTotalTb = jobsInGroup.reduce((s, j) => s + j.tbUsed, 0);
+      const shiftTotalMan = jobsInGroup.reduce((s, j) => s + j.manUsed, 0);
       const isUnder = shiftTotalH <= quotaHours + 0.05;
 
-      const rowsHtml = jobsInShift.map((j, idx) => `
+      const wcTitleText = grp.workcell ? ` - Xưởng ${grp.workcell}` : '';
+
+      const rowsHtml = jobsInGroup.map((j, idx) => `
         <tr>
           <td style="text-align: center; color: var(--text-muted); font-size: 0.75rem;">${idx + 1}</td>
           <td style="text-align: center; font-weight: 900;">
@@ -8712,8 +9022,9 @@
             <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
               <span style="font-size: 1.15rem;">${shiftIcon}</span>
               <span style="font-weight: 900; font-size: 0.95rem; color: ${shiftColor}; text-transform: uppercase;">
-                ${shiftName} (Định mức ≤ ${quotaHours}h)
+                ${shiftName}${wcTitleText} (Định mức ≤ ${quotaHours}h)
               </span>
+              ${grp.workcell ? renderWorkcellBadge(grp.workcell) : ''}
               <span class="font-mono" style="font-size: 0.8rem; color: #94a3b8;">
                 (Tổng: <strong style="color: ${shiftColor};">${shiftTotalH.toFixed(1)}h</strong> / ${quotaHours}h)
               </span>
@@ -8767,10 +9078,12 @@
 
   window.handleExportHardtestSeqGoogleSheet = function() {
     const allJobs = getScheduledHardtestShiftJobs();
+    const filterWorkcell = window.AppStore.hardtestSeqFilterWorkcell || 'ALL';
     const filterShift = window.AppStore.hardtestSeqFilterShift || 'ALL';
     const filterStage = window.AppStore.hardtestSeqFilterStage || 'ALL';
 
     const filteredJobs = allJobs.filter(j => {
+      if (filterWorkcell !== 'ALL' && (j.workcell || 'WCB') !== filterWorkcell) return false;
       if (filterShift !== 'ALL' && j.shiftCode !== filterShift) return false;
       if (filterStage !== 'ALL' && j.stage !== filterStage) return false;
       return true;
@@ -8796,6 +9109,7 @@
       'Ca Làm Việc',
       'Thứ Tự SX',
       'Công Đoạn',
+      'Workcell',
       'Group Model',
       'Mã Model (1C)',
       'Bo Mạch (Board)',
@@ -8822,6 +9136,7 @@
         j.shiftName,
         `#${j.seq}`,
         j.stage,
+        j.workcell || 'WCB',
         j.modelGroup,
         j.productName1C,
         j.board || '',
@@ -8840,6 +9155,7 @@
 
     const totalRow = [
       'Tổng Cộng',
+      '',
       '',
       '',
       '',
@@ -8873,10 +9189,12 @@
 
   window.handleCopyHardtestSeqClipboard = function() {
     const allJobs = getScheduledHardtestShiftJobs();
+    const filterWorkcell = window.AppStore.hardtestSeqFilterWorkcell || 'ALL';
     const filterShift = window.AppStore.hardtestSeqFilterShift || 'ALL';
     const filterStage = window.AppStore.hardtestSeqFilterStage || 'ALL';
 
     const filteredJobs = allJobs.filter(j => {
+      if (filterWorkcell !== 'ALL' && (j.workcell || 'WCB') !== filterWorkcell) return false;
       if (filterShift !== 'ALL' && j.shiftCode !== filterShift) return false;
       if (filterStage !== 'ALL' && j.stage !== filterStage) return false;
       return true;
@@ -8901,6 +9219,7 @@
       'Ca Làm Việc',
       'Thứ Tự SX',
       'Công Đoạn',
+      'Workcell',
       'Group Model',
       'Mã Model (1C)',
       'Bo Mạch (Board)',
@@ -8926,6 +9245,7 @@
         j.shiftName,
         `#${j.seq}`,
         j.stage,
+        j.workcell || 'WCB',
         j.modelGroup,
         j.productName1C,
         j.board || '',
@@ -8944,6 +9264,7 @@
 
     const totalRow = [
       'Tổng Cộng',
+      '',
       '',
       '',
       '',

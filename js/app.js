@@ -4144,7 +4144,7 @@ window.createFactoryFilterHtml = function(extraStyle = '') {
     <div class="factory-filter-pill-wrapper" data-section-factory="true" style="${displayStyle} ${extraStyle}">
       <span class="factory-filter-pill-label">🏭 Xưởng:</span>
       <div class="btn-group factory-filter-btn-group">
-        <button type="button" class="btn-mode ${curFac === 'ALL' ? 'active' : ''}" data-factory="ALL" onclick="window.handleFactoryFilterChange('ALL')" title="Xem toàn bộ nhà máy (WCA + WCB)">⭐ Tất Cả (WCAB)</button>
+        <button type="button" class="btn-mode ${curFac === 'ALL' ? 'active' : ''}" data-factory="ALL" onclick="window.handleFactoryFilterChange('ALL')" title="Xem toàn bộ nhà máy (WCA + WCB)">⭐ Tất Cả</button>
         <button type="button" class="btn-mode ${curFac === 'WCA' ? 'active' : ''}" data-factory="WCA" onclick="window.handleFactoryFilterChange('WCA')" title="Xem xưởng WCA (từ ngày 27/11/2026)">🏢 Xưởng WCA</button>
         <button type="button" class="btn-mode ${curFac === 'WCB' ? 'active' : ''}" data-factory="WCB" onclick="window.handleFactoryFilterChange('WCB')" title="Xem xưởng WCB (loại trừ WCA từ ngày 27/11/2026)">🏭 Xưởng WCB</button>
       </div>
@@ -6898,7 +6898,7 @@ window.handleFactoryFilterChange = function(factory) {
   }
 
   const facLabels = {
-    'ALL': '⭐ Tất Cả Nhà Máy (WCAB)',
+    'ALL': '⭐ Tất Cả Nhà Máy',
     'WCA': '🏢 Xưởng WCA (Từ 27/11/2026)',
     'WCB': '🏭 Xưởng WCB (Loại trừ WCA từ 27/11/2026)'
   };

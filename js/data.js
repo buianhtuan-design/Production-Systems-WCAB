@@ -3584,12 +3584,13 @@ class Store {
       });
     });
 
-    // Deduplicate items by stage + productName1C to prevent duplicate planning rows for same physical product
+    // Deduplicate items by stage + productName1C (+ workcell in V01) to prevent duplicate planning rows for same physical product
     const dedupMap = new Map();
     items.forEach(it => {
       const p1cKey = (it.productName1C || it.model || '').trim().toLowerCase();
       const stageKey = (it.stage || '').trim().toUpperCase();
-      const key = `${stageKey}___${p1cKey}`;
+      const wcKey = (this.appVersion === 'V01') ? (it.workcell || 'WCB') : '';
+      const key = `${stageKey}___${p1cKey}${wcKey ? '___' + wcKey : ''}`;
       if (!dedupMap.has(key)) {
         dedupMap.set(key, it);
       } else {
@@ -3603,7 +3604,7 @@ class Store {
           if (it.normKeyShort) existing.normKeyShort = it.normKeyShort;
           if (it.normName) existing.normName = it.normName;
         }
-        if (existing.workcell !== it.workcell && it.workcell) {
+        if (this.appVersion !== 'V01' && existing.workcell !== it.workcell && it.workcell) {
           if ((existing.workcell === 'WCA' && it.workcell === 'WCB') || (existing.workcell === 'WCB' && it.workcell === 'WCA')) {
             existing.workcell = 'WCAB';
           } else if (!existing.workcell) {
@@ -3666,9 +3667,16 @@ class Store {
     });
     items.splice(0, items.length, ...Array.from(dedupMap.values()));
 
-    // Sắp xếp Model: Các Model có Gap < 0 (thiếu hụt so với kế hoạch) đưa lên đầu, sắp xếp âm nhiều nhất lên trước nhất.
+    // Sắp xếp Model: Ở V01 sắp xếp toàn bộ WCA trước rồi đến WCB.
+    // Các Model có Gap < 0 (thiếu hụt so với kế hoạch) đưa lên đầu, sắp xếp âm nhiều nhất lên trước nhất.
     // Các Model không âm (Gap >= 0) xếp phía sau, ưu tiên sản lượng kế hoạch lớn nhất.
     items.sort((a, b) => {
+      if (this.appVersion === 'V01') {
+        const rA = (a.workcell || 'WCB') === 'WCA' ? 1 : 2;
+        const rB = (b.workcell || 'WCB') === 'WCA' ? 1 : 2;
+        if (rA !== rB) return rA - rB;
+      }
+
       const aNeg = a.cumGapQty < 0;
       const bNeg = b.cumGapQty < 0;
 
@@ -3887,6 +3895,8 @@ class Store {
             const wca = it.wca || {};
             return {
               ...it,
+              workcell: 'WCA',
+              factory: 'WCA',
               plan: wca.plan || {},
               planDay: wca.planDay || {},
               planNight: wca.planNight || {},
@@ -3907,6 +3917,8 @@ class Store {
             const wcb = it.wcb || {};
             return {
               ...it,
+              workcell: 'WCB',
+              factory: 'WCB',
               plan: wcb.plan || {},
               planDay: wcb.planDay || {},
               planNight: wcb.planNight || {},
@@ -3921,8 +3933,61 @@ class Store {
           }))
         };
       } else {
-        // 'ALL' - WCAB combined
-        this.dataMass = baseData;
+        // 'ALL' in V01: Tách riêng từng dòng theo WCA và WCB (không gộp thành WCAB, sắp xếp WCA trước WCB)
+        const splitItems = [];
+        (baseData.items || []).forEach(it => {
+          const wca = it.wca || {};
+          const wcb = it.wcb || {};
+          const hasWca = hasPos(wca.plan) || hasPos(wca.fact) || hasPos(wca.planDay) || hasPos(wca.planNight) || hasPos(wca.factDay) || hasPos(wca.factNight);
+          const hasWcb = hasPos(wcb.plan) || hasPos(wcb.fact) || hasPos(wcb.planDay) || hasPos(wcb.planNight) || hasPos(wcb.factDay) || hasPos(wcb.factNight);
+
+          if (hasWca) {
+            splitItems.push({
+              ...it,
+              workcell: 'WCA',
+              factory: 'WCA',
+              plan: wca.plan || {},
+              planDay: wca.planDay || {},
+              planNight: wca.planNight || {},
+              fact: wca.fact || {},
+              factDay: wca.factDay || {},
+              factNight: wca.factNight || {}
+            });
+          }
+          if (hasWcb) {
+            splitItems.push({
+              ...it,
+              workcell: 'WCB',
+              factory: 'WCB',
+              plan: wcb.plan || {},
+              planDay: wcb.planDay || {},
+              planNight: wcb.planNight || {},
+              fact: wcb.fact || {},
+              factDay: wcb.factDay || {},
+              factNight: wcb.factNight || {}
+            });
+          }
+          if (!hasWca && !hasWcb) {
+            const targetWc = this.getItemWorkcell(it);
+            splitItems.push({
+              ...it,
+              workcell: targetWc === 'WCA' ? 'WCA' : 'WCB',
+              factory: targetWc === 'WCA' ? 'WCA' : 'WCB'
+            });
+          }
+        });
+
+        // Sắp xếp: Toàn bộ WCA lên trước, sau đó đến WCB
+        splitItems.sort((a, b) => {
+          const rankA = a.workcell === 'WCA' ? 1 : 2;
+          const rankB = b.workcell === 'WCA' ? 1 : 2;
+          return rankA - rankB;
+        });
+
+        this.dataMass = {
+          ...baseData,
+          items: splitItems
+        };
       }
     } else {
       // V00 - baseline Data_Mass WCB 100% untouched
@@ -4003,21 +4068,25 @@ class Store {
   // ==========================================
   getItemWorkcell(it) {
     if (!it) return 'WCB';
-    if (it.workcell && ['WCA', 'WCB', 'WCAB'].includes(it.workcell)) return it.workcell;
-    if (it.factory && ['WCA', 'WCB', 'WCAB'].includes(it.factory)) return it.factory;
+    if (it.workcell && ['WCA', 'WCB'].includes(it.workcell)) return it.workcell;
+    if (it.factory && ['WCA', 'WCB'].includes(it.factory)) return it.factory;
+    if (this.appVersion !== 'V01' && (it.workcell === 'WCAB' || it.factory === 'WCAB')) return 'WCAB';
 
     // Check item's own wca/wcb data from datamass_data_v01 if present
     const hasPos = (obj) => Object.values(obj || {}).some(v => parseFloat(v) > 0);
     const hasWca = it.wca && (hasPos(it.wca.plan) || hasPos(it.wca.fact) || hasPos(it.wca.planDay) || hasPos(it.wca.planNight) || hasPos(it.wca.factDay) || hasPos(it.wca.factNight));
     const hasWcb = it.wcb && (hasPos(it.wcb.plan) || hasPos(it.wcb.fact) || hasPos(it.wcb.planDay) || hasPos(it.wcb.planNight) || hasPos(it.wcb.factDay) || hasPos(it.wcb.factNight));
 
+    if (hasWca && !hasWcb) return 'WCA';
+    if (hasWcb && !hasWca) return 'WCB';
     if (hasWca && hasWcb) {
-      if (this.appVersion === 'V01' && this.factoryFilter === 'WCA') return 'WCA';
-      if (this.appVersion === 'V01' && this.factoryFilter === 'WCB') return 'WCB';
+      if (this.appVersion === 'V01') {
+        if (this.factoryFilter === 'WCA') return 'WCA';
+        if (this.factoryFilter === 'WCB') return 'WCB';
+        return (it.workcell === 'WCA' || it.factory === 'WCA') ? 'WCA' : 'WCB';
+      }
       return 'WCAB';
     }
-    if (hasWca) return 'WCA';
-    if (hasWcb) return 'WCB';
 
     // Build cached lookup sets from window.DATAMASS_DATA_V01
     if (!this._wcaModelSet) {
@@ -4112,7 +4181,7 @@ class Store {
     });
 
     if (this.appVersion === 'V01' && this.factoryFilter && this.factoryFilter !== 'ALL') {
-      items = items.filter(it => it.workcell === this.factoryFilter || it.workcell === 'WCAB');
+      items = items.filter(it => it.workcell === this.factoryFilter);
     }
 
     if (stageFilter && stageFilter !== 'ALL') {
@@ -4131,6 +4200,14 @@ class Store {
         (it.note || '').toLowerCase().includes(s) ||
         (it.stage || '').toLowerCase().includes(s)
       );
+    }
+
+    if (this.appVersion === 'V01') {
+      items.sort((a, b) => {
+        const rA = a.workcell === 'WCA' ? 1 : 2;
+        const rB = b.workcell === 'WCA' ? 1 : 2;
+        return rA - rB;
+      });
     }
 
     return items;
@@ -4186,7 +4263,7 @@ class Store {
     });
 
     if (this.appVersion === 'V01' && this.factoryFilter && this.factoryFilter !== 'ALL') {
-      items = items.filter(it => it.workcell === this.factoryFilter || it.workcell === 'WCAB');
+      items = items.filter(it => it.workcell === this.factoryFilter);
     }
 
     if (groupFilter && groupFilter !== 'ALL') {
@@ -4204,6 +4281,14 @@ class Store {
         (it.board || '').toLowerCase().includes(s) ||
         (it.productName1C || '').toLowerCase().includes(s)
       );
+    }
+
+    if (this.appVersion === 'V01') {
+      items.sort((a, b) => {
+        const rA = a.workcell === 'WCA' ? 1 : 2;
+        const rB = b.workcell === 'WCA' ? 1 : 2;
+        return rA - rB;
+      });
     }
 
     return items;

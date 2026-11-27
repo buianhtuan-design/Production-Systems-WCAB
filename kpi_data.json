@@ -1,7 +1,7 @@
 {
   "success": true,
-  "timestamp": "2026-11-27 09:34:11",
-  "version": 20261127093411,
+  "timestamp": "2026-11-27 14:37:10",
+  "version": 20261127143710,
   "kpiSummary": [
     {
       "month": "Nov - 2026",
@@ -6340,7 +6340,7 @@
     },
     {
       "date": "20.11.2026",
-      "unblockDate": "",
+      "unblockDate": "22.11.2026",
       "device": "Ajax, Монтажний комплект (HomeSiren)",
       "area": "QC",
       "cl": "",
@@ -6353,7 +6353,7 @@
     },
     {
       "date": "20.11.2026",
-      "unblockDate": "",
+      "unblockDate": "25.11.2026",
       "device": "Ajax, Монтажний комплект (MCO)",
       "area": "OBA",
       "cl": "",
@@ -6366,7 +6366,7 @@
     },
     {
       "date": "21.11.2026",
-      "unblockDate": "",
+      "unblockDate": "22.11.2026",
       "device": "Ajax, Монтажний комплект  (StreetSiren_white)",
       "area": "OBA",
       "cl": "",
