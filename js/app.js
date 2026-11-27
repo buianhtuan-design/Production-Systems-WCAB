@@ -1101,6 +1101,8 @@ function updateHeaderViewTitle(tabKey, linkElem) {
     titleElem.innerHTML = 'Tra Cứu Lịch Sử Sản Xuất <span class="badge-status-inuse" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);">⚖️ SO SÁNH CÔNG ĐOẠN</span>';
   } else if (tabKey === 'plan-fact-check') {
     titleElem.innerHTML = 'Check Tổng Thể Plan / Fact <span class="badge-status-inuse" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);">🔍 TRUY VẾT NGÀY &amp; CA</span>';
+  } else if (tabKey === 'product-qr-history') {
+    titleElem.innerHTML = 'Quản Lý Lịch Sử Sản Phẩm <span class="badge-status-inuse" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);">📱 SCAN QR &amp; SỬA CHỮA</span>';
   } else {
     const rawText = linkElem ? (linkElem.getAttribute('data-title') || linkElem.querySelector('span')?.textContent || 'Phân Hệ') : 'Phân Hệ';
     titleElem.innerHTML = `${rawText} <span class="badge-status-dev">🚧 Đang phát triển</span>`;
@@ -1150,6 +1152,8 @@ function initNavigation() {
         window.renderProdHistoryView('prodHistoryContainer');
       } else if (targetTab === 'plan-fact-check' && window.renderPlanFactCheckView) {
         window.renderPlanFactCheckView('planFactCheckContainer');
+      } else if (targetTab === 'product-qr-history' && window.renderProductHistoryView) {
+        window.renderProductHistoryView('productHistoryContainer');
       } else if (targetTab === 'settings' && typeof window.handleFetchUsersList === 'function') {
         window.handleFetchUsersList();
       }
@@ -1275,6 +1279,9 @@ function renderAllViews() {
   }
   if (document.getElementById('tab-plan-fact-check')?.classList.contains('active') && window.renderPlanFactCheckView) {
     window.renderPlanFactCheckView('planFactCheckContainer');
+  }
+  if (document.getElementById('tab-product-qr-history')?.classList.contains('active') && window.renderProductHistoryView) {
+    window.renderProductHistoryView('productHistoryContainer');
   }
 }
 
@@ -6871,6 +6878,9 @@ window.switchAppVersion = function(ver) {
   if (typeof renderCapacityView === 'function') {
     renderCapacityView();
   }
+  if (typeof window.renderProductHistoryView === 'function' && document.getElementById('tab-product-qr-history')?.classList.contains('active')) {
+    window.renderProductHistoryView();
+  }
 
   if (window.showToast) {
     if (ver === 'V01') {
@@ -6895,6 +6905,9 @@ window.handleFactoryFilterChange = function(factory) {
   }
   if (typeof renderCapacityView === 'function') {
     renderCapacityView();
+  }
+  if (typeof window.renderProductHistoryView === 'function' && document.getElementById('tab-product-qr-history')?.classList.contains('active')) {
+    window.renderProductHistoryView();
   }
 
   const facLabels = {

@@ -86,6 +86,10 @@ class AppRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.handle_api_get_cloud_sync_config()
         elif self.path == '/api/users' or self.path.startswith('/api/users?'):
             self.handle_api_get_users()
+        elif self.path == '/api/product-repair-history' or self.path.startswith('/api/product-repair-history?'):
+            self.handle_api_get_product_repair_history()
+        elif self.path == '/api/export-repair-history-sheet' or self.path.startswith('/api/export-repair-history-sheet?'):
+            self.handle_api_export_repair_history_sheet()
         else:
             super().do_GET()
 
@@ -98,6 +102,8 @@ class AppRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.handle_api_post_cloud_sync_config()
         elif self.path == '/api/users' or self.path.startswith('/api/users?'):
             self.handle_api_post_users()
+        elif self.path == '/api/product-repair-history' or self.path.startswith('/api/product-repair-history?'):
+            self.handle_api_post_product_repair_history()
         else:
             self.send_response(404)
             self.end_headers()
@@ -544,6 +550,131 @@ class AppRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
             err_data = {'success': False, 'error': str(e)}
             self.wfile.write(json.dumps(err_data, ensure_ascii=False).encode('utf-8'))
+
+    def handle_api_export_repair_history_sheet(self):
+        file_path = os.path.join(WORKSPACE_DIR, 'product_repair_history.json')
+        records = []
+        if os.path.exists(file_path):
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    records = json.load(f)
+                if not isinstance(records, list):
+                    records = []
+            except Exception as e:
+                print(f"[Error reading product_repair_history.json]: {e}")
+
+        headers = [
+            'STT', 'Model', 'QR Code', 'Nội Dung Lỗi', 'Nguyên Nhân',
+            'Cách Xử Lý', 'Kết Quả', 'Hiện trạng', 'Công Đoạn',
+            'Workcell', 'Line', 'Ngày', 'Ca', 'Người Sửa Chữa', 'Ghi Chú', 'Thời Gian Ghi Nhận'
+        ]
+        csv_rows = [','.join([f'"{h}"' for h in headers])]
+        for idx, r in enumerate(records):
+            row = [
+                str(idx + 1),
+                str(r.get('model', '')).replace('"', '""'),
+                str(r.get('qrCode', '')).replace('"', '""'),
+                str(r.get('defectDesc', '')).replace('"', '""'),
+                str(r.get('rootCause', '')).replace('"', '""'),
+                str(r.get('action', '')).replace('"', '""'),
+                str(r.get('result', '')).replace('"', '""'),
+                str(r.get('status', '')).replace('"', '""'),
+                str(r.get('stage', '')).replace('"', '""'),
+                str(r.get('workcell', 'WCA')).replace('"', '""'),
+                str(r.get('line', '')).replace('"', '""'),
+                str(r.get('date', '')).replace('"', '""'),
+                str(r.get('shiftName', r.get('shift', ''))).replace('"', '""'),
+                str(r.get('repairer', '')).replace('"', '""'),
+                str(r.get('note', '')).replace('"', '""'),
+                str(r.get('timestamp', '')).replace('"', '""')
+            ]
+            csv_rows.append(','.join([f'"{v}"' for v in row]))
+
+        csv_content = '\ufeff' + '\r\n'.join(csv_rows)
+        csv_bytes = csv_content.encode('utf-8')
+
+        self.send_response(200)
+        self.send_header('Content-Type', 'text/csv; charset=utf-8')
+        self.send_header('Content-Disposition', 'attachment; filename="Repair_history_export.csv"')
+        self.send_header('Content-Length', str(len(csv_bytes)))
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.end_headers()
+        self.wfile.write(csv_bytes)
+
+    def handle_api_get_product_repair_history(self):
+        file_path = os.path.join(WORKSPACE_DIR, 'product_repair_history.json')
+        records = []
+        if os.path.exists(file_path):
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    records = json.load(f)
+                if not isinstance(records, list):
+                    records = []
+            except Exception as e:
+                print(f"[Error reading product_repair_history.json]: {e}")
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json; charset=utf-8')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.end_headers()
+        data = {'success': True, 'records': records, 'total': len(records)}
+        self.wfile.write(json.dumps(data, ensure_ascii=False).encode('utf-8'))
+
+    def handle_api_post_product_repair_history(self):
+        try:
+            content_length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(content_length).decode('utf-8')
+            payload = json.loads(body)
+
+            file_path = os.path.join(WORKSPACE_DIR, 'product_repair_history.json')
+            records = []
+            if os.path.exists(file_path):
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        records = json.load(f)
+                    if not isinstance(records, list):
+                        records = []
+                except Exception:
+                    records = []
+
+            action = payload.get('action', 'save')
+            if action == 'delete':
+                record_id = payload.get('id')
+                if record_id:
+                    records = [r for r in records if r.get('id') != record_id]
+            elif action == 'save' or action == 'create':
+                record = payload.get('record') or payload
+                if not record.get('id'):
+                    record['id'] = f"PRH_{int(time.time() * 1000)}"
+                if not record.get('createdAt'):
+                    record['createdAt'] = time.strftime('%Y-%m-%dT%H:%M:%S+07:00')
+                if not record.get('timestamp'):
+                    record['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
+
+                existing_idx = next((i for i, r in enumerate(records) if r.get('id') == record.get('id')), -1)
+                if existing_idx >= 0:
+                    records[existing_idx] = record
+                else:
+                    records.insert(0, record)
+            elif action == 'bulk_replace':
+                if isinstance(payload.get('records'), list):
+                    records = payload.get('records')
+
+            tmp_file = file_path + '.tmp'
+            with open(tmp_file, 'w', encoding='utf-8') as f:
+                json.dump(records, f, ensure_ascii=False, indent=2)
+            os.replace(tmp_file, file_path)
+
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps({'success': True, 'records': records, 'total': len(records)}, ensure_ascii=False).encode('utf-8'))
+        except Exception as e:
+            self.send_response(500)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps({'success': False, 'error': str(e)}, ensure_ascii=False).encode('utf-8'))
 
     def handle_api_get_users(self):
         users_file = os.path.join(WORKSPACE_DIR, 'users_config.json')

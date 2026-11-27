@@ -196,6 +196,20 @@
             </div>
             <span class="nav-badge-pill" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);">Mới</span>
           </a>
+          <a href="#product-qr-history" class="nav-link nav-link-primary" data-tab="product-qr-history" data-title="Quản Lý Lịch Sử Sản Phẩm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+              <path d="M10 7h1M7 10h1M10 17h1M17 10h1M14 17h3M17 14v3"></path>
+            </svg>
+            <div class="nav-label-wrap">
+              <span class="nav-label-main">Quản Lý Lịch Sử Sản Phẩm</span>
+              <span class="nav-label-sub">Scan QR Code &amp; Sửa Chữa</span>
+            </div>
+            <span class="nav-badge-pill" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);">Mới</span>
+          </a>
         </div>
 
         <!-- GROUP 2: CÁC PHÂN HỆ ĐANG PHÁT TRIỂN (COLLAPSIBLE / FILTERED) -->
@@ -1303,6 +1317,15 @@
         <section id="tab-plan-fact-check" class="tab-content">
           <div id="planFactCheckContainer">
             <!-- Dynamically rendered by renderPlanFactCheckView() -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW: QUẢN LÝ LỊCH SỬ SẢN PHẨM (SCAN QR & SỬA CHỮA) -->
+        <!-- ========================================== -->
+        <section id="tab-product-qr-history" class="tab-content">
+          <div id="productHistoryContainer">
+            <!-- Dynamically rendered by renderProductHistoryView() -->
           </div>
         </section>
 
@@ -2605,5 +2628,6 @@
   <script src="js/prod-history.js?v=20261107_prod_hist_v1"></script>
   <script src="js/plan-fact-check.js?v=20261115_adj_v3"></script>
   <script src="js/assembly-adjustment.js?v=20261118_adj_syncfix_v4"></script>
+  <script src="js/product-history.js?v=20261127_qr_v1"></script>
 </body>
 </html>
