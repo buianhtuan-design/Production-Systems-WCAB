@@ -7,14 +7,14 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-27 15:45:46",
+      "archivedAt": "2026-11-27 15:49:03",
       "totalItems": 273,
       "totalPlan": 485822.0,
-      "totalSheetFact": 415956.0,
+      "totalSheetFact": 429642.0,
       "qtyAllDevice": 273,
-      "qtyDoneDevice": 202,
-      "qtyNotDoneDevice": 71,
-      "clipAllPlant": "74.0%",
+      "qtyDoneDevice": 205,
+      "qtyNotDoneDevice": 68,
+      "clipAllPlant": "75.1%",
       "items": [
         {
           "category": "Comfort and productivity",
@@ -1032,7 +1032,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
           "plan": 9569.0,
-          "sheetFact": 9564.0,
+          "sheetFact": 9629.0,
           "done": 1,
           "isDone": true
         },
@@ -1092,9 +1092,9 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8IN/ECG) white охоронна централь",
           "plan": 160.0,
-          "sheetFact": 0.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 158.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -1582,7 +1582,7 @@
           "agg": "KeyPad TouchScreen",
           "device": "Ajax KeyPad TouchScreen (8EU) ASP black клавіатура",
           "plan": 1623.0,
-          "sheetFact": 146.0,
+          "sheetFact": 742.0,
           "done": 0,
           "isDone": false
         },
@@ -1602,7 +1602,7 @@
           "agg": "",
           "device": "Ajax KeyPad TouchScreen (9AU) white клавіатура",
           "plan": 332.0,
-          "sheetFact": 284.0,
+          "sheetFact": 292.0,
           "done": 0,
           "isDone": false
         },
@@ -1752,7 +1752,7 @@
           "agg": "MotionCam Outdoor",
           "device": "Ajax MotionCam Outdoor (8EU) ASP white датчик руху з камерою",
           "plan": 5950.0,
-          "sheetFact": 4288.0,
+          "sheetFact": 4780.0,
           "done": 0,
           "isDone": false
         },
@@ -1862,7 +1862,7 @@
           "agg": "",
           "device": "Ajax MotionProtect (8EU) ASP white датчик руху",
           "plan": 44114.0,
-          "sheetFact": 44038.0,
+          "sheetFact": 44044.0,
           "done": 1,
           "isDone": true
         },
@@ -1962,9 +1962,9 @@
           "agg": "MotionProtect Outdoor",
           "device": "Ajax MotionProtect Outdoor (8EU) ASP white датчик руху",
           "plan": 3079.0,
-          "sheetFact": 2752.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 2939.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -2032,7 +2032,7 @@
           "agg": "",
           "device": "Ajax MotionProtect Plus (8EU) ASP white датчик руху",
           "plan": 9755.0,
-          "sheetFact": 9560.0,
+          "sheetFact": 9716.0,
           "done": 1,
           "isDone": true
         },
@@ -2072,7 +2072,7 @@
           "agg": "",
           "device": "Ajax DoorProtect (8EU) ASP white датчик відкриття",
           "plan": 48485.0,
-          "sheetFact": 48438.0,
+          "sheetFact": 48485.0,
           "done": 1,
           "isDone": true
         },
@@ -2192,7 +2192,7 @@
           "agg": "DoorProtect Plus",
           "device": "Ajax DoorProtect Plus (8EU) ASP black датчик відкриття",
           "plan": 6842.0,
-          "sheetFact": 6969.0,
+          "sheetFact": 6970.0,
           "done": 1,
           "isDone": true
         },
@@ -2202,7 +2202,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) ASP white датчик відкриття",
           "plan": 28086.0,
-          "sheetFact": 8579.0,
+          "sheetFact": 16183.0,
           "done": 0,
           "isDone": false
         },
@@ -2212,7 +2212,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) WL Standard ASP black датчик відкриття",
           "plan": 1025.0,
-          "sheetFact": 1019.0,
+          "sheetFact": 1025.0,
           "done": 1,
           "isDone": true
         },
@@ -2282,7 +2282,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (9AU) white датчик відкриття",
           "plan": 4581.0,
-          "sheetFact": 4588.0,
+          "sheetFact": 4589.0,
           "done": 1,
           "isDone": true
         },
@@ -2342,7 +2342,7 @@
           "agg": "HomeSiren",
           "device": "Ajax HomeSiren (8EU) ASP black сирена",
           "plan": 3720.0,
-          "sheetFact": 3711.0,
+          "sheetFact": 3720.0,
           "done": 1,
           "isDone": true
         },
@@ -2352,7 +2352,7 @@
           "agg": "",
           "device": "Ajax HomeSiren (8EU) ASP white сирена",
           "plan": 13736.0,
-          "sheetFact": 5159.0,
+          "sheetFact": 7415.0,
           "done": 0,
           "isDone": false
         },
@@ -2372,7 +2372,7 @@
           "agg": "",
           "device": "Ajax HomeSiren (8EU) WL Standard ASP white сирена",
           "plan": 3348.0,
-          "sheetFact": 3344.0,
+          "sheetFact": 3355.0,
           "done": 1,
           "isDone": true
         },
@@ -2382,7 +2382,7 @@
           "agg": "",
           "device": "Ajax HomeSiren (9AU) white сирена",
           "plan": 5498.0,
-          "sheetFact": 5486.0,
+          "sheetFact": 5496.0,
           "done": 1,
           "isDone": true
         },
@@ -2392,7 +2392,7 @@
           "agg": "",
           "device": "Ajax HomeSiren (9NA) UPC black сирена",
           "plan": 0.0,
-          "sheetFact": 1.0,
+          "sheetFact": 2.0,
           "done": 1,
           "isDone": true
         },
@@ -2412,7 +2412,7 @@
           "agg": "",
           "device": "Ajax HomeSiren (9NA) white сирена",
           "plan": 225.0,
-          "sheetFact": 224.0,
+          "sheetFact": 225.0,
           "done": 1,
           "isDone": true
         },
@@ -2432,7 +2432,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 22754.0,
+          "sheetFact": 23678.0,
           "done": 0,
           "isDone": false
         },
@@ -2452,7 +2452,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8MA) white вулична сирена",
           "plan": 1431.0,
-          "sheetFact": 1.0,
+          "sheetFact": 380.0,
           "done": 0,
           "isDone": false
         },
@@ -2462,9 +2462,9 @@
           "agg": "",
           "device": "Ajax StreetSiren (9AU) AR WL Prosegur white вулична сирена",
           "plan": 250.0,
-          "sheetFact": 0.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 244.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -2482,7 +2482,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (9AU) white вулична сирена",
           "plan": 3239.0,
-          "sheetFact": 2061.0,
+          "sheetFact": 2585.0,
           "done": 0,
           "isDone": false
         },
@@ -3764,7 +3764,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8EU/ECG) ASP white охоронна централь",
           "plan": 9569.0,
-          "sheetFact": 9564.0,
+          "sheetFact": 9629.0,
           "done": 1,
           "isDone": true
         },
@@ -3824,9 +3824,9 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8IN/ECG) white охоронна централь",
           "plan": 160.0,
-          "sheetFact": 0.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 158.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax Hub 2 4G (8MA/ECG) black охоронна централь": {
           "category": "",
@@ -4314,7 +4314,7 @@
           "agg": "KeyPad TouchScreen",
           "device": "Ajax KeyPad TouchScreen (8EU) ASP black клавіатура",
           "plan": 1623.0,
-          "sheetFact": 146.0,
+          "sheetFact": 742.0,
           "done": 0,
           "isDone": false
         },
@@ -4334,7 +4334,7 @@
           "agg": "",
           "device": "Ajax KeyPad TouchScreen (9AU) white клавіатура",
           "plan": 332.0,
-          "sheetFact": 284.0,
+          "sheetFact": 292.0,
           "done": 0,
           "isDone": false
         },
@@ -4484,7 +4484,7 @@
           "agg": "MotionCam Outdoor",
           "device": "Ajax MotionCam Outdoor (8EU) ASP white датчик руху з камерою",
           "plan": 5950.0,
-          "sheetFact": 4288.0,
+          "sheetFact": 4780.0,
           "done": 0,
           "isDone": false
         },
@@ -4594,7 +4594,7 @@
           "agg": "",
           "device": "Ajax MotionProtect (8EU) ASP white датчик руху",
           "plan": 44114.0,
-          "sheetFact": 44038.0,
+          "sheetFact": 44044.0,
           "done": 1,
           "isDone": true
         },
@@ -4694,9 +4694,9 @@
           "agg": "MotionProtect Outdoor",
           "device": "Ajax MotionProtect Outdoor (8EU) ASP white датчик руху",
           "plan": 3079.0,
-          "sheetFact": 2752.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 2939.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax MotionProtect Outdoor (8EU) WL Standard ASP white датчик руху": {
           "category": "",
@@ -4764,7 +4764,7 @@
           "agg": "",
           "device": "Ajax MotionProtect Plus (8EU) ASP white датчик руху",
           "plan": 9755.0,
-          "sheetFact": 9560.0,
+          "sheetFact": 9716.0,
           "done": 1,
           "isDone": true
         },
@@ -4804,7 +4804,7 @@
           "agg": "",
           "device": "Ajax DoorProtect (8EU) ASP white датчик відкриття",
           "plan": 48485.0,
-          "sheetFact": 48438.0,
+          "sheetFact": 48485.0,
           "done": 1,
           "isDone": true
         },
@@ -4924,7 +4924,7 @@
           "agg": "DoorProtect Plus",
           "device": "Ajax DoorProtect Plus (8EU) ASP black датчик відкриття",
           "plan": 6842.0,
-          "sheetFact": 6969.0,
+          "sheetFact": 6970.0,
           "done": 1,
           "isDone": true
         },
@@ -4934,7 +4934,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) ASP white датчик відкриття",
           "plan": 28086.0,
-          "sheetFact": 8579.0,
+          "sheetFact": 16183.0,
           "done": 0,
           "isDone": false
         },
@@ -4944,7 +4944,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) WL Standard ASP black датчик відкриття",
           "plan": 1025.0,
-          "sheetFact": 1019.0,
+          "sheetFact": 1025.0,
           "done": 1,
           "isDone": true
         },
@@ -5014,7 +5014,7 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (9AU) white датчик відкриття",
           "plan": 4581.0,
-          "sheetFact": 4588.0,
+          "sheetFact": 4589.0,
           "done": 1,
           "isDone": true
         },
@@ -5074,7 +5074,7 @@
           "agg": "HomeSiren",
           "device": "Ajax HomeSiren (8EU) ASP black сирена",
           "plan": 3720.0,
-          "sheetFact": 3711.0,
+          "sheetFact": 3720.0,
           "done": 1,
           "isDone": true
         },
@@ -5084,7 +5084,7 @@
           "agg": "",
           "device": "Ajax HomeSiren (8EU) ASP white сирена",
           "plan": 13736.0,
-          "sheetFact": 5159.0,
+          "sheetFact": 7415.0,
           "done": 0,
           "isDone": false
         },
@@ -5104,7 +5104,7 @@
           "agg": "",
           "device": "Ajax HomeSiren (8EU) WL Standard ASP white сирена",
           "plan": 3348.0,
-          "sheetFact": 3344.0,
+          "sheetFact": 3355.0,
           "done": 1,
           "isDone": true
         },
@@ -5114,7 +5114,7 @@
           "agg": "",
           "device": "Ajax HomeSiren (9AU) white сирена",
           "plan": 5498.0,
-          "sheetFact": 5486.0,
+          "sheetFact": 5496.0,
           "done": 1,
           "isDone": true
         },
@@ -5124,7 +5124,7 @@
           "agg": "",
           "device": "Ajax HomeSiren (9NA) UPC black сирена",
           "plan": 0.0,
-          "sheetFact": 1.0,
+          "sheetFact": 2.0,
           "done": 1,
           "isDone": true
         },
@@ -5144,7 +5144,7 @@
           "agg": "",
           "device": "Ajax HomeSiren (9NA) white сирена",
           "plan": 225.0,
-          "sheetFact": 224.0,
+          "sheetFact": 225.0,
           "done": 1,
           "isDone": true
         },
@@ -5164,7 +5164,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 22754.0,
+          "sheetFact": 23678.0,
           "done": 0,
           "isDone": false
         },
@@ -5184,7 +5184,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8MA) white вулична сирена",
           "plan": 1431.0,
-          "sheetFact": 1.0,
+          "sheetFact": 380.0,
           "done": 0,
           "isDone": false
         },
@@ -5194,9 +5194,9 @@
           "agg": "",
           "device": "Ajax StreetSiren (9AU) AR WL Prosegur white вулична сирена",
           "plan": 250.0,
-          "sheetFact": 0.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 244.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax StreetSiren (9AU) BR white вулична сирена": {
           "category": "",
@@ -5214,7 +5214,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (9AU) white вулична сирена",
           "plan": 3239.0,
-          "sheetFact": 2061.0,
+          "sheetFact": 2585.0,
           "done": 0,
           "isDone": false
         },
