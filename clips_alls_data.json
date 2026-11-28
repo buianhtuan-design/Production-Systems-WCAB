@@ -566,7 +566,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) PL white сповіщувач пожежний тепловий зі звуковим оповіщувачем",
       "plan": 588.0,
-      "sheetFact": 566.0,
+      "sheetFact": 573.0,
       "done": 1,
       "isDone": true
     },
@@ -656,7 +656,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Smoke) (8MA) white сповіщувач пожежний димовий",
       "plan": 504.0,
-      "sheetFact": 500.0,
+      "sheetFact": 504.0,
       "done": 1,
       "isDone": true
     },
@@ -2016,7 +2016,7 @@
       "agg": "",
       "device": "Ajax MotionProtect Plus (8EU) ASP white датчик руху",
       "plan": 9755.0,
-      "sheetFact": 9714.0,
+      "sheetFact": 9719.0,
       "done": 1,
       "isDone": true
     },
@@ -3308,7 +3308,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) PL white сповіщувач пожежний тепловий зі звуковим оповіщувачем",
       "plan": 588.0,
-      "sheetFact": 566.0,
+      "sheetFact": 573.0,
       "done": 1,
       "isDone": true
     },
@@ -3398,7 +3398,7 @@
       "agg": "",
       "device": "Ajax EN54 FireProtect (Smoke) (8MA) white сповіщувач пожежний димовий",
       "plan": 504.0,
-      "sheetFact": 500.0,
+      "sheetFact": 504.0,
       "done": 1,
       "isDone": true
     },
@@ -4758,7 +4758,7 @@
       "agg": "",
       "device": "Ajax MotionProtect Plus (8EU) ASP white датчик руху",
       "plan": 9755.0,
-      "sheetFact": 9714.0,
+      "sheetFact": 9719.0,
       "done": 1,
       "isDone": true
     },
@@ -5490,7 +5490,7 @@
   "clipAllPlant": "79.2%",
   "clipAllPlantPct": 79.2,
   "totalPlan": 485822.0,
-  "totalSheetFact": 446388.0,
+  "totalSheetFact": 446404.0,
   "hasPlanCount": 219,
   "gt90Count": 217,
   "lt90Count": 57,
@@ -5503,10 +5503,10 @@
       "2026-11": {
         "month": "2026-11",
         "monthLabel": "Tháng 11/2026",
-        "archivedAt": "2026-11-28 13:41:42",
+        "archivedAt": "2026-11-28 14:57:23",
         "totalItems": 274,
         "totalPlan": 485822.0,
-        "totalSheetFact": 446388.0,
+        "totalSheetFact": 446404.0,
         "qtyAllDevice": 274,
         "qtyDoneDevice": 217,
         "qtyNotDoneDevice": 57,
@@ -6078,7 +6078,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) PL white сповіщувач пожежний тепловий зі звуковим оповіщувачем",
             "plan": 588.0,
-            "sheetFact": 566.0,
+            "sheetFact": 573.0,
             "done": 1,
             "isDone": true
           },
@@ -6168,7 +6168,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Smoke) (8MA) white сповіщувач пожежний димовий",
             "plan": 504.0,
-            "sheetFact": 500.0,
+            "sheetFact": 504.0,
             "done": 1,
             "isDone": true
           },
@@ -7528,7 +7528,7 @@
             "agg": "",
             "device": "Ajax MotionProtect Plus (8EU) ASP white датчик руху",
             "plan": 9755.0,
-            "sheetFact": 9714.0,
+            "sheetFact": 9719.0,
             "done": 1,
             "isDone": true
           },
@@ -8820,7 +8820,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Heat/Sounder) (8EU) PL white сповіщувач пожежний тепловий зі звуковим оповіщувачем",
             "plan": 588.0,
-            "sheetFact": 566.0,
+            "sheetFact": 573.0,
             "done": 1,
             "isDone": true
           },
@@ -8910,7 +8910,7 @@
             "agg": "",
             "device": "Ajax EN54 FireProtect (Smoke) (8MA) white сповіщувач пожежний димовий",
             "plan": 504.0,
-            "sheetFact": 500.0,
+            "sheetFact": 504.0,
             "done": 1,
             "isDone": true
           },
@@ -10270,7 +10270,7 @@
             "agg": "",
             "device": "Ajax MotionProtect Plus (8EU) ASP white датчик руху",
             "plan": 9755.0,
-            "sheetFact": 9714.0,
+            "sheetFact": 9719.0,
             "done": 1,
             "isDone": true
           },
