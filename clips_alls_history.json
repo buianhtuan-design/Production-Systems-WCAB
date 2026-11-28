@@ -7,14 +7,14 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-28 22:45:43",
+      "archivedAt": "2026-11-29 00:17:30",
       "totalItems": 274,
       "totalPlan": 485822.0,
-      "totalSheetFact": 457735.0,
+      "totalSheetFact": 463823.0,
       "qtyAllDevice": 274,
-      "qtyDoneDevice": 220,
-      "qtyNotDoneDevice": 54,
-      "clipAllPlant": "80.3%",
+      "qtyDoneDevice": 225,
+      "qtyNotDoneDevice": 49,
+      "clipAllPlant": "82.1%",
       "items": [
         {
           "category": "Comfort and productivity",
@@ -1052,7 +1052,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8EU/ECG) white plug type G охоронна централь",
           "plan": 241.0,
-          "sheetFact": 75.0,
+          "sheetFact": 144.0,
           "done": 0,
           "isDone": false
         },
@@ -1072,7 +1072,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8EU/ECG) WL Standard ASP white охоронна централь",
           "plan": 120.0,
-          "sheetFact": 43.0,
+          "sheetFact": 107.0,
           "done": 0,
           "isDone": false
         },
@@ -1152,7 +1152,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (9NA/AUX) white охоронна централь",
           "plan": 126.0,
-          "sheetFact": 123.0,
+          "sheetFact": 124.0,
           "done": 1,
           "isDone": true
         },
@@ -1182,7 +1182,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (8EU/ECG) NO WL Gjensidige white охоронна централь",
           "plan": 1327.0,
-          "sheetFact": 6.0,
+          "sheetFact": 251.0,
           "done": 0,
           "isDone": false
         },
@@ -1212,7 +1212,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (8EU/ECG) WL Standard ASP white охоронна централь",
           "plan": 280.0,
-          "sheetFact": 0.0,
+          "sheetFact": 13.0,
           "done": 0,
           "isDone": false
         },
@@ -1232,7 +1232,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (8MA/ECG) white охоронна централь",
           "plan": 140.0,
-          "sheetFact": 0.0,
+          "sheetFact": 93.0,
           "done": 0,
           "isDone": false
         },
@@ -1312,7 +1312,7 @@
           "agg": "Hub 4G",
           "device": "Ajax Hub 4G (8EU/UEU) ASP white охоронна централь",
           "plan": 1834.0,
-          "sheetFact": 1745.0,
+          "sheetFact": 1822.0,
           "done": 1,
           "isDone": true
         },
@@ -1322,9 +1322,9 @@
           "agg": "",
           "device": "Ajax Hub 4G (8MA/UEU) white охоронна централь",
           "plan": 100.0,
-          "sheetFact": 37.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 97.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -1592,7 +1592,7 @@
           "agg": "",
           "device": "Ajax KeyPad TouchScreen (8EU) ASP white клавіатура",
           "plan": 5397.0,
-          "sheetFact": 4906.0,
+          "sheetFact": 5212.0,
           "done": 1,
           "isDone": true
         },
@@ -1802,7 +1802,7 @@
           "agg": "",
           "device": "Ajax MotionCam Outdoor (PhOD) Jeweller (8EU) ASP white датчик руху з камерою",
           "plan": 4979.0,
-          "sheetFact": 3580.0,
+          "sheetFact": 3844.0,
           "done": 0,
           "isDone": false
         },
@@ -1962,7 +1962,7 @@
           "agg": "MotionProtect Outdoor",
           "device": "Ajax MotionProtect Outdoor (8EU) ASP white датчик руху",
           "plan": 3079.0,
-          "sheetFact": 2939.0,
+          "sheetFact": 2966.0,
           "done": 1,
           "isDone": true
         },
@@ -1972,7 +1972,7 @@
           "agg": "",
           "device": "Ajax MotionProtect Outdoor (8EU) WL Standard ASP white датчик руху",
           "plan": 140.0,
-          "sheetFact": 8.0,
+          "sheetFact": 116.0,
           "done": 0,
           "isDone": false
         },
@@ -2002,9 +2002,9 @@
           "agg": "",
           "device": "Ajax MotionProtect Outdoor (9NA) UPC white датчик руху",
           "plan": 92.0,
-          "sheetFact": 81.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 83.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -2212,9 +2212,9 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) ASP white датчик відкриття",
           "plan": 28086.0,
-          "sheetFact": 25011.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 28290.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -2432,7 +2432,7 @@
           "agg": "StreetSiren",
           "device": "Ajax StreetSiren (8EU) ASP black вулична сирена",
           "plan": 5722.0,
-          "sheetFact": 1711.0,
+          "sheetFact": 2886.0,
           "done": 0,
           "isDone": false
         },
@@ -2442,7 +2442,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 24404.0,
+          "sheetFact": 24417.0,
           "done": 0,
           "isDone": false
         },
@@ -2462,7 +2462,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8MA) white вулична сирена",
           "plan": 1431.0,
-          "sheetFact": 1231.0,
+          "sheetFact": 1243.0,
           "done": 0,
           "isDone": false
         },
@@ -2482,9 +2482,9 @@
           "agg": "",
           "device": "Ajax StreetSiren (9AU) BR white вулична сирена",
           "plan": 10.0,
-          "sheetFact": 0.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 10.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -2492,9 +2492,9 @@
           "agg": "",
           "device": "Ajax StreetSiren (9AU) white вулична сирена",
           "plan": 3239.0,
-          "sheetFact": 2859.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 3129.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -3794,7 +3794,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8EU/ECG) white plug type G охоронна централь",
           "plan": 241.0,
-          "sheetFact": 75.0,
+          "sheetFact": 144.0,
           "done": 0,
           "isDone": false
         },
@@ -3814,7 +3814,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (8EU/ECG) WL Standard ASP white охоронна централь",
           "plan": 120.0,
-          "sheetFact": 43.0,
+          "sheetFact": 107.0,
           "done": 0,
           "isDone": false
         },
@@ -3894,7 +3894,7 @@
           "agg": "",
           "device": "Ajax Hub 2 4G (9NA/AUX) white охоронна централь",
           "plan": 126.0,
-          "sheetFact": 123.0,
+          "sheetFact": 124.0,
           "done": 1,
           "isDone": true
         },
@@ -3924,7 +3924,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (8EU/ECG) NO WL Gjensidige white охоронна централь",
           "plan": 1327.0,
-          "sheetFact": 6.0,
+          "sheetFact": 251.0,
           "done": 0,
           "isDone": false
         },
@@ -3954,7 +3954,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (8EU/ECG) WL Standard ASP white охоронна централь",
           "plan": 280.0,
-          "sheetFact": 0.0,
+          "sheetFact": 13.0,
           "done": 0,
           "isDone": false
         },
@@ -3974,7 +3974,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (8MA/ECG) white охоронна централь",
           "plan": 140.0,
-          "sheetFact": 0.0,
+          "sheetFact": 93.0,
           "done": 0,
           "isDone": false
         },
@@ -4054,7 +4054,7 @@
           "agg": "Hub 4G",
           "device": "Ajax Hub 4G (8EU/UEU) ASP white охоронна централь",
           "plan": 1834.0,
-          "sheetFact": 1745.0,
+          "sheetFact": 1822.0,
           "done": 1,
           "isDone": true
         },
@@ -4064,9 +4064,9 @@
           "agg": "",
           "device": "Ajax Hub 4G (8MA/UEU) white охоронна централь",
           "plan": 100.0,
-          "sheetFact": 37.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 97.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax Hub 4G (9AU/ULA) UY white охоронна централь": {
           "category": "",
@@ -4334,7 +4334,7 @@
           "agg": "",
           "device": "Ajax KeyPad TouchScreen (8EU) ASP white клавіатура",
           "plan": 5397.0,
-          "sheetFact": 4906.0,
+          "sheetFact": 5212.0,
           "done": 1,
           "isDone": true
         },
@@ -4544,7 +4544,7 @@
           "agg": "",
           "device": "Ajax MotionCam Outdoor (PhOD) Jeweller (8EU) ASP white датчик руху з камерою",
           "plan": 4979.0,
-          "sheetFact": 3580.0,
+          "sheetFact": 3844.0,
           "done": 0,
           "isDone": false
         },
@@ -4704,7 +4704,7 @@
           "agg": "MotionProtect Outdoor",
           "device": "Ajax MotionProtect Outdoor (8EU) ASP white датчик руху",
           "plan": 3079.0,
-          "sheetFact": 2939.0,
+          "sheetFact": 2966.0,
           "done": 1,
           "isDone": true
         },
@@ -4714,7 +4714,7 @@
           "agg": "",
           "device": "Ajax MotionProtect Outdoor (8EU) WL Standard ASP white датчик руху",
           "plan": 140.0,
-          "sheetFact": 8.0,
+          "sheetFact": 116.0,
           "done": 0,
           "isDone": false
         },
@@ -4744,9 +4744,9 @@
           "agg": "",
           "device": "Ajax MotionProtect Outdoor (9NA) UPC white датчик руху",
           "plan": 92.0,
-          "sheetFact": 81.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 83.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax MotionProtect Outdoor (9NA) white датчик руху": {
           "category": "",
@@ -4954,9 +4954,9 @@
           "agg": "",
           "device": "Ajax DoorProtect Plus (8EU) ASP white датчик відкриття",
           "plan": 28086.0,
-          "sheetFact": 25011.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 28290.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax DoorProtect Plus (8EU) WL Standard ASP black датчик відкриття": {
           "category": "",
@@ -5174,7 +5174,7 @@
           "agg": "StreetSiren",
           "device": "Ajax StreetSiren (8EU) ASP black вулична сирена",
           "plan": 5722.0,
-          "sheetFact": 1711.0,
+          "sheetFact": 2886.0,
           "done": 0,
           "isDone": false
         },
@@ -5184,7 +5184,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8EU) ASP white вулична сирена",
           "plan": 29553.0,
-          "sheetFact": 24404.0,
+          "sheetFact": 24417.0,
           "done": 0,
           "isDone": false
         },
@@ -5204,7 +5204,7 @@
           "agg": "",
           "device": "Ajax StreetSiren (8MA) white вулична сирена",
           "plan": 1431.0,
-          "sheetFact": 1231.0,
+          "sheetFact": 1243.0,
           "done": 0,
           "isDone": false
         },
@@ -5224,9 +5224,9 @@
           "agg": "",
           "device": "Ajax StreetSiren (9AU) BR white вулична сирена",
           "plan": 10.0,
-          "sheetFact": 0.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 10.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax StreetSiren (9AU) white вулична сирена": {
           "category": "",
@@ -5234,9 +5234,9 @@
           "agg": "",
           "device": "Ajax StreetSiren (9AU) white вулична сирена",
           "plan": 3239.0,
-          "sheetFact": 2859.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 3129.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax StreetSiren (9NA) black вулична сирена": {
           "category": "",
