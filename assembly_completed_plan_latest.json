@@ -1,15 +1,15 @@
 {
-  "id": "PLAN_1795787740860_dwbi",
-  "createdAt": "2026-11-27T13:55:39.509Z",
-  "dateStr": "27/11/2026",
-  "timeStr": "20:55:39",
-  "planner": "Phan Văn Thắng",
-  "stage": "ASSEMBLY",
-  "modelsCount": 27,
-  "grandPlan": 21314,
-  "grandFact": 15522,
-  "grandPlanDay": 2979,
-  "grandPlanNight": 8736,
+  "id": "PLAN_1795832326028_zdpy",
+  "createdAt": "2026-11-28T02:18:44.879Z",
+  "dateStr": "28/11/2026",
+  "timeStr": "09:18:44",
+  "planner": "Bùi Thu Phương",
+  "stage": "TOTAL_HARDTEST",
+  "modelsCount": 15,
+  "grandPlan": 21685,
+  "grandFact": 0,
+  "grandPlanDay": 10337,
+  "grandPlanNight": 11298,
   "workingLinesDay": [
     "1",
     "2",
@@ -33,11 +33,11 @@
     "3D"
   ],
   "snapshot": {
-    "plannerName": "Phan Văn Thắng",
-    "selectedCapacityStage": "ASSEMBLY",
+    "plannerName": "Bùi Thu Phương",
+    "selectedCapacityStage": "TOTAL_HARDTEST",
     "stageFilter": "ASSEMBLY",
-    "simFromDate": "2026-11-26",
-    "simToDate": "2026-11-27",
+    "simFromDate": "2026-11-28",
+    "simToDate": "2026-11-28",
     "simTargetDate": "2026-11-26",
     "simScope": "CUMULATIVE",
     "simPlanStatusFilter": "GAP_NEGATIVE",
@@ -591,11 +591,12 @@
       "ASSEMBLY___MotionCam Outdoor (PhOD)___Ajax MotionCam Outdoor (PhOD) Jeweller (9NA) white (напівфабрикат)": "Không có mạch",
       "ASSEMBLY___Hub 2 4G black___Ajax Hub 2 4G (8EU/ECG) WL Standard white (напівфабрикат)": "Ajax, CAM.008.OSB.001v5_HRD",
       "ASSEMBLY___Hub 2 Plus___Ajax Hub 2 Plus (8EU/ECG) WL Standard white (напівфабрикат)": "Ajax, CAM.008.OSB.001v5_HRD",
-      "ASSEMBLY___WaterStop black___Ajax WaterStop Tap [3/4] NA black (напівфабрикат)": "Ajax, CAM.008.OSB.001v5_HRD"
+      "ASSEMBLY___WaterStop black___Ajax WaterStop Tap [3/4] NA black (напівфабрикат)": "Ajax, CAM.008.OSB.001v5_HRD",
+      "HARD TEST___Hub 4G white (915)_ULA___Ajax, HB3.002.MBR.001v5_[HB1-9xx-66W-ULA]_white_HRD___WCA": "debug báo phế"
     },
     "hardtestState": {
-      "hardtestSimFromDate": "2026-11-26",
-      "hardtestSimToDate": "2026-11-27",
+      "hardtestSimFromDate": "2026-11-28",
+      "hardtestSimToDate": "2026-11-28",
       "hardtestSimShiftType": "FULL_DAY",
       "hardtestSimStageFilter": "ALL",
       "hardtestSimGroupFilter": "ALL",
@@ -702,7 +703,18 @@
         "HARD TEST___MultiTransmitter___Ajax, MTR.001.MBR.000v1b_MTRJ_EU_2/3ЕОL_white_HRD": 30,
         "HARD TEST___StreetSiren black___Ajax, SS.005.MBR.001v2_SSJ_8EU_black_HRD": 1250,
         "HARD TEST___DoorProtect Plus v5 8xx___Ajax, DPP.011.MBR.001v5_8EU_white_HRD": 3250,
-        "HARD TEST___Hub 2 Plus___Ajax, HB2.008.MBR.001v1_H2P_ECG_8EU_WL_white_HRD": 300
+        "HARD TEST___Hub 2 Plus___Ajax, HB2.008.MBR.001v1_H2P_ECG_8EU_WL_white_HRD": 300,
+        "OPTICS ASM___MotionCam HDR OSB___Ajax, CAM.008.OSB.001v5_DIP___WCA": 1000,
+        "FOCUS___MotionCam HDR OSB___Ajax, CAM.008.OSB.001v5_HRD___WCA": 900,
+        "HARD TEST___MotionCam HDR OSB___Ajax, CAM.008.OSB.001v5_HRD___WCA": 800,
+        "HARD TEST___DoorProtect Plus v5 8xx___Ajax, DPP.011.MBR.001v5_8EU_white_HRD___WCB": 3250,
+        "HARD TEST___KeyPad TouchScreen___Ajax, KPG.001.LOG.001v1_плата з компонентами___WCB": 1000,
+        "HARD TEST___KeyPad TouchScreen (8xx)___Ajax, KPG.001.PRX.000v4_KPTJ_HRD___WCB": 0,
+        "HARD TEST___KeyPad TouchScreen___Ajax, KeypadDisplayModule_5.0LCD_CapacitiveTouch_HRD___WCB": 780,
+        "HARD TEST___KeyPad TouchScreen white NA___Ajax, KPG.001.MBU.001v1_KPTJ_9NA_white_HRD___WCB": 0,
+        "HARD TEST___KeyPad TouchScreen black NA___Ajax, KPG.001.MBU.001v1_KPTJ_9NA_black_HRD___WCB": 0,
+        "HARD TEST___KeyPad TouchScreen white AU___Ajax, KPG.001.MBU.001v1_KPTJ_9AU_white_HRD___WCB": 0,
+        "HARD TEST___StreetSiren white___Ajax, SS.005.MBR.001v2_SSJ_8EU_white_HRD___WCB": 1190
       },
       "hardtestManualTbNight": {
         "HARD TEST___MotionProtect (8xx)___Ajax, MP.002.MBR.001v0_868 Mhz_MPJ_EU_white_HRD": 3,
@@ -763,7 +775,11 @@
         "OPTICS ASM___MotionCam HDR OSB___Ajax, CAM.008.OSB.001v5_DIP": 780,
         "HARD TEST___DualCurtain Outdoor___Ajax, DCO.001.MBR.001v5_DCOJ_9AU_white_HRD": 1,
         "HARD TEST___StreetSiren black___Ajax, SS.005.MBR.001v2_SSJ_8EU_black_HRD": 1600,
-        "HARD TEST___MotionCam Outdoor___Ajax, MCO.001.MBR.001v13_MCOJ_8EU_WL_white_HRD": 111
+        "HARD TEST___MotionCam Outdoor___Ajax, MCO.001.MBR.001v13_MCOJ_8EU_WL_white_HRD": 111,
+        "HARD TEST___KeyPad TouchScreen___Ajax, KeypadDisplayModule_5.0LCD_CapacitiveTouch_HRD___WCB": 780,
+        "OPTICS ASM___MotionCam HDR OSB___Ajax, CAM.008.OSB.001v5_DIP___WCA": 960,
+        "FOCUS___MotionCam HDR OSB___Ajax, CAM.008.OSB.001v5_HRD___WCA": 900,
+        "HARD TEST___KeyPad TouchScreen white NA___Ajax, KPG.001.MBU.001v1_KPTJ_9NA_white_HRD___WCB": 60
       },
       "hardtestManualTb": {
         "HARD TEST___DoorProtect___Ajax, DP.011.MBR.001v3_DPJ_8EU_white_HRD": 6,
@@ -823,7 +839,18 @@
         "HARD TEST___StreetSiren white___Ajax, SS.005.MBR.001v2_SSJ_8IN_white_HRD": "1C",
         "HARD TEST___DoorProtect Plus v5 8xx___Ajax, DPP.011.MBR.001v5_8EU_white_HRD": "1C",
         "HARD TEST___DualCurtain Outdoor (8XX)___Ajax, DCO.001.MBR.001v5_DCOJ_8EU_white_HRD": "1C",
-        "HARD TEST___Hub 2 Plus___Ajax, HB2.008.MBR.001v1_H2P_ECG_8EU_WL_white_HRD": "1C"
+        "HARD TEST___Hub 2 Plus___Ajax, HB2.008.MBR.001v1_H2P_ECG_8EU_WL_white_HRD": "1C",
+        "OPTICS ASM___MotionCam HDR OSB___Ajax, CAM.008.OSB.001v5_DIP___WCA": "1C",
+        "FOCUS___MotionCam HDR OSB___Ajax, CAM.008.OSB.001v5_HRD___WCA": "1C",
+        "HARD TEST___MotionCam HDR OSB___Ajax, CAM.008.OSB.001v5_HRD___WCA": "1C",
+        "HARD TEST___DoorProtect Plus v5 8xx___Ajax, DPP.011.MBR.001v5_8EU_white_HRD___WCB": "1C",
+        "HARD TEST___DoorProtect Plus U___Ajax, DP.012.MBR.001v1_DPPJ_U_8EU_white_HRD___WCB": "1C",
+        "HARD TEST___HomeSiren white___Ajax, HS.001.MBR.001_v4_868 Mhz_HSJ_8EU_white_HRD___WCB": "1C",
+        "HARD TEST___KeyPad TouchScreen___Ajax, KPG.001.LOG.001v1_плата з компонентами___WCB": "1C",
+        "HARD TEST___StreetSiren white___Ajax, SS.005.MBR.001v2_SSJ_8EU_white_HRD___WCB": "1C",
+        "HARD TEST___KeyPad TouchScreen___Ajax, KeypadDisplayModule_5.0LCD_CapacitiveTouch_HRD___WCB": "1C",
+        "HARD TEST___StreetSiren white___Ajax, SS.005.MBR.001v2_SSJ_8IN_white_HRD___WCB": "1C",
+        "HARD TEST___StreetSiren white___Ajax, SS.005.MBR.001v2_SSJ_8MA_white_HRD___WCB": "1C"
       },
       "hardtestManualSeqsNight": {
         "HARD TEST___MotionCam Outdoor___Ajax, MCO.001.MBR.001v13_MCOJ_8EU_WL_white_HRD": "1D"
