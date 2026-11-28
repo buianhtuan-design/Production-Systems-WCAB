@@ -7,14 +7,14 @@
     "2026-11": {
       "month": "2026-11",
       "monthLabel": "Tháng 11/2026",
-      "archivedAt": "2026-11-28 17:46:21",
+      "archivedAt": "2026-11-28 17:47:34",
       "totalItems": 274,
       "totalPlan": 485822.0,
-      "totalSheetFact": 455107.0,
+      "totalSheetFact": 456663.0,
       "qtyAllDevice": 274,
-      "qtyDoneDevice": 219,
-      "qtyNotDoneDevice": 55,
-      "clipAllPlant": "79.9%",
+      "qtyDoneDevice": 220,
+      "qtyNotDoneDevice": 54,
+      "clipAllPlant": "80.3%",
       "items": [
         {
           "category": "Comfort and productivity",
@@ -232,7 +232,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat) (8EU) ASP white датчик температури",
           "plan": 0.0,
-          "sheetFact": 16.0,
+          "sheetFact": 303.0,
           "done": 1,
           "isDone": true
         },
@@ -312,7 +312,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) WL Standard ASP white датчик диму та температури",
           "plan": 7237.0,
-          "sheetFact": 6746.0,
+          "sheetFact": 6960.0,
           "done": 1,
           "isDone": true
         },
@@ -642,7 +642,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke) (8EU) ASP white сповіщувач пожежний димовий",
           "plan": 16298.0,
-          "sheetFact": 15824.0,
+          "sheetFact": 15887.0,
           "done": 1,
           "isDone": true
         },
@@ -672,7 +672,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke) (8MA) white сповіщувач пожежний димовий",
           "plan": 504.0,
-          "sheetFact": 504.0,
+          "sheetFact": 744.0,
           "done": 1,
           "isDone": true
         },
@@ -682,7 +682,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8EU) ASP black сповіщувач пожежний димовий зі звуковим оповіщувачем",
           "plan": 2454.0,
-          "sheetFact": 1977.0,
+          "sheetFact": 2178.0,
           "done": 0,
           "isDone": false
         },
@@ -692,7 +692,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8EU) ASP white сповіщувач пожежний димовий зі звуковим оповіщувачем",
           "plan": 10769.0,
-          "sheetFact": 10833.0,
+          "sheetFact": 10845.0,
           "done": 1,
           "isDone": true
         },
@@ -722,9 +722,9 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Blue) (8EU) DACH ручний сповіщувач",
           "plan": 880.0,
-          "sheetFact": 328.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 847.0,
+          "done": 1,
+          "isDone": true
         },
         {
           "category": "",
@@ -992,7 +992,7 @@
           "agg": "Hub 2",
           "device": "Ajax Hub 2 (8EU) ASP black охоронна централь",
           "plan": 426.0,
-          "sheetFact": 424.0,
+          "sheetFact": 429.0,
           "done": 1,
           "isDone": true
         },
@@ -1012,7 +1012,7 @@
           "agg": "",
           "device": "Ajax Hub 2 (8MA) white охоронна централь",
           "plan": 442.0,
-          "sheetFact": 424.0,
+          "sheetFact": 426.0,
           "done": 1,
           "isDone": true
         },
@@ -1022,7 +1022,7 @@
           "agg": "Hub 2 4G",
           "device": "Ajax Hub 2 4G (8EU/ECG) ASP black охоронна централь",
           "plan": 0.0,
-          "sheetFact": 31.0,
+          "sheetFact": 32.0,
           "done": 1,
           "isDone": true
         },
@@ -1162,7 +1162,7 @@
           "agg": "Hub 2 Plus",
           "device": "Ajax Hub 2 Plus (8EU/ECG) ASP black охоронна централь",
           "plan": 157.0,
-          "sheetFact": 88.0,
+          "sheetFact": 89.0,
           "done": 0,
           "isDone": false
         },
@@ -1172,7 +1172,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (8EU/ECG) ASP white охоронна централь",
           "plan": 3680.0,
-          "sheetFact": 3670.0,
+          "sheetFact": 3671.0,
           "done": 1,
           "isDone": true
         },
@@ -1222,7 +1222,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (8IN/ECG) white охоронна централь",
           "plan": 80.0,
-          "sheetFact": 77.0,
+          "sheetFact": 80.0,
           "done": 1,
           "isDone": true
         },
@@ -1242,7 +1242,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (9AU/AUX) black охоронна централь",
           "plan": 166.0,
-          "sheetFact": 159.0,
+          "sheetFact": 166.0,
           "done": 1,
           "isDone": true
         },
@@ -2974,7 +2974,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat) (8EU) ASP white датчик температури",
           "plan": 0.0,
-          "sheetFact": 16.0,
+          "sheetFact": 303.0,
           "done": 1,
           "isDone": true
         },
@@ -3054,7 +3054,7 @@
           "agg": "",
           "device": "Ajax FireProtect 2 RB (Heat/Smoke) (8EU) WL Standard ASP white датчик диму та температури",
           "plan": 7237.0,
-          "sheetFact": 6746.0,
+          "sheetFact": 6960.0,
           "done": 1,
           "isDone": true
         },
@@ -3384,7 +3384,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke) (8EU) ASP white сповіщувач пожежний димовий",
           "plan": 16298.0,
-          "sheetFact": 15824.0,
+          "sheetFact": 15887.0,
           "done": 1,
           "isDone": true
         },
@@ -3414,7 +3414,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke) (8MA) white сповіщувач пожежний димовий",
           "plan": 504.0,
-          "sheetFact": 504.0,
+          "sheetFact": 744.0,
           "done": 1,
           "isDone": true
         },
@@ -3424,7 +3424,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8EU) ASP black сповіщувач пожежний димовий зі звуковим оповіщувачем",
           "plan": 2454.0,
-          "sheetFact": 1977.0,
+          "sheetFact": 2178.0,
           "done": 0,
           "isDone": false
         },
@@ -3434,7 +3434,7 @@
           "agg": "",
           "device": "Ajax EN54 FireProtect (Smoke/Sounder) (8EU) ASP white сповіщувач пожежний димовий зі звуковим оповіщувачем",
           "plan": 10769.0,
-          "sheetFact": 10833.0,
+          "sheetFact": 10845.0,
           "done": 1,
           "isDone": true
         },
@@ -3464,9 +3464,9 @@
           "agg": "",
           "device": "Ajax Manual Call Point (Blue) (8EU) DACH ручний сповіщувач",
           "plan": 880.0,
-          "sheetFact": 328.0,
-          "done": 0,
-          "isDone": false
+          "sheetFact": 847.0,
+          "done": 1,
+          "isDone": true
         },
         "Ajax Manual Call Point (Blue) (9NA) ручний сповіщувач": {
           "category": "",
@@ -3734,7 +3734,7 @@
           "agg": "Hub 2",
           "device": "Ajax Hub 2 (8EU) ASP black охоронна централь",
           "plan": 426.0,
-          "sheetFact": 424.0,
+          "sheetFact": 429.0,
           "done": 1,
           "isDone": true
         },
@@ -3754,7 +3754,7 @@
           "agg": "",
           "device": "Ajax Hub 2 (8MA) white охоронна централь",
           "plan": 442.0,
-          "sheetFact": 424.0,
+          "sheetFact": 426.0,
           "done": 1,
           "isDone": true
         },
@@ -3764,7 +3764,7 @@
           "agg": "Hub 2 4G",
           "device": "Ajax Hub 2 4G (8EU/ECG) ASP black охоронна централь",
           "plan": 0.0,
-          "sheetFact": 31.0,
+          "sheetFact": 32.0,
           "done": 1,
           "isDone": true
         },
@@ -3904,7 +3904,7 @@
           "agg": "Hub 2 Plus",
           "device": "Ajax Hub 2 Plus (8EU/ECG) ASP black охоронна централь",
           "plan": 157.0,
-          "sheetFact": 88.0,
+          "sheetFact": 89.0,
           "done": 0,
           "isDone": false
         },
@@ -3914,7 +3914,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (8EU/ECG) ASP white охоронна централь",
           "plan": 3680.0,
-          "sheetFact": 3670.0,
+          "sheetFact": 3671.0,
           "done": 1,
           "isDone": true
         },
@@ -3964,7 +3964,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (8IN/ECG) white охоронна централь",
           "plan": 80.0,
-          "sheetFact": 77.0,
+          "sheetFact": 80.0,
           "done": 1,
           "isDone": true
         },
@@ -3984,7 +3984,7 @@
           "agg": "",
           "device": "Ajax Hub 2 Plus (9AU/AUX) black охоронна централь",
           "plan": 166.0,
-          "sheetFact": 159.0,
+          "sheetFact": 166.0,
           "done": 1,
           "isDone": true
         },
